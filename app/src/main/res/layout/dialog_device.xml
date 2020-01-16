@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Agregar Dispositivo"
+        android:fontFamily="@font/nunito_bold"
+        android:textColor="@color/black100"
+        android:textSize="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"
+        ></TextView>
+
+    <EditText
+        android:id="@+id/txtDeviceName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del equipo"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"></EditText>
+
+    <EditText
+        android:id="@+id/txtDeviceModel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descripción"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"></EditText>
+
+
+</LinearLayout>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Registrate App</string>
+    <string name="title_activity_bottom_navigation">BottomNavigation</string>
+    <string name="title_home">Panel Principal</string>
+    <string name="title_dashboard">Historial</string>
+    <string name="title_notifications">Permisos</string>
+    <string name="title_devices">Equipos</string>
+</resources>
