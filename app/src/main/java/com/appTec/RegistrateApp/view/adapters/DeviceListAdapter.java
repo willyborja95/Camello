@@ -27,6 +27,7 @@ public class DeviceListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        System.out.println("GET VIEW DEVICELISTADAPTER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         final View view = layoutInflater.inflate(R.layout.device_element, null);
         TextView txtDeviceName = (TextView) view.findViewById(R.id.txtDeviceName);
         TextView txtDeviceModel = (TextView) view.findViewById(R.id.txtDeviceModel);

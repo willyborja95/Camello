@@ -30,7 +30,8 @@ public class DialogDevice extends DialogFragment {
     String token;
 
     public interface NoticeDialogListener {
-        public void onDialogPositiveClick(String str);
+        public void onDeviceSaved(Device device);
+        public void onDeviceNotSaved();
     }
 
 
@@ -40,7 +41,6 @@ public class DialogDevice extends DialogFragment {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // Get the layout inflater
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View viewDialog = inflater.inflate(R.layout.dialog_device, null);
 
@@ -55,7 +55,10 @@ public class DialogDevice extends DialogFragment {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.onDialogPositiveClick(txtDeviceName.getText().toString());
+
+
+                        Device device = new Device(txtDeviceName.getText().toString(), txtDeviceModel.getText().toString());
+                        listener.onDeviceSaved(txtDeviceName.getText().toString());
 
                         String deviceName = txtDeviceName.getText().toString();
                         String deviceDescription = txtDeviceModel.getText().toString();

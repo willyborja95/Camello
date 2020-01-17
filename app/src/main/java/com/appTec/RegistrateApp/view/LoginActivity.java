@@ -56,9 +56,6 @@ public class LoginActivity extends Activity implements  View.OnClickListener {
         btnLogin.setOnClickListener(this);
         hideProgress();
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
-        System.out.println("(((((((((((((((((((((((((((((((( INICIANDO ))))))))))))))))))))))))))))))))))))))))))))))))))))))))");
-        System.out.println("CONSULTA BASE: "+databaseAdapter.getLoginStatus());
-        System.out.println("(((((((((((((((((((((((((((((((( INICIANDO ))))))))))))))))))))))))))))))))))))))))))))))))))))))))");
 
         if(databaseAdapter.getLoginStatus()==1){
             navidateToDashboard();

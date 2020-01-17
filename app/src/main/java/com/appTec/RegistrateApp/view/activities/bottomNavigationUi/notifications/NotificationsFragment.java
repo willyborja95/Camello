@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Device;
+import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.adapters.DeviceListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,8 +34,11 @@ public class NotificationsFragment extends Fragment {
     private ListView lvDevices;
     private ArrayList<Device> lstDevice;
 
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("NOTIFICATION VISTA CREADA!!!!!!!!!!!!!!!!!!!!!!!!!!");
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
         txtDeviceName = root.findViewById(R.id.txtDeviceName);
         txtDeviceModel = root.findViewById(R.id.txtDeviceModel);
@@ -45,14 +49,8 @@ public class NotificationsFragment extends Fragment {
         lstDevice.add(new Device("2", "samsung", "456"));
         lstDevice.add(new Device("3", "samsung", "456"));
         lstDevice.add(new Device("4", "samsung", "123"));
-        lstDevice.add(new Device("4", "samsung", "123"));
-        lstDevice.add(new Device("4", "samsung", "123"));
-        lstDevice.add(new Device("4", "samsung", "123"));
-        lstDevice.add(new Device("4", "samsung", "123"));
-        lstDevice.add(new Device("4", "samsung", "123"));
-        lstDevice.add(new Device("4", "samsung", "123"));
 
-        lvDevices.setAdapter(new DeviceListAdapter(root.getContext(), lstDevice ));
+        lvDevices.setAdapter(new DeviceListAdapter(getContext(), lstDevice ));
 
 
         fabAgregarEquipo = (FloatingActionButton) root.findViewById(R.id.fabAgregarDispositivo);

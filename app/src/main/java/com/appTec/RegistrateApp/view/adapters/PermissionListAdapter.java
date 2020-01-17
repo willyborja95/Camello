@@ -43,7 +43,7 @@ public class PermissionListAdapter extends BaseAdapter {
 
         System.out.println("=====================================");
         System.out.println("PRINTEANDO!!!!!!!!!!!!!!!!!!!!!!!");
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        DateFormat inputFormat = new SimpleDateFormat("yyyy - MM - dd' 'HH:mm:ss");
         String date = inputFormat.format(new Date());
         System.out.println(date);
 

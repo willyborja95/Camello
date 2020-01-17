@@ -32,4 +32,11 @@
         android:layout_marginRight="35dp"></EditText>
 
 
+    <DatePicker
+        android:id="@+id/dpStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:datePickerMode="calendar"/>
+
+
 </LinearLayout>
