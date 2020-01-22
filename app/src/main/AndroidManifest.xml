@@ -3,10 +3,11 @@
     package="com.appTec.RegistrateApp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -17,11 +18,19 @@
             android:label="@string/title_activity_bottom_navigation" />
         <activity android:name=".view.SplashActivity" />
         <activity
+            android:name=".view.activities.bottomNavigationUi.dashboard.DashboardFragment"
+            android:label="Permisos" />
+        <activity
+            android:name=".view.activities.modals.DialogPermission"
+            android:label="Permisos" />
+        <activity
+            android:name=".view.activities.modals.DialogDateTime"
+            android:label="Seleccionas fecha y hora" />
+        <activity
             android:name=".view.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

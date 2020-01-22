@@ -5,12 +5,16 @@ import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface DeviceRetrofitInterface {
-    @Headers({"Accept: application/json"})
     @POST("dispositivo/")
-    Call<JsonObject> post(@Header ("Authentication") String token, @Body Device device );
+    Call<JsonObject> post(@Header ("authorization") String token, @Body Device device );
+
+    @GET("dispositivo/empleado/{userId}")
+    Call<JsonObject> get(@Header ("authorization") String token, @Path("userId") int userId);
 }

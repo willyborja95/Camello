@@ -1,11 +1,15 @@
 package com.appTec.RegistrateApp.view;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -14,24 +18,30 @@ import android.widget.ProgressBar;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Company;
+import com.appTec.RegistrateApp.models.Device;
+import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.models.UserCredential;
 import com.appTec.RegistrateApp.models.WorkingPeriod;
 import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
 import com.appTec.RegistrateApp.services.webServices.ApiClient;
+import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
 import com.appTec.RegistrateApp.services.webServices.interfaces.LoginRetrofitInterface;
+import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionTypeRetrofitInterface;
 import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import android.Manifest.permission;
+
+
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends Activity implements  View.OnClickListener {
+public class LoginActivity extends Activity implements View.OnClickListener {
 
     //UI elements
     private ProgressBar progressBar;
@@ -42,13 +52,21 @@ public class LoginActivity extends Activity implements  View.OnClickListener {
     //App elements
     private String email;
     private String password;
-    DatabaseAdapter databaseAdapter ;
+    private String deviceImei;
+    private Device device;
+    private User user;
+    private ArrayList<PermissionType> lstPermissionType;
+    DatabaseAdapter databaseAdapter;
+    TelephonyManager telephonyManager;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+        lstPermissionType = new ArrayList<PermissionType>();
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         txtEmail = (EditText) findViewById(R.id.email);
         txtPassword = (EditText) findViewById(R.id.password);
@@ -56,11 +74,25 @@ public class LoginActivity extends Activity implements  View.OnClickListener {
         btnLogin.setOnClickListener(this);
         hideProgress();
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
+        telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
+        pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0); // 0 - for private mode
+        editor = pref.edit();
 
-        if(databaseAdapter.getLoginStatus()==1){
+
+        if (databaseAdapter.getLoginStatus() == 1) {
+            this.device = databaseAdapter.getDevice();
+            this.lstPermissionType = databaseAdapter.getPermissionType();
             navidateToDashboard();
 
         }
+
+        if (android.os.Build.VERSION.SDK_INT >= 26) {
+            System.out.println("ESTE ES MI ID ***************************************************");
+            if (checkSelfPermission(permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
+            }
+        }
+
 
     }
 
@@ -91,86 +123,92 @@ public class LoginActivity extends Activity implements  View.OnClickListener {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if(response.code()==200){
-                    User user = new User();
+                if (response.code() == 200) {
+                    if (android.os.Build.VERSION.SDK_INT >= 26) {
+                        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
+                        } else {
+                            deviceImei = telephonyManager.getImei();
+                        }
+                    }
+                    user = new User();
                     Company company = new Company();
                     ArrayList<WorkingPeriod> workingPeriodList = new ArrayList<WorkingPeriod>();
-                    double companyLatitude = response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("latitud").getAsDouble();
-                    double companyLongitude = response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble();
-                    Location companyLocation = new Location("dummyprovider");
-                    companyLocation.setLatitude(companyLatitude);
-                    companyLocation.setLongitude(companyLongitude);
-                    user.setNames(response.body().getAsJsonObject("data").get("nombres").toString());
-                    user.setLastnames(response.body().getAsJsonObject("data").get("apellidos").toString());
+                    user.setId(response.body().getAsJsonObject("data").get("id").getAsInt());
+                    user.setNombres(response.body().getAsJsonObject("data").get("nombres").toString());
+                    user.setApellidos(response.body().getAsJsonObject("data").get("apellidos").toString());
                     user.setEmail(response.body().getAsJsonObject("data").get("email").toString());
                     company.setName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").toString());
-                    company.setLocation(companyLocation);
+                    company.setLatitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("latitud").getAsDouble());
+                    company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
                     company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsDouble());
                     user.setCompany(company);
-
-                    JsonArray a = response.body().getAsJsonObject("data").getAsJsonObject("cargo").getAsJsonArray("periodos");
-
-                    for (int i = 0; i < a.size(); i++) {
-                        JsonObject workingPeriodJson = a.get(i).getAsJsonObject();
-                        JsonObject sJson = a.get(i).getAsJsonObject();
-
-                        Calendar calendarStart = Calendar.getInstance();
-
-                        calendarStart.set(Calendar.HOUR_OF_DAY, Integer.parseInt(workingPeriodJson.get("horainicio").getAsString().split(":")[0]));
-                        calendarStart.set(Calendar.MINUTE, Integer.parseInt(workingPeriodJson.get("horainicio").getAsString().split(":")[1]));
-                        calendarStart.set(Calendar.SECOND, Integer.parseInt(workingPeriodJson.get("horainicio").getAsString().split(":")[2]));
-
-                        Calendar calendarEnd = Calendar.getInstance();
-                        calendarEnd.set(Calendar.HOUR_OF_DAY, Integer.parseInt(workingPeriodJson.get("horafin").getAsString().split(":")[0]));
-                        calendarEnd.set(Calendar.MINUTE, Integer.parseInt(workingPeriodJson.get("horafin").getAsString().split(":")[1]));
-                        calendarEnd.set(Calendar.SECOND, Integer.parseInt(workingPeriodJson.get("horafin").getAsString().split(":")[2]));
-
-                        String StringDay = workingPeriodJson.getAsJsonObject("dia").get("nombre").getAsString();
-                        int intDay;
-
-                        switch (StringDay){
-                            case "Lunes":
-                                intDay = 1;
-                                break;
-                            case "Martes":
-                                intDay = 2;
-                                break;
-                            case "Miércoles":
-                                intDay = 3;
-                                break;
-                            case "Jueves":
-                                intDay = 4;
-                                break;
-                            case "Viernes":
-                                intDay = 5;
-                                break;
-                            case "Sábado":
-                                intDay = 6;
-                                break;
-                            case "Domingo":
-                                intDay = 7;
-                                break;
-                            default:
-                                intDay = 1;
-                                break;
-                        }
-
-                        workingPeriodList.add(new WorkingPeriod(calendarStart, calendarEnd, intDay));
-
-
-                    }
+                    String token = response.body().get("token").toString().replace("\"", "");
+                    editor.putString("token", token);
+                    editor.commit();
                     databaseAdapter.insertUser(user);
-                    User myUser = databaseAdapter.getUser();
-                    System.out.println("(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((");
-                    System.out.println(myUser.getNames());
-                    System.out.println(myUser.getLastnames());
-                    System.out.println(myUser.getEmail());
-                    System.out.println("(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((");
                     databaseAdapter.insertLoginStatus(1);
 
-                    navidateToDashboard();
+                    DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
+                    Call<JsonObject> deviceCall = deviceRetrofitInterface.get(token, user.getId());
+                    deviceCall.enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            JsonArray deviceList = response.body().getAsJsonArray("data");
+                            Device device = null;
+                            for (int i = 0; i < deviceList.size(); i++) {
+                                JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
+                                if (deviceImei.equals(jsonDevice.get("imei").getAsString()) && jsonDevice.get("estado").getAsBoolean() == true) {
+                                    int deviceId = jsonDevice.get("id").getAsInt();
+                                    String deviceName = jsonDevice.get("nombre").getAsString();
+                                    String deviceModel = jsonDevice.get("modelo").getAsString();
+                                    String deviceImei = jsonDevice.get("imei").getAsString();
+                                    boolean deviceStatus = jsonDevice.get("estado").getAsBoolean();
+                                    device = new Device(deviceId, deviceName, deviceModel, deviceImei, deviceStatus);
+                                    databaseAdapter.insertDevice(device);
+                                }
+                            }
+                            //******************************************************************
+                            //TOMAR EN CUENTA
+                            setDevice(device);
+                        }
 
-                }else if(response.code()==404 || response.code()==401){
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                        }
+                    });
+
+
+                    //Get PermissionType
+                    PermissionTypeRetrofitInterface permissionTypeRetrofitInterface = ApiClient.getClient().create(PermissionTypeRetrofitInterface.class);
+                    final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(token);
+                    permissionTypeCall.enqueue(new Callback<JsonObject>() {
+
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            JsonArray jsonLstPermissionType = response.body().getAsJsonArray("data");
+                            if (jsonLstPermissionType.size() > 0) {
+                                for (int i = 0; i < jsonLstPermissionType.size(); i++) {
+                                    JsonObject jsonPermissionType = jsonLstPermissionType.get(i).getAsJsonObject();
+                                    int permissionTypeId = jsonPermissionType.get("id").getAsInt();
+                                    String permissionTypeName = jsonPermissionType.get("nombre").getAsString();
+                                    PermissionType permissionType = new PermissionType(permissionTypeId, permissionTypeName);
+                                    databaseAdapter.insertPermissionType(permissionType);
+                                    lstPermissionType.add(permissionType);
+                                }
+                            }
+                            navidateToDashboard();
+                        }
+
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                        }
+                    });
+
+
+                } else if (response.code() == 404 || response.code() == 401) {
                     System.out.println("USUARIO NO ENCONTRADO ==================================================");
                     showCredentialsErrorMessage();
                 }
@@ -217,9 +255,19 @@ public class LoginActivity extends Activity implements  View.OnClickListener {
         btnLogin.setEnabled(true);
     }
 
+    private void setDevice(Device device){
+        this.device = device;
+    }
+
     public void navidateToDashboard() {
         Intent intent = new Intent(this, BottomNavigation.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Bundle bundle = new Bundle();
+
+        bundle.putSerializable("device", (Device) device);
+        bundle.putSerializable("user", (User) user);
+        bundle.putSerializable("lstPermissionType", lstPermissionType);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 

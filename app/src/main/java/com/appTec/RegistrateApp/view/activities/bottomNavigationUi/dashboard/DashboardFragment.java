@@ -1,5 +1,6 @@
 package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +40,14 @@ public class DashboardFragment extends Fragment {
 
     private NotificationsViewModel notificationsViewModel;
     private FloatingActionButton fabAddPermission;
+    private ArrayList<PermissionType> lstPermissionType;
     private ArrayList<Permission> lstPermission;
     private ListView lvPermission;
     private DashboardViewModel dashboardViewModel;
+
+    public void addArrayListPermissionType(ArrayList<PermissionType> lstPermissionType){
+        this.lstPermissionType = lstPermissionType;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,8 +66,11 @@ public class DashboardFragment extends Fragment {
         fabAddPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Intent i = new Intent(getContext(), DialogPermission.class);
+
                 System.out.println("Cheetah!!!!");
-                DialogFragment df = new DialogPermission();
+                DialogPermission df = new DialogPermission();
+                df.addArrayListPerissionType(lstPermissionType);
                 df.show(getFragmentManager(), "nani");
             }
         });
@@ -74,12 +83,6 @@ public class DashboardFragment extends Fragment {
     }
 
     private void updateListView(){
-        PermissionType permissionType1 = new PermissionType(1, "Vacaciones");
-        PermissionType permissionType2 = new PermissionType(1, "Intempestivo");
-        lstPermission.add(new Permission(permissionType1, PermissionStatus.Aprobado, new Date(), new Date()));
-        lstPermission.add(new Permission(permissionType2, PermissionStatus.Rechazado, new Date(), new Date()));
-        lstPermission.add(new Permission(permissionType1, PermissionStatus.Rechazado, new Date(), new Date()));
         lvPermission.setAdapter(new PermissionListAdapter(getContext(), lstPermission ));
-
     }
 }
