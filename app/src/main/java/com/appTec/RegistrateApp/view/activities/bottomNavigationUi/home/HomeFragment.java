@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.view.activities.generic.DayViewContainer;
 import com.appTec.RegistrateApp.view.activities.generic.MonthHeaderViewContainer;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.kizitonwose.calendarview.CalendarView;
 import com.kizitonwose.calendarview.model.CalendarDay;
 import com.kizitonwose.calendarview.model.CalendarMonth;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        AndroidThreeTen.init(getContext());
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
