@@ -1,28 +1,38 @@
 package com.appTec.RegistrateApp.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
-    private String names;
-    private String lastnames;
+public class User implements Serializable {
+    private int id;
+    private String nombres;
+    private String apellidos;
     private String email;
     private Company company;
     private ArrayList<WorkingPeriod> workingPeriodList;
 
-    public String getNames() {
-        return names;
+    public int getId() {
+        return id;
     }
 
-    public void setNames(String names) {
-        this.names = names;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getLastnames() {
-        return lastnames;
+    public String getNombres() {
+        return nombres;
     }
 
-    public void setLastnames(String lastnames) {
-        this.lastnames = lastnames;
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 
     public String getEmail() {

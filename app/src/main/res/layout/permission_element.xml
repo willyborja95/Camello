@@ -5,95 +5,163 @@
     android:id="@+id/device_element"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <TextView
-        android:id="@+id/txtPermissionType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Equipo 1"
-        tools:ignore="MissingConstraints"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginRight="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtPermissionType"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/nunito_bold"
+            android:textColor="@color/black100"
+            android:textSize="20dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"/>
+
+        <ImageButton
+            android:id="@+id/btnDeletePermission"
+            android:layout_alignParentRight="true"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:src="@drawable/ic_delete"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/lblPermissionStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estado:"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="54dp"
-            tools:layout_editor_absoluteY="102dp" />
+            android:text="Estado: "
+            android:fontFamily="@font/opensans_light"
+            android:textColor="@color/black100"
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/txtPermissionStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Huawei"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="130dp"
-            tools:layout_editor_absoluteY="102dp" />
+            android:fontFamily="@font/opensans_light"
+            android:textColor="@color/black100"
+            android:textSize="15dp" />
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/lblStartDate"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fecha de Inicio:"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="54dp"
-            tools:layout_editor_absoluteY="102dp" />
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/datetime_chip"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="15dp">
 
-        <TextView
-            android:id="@+id/txtStartDate"
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/circle_chip_background"
+                android:src="@drawable/ic_play" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_light"
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/txtStartTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_light"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Huawei"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="130dp"
-            tools:layout_editor_absoluteY="102dp" />
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:background="@drawable/datetime_chip"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="15dp">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/circle_chip_background"
+                android:src="@drawable/ic_stop" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtEndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_light"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"/>
+
+                <TextView
+                    android:id="@+id/txtEndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_light"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
-
-        <TextView
-            android:id="@+id/lblEndDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fecha de finalización: "
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="54dp"
-            tools:layout_editor_absoluteY="135dp" />
-
-        <TextView
-            android:id="@+id/txtEndDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Habilitado"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="131dp"
-            tools:layout_editor_absoluteY="135dp" />
-
-    </LinearLayout>
 
 </LinearLayout>
+
+
+

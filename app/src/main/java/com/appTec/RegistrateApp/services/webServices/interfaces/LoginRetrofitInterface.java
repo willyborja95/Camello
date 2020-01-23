@@ -11,5 +11,5 @@ import retrofit2.http.POST;
 public interface LoginRetrofitInterface {
     @Headers({"Accept: application/json"})
     @POST("login/")
-    Call<JsonObject> login(@Body UserCredential credential );
+    Call<JsonObject> login(@Body UserCredential credential);
 }

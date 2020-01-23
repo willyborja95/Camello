@@ -1,57 +1,169 @@
 package com.appTec.RegistrateApp.view.activities.modals;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TimePicker;
 
 import androidx.fragment.app.DialogFragment;
 
 import com.appTec.RegistrateApp.R;
-import com.appTec.RegistrateApp.models.Device;
+import com.appTec.RegistrateApp.models.Permission;
+import com.appTec.RegistrateApp.models.PermissionStatus;
+import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
-import com.appTec.RegistrateApp.services.webServices.ApiClient;
-import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
-import com.google.gson.JsonObject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class DialogPermission extends DialogFragment {
-    PermissionDialogListener listener;
+
+    //UI elements
     EditText txtStartDate;
     EditText txtEndDate;
+    private DatePicker dpStartDate;
+    private Spinner spnPermissionType;
+    private ArrayAdapter<PermissionType> adapterPermissionType;
+
+
+    PermissionDialogListener listener;
+    ArrayList<PermissionType> lstPermissionType;
+
     DatabaseAdapter databaseAdapter;
-    String token;
+    SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy  HH:mm");
+    final Calendar startDate = Calendar.getInstance();
+    final Calendar endDate = Calendar.getInstance();
+    String strStartDate;
+    String strEndDate;
 
     public interface PermissionDialogListener {
-        public void onPermissionSaved(String str);
-        public void onPermissionNotSaved(String str);
+        public void onPermissionSaved(Permission permission);
     }
 
 
+    public void addArrayListPerissionType(ArrayList<PermissionType> lstPermissionType) {
+        this.lstPermissionType = lstPermissionType;
+    }
+
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this.getContext());
-        //token = databaseAdapter.getToken();
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // Get the layout inflater
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View viewDialog = inflater.inflate(R.layout.dialog_permission, null);
-
         txtStartDate = (EditText) viewDialog.findViewById(R.id.txtStartDate);
         txtEndDate = (EditText) viewDialog.findViewById(R.id.txtEndDate);
-
         txtStartDate.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                final TimePickerDialog tpStartDate;
+                tpStartDate = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        startDate.set(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
+                        strStartDate = dateformat.format(startDate.getTime());
+                        txtStartDate.setText(strStartDate);
+                    }
+                }, startDate.get(Calendar.HOUR_OF_DAY), startDate.get(Calendar.MINUTE), true);//Yes 24 hour time
+                tpStartDate.hide();
 
+
+                DatePickerDialog dpStartDate = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+
+                        startDate.set(year, monthOfYear, dayOfMonth);
+                        strStartDate = dateformat.format(startDate.getTime());
+                        txtStartDate.setText(strStartDate);
+                        tpStartDate.show();
+                    }
+                }, startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
+
+                dpStartDate.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        System.out.println(startDate.getTime());
+                        strStartDate = dateformat.format(startDate.getTime());
+                        txtStartDate.setText(strStartDate);
+                    }
+                });
+                dpStartDate.show();
+
+            }
+        });
+
+
+        txtEndDate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                final TimePickerDialog tpEndDate;
+                tpEndDate = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        endDate.set(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
+                        strEndDate = dateformat.format(endDate.getTime());
+                        txtEndDate.setText(strEndDate);
+                    }
+                }, endDate.get(Calendar.HOUR_OF_DAY), endDate.get(Calendar.MINUTE), true);//Yes 24 hour time
+                tpEndDate.hide();
+
+
+                final DatePickerDialog dpEndDate = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+
+                        endDate.set(year, monthOfYear, dayOfMonth);
+                        strEndDate = dateformat.format(endDate.getTime());
+                        txtEndDate.setText(strEndDate);
+                        tpEndDate.show();
+                    }
+                }, endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
+
+                dpEndDate.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        strEndDate = dateformat.format(endDate.getTime());
+                        txtEndDate.setText(strEndDate);
+                    }
+                });
+                dpEndDate.show();
+
+            }
+        });
+
+
+        spnPermissionType = (Spinner) viewDialog.findViewById(R.id.spnPermissionType);
+
+        adapterPermissionType = new ArrayAdapter<PermissionType>(viewDialog.getContext(), R.layout.permission_type_element, R.id.textView3, lstPermissionType);
+
+
+        spnPermissionType.setAdapter(adapterPermissionType);
+
+        spnPermissionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("Se ha seleccionado la opcion: " + position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
@@ -64,33 +176,17 @@ public class DialogPermission extends DialogFragment {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.onPermissionSaved("hello");
-                        //listener.onDialogPositiveClick(txtDeviceName.getText().toString());
-
-                        //String deviceName = txtDeviceName.getText().toString();
-                        //String deviceDescription = txtDeviceModel.getText().toString();
-                        //String deviceImei = "XXXXXXX";
+                        System.out.println("RESULTADO 1111111111111111111111111111111111111");
+                        PermissionType permissionType = (PermissionType)spnPermissionType.getSelectedItem();
+                        Permission permission = new Permission(permissionType, startDate, endDate);
+                        listener.onPermissionSaved(permission);
 
 
-                        //Device device = new Device(deviceName, deviceDescription, deviceImei);
 
                         /*
-
-                        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-
-                        Call<JsonObject> call = deviceRetrofitInterface.post(token, device);
-                        call.enqueue(new Callback<JsonObject>() {
-                            @Override
-                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                System.out.println("RESPUESTA DEL SERVER!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                                System.out.println(response.toString());
-                            }
-
-                            @Override
-                            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                            }
-                        });
+                        PermissionType permissionType1 = new PermissionType(1, "Intempestivo");
+                        Permission p1 = new Permission(permissionType1, PermissionStatus.Aprobado, new Date(), new Date());
+                        listener.onPermissionSaved(p1);
 
                          */
 
@@ -98,12 +194,13 @@ public class DialogPermission extends DialogFragment {
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.onPermissionNotSaved("hello");
 
                         DialogPermission.this.getDialog().cancel();
                         //LoginDialogFragment.this.getDialog().cancel();
                     }
                 });
+
+
         return builder.create();
     }
 
