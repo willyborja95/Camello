@@ -1,17 +1,32 @@
 package com.appTec.RegistrateApp.models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Permission {
+public class Permission implements Serializable {
     private int id;
     private PermissionType permissionType;
     private PermissionStatus permissionStatus;
-    private Date startDate;
-    private Date endDate;
+    private Calendar startDate;
+    private Calendar endDate;
 
-    public Permission(PermissionType permissionType, PermissionStatus permissionStatus, Date startDate, Date endDate) {
+    public Permission(PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
+        this.permissionType = permissionType;
+        this.permissionStatus = permissionStatus;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public Permission(PermissionType permissionType, Calendar startDate, Calendar endDate) {
+        this.permissionType = permissionType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public Permission(int id, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
+        this.id = id;
         this.permissionType = permissionType;
         this.permissionStatus = permissionStatus;
         this.startDate = startDate;
@@ -42,19 +57,19 @@ public class Permission {
         this.permissionStatus = permissionStatus;
     }
 
-    public Date getStartDate() {
+    public Calendar getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Calendar startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public Calendar getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Calendar endDate) {
         this.endDate = endDate;
     }
 }

@@ -2,13 +2,15 @@ package com.appTec.RegistrateApp.models;
 
 import androidx.annotation.NonNull;
 
-public class PermissionType {
+import java.io.Serializable;
+
+public class PermissionType implements Serializable {
     private int id;
-    private String permissionType;
+    private String nombe;
 
     public PermissionType(int id, String permissionType) {
         this.id = id;
-        this.permissionType = permissionType;
+        this.nombe = permissionType;
     }
 
     public int getId() {
@@ -19,17 +21,17 @@ public class PermissionType {
         this.id = id;
     }
 
-    public String getPermissionType() {
-        return permissionType;
+    public String getNombe() {
+        return nombe;
     }
 
-    public void setPermissionType(String permissionType) {
-        this.permissionType = permissionType;
+    public void setNombe(String nombe) {
+        this.nombe = nombe;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return this.permissionType;
+        return this.nombe;
     }
 }

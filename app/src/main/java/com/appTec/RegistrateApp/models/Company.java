@@ -2,9 +2,12 @@ package com.appTec.RegistrateApp.models;
 
 import android.location.Location;
 
-public class Company {
+import java.io.Serializable;
+
+public class Company implements Serializable {
     private String name;
-    private Location location;
+    private double latitude;
+    private double longitude;
     private double radius;
 
     public String getName() {
@@ -15,12 +18,20 @@ public class Company {
         this.name = name;
     }
 
-    public Location getLocation() {
-        return location;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public double getRadius() {
