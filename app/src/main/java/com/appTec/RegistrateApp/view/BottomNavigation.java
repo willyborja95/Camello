@@ -356,6 +356,7 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
                             }
 
 
+
                             if (strPermissionStatus.equals("enrevision")) {
                                 permissionStatus = PermissionStatus.Revisando;
                             } else if (strPermissionStatus.equals("aprobado")) {
