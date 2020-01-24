@@ -18,8 +18,7 @@
             android:label="@string/title_activity_bottom_navigation" />
         <activity android:name=".view.SplashActivity" />
         <activity
-            android:name=".view.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".view.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -12,14 +12,20 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_assistance"
+        android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment"
+        android:label="Historial"
+        tools:layout="@layout/fragment_assistance" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_permission"
+        android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment"
+        android:label="Permisos"
+        tools:layout="@layout/fragment_permission" />
+
+    <fragment
+        android:id="@+id/navigation_device"
+        android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device.DeviceFragment"
+        android:label="Equipos"
+        tools:layout="@layout/fragment_device" />
 </navigation>

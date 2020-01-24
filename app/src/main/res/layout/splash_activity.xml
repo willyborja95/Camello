@@ -12,5 +12,6 @@
         android:layout_height="wrap_content"
         android:text="Splash screen desde registrateApp"
         tools:layout_editor_absoluteX="149dp"
-        tools:layout_editor_absoluteY="272dp" />
+        tools:layout_editor_absoluteY="272dp"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
