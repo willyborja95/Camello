@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -65,6 +66,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.login_activity);
         lstPermissionType = new ArrayList<PermissionType>();
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -81,13 +83,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         if (databaseAdapter.getLoginStatus() == 1) {
             this.device = databaseAdapter.getDevice();
+            this.user = databaseAdapter.getUser();
             this.lstPermissionType = databaseAdapter.getPermissionType();
             navidateToDashboard();
-
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= 26) {
-            System.out.println("ESTE ES MI ID ***************************************************");
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
             }
@@ -107,9 +108,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     txtEmail.setError("Parámetro requerido");
                     txtPassword.setError("Parámetro requerido");
                 } else {
-                    UserCredential userCredential = new UserCredential(email, password);
-                    showProgress();
-                    login(userCredential);
+                    if (checkSelfPermission(permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                        UserCredential userCredential = new UserCredential(email, password);
+                        showProgress();
+                        login(userCredential);
+                    }else{
+                        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
+                    }
                 }
                 break;
         }
@@ -124,11 +129,16 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.code() == 200) {
-                    if (android.os.Build.VERSION.SDK_INT >= 26) {
+                    if (android.os.Build.VERSION.SDK_INT >= 23) {
                         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
                         } else {
-                            deviceImei = telephonyManager.getImei();
+                            if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
+                                deviceImei = telephonyManager.getDeviceId();
+                            }
+                            if (android.os.Build.VERSION.SDK_INT >= 26) {
+                                deviceImei = telephonyManager.getImei();
+                            }
                         }
                     }
                     user = new User();
@@ -168,8 +178,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     databaseAdapter.insertDevice(device);
                                 }
                             }
-                            //******************************************************************
-                            //TOMAR EN CUENTA
                             setDevice(device);
                         }
 
@@ -209,7 +217,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 
                 } else if (response.code() == 404 || response.code() == 401) {
-                    System.out.println("USUARIO NO ENCONTRADO ==================================================");
                     showCredentialsErrorMessage();
                 }
 
@@ -219,9 +226,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                System.out.println("NO TENEMOS RESPUESTA");
-                System.out.println(call.toString());
-                System.out.println(t.toString());
                 showConectionErrorMessage();
             }
 
@@ -242,7 +246,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     public void showConectionErrorMessage() {
-        System.out.println("error de conexion -------------------------------------------------------------");
         InformationDialog.createDialog(this);
         InformationDialog.setTitle("Error de conexión");
         InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
@@ -255,7 +258,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         btnLogin.setEnabled(true);
     }
 
-    private void setDevice(Device device){
+    private void setDevice(Device device) {
         this.device = device;
     }
 

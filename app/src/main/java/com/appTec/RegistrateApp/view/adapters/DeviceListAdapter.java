@@ -31,7 +31,6 @@ public class DeviceListAdapter extends BaseAdapter {
         TextView txtDeviceName = (TextView) view.findViewById(R.id.txtDeviceName);
         TextView txtDeviceModel = (TextView) view.findViewById(R.id.txtDeviceModel);
         TextView txtDeviceImei = (TextView) view.findViewById(R.id.txtDeviceImei);
-
         txtDeviceName.setText(lstDevices.get(position).getNombre());
         txtDeviceModel.setText(lstDevices.get(position).getModelo());
         txtDeviceImei.setText(lstDevices.get(position).getImei());

@@ -43,7 +43,7 @@ public class DialogPermission extends DialogFragment {
     ArrayList<PermissionType> lstPermissionType;
 
     DatabaseAdapter databaseAdapter;
-    SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy  HH:mm");
+    SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     final Calendar startDate = Calendar.getInstance();
     final Calendar endDate = Calendar.getInstance();
     String strStartDate;
