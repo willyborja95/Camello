@@ -76,6 +76,7 @@ public class DatabaseAdapter {
         Cursor cursor = sqLiteDatabase.query("User", null, null, null, null, null, null);
         if (cursor != null & cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
+                user.setId(cursor.getInt(0));
                 user.setNombres(cursor.getString(1));
                 user.setApellidos(cursor.getString(2));
                 user.setEmail(cursor.getString(3));

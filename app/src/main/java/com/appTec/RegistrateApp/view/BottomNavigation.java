@@ -27,6 +27,7 @@ import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.assistance.As
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home.HomeFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device.DeviceFragment;
+import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
 import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.activities.modals.DialogPermission;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -94,10 +95,7 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
         pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0); // 0 - for private mode
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
-
-
         setContentView(R.layout.bottom_navigation);
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
 
         //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -107,22 +105,16 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
         //NavigationUI.setupWithNavController(toolbar, navController);
         //NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
-
-
         getSupportActionBar().setTitle(null);
         lblToolbarName.setText("Panel Principal");
         getSupportActionBar().show();
 
-
-
-
         active = homeFragment;
-        fm.beginTransaction().add(R.id.nav_host_fragment, deviceFragment, "3").hide(deviceFragment).commit();
+        fm.beginTransaction().add(R.id.nav_host_fragment, deviceFragment, "4").hide(deviceFragment).commit();
+        fm.beginTransaction().add(R.id.nav_host_fragment, assistanceFragment, "3").hide(assistanceFragment).commit();
         fm.beginTransaction().add(R.id.nav_host_fragment, permissionFragment, "2").hide(permissionFragment).commit();
         fm.beginTransaction().add(R.id.nav_host_fragment, homeFragment, "1").hide(homeFragment).commit();
         fm.beginTransaction().show(active).commit();
-
-
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -145,6 +137,7 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
                         fm.beginTransaction().hide(active).show(assistanceFragment).commit();
                         active = assistanceFragment;
                         return true;
+
                     case R.id.navigation_permission:
                         System.out.println("Permisos");
                         lblToolbarName.setText("Permisos");
@@ -152,6 +145,7 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
                         if (toolbar.getMenu().size() == 0) {
                             toolbar.inflateMenu(R.menu.toolbar_menu);
                         }
+
                         getSupportActionBar().show();
 
 
@@ -176,125 +170,6 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
             }
         });
 
-
-
-
-        //NavigationUI.setupWithNavController(toolbar, navController);
-        //AppBarConfiguration appBarConfiguration =
-        //        new AppBarConfiguration.Builder(navController.getGraph()).build();
-        //Toolbar toolbar = findViewById(R.id.tbFragmentToolbar);
-
-
-        //Load data
-
-
-        //Toolbar myToolbar = (Toolbar) findViewById(R.id.tbFragmentToolbar);
-
-
-
-        /*
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
-
-
-        //New Bottom Navigation manager
-        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-
-
-                }
-
-
-
-
-                return true;
-            }
-        });
-
-         */
-
-
-        /*
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        AppBarConfiguration appBarConfiguration =
-                new AppBarConfiguration.Builder(navController.getGraph()).build();
-        Toolbar toolbar = findViewById(R.id.tbFragmentToolbar);
-
-
-         */
-
-
-        //NavigationUI.setupWithNavController(toolbar, navController);
-
-
-        /*
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController1.getGraph())
-                .build();
-        NavigationUI.setupActionBarWithNavController(this, navController1, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController1);
-
-        Toolbar toolbar = findViewById(R.id.tbFragmentToolbar);
-
-        navController1.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
-            @Override
-            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-                System.out.println("El cambio es  bueno");
-            }
-        });
-
-         */
-
-        /*
-
-
-
-        mainActionBar = getSupportActionBar();
-        //fragmentToolBar = (Toolbar) navView.findViewById(R.id.tbFragmentToolbar);
-        mainActionBar.hide();
-        active = homeFragment;
-        fm.beginTransaction().add(R.id.nav_host_fragment, deviceFragment, "3").hide(deviceFragment).commit();
-        fm.beginTransaction().add(R.id.nav_host_fragment, permissionFragment, "2").hide(permissionFragment).commit();
-        fm.beginTransaction().add(R.id.nav_host_fragment, homeFragment, "1").hide(homeFragment).commit();
-        fm.beginTransaction().show(active).commit();
-
-
-        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        fm.beginTransaction().hide(active).show(homeFragment).commit();
-                        active = homeFragment;
-                        //fragmentToolBar.setTitle("hola");
-                        return true;
-                    case R.id.navigation_assistance:
-                        fm.beginTransaction().hide(active).show(assistanceFragment).commit();
-                        active = assistanceFragment;
-                        return true;
-                    case R.id.navigation_permission:
-                        fm.beginTransaction().hide(active).show(permissionFragment).commit();
-                        active = permissionFragment;
-                        permissionFragment.addArrayListPermissionType(lstPermissionType);
-                        return true;
-                    case R.id.navigation_device:
-                        fm.beginTransaction().hide(active).show(deviceFragment).commit();
-                        active = deviceFragment;
-                        if (device != null) {
-                            deviceFragment.addDeviceToList(device);
-                        }
-                        return true;
-                }
-                return true;
-            }
-        });
-
-         */
     }
 
 
@@ -302,48 +177,28 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.btnUpdatePermissions:
-                System.out.println("Boton de permisos");
                 PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-                System.out.println(user.getId());
                 Call<JsonObject> permissionCall = permissionRetrofitInterface.get(pref.getString("token", null), user.getId());
                 permissionCall.enqueue(new Callback<JsonObject>() {
-
-
-
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        System.out.println(response.toString());
-                        System.out.println(response.body());
-
-
-
                         JsonArray permissionListJson = response.body().getAsJsonArray("data");
-
                         lstPermission.clear();
-
-                        for (int i = 0; i <permissionListJson.size() ; i++) {
-
-
+                        for (int i = 0; i < permissionListJson.size(); i++) {
                             JsonObject permissionJson = permissionListJson.get(i).getAsJsonObject();
-
-
                             int id = permissionJson.get("id").getAsInt();
                             String strStartDate = permissionJson.get("fechainicio").getAsString();
                             String strEndDate = permissionJson.get("fechafin").getAsString();
                             String strPermissionType = permissionJson.getAsJsonObject("permiso").get("nombre").getAsString();
                             String strPermissionStatus = permissionJson.get("estado").getAsString();
-
                             String[] arrayStartDateTime = strStartDate.split(" ");
                             String[] arrayStartTime = arrayStartDateTime[1].split(":");
                             String[] arrayStartDate = arrayStartDateTime[0].split("/");
-
                             String[] arrayEndDateTime = strEndDate.split(" ");
                             String[] arrayEndTime = arrayEndDateTime[1].split(":");
                             String[] arrayEndDate = arrayEndDateTime[0].split("/");
-
                             Calendar calendarStartDate = Calendar.getInstance();
                             calendarStartDate.set(Integer.parseInt(arrayStartDate[2]), Integer.parseInt(arrayStartDate[1]), Integer.parseInt(arrayStartDate[0]), Integer.parseInt(arrayStartTime[0]), Integer.parseInt(arrayStartTime[1]));
-
                             Calendar calendarEndDate = Calendar.getInstance();
                             calendarEndDate.set(Integer.parseInt(arrayEndDate[2]), Integer.parseInt(arrayEndDate[1]), Integer.parseInt(arrayEndDate[0]), Integer.parseInt(arrayEndTime[0]), Integer.parseInt(arrayEndTime[1]));
                             PermissionType permissionType = null;
@@ -361,159 +216,53 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
                                 permissionStatus = PermissionStatus.Aprobado;
                             } else if (strPermissionStatus.equals("rechazado")) {
                                 permissionStatus = PermissionStatus.Rechazado;
-
                             }
-
                             Permission permission = new Permission(id, permissionType, permissionStatus, calendarStartDate, calendarEndDate);
                             lstPermission.add(permission);
-
-
-
-
                         }
-
                         permissionFragment.addPermissionList(lstPermission);
-
-
-                        /*
-                        int id = response.body().getAsJsonObject("data").get("id").getAsInt();
-                        String strStartDate = response.body().getAsJsonObject("data").get("fechainicio").getAsString();
-                        String strEndDate = response.body().getAsJsonObject("data").get("fechafin").getAsString();
-                        int idPermission = Integer.parseInt(response.body().getAsJsonObject("data").get("permisoid").getAsString());
-                        String strPermissionStatus = response.body().getAsJsonObject("data").get("estado").getAsString();
-
-                        String[] arrayStartDateTime = strStartDate.split(" ");
-                        String[] arrayStartTime = arrayStartDateTime[1].split(":");
-                        String[] arrayStartDate = arrayStartDateTime[0].split("/");
-
-                        String[] arrayEndDateTime = strEndDate.split(" ");
-                        String[] arrayEndTime = arrayEndDateTime[1].split(":");
-                        String[] arrayEndDate = arrayEndDateTime[0].split("/");
-
-                        Calendar calendarStartDate = Calendar.getInstance();
-                        calendarStartDate.set(Integer.parseInt(arrayStartDate[2]), Integer.parseInt(arrayStartDate[1]), Integer.parseInt(arrayStartDate[0]), Integer.parseInt(arrayStartTime[0]), Integer.parseInt(arrayStartTime[1]));
-
-                        Calendar calendarEndDate = Calendar.getInstance();
-                        calendarEndDate.set(Integer.parseInt(arrayEndDate[2]), Integer.parseInt(arrayEndDate[1]), Integer.parseInt(arrayEndDate[0]), Integer.parseInt(arrayEndTime[0]), Integer.parseInt(arrayEndTime[1]));
-                        PermissionType permissionType = null;
-                        PermissionStatus permissionStatus = null;
-
-                        for (int i = 0; i < lstPermissionType.size(); i++) {
-                            if (idPermission == lstPermissionType.get(i).getId()) {
-                                permissionType = lstPermissionType.get(i);
-                            }
-                        }
-
-
-                        if (strPermissionStatus.equals("enrevision")) {
-                            permissionStatus = PermissionStatus.Revisando;
-                        } else if (strPermissionStatus.equals("aprobado")) {
-                            permissionStatus = PermissionStatus.Aprobado;
-                        } else if (strPermissionStatus.equals("rechazado")) {
-                            permissionStatus = PermissionStatus.Rechazado;
-
-                        }
-
-                        Permission permission = new Permission(id, permissionType, permissionStatus, calendarStartDate, calendarEndDate);
-                        permissionFragment.addPermissionToList(permission);
-
-
-                         */
-
-
-
-
-
-
-
                     }
-
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                        showConectionErrorMessage();
                     }
                 });
-
         }
         return true;
     }
 
     @Override
     public void onDeviceSaved(Device device) {
-        String deviceImei = "";
-        if (android.os.Build.VERSION.SDK_INT >= 26) {
-            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
-            } else {
-                deviceImei = telephonyManager.getImei();
-            }
-        }
-        device.setImei(deviceImei);
-
-        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> call = deviceRetrofitInterface.post(pref.getString("token", null), device);
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                System.out.println(response.body());
-                int id = response.body().getAsJsonObject("data").get("id").getAsInt();
-                String deviceName = response.body().getAsJsonObject("data").get("nombre").getAsString();
-                String deviceModel = response.body().getAsJsonObject("data").get("modelo").getAsString();
-                String deviceImei = response.body().getAsJsonObject("data").get("imei").getAsString();
-                boolean deviceStatus = response.body().getAsJsonObject("data").get("estado").getAsBoolean();
-                Device device = new Device(id, deviceName, deviceModel, deviceImei, deviceStatus);
-                databaseAdapter.insertDevice(device);
-                deviceFragment.addDeviceToList(device);
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
-
-
+        deviceFragment.saveDevice(device);
     }
-
 
     @Override
     public void onPermissionSaved(final Permission permission) {
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String strStartDate = dateformat.format(permission.getStartDate().getTime());
         final String strEndDate = dateformat.format(permission.getEndDate().getTime());
-
         JsonObject jsonPermission = new JsonObject();
         jsonPermission.addProperty("fechainicio", strStartDate);
         jsonPermission.addProperty("fechafin", strEndDate);
         jsonPermission.addProperty("permisoid", permission.getPermissionType().getId());
-
-
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
         Call<JsonObject> permissionCall = permissionRetrofitInterface.post(pref.getString("token", null), jsonPermission);
         permissionCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                System.out.println("VIENDOOOOOOOOOOOOOOOOOOOOOOO");
-                System.out.println(response.body());
-
-
                 int id = response.body().getAsJsonObject("data").get("id").getAsInt();
                 String strStartDate = response.body().getAsJsonObject("data").get("fechainicio").getAsString();
                 String strEndDate = response.body().getAsJsonObject("data").get("fechafin").getAsString();
                 int idPermission = Integer.parseInt(response.body().getAsJsonObject("data").get("permisoid").getAsString());
                 String strPermissionStatus = response.body().getAsJsonObject("data").get("estado").getAsString();
-
                 String[] arrayStartDateTime = strStartDate.split(" ");
                 String[] arrayStartTime = arrayStartDateTime[1].split(":");
                 String[] arrayStartDate = arrayStartDateTime[0].split("/");
-
                 String[] arrayEndDateTime = strEndDate.split(" ");
                 String[] arrayEndTime = arrayEndDateTime[1].split(":");
                 String[] arrayEndDate = arrayEndDateTime[0].split("/");
-
                 Calendar calendarStartDate = Calendar.getInstance();
                 calendarStartDate.set(Integer.parseInt(arrayStartDate[2]), Integer.parseInt(arrayStartDate[1]), Integer.parseInt(arrayStartDate[0]), Integer.parseInt(arrayStartTime[0]), Integer.parseInt(arrayStartTime[1]));
-
                 Calendar calendarEndDate = Calendar.getInstance();
                 calendarEndDate.set(Integer.parseInt(arrayEndDate[2]), Integer.parseInt(arrayEndDate[1]), Integer.parseInt(arrayEndDate[0]), Integer.parseInt(arrayEndTime[0]), Integer.parseInt(arrayEndTime[1]));
                 PermissionType permission = null;
@@ -525,30 +274,28 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
                     }
                 }
 
-                System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPP");
-                System.out.println(strPermissionStatus);
-                System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPP");
-
                 if (strPermissionStatus.equals("enrevision")) {
                     permissionStatus = PermissionStatus.Revisando;
                 } else if (strPermissionStatus.equals("aprobado")) {
                     permissionStatus = PermissionStatus.Aprobado;
                 } else if (strPermissionStatus.equals("rechazado")) {
                     permissionStatus = PermissionStatus.Rechazado;
-
                 }
-
                 Permission permission1 = new Permission(id, permission, permissionStatus, calendarStartDate, calendarEndDate);
                 permissionFragment.addPermissionToList(permission1);
-
-
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                showConectionErrorMessage();
             }
         });
+    }
 
+    public void showConectionErrorMessage() {
+        InformationDialog.createDialog(this);
+        InformationDialog.setTitle("Error de conexión");
+        InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
+        InformationDialog.showDialog();
     }
 }
