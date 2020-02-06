@@ -1,5 +1,6 @@
 package com.appTec.RegistrateApp.view;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
@@ -8,15 +9,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
+import com.appTec.RegistrateApp.BuildConfig;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
@@ -30,6 +35,7 @@ import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitIn
 import com.appTec.RegistrateApp.services.webServices.interfaces.LoginRetrofitInterface;
 import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionTypeRetrofitInterface;
 import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -43,6 +49,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
+
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
     //UI elements
     private ProgressBar progressBar;
@@ -89,11 +97,17 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
+            if (checkSelfPermission(permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{
+                        android.Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                }, 225);
             }
         }
-
 
     }
 
@@ -151,7 +165,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     company.setName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").toString());
                     company.setLatitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("latitud").getAsDouble());
                     company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
-                    company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsDouble());
+                    company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
                     user.setCompany(company);
                     String token = response.body().get("token").toString().replace("\"", "");
                     editor.putString("token", token);

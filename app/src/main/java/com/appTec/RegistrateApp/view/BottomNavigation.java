@@ -1,28 +1,39 @@
 package com.appTec.RegistrateApp.view;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.appTec.RegistrateApp.BuildConfig;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.models.PermissionStatus;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
+import com.appTec.RegistrateApp.services.alarmmanager.AlarmBroadcastReceiver;
+import com.appTec.RegistrateApp.services.geofence.GeofenceBroadcastReceiver;
+import com.appTec.RegistrateApp.services.geofence.GeofenceConstants;
+import com.appTec.RegistrateApp.services.geofence.GeofenceErrorMessages;
 import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
 import com.appTec.RegistrateApp.services.webServices.ApiClient;
-import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
 import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionRetrofitInterface;
+import com.appTec.RegistrateApp.util.Constants;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.assistance.AssistanceFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home.HomeFragment;
@@ -30,34 +41,54 @@ import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device.Device
 import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
 import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.activities.modals.DialogPermission;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
-import androidx.navigation.NavGraph;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.widget.Toolbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BottomNavigation extends AppCompatActivity implements DialogDevice.NoticeDialogListener, DialogPermission.PermissionDialogListener {
+public class BottomNavigation extends AppCompatActivity implements
+        DialogDevice.NoticeDialogListener,
+        DialogPermission.PermissionDialogListener,
+        OnCompleteListener<Void> {
+
+    private static final String TAG = BottomNavigation.class.getSimpleName();
+
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    private String lastExitTime;
+
+    private enum PendingGeofenceTask {
+        ADD, REMOVE, NONE
+    }
+    private PendingGeofenceTask pendingGeofenceTask = PendingGeofenceTask.NONE;
+    private GeofencingClient geofencingClient;
+    private List<Geofence> geofenceList;
+    private PendingIntent geofencePendingIntent;
 
     final Fragment homeFragment = new HomeFragment();
     final PermissionFragment permissionFragment = new PermissionFragment();
@@ -84,7 +115,6 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         //Load data
         Intent i = getIntent();
@@ -115,6 +145,17 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
         fm.beginTransaction().add(R.id.nav_host_fragment, permissionFragment, "2").hide(permissionFragment).commit();
         fm.beginTransaction().add(R.id.nav_host_fragment, homeFragment, "1").hide(homeFragment).commit();
         fm.beginTransaction().show(active).commit();
+
+        // Last exit time captured by geofencing
+        lastExitTime = getLastTimeExited();
+
+        // Setup geofencing
+        geofenceList = new ArrayList<>();
+        geofencePendingIntent = null;
+        populateGeofenceList();
+        geofencingClient = LocationServices.getGeofencingClient(this);
+
+        homeFragment.setArguments(getIntent().getExtras());
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -169,7 +210,240 @@ public class BottomNavigation extends AppCompatActivity implements DialogDevice.
                 return true;
             }
         });
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (!checkPermissions()) {
+            requestPermissions();
+        } else {
+            performPendingGeofenceTask();
+        }
+    }
+
+    private String getLastTimeExited() {
+        SharedPreferences sharedPref = getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.LAST_EXIT_TIME,
+                "");
+    }
+
+
+    /********** GEOFENCING *********/
+
+    private GeofencingRequest getGeofencingRequest() {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_EXIT);
+        builder.addGeofences(geofenceList);
+        return builder.build();
+    }
+
+    public void addGeofencesHandler() {
+        if (!checkPermissions()) {
+            pendingGeofenceTask = PendingGeofenceTask.ADD;
+            requestPermissions();
+            return;
+        }
+        addGeofences();
+    }
+
+    private void addGeofences() {
+        if (!checkPermissions()) {
+            showSnackbar(getString(R.string.insufficient_permissions));
+            return;
+        }
+
+        geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+                .addOnSuccessListener(this, aVoid ->
+                        Log.i(BottomNavigation.class.getSimpleName(), "Successfully registered geofence"))
+                .addOnFailureListener(this, e ->
+                        Log.e(BottomNavigation.class.getSimpleName(), "There was a problem registering the geofence"))
+                .addOnCompleteListener(this);
+    }
+
+    public void removeGeofencesHandler() {
+        if (!checkPermissions()) {
+            pendingGeofenceTask = PendingGeofenceTask.REMOVE;
+            requestPermissions();
+            return;
+        }
+        removeGeofences();
+    }
+
+    private void removeGeofences() {
+        if (!checkPermissions()) {
+            showSnackbar(getString(R.string.insufficient_permissions));
+            return;
+        }
+
+        geofencingClient.removeGeofences(getGeofencePendingIntent()).addOnCompleteListener(this);
+    }
+
+    @Override
+    public void onComplete(@NonNull Task<Void> task) {
+        pendingGeofenceTask = PendingGeofenceTask.NONE;
+        if (task.isSuccessful()) {
+            updateGeofencesAdded(!getGeofencesAdded());
+
+            int messageId = getGeofencesAdded() ? R.string.geofences_added :
+                    R.string.geofences_removed;
+//            Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show();
+        } else {
+            // Get the status code for the error and log it using a user-friendly message.
+            String errorMessage = GeofenceErrorMessages.getErrorString(this, task.getException());
+            Log.w(TAG, errorMessage);
+        }
+    }
+
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+        Intent intent = new Intent(this, GeofenceBroadcastReceiver.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        geofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+        return geofencePendingIntent;
+    }
+
+    private void populateGeofenceList() {
+        geofenceList.add(new Geofence.Builder()
+                .setRequestId(getClass().getSimpleName())
+                .setCircularRegion(
+                        // TODO: FIX, Company not being retrieved
+                        Constants.LATITUDE_TESTING,
+                        Constants.LONGITUDE_TESTING,
+                        100
+//                        user.getCompany().getLatitude(),
+//                        user.getCompany().getLongitude(),
+//                        user.getCompany().getRadius()
+                )
+                .setExpirationDuration(GeofenceConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build());
+    }
+
+    private void showSnackbar(final String text) {
+
+        View container = findViewById(android.R.id.content);
+        if (container != null) {
+            Snackbar.make(container, text, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    private void showSnackbar(final int mainTextStringId, final int actionStringId,
+                              View.OnClickListener listener) {
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(mainTextStringId),
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(actionStringId), listener).show();
+    }
+
+    private boolean getGeofencesAdded() {
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+                GeofenceConstants.GEOFENCES_ADDED_KEY, false);
+    }
+
+    private void updateGeofencesAdded(boolean added) {
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit()
+                .putBoolean(GeofenceConstants.GEOFENCES_ADDED_KEY, added)
+                .apply();
+    }
+
+    private void performPendingGeofenceTask() {
+        if (pendingGeofenceTask == PendingGeofenceTask.ADD) {
+            addGeofences();
+        } else if (pendingGeofenceTask == PendingGeofenceTask.REMOVE) {
+            removeGeofences();
+        }
+    }
+
+    public boolean checkPermissions() {
+        int coarseLocation = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+        int backgroundLocation = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        return coarseLocation == PackageManager.PERMISSION_GRANTED ||
+                backgroundLocation == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public void requestPermissions() {
+        boolean shouldProvideRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                        ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+
+        // Provide an additional rationale to the user. This would happen if the user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+            showSnackbar(R.string.permission_rationale, android.R.string.ok,
+                    view -> {
+                        // Request permission
+                        ActivityCompat.requestPermissions(BottomNavigation.this,
+                                new String[]{
+                                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                                },
+                                REQUEST_PERMISSIONS_REQUEST_CODE);
+                    });
+        } else {
+            Log.i(TAG, "Requesting permission");
+            // Request permission. It's possible this can be auto answered if device policy
+            // sets the permission in a given state or the user denied the permission
+            // previously and checked "Never ask again".
+            ActivityCompat.requestPermissions(BottomNavigation.this,
+                    new String[]{
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        Log.i(TAG, "onRequestPermissionResult");
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length <= 0) {
+                // If user interaction was interrupted, the permission request is cancelled and you
+                // receive empty arrays.
+                Log.i(TAG, "User interaction was cancelled.");
+            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "Permission granted.");
+                performPendingGeofenceTask();
+            } else {
+                // Permission denied.
+
+                // Notify the user via a SnackBar that they have rejected a core permission for the
+                // app, which makes the Activity useless. In a real app, core permissions would
+                // typically be best requested during a welcome-screen flow.
+                showSnackbar(R.string.permission_denied_explanation, R.string.settings,
+                        view -> {
+                            // Build intent that displays the App settings screen.
+                            Intent intent = new Intent();
+                            intent.setAction(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package",
+                                    BuildConfig.APPLICATION_ID, null);
+                            intent.setData(uri);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        });
+                pendingGeofenceTask = PendingGeofenceTask.NONE;
+            }
+        }
     }
 
 
