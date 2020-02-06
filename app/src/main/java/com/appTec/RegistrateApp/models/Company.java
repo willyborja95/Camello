@@ -8,7 +8,7 @@ public class Company implements Serializable {
     private String name;
     private double latitude;
     private double longitude;
-    private double radius;
+    private float radius;
 
     public String getName() {
         return name;
@@ -34,11 +34,11 @@ public class Company implements Serializable {
         this.longitude = longitude;
     }
 
-    public double getRadius() {
+    public float getRadius() {
         return radius;
     }
 
-    public void setRadius(double radius) {
+    public void setRadius(float radius) {
         this.radius = radius;
     }
 }
