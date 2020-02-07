@@ -166,10 +166,10 @@ public class HomeFragment extends Fragment implements
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        if (googleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this::onLocationChanged);
+    public void onStop() {
+        super.onStop();
+        if (googleApiClient.isConnected()) {
+            googleApiClient.disconnect();
         }
     }
 
