@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Assistance;
+import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.services.alarmmanager.AlarmBroadcastReceiver;
 import com.appTec.RegistrateApp.util.Constants;
@@ -75,10 +76,14 @@ public class HomeFragment extends Fragment implements
     public static final Locale LOCALE_ES = Locale.forLanguageTag("es-419");
     private HomeViewModel homeViewModel;
 
-    @BindView(R.id.timer_text) TextView timerText;
-    @BindView(R.id.calendarView) CalendarView calendarView;
-    @BindView(R.id.start_timer_btn) Button startTimerButton;
-    @BindView(R.id.map_layout) RelativeLayout mapLayout;
+    @BindView(R.id.timer_text)
+    TextView timerText;
+    @BindView(R.id.calendarView)
+    CalendarView calendarView;
+    @BindView(R.id.start_timer_btn)
+    Button startTimerButton;
+    @BindView(R.id.map_layout)
+    RelativeLayout mapLayout;
 
     private GoogleMap map;
     private LocationRequest locationRequest;
@@ -91,6 +96,11 @@ public class HomeFragment extends Fragment implements
     private AlarmManager alarmManager;
     private PendingIntent alarmIntent;
     private BottomNavigation bottomNavigationActivity;
+    private Company company = new Company();
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -204,8 +214,7 @@ public class HomeFragment extends Fragment implements
 
                 // Post server
                 updateAssistance();
-            }
-            else if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
+            } else if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
                 changeWorkingState(Constants.STATE_NOT_WORKING);
 
                 // Cancelar AlarmManager
@@ -218,14 +227,12 @@ public class HomeFragment extends Fragment implements
                 // Post server
                 updateAssistance();
             }
-        }
-        else {
+        } else {
             if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
                 changeWorkingState(Constants.STATE_NOT_WORKING);
                 // Unregister geofencing
                 bottomNavigationActivity.removeGeofencesHandler();
-            }
-            else
+            } else
                 Snackbar.make(view, "No se encuentra dentro de la empresa", Snackbar.LENGTH_SHORT).show();
         }
 
@@ -297,13 +304,12 @@ public class HomeFragment extends Fragment implements
     }
 
     public void circle() {
-        double radiusInMeters = 100;
         int strokeColor = 0xffff0000; //red outline
         int shadeColor = 0x44ff0000; //opaque red fill
 
         circle = map.addCircle (new CircleOptions()
-                .center(new LatLng(Constants.LATITUDE_TESTING, Constants.LONGITUDE_TESTING))
-                .radius(radiusInMeters)
+                .center(new LatLng(company.getLatitude(), company.getLongitude()))
+                .radius(company.getRadius())
                 .fillColor(shadeColor)
                 .strokeColor(strokeColor)
                 .strokeWidth(1));
@@ -311,27 +317,34 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("locationtesting", "lat: " + location.getLatitude() + "lon: " +
-                location.getLongitude());
-
         if (circle != null) {
             float[] distance = new float[2];
             Location.distanceBetween(location.getLatitude(), location.getLongitude(),
                     circle.getCenter().latitude, circle.getCenter().longitude, distance);
 
             // Registrar si usuario esta dentro de la empresa mientras la aplicacion esta en primer plano
-            isWithinRadius = distance[0] < circle.getRadius();
+            System.out.println("++++++++++++++++++++++");
+            System.out.println(distance[0]);
+            System.out.println((int)circle.getRadius());
+            System.out.println(company.getRadius());
+            System.out.println("++++++++++++++++++++++");
+
+            isWithinRadius = distance[0] < company.getRadius();
+
         }
     }
 
     @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) { }
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+    }
 
     @Override
-    public void onProviderEnabled(String s) { }
+    public void onProviderEnabled(String s) {
+    }
 
     @Override
-    public void onProviderDisabled(String s) { }
+    public void onProviderDisabled(String s) {
+    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {

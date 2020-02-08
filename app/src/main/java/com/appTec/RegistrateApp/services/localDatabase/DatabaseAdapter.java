@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
@@ -132,6 +133,34 @@ public class DatabaseAdapter {
         return sqLiteDatabase.delete("Device", "", null) > 0;
     }
 
+    //Company database functions
+    public boolean insertCompany(Company company){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name", company.getName());
+        contentValues.put("latitude", company.getLatitude());
+        contentValues.put("longitude", company.getLongitude());
+        contentValues.put("radius", company.getRadius());
+        return sqLiteDatabase.insert("Company", null, contentValues) > 0;
+    }
+
+    public Company getCompany(){
+        Company company = new Company();
+        Cursor cursor = sqLiteDatabase.query("Company", null, null, null, null, null, null);
+        if (cursor != null & cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(1);
+                Double latitude = cursor.getDouble(2);
+                Double longitude = cursor.getDouble(3);
+                Double radius = cursor.getDouble(4);
+                company.setName(name);
+                company.setLatitude(latitude);
+                company.setLongitude(longitude);
+                company.setRadius(radius);
+            }
+        }
+        return company;
+    }
+
     //PermissionType database functions
     public boolean insertPermissionType(PermissionType permissionType) {
         ContentValues contentValues = new ContentValues();
@@ -170,10 +199,12 @@ public class DatabaseAdapter {
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
             String loginStatusScript = "CREATE TABLE LoginStatus (id INTEGER primary key, status INTEGER)";
+            String sqlCompanyScript = "CREATE TABLE Company (id INTEGER primary key, name TEXT, latitude REAL, longitude REAL, radius REAL) ";
             String sqlUserScript = "CREATE TABLE User (id INTEGER primary key, names TEXT not null, lastnames TEXT not null, email TEXT not null) ";
             String sqlDeviceScript = "CREATE TABLE Device (id INTEGER primary key, name TEXT, model TEXT, imei TEXT, status INTEGER) ";
             String sqlPermissionTypeScript = "CREATE TABLE PermissionType (id INTEGER primary key, name TEXT) ";
             sqLiteDatabase.execSQL(loginStatusScript);
+            sqLiteDatabase.execSQL(sqlCompanyScript);
             sqLiteDatabase.execSQL(sqlUserScript);
             sqLiteDatabase.execSQL(sqlDeviceScript);
             sqLiteDatabase.execSQL(sqlPermissionTypeScript);

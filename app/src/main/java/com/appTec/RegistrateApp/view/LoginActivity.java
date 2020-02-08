@@ -92,6 +92,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         if (databaseAdapter.getLoginStatus() == 1) {
             this.device = databaseAdapter.getDevice();
             this.user = databaseAdapter.getUser();
+            this.user.setCompany(databaseAdapter.getCompany());
             this.lstPermissionType = databaseAdapter.getPermissionType();
             navidateToDashboard();
         }
@@ -171,6 +172,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     editor.putString("token", token);
                     editor.commit();
                     databaseAdapter.insertUser(user);
+                    databaseAdapter.insertCompany(company);
                     databaseAdapter.insertLoginStatus(1);
 
                     DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);

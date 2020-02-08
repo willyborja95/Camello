@@ -90,7 +90,7 @@ public class BottomNavigation extends AppCompatActivity implements
     private List<Geofence> geofenceList;
     private PendingIntent geofencePendingIntent;
 
-    final Fragment homeFragment = new HomeFragment();
+    final HomeFragment homeFragment = new HomeFragment();
     final PermissionFragment permissionFragment = new PermissionFragment();
     final DeviceFragment deviceFragment = new DeviceFragment();
     final AssistanceFragment assistanceFragment = new AssistanceFragment();
@@ -140,6 +140,7 @@ public class BottomNavigation extends AppCompatActivity implements
         getSupportActionBar().show();
 
         active = homeFragment;
+        homeFragment.setCompany(user.getCompany());
         fm.beginTransaction().add(R.id.nav_host_fragment, deviceFragment, "4").hide(deviceFragment).commit();
         fm.beginTransaction().add(R.id.nav_host_fragment, assistanceFragment, "3").hide(assistanceFragment).commit();
         fm.beginTransaction().add(R.id.nav_host_fragment, permissionFragment, "2").hide(permissionFragment).commit();
@@ -167,7 +168,7 @@ public class BottomNavigation extends AppCompatActivity implements
                         toolbar.getMenu().clear();
                         fm.beginTransaction().hide(active).show(homeFragment).commit();
                         active = homeFragment;
-                        //fragmentToolBar.setTitle("hola");
+                        homeFragment.setCompany(user.getCompany());
                         return true;
                     case R.id.navigation_assistance:
                         System.out.println("Asistencia");
@@ -316,9 +317,9 @@ public class BottomNavigation extends AppCompatActivity implements
                 .setRequestId(getClass().getSimpleName())
                 .setCircularRegion(
                         // TODO: FIX, Company not being retrieved
-                        Constants.LATITUDE_TESTING,
-                        Constants.LONGITUDE_TESTING,
-                        100
+                        user.getCompany().getLatitude(),
+                        user.getCompany().getLongitude(),
+                        (int) user.getCompany().getRadius()
 //                        user.getCompany().getLatitude(),
 //                        user.getCompany().getLongitude(),
 //                        user.getCompany().getRadius()
