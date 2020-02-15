@@ -45,8 +45,6 @@ public class PermissionListAdapter extends BaseAdapter {
         imgBtnDeletePermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Eliminando: " + lstPermission.get(position).getId());
-
                 PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
                 Call<JsonObject> permissionCall = permissionRetrofitInterface.delete(pref.getString("token", null), lstPermission.get(position).getId());
                 permissionCall.enqueue(new Callback<JsonObject>() {
@@ -67,7 +65,7 @@ public class PermissionListAdapter extends BaseAdapter {
 
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                        showConectionErrorMessage(v.getContext());
                     }
                 });
             }
@@ -104,6 +102,13 @@ public class PermissionListAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return 0;
+    }
+
+    public void showConectionErrorMessage(Context context) {
+        InformationDialog.createDialog(context);
+        InformationDialog.setTitle("Error de conexión");
+        InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
+        InformationDialog.showDialog();
     }
 
 }

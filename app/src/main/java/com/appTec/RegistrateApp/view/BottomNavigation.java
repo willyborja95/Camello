@@ -530,6 +530,10 @@ public class BottomNavigation extends AppCompatActivity implements
     @Override
     public void onPermissionSaved(final Permission permission) {
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        permission.getStartDate().getTime().setMonth(permission.getStartDate().getTime().getMonth()-1);
+        permission.getEndDate().getTime().setMonth(permission.getEndDate().getTime().getMonth()-1);
+
+
         String strStartDate = dateformat.format(permission.getStartDate().getTime());
         final String strEndDate = dateformat.format(permission.getEndDate().getTime());
         JsonObject jsonPermission = new JsonObject();

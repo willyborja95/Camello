@@ -77,6 +77,8 @@ public class DialogPermission extends DialogFragment {
                         startDate.set(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
                         strStartDate = dateformat.format(startDate.getTime());
                         txtStartDate.setText(strStartDate);
+                        startDate.add(Calendar.MONTH, -1);
+
                     }
                 }, startDate.get(Calendar.HOUR_OF_DAY), startDate.get(Calendar.MINUTE), true);//Yes 24 hour time
                 tpStartDate.hide();
@@ -98,6 +100,7 @@ public class DialogPermission extends DialogFragment {
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         System.out.println(startDate.getTime());
+                        startDate.add(Calendar.MONTH, 1);
                         strStartDate = dateformat.format(startDate.getTime());
                         txtStartDate.setText(strStartDate);
                     }
@@ -119,6 +122,7 @@ public class DialogPermission extends DialogFragment {
                         endDate.set(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
                         strEndDate = dateformat.format(endDate.getTime());
                         txtEndDate.setText(strEndDate);
+                        endDate.add(Calendar.MONTH, -1);
                     }
                 }, endDate.get(Calendar.HOUR_OF_DAY), endDate.get(Calendar.MINUTE), true);//Yes 24 hour time
                 tpEndDate.hide();
@@ -139,6 +143,7 @@ public class DialogPermission extends DialogFragment {
                 dpEndDate.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
+                        endDate.add(Calendar.MONTH, 1);
                         strEndDate = dateformat.format(endDate.getTime());
                         txtEndDate.setText(strEndDate);
                     }
@@ -176,20 +181,9 @@ public class DialogPermission extends DialogFragment {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        System.out.println("RESULTADO 1111111111111111111111111111111111111");
                         PermissionType permissionType = (PermissionType)spnPermissionType.getSelectedItem();
                         Permission permission = new Permission(permissionType, startDate, endDate);
                         listener.onPermissionSaved(permission);
-
-
-
-                        /*
-                        PermissionType permissionType1 = new PermissionType(1, "Intempestivo");
-                        Permission p1 = new Permission(permissionType1, PermissionStatus.Aprobado, new Date(), new Date());
-                        listener.onPermissionSaved(p1);
-
-                         */
-
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
