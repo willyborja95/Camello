@@ -174,6 +174,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     editor.commit();
                     databaseAdapter.insertUser(user);
                     databaseAdapter.insertCompany(company);
+                    changeWorkingState(Constants.STATE_NOT_WORKING);
                     setLoggedUser();
 
                     DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
@@ -278,6 +279,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(Constants.LOGIN_USER_STATE, Constants.LOGGED_USER);
+        editor.commit();
+    }
+
+    private void changeWorkingState(String state) {
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Constants.CURRENT_STATE, state);
         editor.commit();
     }
 

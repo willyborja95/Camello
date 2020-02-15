@@ -135,7 +135,6 @@ public class BottomNavigation extends AppCompatActivity implements
         //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.tbFragmentToolbar);
         TextView lblToolbarName = (TextView) findViewById(R.id.lblToolbarName);
-        toolbar.inflateMenu(R.menu.toolbar_close_session);
         setSupportActionBar(toolbar);
         //NavigationUI.setupWithNavController(toolbar, navController);
         //NavigationUI.setupWithNavController(bottomNavigationView, navController);
@@ -181,9 +180,6 @@ public class BottomNavigation extends AppCompatActivity implements
 
                         //--change
                         homeFragment.updateTimer();
-                        if (toolbar.getMenu().size() == 0) {
-                            toolbar.inflateMenu(R.menu.toolbar_close_session);
-                        }
                         return true;
                     case R.id.navigation_assistance:
                         System.out.println("Asistencia");
