@@ -64,15 +64,9 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             // Send notification and log the transition details.
             sendNotification(geofenceTransitionDetails);
             // Register current time as exit time
-            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.getDefault());
-            String currentDate = dateFormat.format(new Date());
-            SharedPreferences sharedPref = this.getApplication().getApplicationContext()
-                    .getSharedPreferences(
-                    Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(Constants.LAST_EXIT_TIME, currentDate);
-            editor.apply();
             Log.i(TAG, geofenceTransitionDetails);
+
+
         } else {
             // Log the error.
             Log.e(TAG, "Invalid transition");

@@ -49,11 +49,9 @@ public class PermissionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Intent i = new Intent(getContext(), DialogPermission.class);
-
-                System.out.println("Cheetah!!!!");
                 DialogPermission df = new DialogPermission();
                 df.addArrayListPerissionType(lstPermissionType);
-                df.show(getFragmentManager(), "nani");
+                df.show(getFragmentManager(), "");
             }
         });
         return root;

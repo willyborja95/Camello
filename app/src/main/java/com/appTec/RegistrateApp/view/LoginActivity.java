@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -34,6 +35,7 @@ import com.appTec.RegistrateApp.services.webServices.ApiClient;
 import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
 import com.appTec.RegistrateApp.services.webServices.interfaces.LoginRetrofitInterface;
 import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionTypeRetrofitInterface;
+import com.appTec.RegistrateApp.util.Constants;
 import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.JsonArray;
@@ -88,10 +90,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0); // 0 - for private mode
         editor = pref.edit();
 
-
-        if (databaseAdapter.getLoginStatus() == 1) {
-            this.device = databaseAdapter.getDevice();
+        if (getLoginUserStatus().equals(Constants.LOGGED_USER)) {
             this.user = databaseAdapter.getUser();
+            this.device = databaseAdapter.getDevice();
             this.user.setCompany(databaseAdapter.getCompany());
             this.lstPermissionType = databaseAdapter.getPermissionType();
             navidateToDashboard();
@@ -127,7 +128,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         UserCredential userCredential = new UserCredential(email, password);
                         showProgress();
                         login(userCredential);
-                    }else{
+                    } else {
                         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
                     }
                 }
@@ -173,7 +174,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     editor.commit();
                     databaseAdapter.insertUser(user);
                     databaseAdapter.insertCompany(company);
-                    databaseAdapter.insertLoginStatus(1);
+                    setLoggedUser();
 
                     DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
                     Call<JsonObject> deviceCall = deviceRetrofitInterface.get(token, user.getId());
@@ -181,10 +182,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             JsonArray deviceList = response.body().getAsJsonArray("data");
-                            Device device = null;
                             for (int i = 0; i < deviceList.size(); i++) {
                                 JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
-                                if (deviceImei.equals(jsonDevice.get("imei").getAsString()) && jsonDevice.get("estado").getAsBoolean() == true) {
+                                if (deviceImei.equals(jsonDevice.get("imei").getAsString())) {
                                     int deviceId = jsonDevice.get("id").getAsInt();
                                     String deviceName = jsonDevice.get("nombre").getAsString();
                                     String deviceModel = jsonDevice.get("modelo").getAsString();
@@ -194,7 +194,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     databaseAdapter.insertDevice(device);
                                 }
                             }
-                            setDevice(device);
                         }
 
                         @Override
@@ -274,8 +273,19 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         btnLogin.setEnabled(true);
     }
 
-    private void setDevice(Device device) {
-        this.device = device;
+    private void setLoggedUser() {
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Constants.LOGIN_USER_STATE, Constants.LOGGED_USER);
+        editor.commit();
+    }
+
+    private String getLoginUserStatus() {
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.LOGIN_USER_STATE,
+                "");
     }
 
     public void navidateToDashboard() {
@@ -283,7 +293,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle = new Bundle();
 
-        bundle.putSerializable("device", device);
+        if (device != null) {
+            bundle.putSerializable("device", device);
+        }
         bundle.putSerializable("user", user);
         bundle.putSerializable("lstPermissionType", lstPermissionType);
         intent.putExtras(bundle);

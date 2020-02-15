@@ -27,7 +27,7 @@ public class CurveBgRelativeLayout extends RelativeLayout {
         path = new Path();
 
         float horizontalOffset = w * .3f;
-        float top = -h * .8f;
+        float top = -h * .9f;
         float bottom = h;
 
         RectF ovalRect = new RectF(-horizontalOffset, top, w + horizontalOffset, bottom);

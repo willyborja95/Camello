@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.appTec.RegistrateApp.BuildConfig;
 import com.appTec.RegistrateApp.R;
@@ -85,6 +84,7 @@ public class BottomNavigation extends AppCompatActivity implements
     private enum PendingGeofenceTask {
         ADD, REMOVE, NONE
     }
+
     private PendingGeofenceTask pendingGeofenceTask = PendingGeofenceTask.NONE;
     private GeofencingClient geofencingClient;
     private List<Geofence> geofenceList;
@@ -116,14 +116,18 @@ public class BottomNavigation extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         //Load data
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
         user = (User) bundle.getSerializable("user");
+
+        //Hay casos en los quedevice puede venir en null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! bug
         device = (Device) bundle.getSerializable("device");
         lstPermissionType = (ArrayList<PermissionType>) bundle.get("lstPermissionType");
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
         pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0); // 0 - for private mode
+
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
         setContentView(R.layout.bottom_navigation);
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
@@ -131,6 +135,7 @@ public class BottomNavigation extends AppCompatActivity implements
         //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.tbFragmentToolbar);
         TextView lblToolbarName = (TextView) findViewById(R.id.lblToolbarName);
+        toolbar.inflateMenu(R.menu.toolbar_close_session);
         setSupportActionBar(toolbar);
         //NavigationUI.setupWithNavController(toolbar, navController);
         //NavigationUI.setupWithNavController(bottomNavigationView, navController);
@@ -157,8 +162,11 @@ public class BottomNavigation extends AppCompatActivity implements
         geofencingClient = LocationServices.getGeofencingClient(this);
 
         homeFragment.setArguments(getIntent().getExtras());
+        homeFragment.setCompany(user.getCompany());
+        homeFragment.setDevice(device);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
@@ -169,6 +177,13 @@ public class BottomNavigation extends AppCompatActivity implements
                         fm.beginTransaction().hide(active).show(homeFragment).commit();
                         active = homeFragment;
                         homeFragment.setCompany(user.getCompany());
+                        homeFragment.setDevice(device);
+
+                        //--change
+                        homeFragment.updateTimer();
+                        if (toolbar.getMenu().size() == 0) {
+                            toolbar.inflateMenu(R.menu.toolbar_close_session);
+                        }
                         return true;
                     case R.id.navigation_assistance:
                         System.out.println("Asistencia");
@@ -181,16 +196,11 @@ public class BottomNavigation extends AppCompatActivity implements
                         return true;
 
                     case R.id.navigation_permission:
-                        System.out.println("Permisos");
                         lblToolbarName.setText("Permisos");
-                        System.out.println("7777777777777777");
                         if (toolbar.getMenu().size() == 0) {
                             toolbar.inflateMenu(R.menu.toolbar_menu);
                         }
-
                         getSupportActionBar().show();
-
-
                         fm.beginTransaction().hide(active).show(permissionFragment).commit();
                         active = permissionFragment;
                         permissionFragment.addArrayListPermissionType(lstPermissionType);
@@ -200,7 +210,6 @@ public class BottomNavigation extends AppCompatActivity implements
                         lblToolbarName.setText("Equipos");
                         toolbar.getMenu().clear();
                         getSupportActionBar().show();
-
                         fm.beginTransaction().hide(active).show(deviceFragment).commit();
                         active = deviceFragment;
                         if (device != null) {
@@ -217,6 +226,7 @@ public class BottomNavigation extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
 
+
         if (!checkPermissions()) {
             requestPermissions();
         } else {
@@ -227,6 +237,8 @@ public class BottomNavigation extends AppCompatActivity implements
     private String getLastTimeExited() {
         SharedPreferences sharedPref = getSharedPreferences(
                 Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        Log.d("test12", sharedPref.getString("test",
+                ""));
         return sharedPref.getString(Constants.LAST_EXIT_TIME,
                 "");
     }
@@ -316,13 +328,9 @@ public class BottomNavigation extends AppCompatActivity implements
         geofenceList.add(new Geofence.Builder()
                 .setRequestId(getClass().getSimpleName())
                 .setCircularRegion(
-                        // TODO: FIX, Company not being retrieved
                         user.getCompany().getLatitude(),
                         user.getCompany().getLongitude(),
                         (int) user.getCompany().getRadius()
-//                        user.getCompany().getLatitude(),
-//                        user.getCompany().getLongitude(),
-//                        user.getCompany().getRadius()
                 )
                 .setExpirationDuration(GeofenceConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
@@ -497,18 +505,26 @@ public class BottomNavigation extends AppCompatActivity implements
                         }
                         permissionFragment.addPermissionList(lstPermission);
                     }
+
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
                         showConectionErrorMessage();
                     }
                 });
+                break;
+
+            case R.id.btnLogout:
+                setNotLoggedUser();
+                closeSession();
+                break;
         }
         return true;
     }
 
     @Override
     public void onDeviceSaved(Device device) {
-        deviceFragment.saveDevice(device);
+        this.device = device;
+        deviceFragment.saveDevice(this.device);
     }
 
     @Override
@@ -572,5 +588,19 @@ public class BottomNavigation extends AppCompatActivity implements
         InformationDialog.setTitle("Error de conexión");
         InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
         InformationDialog.showDialog();
+    }
+
+    private void setNotLoggedUser() {
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Constants.LOGIN_USER_STATE, Constants.NOT_LOGGED_USER);
+        editor.commit();
+    }
+
+    public void closeSession(){
+        Intent loginIntent = new Intent(getApplication(), LoginActivity.class);
+        databaseAdapter.removeData();
+        startActivity(loginIntent);
     }
 }

@@ -91,7 +91,7 @@
             android:id="@+id/txtDeviceStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Habilitado"
+            android:text="XXX"
             android:fontFamily="@font/opensans_light"
             android:textColor="@color/black100"
             android:textSize="15dp" />

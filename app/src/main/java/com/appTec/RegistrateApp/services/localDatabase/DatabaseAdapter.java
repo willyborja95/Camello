@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
@@ -33,33 +34,6 @@ public class DatabaseAdapter {
             databaseAdapterInstance = new DatabaseAdapter(context);
         }
         return databaseAdapterInstance;
-    }
-
-    //LoginStatus database functions
-    public boolean insertLoginStatus(int status) {
-        int loginStatus = 0;
-        Cursor cursor = sqLiteDatabase.query("LoginStatus", null, null, null, null, null, null);
-        //If there isn't any row, the method add a new row, else update the status row.
-        if (cursor != null & cursor.getCount() > 0) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("status", status);
-            return sqLiteDatabase.update("LoginStatus", contentValues, "id=1", null) > 0;
-        } else {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("status", status);
-            return sqLiteDatabase.insert("LoginStatus", null, contentValues) > 0;
-        }
-    }
-
-    public int getLoginStatus() {
-        int loginStatus = 0;
-        Cursor cursor = sqLiteDatabase.query("LoginStatus", null, null, null, null, null, null);
-        if (cursor != null & cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
-                loginStatus = (cursor.getInt(1));
-            }
-        }
-        return loginStatus;
     }
 
     //User database functions
@@ -149,8 +123,8 @@ public class DatabaseAdapter {
         if (cursor != null & cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String name = cursor.getString(1);
-                Double latitude = cursor.getDouble(2);
-                Double longitude = cursor.getDouble(3);
+                Double latitude = Double.valueOf(cursor.getString(2));
+                Double longitude = Double.valueOf(cursor.getString(3));
                 Double radius = cursor.getDouble(4);
                 company.setName(name);
                 company.setLatitude(latitude);
@@ -183,6 +157,13 @@ public class DatabaseAdapter {
         return lstPermissionType;
     }
 
+    public void removeData() {
+        sqLiteDatabase.delete("Company", "", null);
+        sqLiteDatabase.delete("User", "", null);
+        sqLiteDatabase.delete("Device", "", null);
+        sqLiteDatabase.delete("PermissionType", "", null);
+    }
+
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -198,12 +179,10 @@ public class DatabaseAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            String loginStatusScript = "CREATE TABLE LoginStatus (id INTEGER primary key, status INTEGER)";
-            String sqlCompanyScript = "CREATE TABLE Company (id INTEGER primary key, name TEXT, latitude REAL, longitude REAL, radius REAL) ";
-            String sqlUserScript = "CREATE TABLE User (id INTEGER primary key, names TEXT not null, lastnames TEXT not null, email TEXT not null) ";
-            String sqlDeviceScript = "CREATE TABLE Device (id INTEGER primary key, name TEXT, model TEXT, imei TEXT, status INTEGER) ";
-            String sqlPermissionTypeScript = "CREATE TABLE PermissionType (id INTEGER primary key, name TEXT) ";
-            sqLiteDatabase.execSQL(loginStatusScript);
+            String sqlCompanyScript = "CREATE TABLE IF NOT EXISTS Company (id INTEGER primary key, name TEXT, latitude TEXT, longitude TEXT, radius REAL) ";
+            String sqlUserScript = "CREATE TABLE IF NOT EXISTS User (id INTEGER primary key, names TEXT not null, lastnames TEXT not null, email TEXT not null) ";
+            String sqlDeviceScript = "CREATE TABLE IF NOT EXISTS Device (id INTEGER primary key, name TEXT, model TEXT, imei TEXT, status INTEGER) ";
+            String sqlPermissionTypeScript = "CREATE TABLE IF NOT EXISTS PermissionType (id INTEGER primary key, name TEXT) ";
             sqLiteDatabase.execSQL(sqlCompanyScript);
             sqLiteDatabase.execSQL(sqlUserScript);
             sqLiteDatabase.execSQL(sqlDeviceScript);

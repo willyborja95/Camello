@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,9 @@ public class DialogDevice extends DialogFragment {
     EditText txtDeviceName;
     EditText txtDeviceModel;
     String token;
+    SharedPreferences pref;
+    DatabaseAdapter databaseAdapter;
+    TelephonyManager telephonyManager;
 
     public interface NoticeDialogListener {
         public void onDeviceSaved(Device device);
@@ -52,12 +56,16 @@ public class DialogDevice extends DialogFragment {
         txtDeviceName = (EditText) viewDialog.findViewById(R.id.txtDeviceName);
         txtDeviceModel = (EditText) viewDialog.findViewById(R.id.txtDeviceModel);
 
+        pref = getContext().getSharedPreferences("RegistrateApp", 0);
+        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(getContext());
+        telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+
         builder.setView(viewDialog)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Device device = new Device(txtDeviceName.getText().toString(), txtDeviceModel.getText().toString());
-                        listener.onDeviceSaved(device);
+                        Device deviceDialog = new Device(txtDeviceName.getText().toString(), txtDeviceModel.getText().toString());
+                        saveDevice(deviceDialog);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -66,6 +74,48 @@ public class DialogDevice extends DialogFragment {
                     }
                 });
         return builder.create();
+    }
+
+    public void saveDevice(Device deviceDialog) {
+        String deviceImei = null;
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (getContext().checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                    deviceImei = telephonyManager.getDeviceId();
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    deviceImei = telephonyManager.getImei();
+                }
+            }
+        }
+        deviceDialog.setImei(deviceImei);
+        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
+        Call<JsonObject> call = deviceRetrofitInterface.post(pref.getString("token", null), deviceDialog);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                System.out.println(response.body());
+                if(response.code()==200){
+                    int id = response.body().getAsJsonObject("data").get("id").getAsInt();
+                    String deviceName = response.body().getAsJsonObject("data").get("nombre").getAsString();
+                    String deviceModel = response.body().getAsJsonObject("data").get("modelo").getAsString();
+                    String deviceImei = response.body().getAsJsonObject("data").get("imei").getAsString();
+                    boolean deviceStatus = response.body().getAsJsonObject("data").get("estado").getAsBoolean();
+
+                    Device device = new Device(id, deviceName, deviceModel, deviceImei, deviceStatus);
+                    databaseAdapter.insertDevice(device);
+                    listener.onDeviceSaved(device);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+
+
     }
 
     public void onAttach(Context context) {

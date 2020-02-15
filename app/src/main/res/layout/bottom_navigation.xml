@@ -25,6 +25,7 @@
             android:fontFamily="@font/nunito_bold"
             android:textColor="@color/white"
             android:textSize="15dp" />
+
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
