@@ -181,7 +181,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     databaseAdapter.insertCompany(company);
                     changeWorkingState(Constants.STATE_NOT_WORKING);
                     setLoggedUser();
-                    hideLoginProgressDialog();
 
                     DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
                     Call<JsonObject> deviceCall = deviceRetrofitInterface.get(token, user.getId());
@@ -199,6 +198,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     boolean deviceStatus = jsonDevice.get("estado").getAsBoolean();
                                     device = new Device(deviceId, deviceName, deviceModel, deviceImei, deviceStatus);
                                     databaseAdapter.insertDevice(device);
+                                    hideLoginProgressDialog();
                                 }
                             }
                         }
@@ -239,6 +239,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 
                 } else if (response.code() == 404 || response.code() == 401) {
+                    hideLoginProgressDialog();
                     showCredentialsErrorMessage();
                 }
 
