@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -59,6 +61,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private ImageButton btnLogin;
     private EditText txtEmail;
     private EditText txtPassword;
+    ProgressDialog dialog;
 
     //App elements
     private String email;
@@ -84,6 +87,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         txtPassword = (EditText) findViewById(R.id.password);
         btnLogin = (ImageButton) findViewById(R.id.loginButton);
         btnLogin.setOnClickListener(this);
+        dialog = new ProgressDialog(this);
+
         hideProgress();
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
@@ -126,7 +131,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 } else {
                     if (checkSelfPermission(permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                         UserCredential userCredential = new UserCredential(email, password);
-                        showProgress();
+                        showLoginProgressDialog("Autenticando usuario");
                         login(userCredential);
                     } else {
                         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
@@ -176,6 +181,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     databaseAdapter.insertCompany(company);
                     changeWorkingState(Constants.STATE_NOT_WORKING);
                     setLoggedUser();
+                    hideLoginProgressDialog();
 
                     DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
                     Call<JsonObject> deviceCall = deviceRetrofitInterface.get(token, user.getId());
@@ -309,6 +315,17 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         bundle.putSerializable("lstPermissionType", lstPermissionType);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    public void showLoginProgressDialog(String message) {
+        dialog.setMessage(message);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(false);
+    }
+
+    public void hideLoginProgressDialog() {
+        dialog.dismiss();
     }
 
 }
