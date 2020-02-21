@@ -20,18 +20,15 @@ public class DeviceListAdapter extends BaseAdapter {
     public DeviceListAdapter(Context context, ArrayList<Device> lstDevices ){
         this.context = context;
         this.lstDevices = lstDevices;
-        layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final View view = layoutInflater.inflate(R.layout.device_element, null);
-        TextView txtDeviceName = (TextView) view.findViewById(R.id.txtDeviceName);
-        TextView txtDeviceModel = (TextView) view.findViewById(R.id.txtDeviceModel);
-        TextView txtDeviceImei = (TextView) view.findViewById(R.id.txtDeviceImei);
-        TextView txtDeviceStatus = (TextView) view.findViewById(R.id.txtDeviceStatus);
+        convertView = LayoutInflater.from(context).inflate(R.layout.device_element, null);
+        TextView txtDeviceName = (TextView) convertView.findViewById(R.id.txtDeviceName);
+        TextView txtDeviceModel = (TextView) convertView.findViewById(R.id.txtDeviceModel);
+        TextView txtDeviceImei = (TextView) convertView.findViewById(R.id.txtDeviceImei);
+        TextView txtDeviceStatus = (TextView) convertView.findViewById(R.id.txtDeviceStatus);
 
         txtDeviceName.setText(lstDevices.get(position).getNombre());
         txtDeviceModel.setText(lstDevices.get(position).getModelo());
@@ -42,7 +39,7 @@ public class DeviceListAdapter extends BaseAdapter {
             txtDeviceStatus.setText("Deshabilitado");
         }
 
-        return view;
+        return convertView;
     }
 
     @Override
@@ -52,7 +49,7 @@ public class DeviceListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return lstDevices.get(position);
     }
 
     @Override

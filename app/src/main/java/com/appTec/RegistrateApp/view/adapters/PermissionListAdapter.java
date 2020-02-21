@@ -34,14 +34,13 @@ public class PermissionListAdapter extends BaseAdapter {
     public PermissionListAdapter(Context context, ArrayList<Permission> lstPermission) {
         this.context = context;
         this.lstPermission = lstPermission;
-        layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final View view = layoutInflater.inflate(R.layout.permission_element, null);
-        pref = view.getContext().getSharedPreferences("RegistrateApp", 0);
-        ImageButton imgBtnDeletePermission = (ImageButton) view.findViewById(R.id.btnDeletePermission);
+        convertView = LayoutInflater.from(context).inflate(R.layout.permission_element, null);
+        pref = convertView.getContext().getSharedPreferences("RegistrateApp", 0);
+        ImageButton imgBtnDeletePermission = (ImageButton) convertView.findViewById(R.id.btnDeletePermission);
         imgBtnDeletePermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +55,7 @@ public class PermissionListAdapter extends BaseAdapter {
                             lstPermission.remove(position);
                             notifyDataSetChanged();
                         }else{
-                            InformationDialog.createDialog(view.getContext());
+                            InformationDialog.createDialog(context);
                             InformationDialog.setTitle("Error");
                             InformationDialog.setMessage("No ha sido posible eliminar el permiso.");
                             InformationDialog.showDialog();
@@ -72,12 +71,12 @@ public class PermissionListAdapter extends BaseAdapter {
         });
 
 
-        TextView txtPermissionType = (TextView) view.findViewById(R.id.txtPermissionType);
-        TextView txtPermissionStatus = (TextView) view.findViewById(R.id.txtPermissionStatus);
-        TextView txtPermissionStartDate = (TextView) view.findViewById(R.id.txtStartDate);
-        TextView txtPermissionStartTime = (TextView) view.findViewById(R.id.txtStartTime);
-        TextView txtPermissionEndDate = (TextView) view.findViewById(R.id.txtEndDate);
-        TextView txtPermissionEndTime = (TextView) view.findViewById(R.id.txtEndTime);
+        TextView txtPermissionType = (TextView) convertView.findViewById(R.id.txtPermissionType);
+        TextView txtPermissionStatus = (TextView) convertView.findViewById(R.id.txtPermissionStatus);
+        TextView txtPermissionStartDate = (TextView) convertView.findViewById(R.id.txtStartDate);
+        TextView txtPermissionStartTime = (TextView) convertView.findViewById(R.id.txtStartTime);
+        TextView txtPermissionEndDate = (TextView) convertView.findViewById(R.id.txtEndDate);
+        TextView txtPermissionEndTime = (TextView) convertView.findViewById(R.id.txtEndTime);
         String[] strStartDateTime = dateformat.format(lstPermission.get(position).getStartDate().getTime()).split(" ");
         String[] strEndDateTime = dateformat.format(lstPermission.get(position).getEndDate().getTime()).split(" ");
         txtPermissionType.setText(lstPermission.get(position).getPermissionType().toString());
@@ -86,7 +85,7 @@ public class PermissionListAdapter extends BaseAdapter {
         txtPermissionStartTime.setText(strStartDateTime[1]);
         txtPermissionEndDate.setText(strEndDateTime[0]);
         txtPermissionEndTime.setText(strEndDateTime[1]);
-        return view;
+        return convertView;
     }
 
     @Override

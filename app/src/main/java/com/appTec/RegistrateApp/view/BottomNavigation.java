@@ -14,8 +14,11 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.appTec.RegistrateApp.BuildConfig;
@@ -50,6 +53,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -58,9 +62,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -74,12 +81,14 @@ import retrofit2.Response;
 public class BottomNavigation extends AppCompatActivity implements
         DialogDevice.NoticeDialogListener,
         DialogPermission.PermissionDialogListener,
+        NavigationView.OnNavigationItemSelectedListener,
         OnCompleteListener<Void> {
 
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private String lastExitTime;
+
 
     private enum PendingGeofenceTask {
         ADD, REMOVE, NONE
@@ -90,12 +99,12 @@ public class BottomNavigation extends AppCompatActivity implements
     private List<Geofence> geofenceList;
     private PendingIntent geofencePendingIntent;
 
-    final HomeFragment homeFragment = new HomeFragment();
-    final PermissionFragment permissionFragment = new PermissionFragment();
+    final HomeFragment homeFragment = HomeFragment.newInstance();
+    final PermissionFragment permissionFragment = PermissionFragment.newInstance();
     final DeviceFragment deviceFragment = new DeviceFragment();
     final AssistanceFragment assistanceFragment = new AssistanceFragment();
-    Fragment active;
-    final FragmentManager fm = getSupportFragmentManager();
+
+
     TelephonyManager telephonyManager;
     SharedPreferences pref;
     DatabaseAdapter databaseAdapter;
@@ -103,6 +112,10 @@ public class BottomNavigation extends AppCompatActivity implements
     //UI components
     ActionBar mainActionBar;
     Toolbar fragmentToolBar;
+    private DrawerLayout drawer;
+    private TextView companyName;
+    private TextView userFullName;
+
 
 
     //User data
@@ -111,10 +124,10 @@ public class BottomNavigation extends AppCompatActivity implements
     ArrayList<PermissionType> lstPermissionType;
     ArrayList<Permission> lstPermission = new ArrayList<Permission>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.bottom_navigation);
 
 
         //Load data
@@ -124,13 +137,66 @@ public class BottomNavigation extends AppCompatActivity implements
 
         //Hay casos en los quedevice puede venir en null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! bug
         device = (Device) bundle.getSerializable("device");
+        Log.d("deviceImei", "device received");
+        if(device!=null){
+            Log.d("deviceImei", device.getImei());
+        }else{
+            Log.d("deviceImei", "Device is null");
+
+        }
+
+
         lstPermissionType = (ArrayList<PermissionType>) bundle.get("lstPermissionType");
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
-        pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0); // 0 - for private mode
+        pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0);
+
+
+
+
+
 
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
-        setContentView(R.layout.bottom_navigation);
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
+
+
+        drawer = findViewById(R.id.drawer_layout);
+
+
+
+
+        NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer);
+
+
+        View viewNavHeader = drawerNavigationView.getHeaderView(0);
+        companyName = (TextView) viewNavHeader.findViewById(R.id.company_name);
+        userFullName = (TextView) viewNavHeader.findViewById(R.id.user_fullname);
+        companyName.setText(user.getCompany().getName());
+        userFullName.setText(user.getNombres()+" "+user.getApellidos());
+
+
+
+        drawerNavigationView.setNavigationItemSelectedListener(this);
+
+
+
+
+
+
+
+
+
+
+
+
+        ImageButton menuRight = findViewById(R.id.leftRight);
+        menuRight.setOnClickListener(v -> {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
+
 
         //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.tbFragmentToolbar);
@@ -143,14 +209,6 @@ public class BottomNavigation extends AppCompatActivity implements
         lblToolbarName.setText("Panel Principal");
         getSupportActionBar().show();
 
-        active = homeFragment;
-        homeFragment.setCompany(user.getCompany());
-        fm.beginTransaction().add(R.id.nav_host_fragment, deviceFragment, "4").hide(deviceFragment).commit();
-        fm.beginTransaction().add(R.id.nav_host_fragment, assistanceFragment, "3").hide(assistanceFragment).commit();
-        fm.beginTransaction().add(R.id.nav_host_fragment, permissionFragment, "2").hide(permissionFragment).commit();
-        fm.beginTransaction().add(R.id.nav_host_fragment, homeFragment, "1").hide(homeFragment).commit();
-        fm.beginTransaction().show(active).commit();
-
         // Last exit time captured by geofencing
         lastExitTime = getLastTimeExited();
 
@@ -160,59 +218,68 @@ public class BottomNavigation extends AppCompatActivity implements
         populateGeofenceList();
         geofencingClient = LocationServices.getGeofencingClient(this);
 
+
+        homeFragment.setCompany(user.getCompany());
         homeFragment.setArguments(getIntent().getExtras());
         homeFragment.setCompany(user.getCompany());
         homeFragment.setDevice(device);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.nav_host_fragment, homeFragment);
+        ft.commit();
 
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_home:
-                        System.out.println("Dashboard");
+                        ft.replace(R.id.nav_host_fragment, homeFragment);
                         lblToolbarName.setText("Panel Principal");
                         toolbar.getMenu().clear();
-                        fm.beginTransaction().hide(active).show(homeFragment).commit();
-                        active = homeFragment;
                         homeFragment.setCompany(user.getCompany());
                         homeFragment.setDevice(device);
-
-                        //--change
-                        homeFragment.updateTimer();
-                        return true;
+                        break;
                     case R.id.navigation_assistance:
                         System.out.println("Asistencia");
                         lblToolbarName.setText("Historial");
                         toolbar.getMenu().clear();
                         getSupportActionBar().show();
-
-                        fm.beginTransaction().hide(active).show(assistanceFragment).commit();
-                        active = assistanceFragment;
-                        return true;
+                        ft.replace(R.id.nav_host_fragment, assistanceFragment);
+                        break;
 
                     case R.id.navigation_permission:
+                        Bundle userBundle = new Bundle();
+                        userBundle.putSerializable("user", user);
+                        permissionFragment.setArguments(userBundle);
+                        ft.replace(R.id.nav_host_fragment, permissionFragment);
+
                         lblToolbarName.setText("Permisos");
                         if (toolbar.getMenu().size() == 0) {
                             toolbar.inflateMenu(R.menu.toolbar_menu);
                         }
                         getSupportActionBar().show();
-                        fm.beginTransaction().hide(active).show(permissionFragment).commit();
-                        active = permissionFragment;
                         permissionFragment.addArrayListPermissionType(lstPermissionType);
-                        return true;
+                        break;
                     case R.id.navigation_device:
-                        System.out.println("Equipos");
+                        Bundle deviceBundle = new Bundle();
+                        deviceBundle.putSerializable("device", device);
+                        deviceFragment.setArguments(deviceBundle);
+                        ft.replace(R.id.nav_host_fragment, deviceFragment);
+
                         lblToolbarName.setText("Equipos");
                         toolbar.getMenu().clear();
                         getSupportActionBar().show();
-                        fm.beginTransaction().hide(active).show(deviceFragment).commit();
-                        active = deviceFragment;
-                        if (device != null) {
-                            deviceFragment.addDeviceToList(device);
-                        }
-                        return true;
+//
+//                        if (device != null) {
+//                            deviceFragment.addDeviceToList(device);
+//                        }
+                        break;
                 }
+                Log.d("isAttached", "Preparando commit !");
+                ft.commit();
+                Log.d("isAttached", "Commit done !");
                 return true;
             }
         });
@@ -445,6 +512,7 @@ public class BottomNavigation extends AppCompatActivity implements
                             intent.setData(uri);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+                            finish();
                         });
                 pendingGeofenceTask = PendingGeofenceTask.NONE;
             }
@@ -599,8 +667,35 @@ public class BottomNavigation extends AppCompatActivity implements
     }
 
     public void closeSession(){
-        Intent loginIntent = new Intent(getApplication(), LoginActivity.class);
+        Intent loginIntent = new Intent(BottomNavigation.this, LoginActivity.class);
         databaseAdapter.removeData();
+        setNotLoggedUser();
         startActivity(loginIntent);
+        finish();
+    }
+
+    //Drawer Item selectede logic
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        drawer.closeDrawer(GravityCompat.START);
+        switch (menuItem.getItemId()){
+            case R.id.politica_privacidad:
+                Intent policiesIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/POLI%CC%81TICA_DE_PRIVACIDAD_APP_REGISTRATE.pdf"));
+                startActivity(policiesIntent);
+                finish();
+
+                break;
+
+            case R.id.manual_usuario:
+                Intent guideIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/Manual_de_Usuario.pdf"));
+                startActivity(guideIntent);
+                finish();
+                break;
+
+            case R.id.cerrar_sesion:
+                closeSession();
+                break;
+        }
+        return true;
     }
 }

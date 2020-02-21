@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +47,8 @@ import com.google.gson.JsonObject;
 import android.Manifest.permission;
 
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -57,7 +60,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
     //UI elements
-    private ProgressBar progressBar;
     private ImageButton btnLogin;
     private EditText txtEmail;
     private EditText txtPassword;
@@ -82,14 +84,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         setContentView(R.layout.login_activity);
         lstPermissionType = new ArrayList<PermissionType>();
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         txtEmail = (EditText) findViewById(R.id.email);
         txtPassword = (EditText) findViewById(R.id.password);
         btnLogin = (ImageButton) findViewById(R.id.loginButton);
         btnLogin.setOnClickListener(this);
         dialog = new ProgressDialog(this);
 
-        hideProgress();
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
         pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0); // 0 - for private mode
@@ -133,6 +133,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         UserCredential userCredential = new UserCredential(email, password);
                         showLoginProgressDialog("Autenticando usuario");
                         login(userCredential);
+                        Log.d("demo", "demostracion");
                     } else {
                         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
                     }
@@ -166,10 +167,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     Company company = new Company();
                     ArrayList<WorkingPeriod> workingPeriodList = new ArrayList<WorkingPeriod>();
                     user.setId(response.body().getAsJsonObject("data").get("id").getAsInt());
-                    user.setNombres(response.body().getAsJsonObject("data").get("nombres").toString());
-                    user.setApellidos(response.body().getAsJsonObject("data").get("apellidos").toString());
-                    user.setEmail(response.body().getAsJsonObject("data").get("email").toString());
-                    company.setName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").toString());
+                    user.setNombres(response.body().getAsJsonObject("data").get("nombres").getAsString());
+                    user.setApellidos(response.body().getAsJsonObject("data").get("apellidos").getAsString());
+                    user.setEmail(response.body().getAsJsonObject("data").get("email").getAsString());
+                    company.setName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").getAsString());
                     company.setLatitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("latitud").getAsDouble());
                     company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
                     company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
@@ -188,16 +189,27 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             JsonArray deviceList = response.body().getAsJsonArray("data");
-                            for (int i = 0; i < deviceList.size(); i++) {
+                            boolean deviceFound = false;
+                            for (int i = 0; i < deviceList.size() && deviceFound == false; i++) {
                                 JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
+                                Log.d("deviceImei", jsonDevice.get("imei").getAsString());
+
                                 if (deviceImei.equals(jsonDevice.get("imei").getAsString())) {
+                                    Log.d("deviceImei", "dispositivo agregado");
+
                                     int deviceId = jsonDevice.get("id").getAsInt();
                                     String deviceName = jsonDevice.get("nombre").getAsString();
                                     String deviceModel = jsonDevice.get("modelo").getAsString();
                                     String deviceImei = jsonDevice.get("imei").getAsString();
                                     boolean deviceStatus = jsonDevice.get("estado").getAsBoolean();
+                                    Log.d("deviceImei", "Device info: "+deviceId+" "+deviceName+" "+deviceModel+" "+deviceImei+" "+deviceStatus);
+
                                     device = new Device(deviceId, deviceName, deviceModel, deviceImei, deviceStatus);
-                                    databaseAdapter.insertDevice(device);
+                                    boolean res = databaseAdapter.insertDevice(device);
+                                    Log.d("deviceImei", "Almacenado: "+res);
+
+
+                                    deviceFound = true;
                                     hideLoginProgressDialog();
                                 }
                             }
@@ -237,27 +249,40 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         }
                     });
 
-
                 } else if (response.code() == 404 || response.code() == 401) {
                     hideLoginProgressDialog();
                     showCredentialsErrorMessage();
+                } else if(response.code() == 502 ) {
+                    hideLoginProgressDialog();
+                    showErrorMessage("Se produjo un problema con el servidor, por favor intentelo de nuevo.");
+                }else {
+                    hideLoginProgressDialog();
+                    try {
+                        JSONObject errorJson = new JSONObject(response.errorBody().string());
+                        showErrorMessage(errorJson.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-
-                System.out.println(response.toString());
-
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("server", "error en el server");
                 showConectionErrorMessage();
             }
 
         });
     }
 
-    public void showProgress() {
-        btnLogin.setEnabled(false);
-        progressBar.setVisibility(View.VISIBLE);
+
+
+
+    public void showErrorMessage(String error) {
+        InformationDialog.createDialog(this);
+        InformationDialog.setTitle("Error");
+        InformationDialog.setMessage(error);
+        InformationDialog.showDialog();
     }
 
     public void showCredentialsErrorMessage() {
@@ -265,7 +290,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         InformationDialog.setTitle("Autenticación fallida");
         InformationDialog.setMessage("El usuario y contraseña proporcionados no son correctos.");
         InformationDialog.showDialog();
-        hideProgress();
     }
 
     public void showConectionErrorMessage() {
@@ -273,12 +297,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         InformationDialog.setTitle("Error de conexión");
         InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
         InformationDialog.showDialog();
-        hideProgress();
-    }
-
-    public void hideProgress() {
-        progressBar.setVisibility(View.GONE);
-        btnLogin.setEnabled(true);
     }
 
     private void setLoggedUser() {
@@ -310,12 +328,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         Bundle bundle = new Bundle();
 
         if (device != null) {
+            Log.d("deviceImei", "Device is null before passing to dashbard!");
+
             bundle.putSerializable("device", device);
         }
         bundle.putSerializable("user", user);
         bundle.putSerializable("lstPermissionType", lstPermissionType);
         intent.putExtras(bundle);
         startActivity(intent);
+        finish();
     }
 
     public void showLoginProgressDialog(String message) {

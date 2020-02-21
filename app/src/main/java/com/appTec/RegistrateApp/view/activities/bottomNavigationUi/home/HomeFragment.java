@@ -2,9 +2,11 @@ package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -92,84 +94,56 @@ public class HomeFragment extends Fragment implements
     CalendarView calendarView;
     @BindView(R.id.start_timer_btn)
     Button startTimerButton;
-    @BindView(R.id.map_layout)
-    RelativeLayout mapLayout;
 
-    private GoogleMap map;
+
     private LocationRequest locationRequest;
     private GoogleApiClient googleApiClient;
     private Circle circle;
 
-    private FragmentActivity context;
+    private Context context;
     private static boolean isWithinRadius;
 
-    private AlarmManager alarmManager;
-    private PendingIntent alarmIntent;
+    //private AlarmManager alarmManager;
+    //private PendingIntent alarmIntent;
     private BottomNavigation bottomNavigationActivity;
     private Company company = new Company();
     private SharedPreferences pref;
-    private Location location;
+    private Location location = new Location("");
     ProgressDialog dialog;
     Device device;
 
-
-    public void setDevice(Device device) {
-        this.device = device;
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
-    }
+    /*
+    =======================================
+    FRAGMENT LYFICYCLE METHODS
+    =======================================
+     */
 
-    public void updateTimer() {
-        if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
-
-            TimeRetrofit timeRetrofit = ApiClient.getClient().create(TimeRetrofit.class);
-
-            Call<JsonObject> timeCall = timeRetrofit.get(pref.getString("token", null));
-            timeCall.enqueue(new Callback<JsonObject>() {
-                @Override
-                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    if ((response.code() == 200) && (response != null)) {
-                        Log.d("time", response.body().toString());
-                        JsonObject timeJson = response.body().get("data").getAsJsonObject();
-                        long workingTimeMilis = 0;
-                        if (timeJson.has("tiempoLaborado")) {
-                            String workingTime = timeJson.get("tiempoLaborado").getAsString();
-                            int hours = Integer.valueOf(workingTime.split(":")[0]);
-                            int minutes = Integer.valueOf(workingTime.split(":")[1]);
-                            int seconds = Integer.valueOf(workingTime.split(":")[2]);
-                            workingTimeMilis = TimeUnit.HOURS.toMillis(hours) + TimeUnit.MINUTES.toMillis(minutes) + TimeUnit.SECONDS.toMillis(seconds);
-                        }
-                        timer.setBase(SystemClock.elapsedRealtime() - workingTimeMilis);
-                        timer.start();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                }
-            });
-
-
-        }
+    //Create methods
+    @Override
+    public void onAttach(Context context) {
+        Log.d("isAttached", "Si esta attachado!");
+        super.onAttach(context);
+        this.context = (Context) context;
+        pref = this.context.getSharedPreferences("RegistrateApp", 0);
+        this.updateTimer();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        AndroidThreeTen.init(getContext());
+        AndroidThreeTen.init(getActivity());
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        pref = getContext().getSharedPreferences("RegistrateApp", 0);
         ButterKnife.bind(this, root);
 
         timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
@@ -223,7 +197,7 @@ public class HomeFragment extends Fragment implements
                 container.getMonthText().setText(monthYearTxt);
                 // Week scroll buttons
                 container.getLeftMonthButton().setOnClickListener(view -> {
-                    Toast.makeText(getContext(), "<-", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "<-", Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -243,9 +217,22 @@ public class HomeFragment extends Fragment implements
     }
 
     @Override
-    public void onAttach(@NonNull Activity activity) {
-        context = (FragmentActivity) activity;
-        super.onAttach(activity);
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("visible", "now is visible!");
+        updateTimer();
+    }
+
+    //Ending methods
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.context = null;
     }
 
     @Override
@@ -256,75 +243,117 @@ public class HomeFragment extends Fragment implements
         }
     }
 
+
+    /*
+    =======================================
+    LOCATION METHODS
+    =======================================
+     */
+
+    protected synchronized void buildGoogleApiClient() {
+        Log.d("testgps", "build google apli client!!");
+        googleApiClient = new GoogleApiClient.Builder(this.context)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("visible", "now is visible!");
-        setUpMapIfNeeded();
-        updateTimer();
+    public void onMapReady(GoogleMap googleMap) {
     }
 
-    public void showDeviceNotRegisteredMessage() {
-        InformationDialog.createDialog(getActivity());
-        InformationDialog.setTitle("Equipo no registrado");
-        InformationDialog.setMessage("Para registrar asistencia, porfavor registre el equipo en la sección de equipos.");
-        InformationDialog.showDialog();
+
+    @Override
+    public void onLocationChanged(Location location) {
+        float[] distance = new float[2];
+        Location.distanceBetween(location.getLatitude(), location.getLongitude(),
+                company.getLatitude(), company.getLongitude(), distance);
+        this.location = location;
+        isWithinRadius = distance[0] < company.getRadius();
     }
 
-    public void showProgressDialog(String message) {
-        dialog.setMessage(message);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.show();
-        dialog.setCanceledOnTouchOutside(false);
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
     }
 
-    public void dimissEntranceDialog() {
-        dialog.dismiss();
+    @Override
+    public void onProviderEnabled(String s) {
     }
 
-    @OnClick(R.id.start_timer_btn)
-    public void startTimer(View view) {
-        // Identificar si el usuario se encuentra dentro de la empresa
-        if (isWithinRadius) {
-            //Change to working status
-            if (this.device != null) {
-                String lastTimeExited = getLastTimeExited();
-                boolean timerIsRunning = timer.getText()!="00:00:00";
-                if ((getCurrentWorkingState().equals(Constants.STATE_NOT_WORKING)) && !lastTimeExited.equals("") && timerIsRunning) {
-                    Log.d("log", "salida pendiente de sicronizacion");
-                    Log.d("log",  getLastTimeExited());
-                    bottomNavigationActivity.removeGeofencesHandler();
-                    showExitMessage();
-                    startTimerButton.setText(getButtonTextForState(getCurrentWorkingState()));
-                    timer.stop();
-                    timer.setText("00:00:00");
-                } else if (getCurrentWorkingState().equals(Constants.STATE_NOT_WORKING)) {
-                    showProgressDialog("Registrando su entrada ...");
-                    // Post server
-                    if (lastTimeExited.equals("")) {
-                        Log.d("log", "Registrar entrada");
-                        registerEntry();
-                    } else {
-                        Log.d("log", "Registrar entrada");
-                        Log.d("log", "hora salida previa");
-                        Log.d("log", lastTimeExited);
-                        Log.d("log", "fin hora salida previa");
-                        syncAssistances(lastTimeExited);
+    @Override
+    public void onProviderDisabled(String s) {
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10);
+        locationRequest.setFastestInterval(10);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        locationRequest.setSmallestDisplacement(0.1F);
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this::onLocationChanged);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+//        Toast.makeText(getContext(), "connection suspended", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+//        Toast.makeText(getContext(), "connection failed", Toast.LENGTH_SHORT).show();
+    }
+
+
+    /*
+    =======================================
+    BUSINESS LOGIC METHODS
+    =======================================
+     */
+
+    //Business logic methods
+    public void setDevice(Device device) {
+        this.device = device;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public void updateTimer() {
+        if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
+
+            TimeRetrofit timeRetrofit = ApiClient.getClient().create(TimeRetrofit.class);
+
+            Call<JsonObject> timeCall = timeRetrofit.get(pref.getString("token", null));
+            timeCall.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if ((response.code() == 200) && (response != null)) {
+                        Log.d("time", response.body().toString());
+                        JsonObject timeJson = response.body().get("data").getAsJsonObject();
+                        long workingTimeMilis = 0;
+                        if (timeJson.has("tiempoLaborado")) {
+                            String workingTime = timeJson.get("tiempoLaborado").getAsString();
+                            int hours = Integer.valueOf(workingTime.split(":")[0]);
+                            int minutes = Integer.valueOf(workingTime.split(":")[1]);
+                            int seconds = Integer.valueOf(workingTime.split(":")[2]);
+                            workingTimeMilis = TimeUnit.HOURS.toMillis(hours) + TimeUnit.MINUTES.toMillis(minutes) + TimeUnit.SECONDS.toMillis(seconds);
+                        }
+                        timer.setBase(SystemClock.elapsedRealtime() - workingTimeMilis);
+                        timer.start();
                     }
-                } else if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
-                    Log.d("test", "saliendo con post");
-                    //Post server
-                    registerExit();
                 }
-            } else {
-                showDeviceNotRegisteredMessage();
-            }
 
-        } else {
-            showOutRangeMessage();
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                }
+            });
         }
-
-
     }
 
     private void syncAssistances(String lastTimeExited) {
@@ -353,7 +382,7 @@ public class HomeFragment extends Fragment implements
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                InformationDialog.createDialog(getContext());
+                InformationDialog.createDialog(getActivity());
                 InformationDialog.setTitle("Error de conexión");
                 InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
                 InformationDialog.showDialog();
@@ -423,7 +452,7 @@ public class HomeFragment extends Fragment implements
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                InformationDialog.createDialog(getContext());
+                InformationDialog.createDialog(getActivity());
                 InformationDialog.setTitle("Error de conexión");
                 InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
                 InformationDialog.showDialog();
@@ -462,7 +491,7 @@ public class HomeFragment extends Fragment implements
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                InformationDialog.createDialog(getContext());
+                InformationDialog.createDialog(getActivity());
                 InformationDialog.setTitle("Error de conexión");
                 InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
                 InformationDialog.showDialog();
@@ -474,30 +503,30 @@ public class HomeFragment extends Fragment implements
     }
 
     private String getLastTimeExited() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
+        SharedPreferences sharedPref = this.context.getSharedPreferences(
                 Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
         return sharedPref.getString(Constants.LAST_EXIT_TIME,
                 "");
     }
 
     private void removeLastTimeExited() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
+        SharedPreferences sharedPref = this.context.getSharedPreferences(
                 Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
         sharedPref.edit().remove(Constants.LAST_EXIT_TIME).commit();
     }
 
+    private String getCurrentWorkingState() {
+        SharedPreferences sharedPref = this.context.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.CURRENT_STATE, "");
+    }
+
     private void changeWorkingState(String state) {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
+        SharedPreferences sharedPref = this.context.getSharedPreferences(
                 Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(Constants.CURRENT_STATE, state);
         editor.commit();
-    }
-
-    private String getCurrentWorkingState() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.CURRENT_STATE,"");
     }
 
     private String getButtonTextForState(String workingState) {
@@ -506,143 +535,101 @@ public class HomeFragment extends Fragment implements
         return "Iniciar";
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(getContext())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
 
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (map == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            MapFragment mapFragment = (MapFragment) context.getFragmentManager()
-                    .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-            // Check if we were successful in obtaining the map.
-            if (map != null) {
-                setUpMap();
+    //Layout GUI methods
+
+    @OnClick(R.id.start_timer_btn)
+    public void startTimer(View view) {
+        Log.d("userLoc", "Comapny values");
+        Log.d("userLoc", String.valueOf(this.company.getLatitude()));
+        Log.d("userLoc", String.valueOf(this.company.getLongitude()));
+        // Identificar si el usuario se encuentra dentro de la empresa
+        if (isWithinRadius) {
+            //Change to working status
+            if (this.device != null) {
+                String lastTimeExited = getLastTimeExited();
+                boolean timerIsRunning = timer.getText() != "00:00:00";
+                if ((getCurrentWorkingState().equals(Constants.STATE_NOT_WORKING)) && !lastTimeExited.equals("") && timerIsRunning) {
+                    bottomNavigationActivity.removeGeofencesHandler();
+                    showExitMessage();
+                    startTimerButton.setText(getButtonTextForState(getCurrentWorkingState()));
+                    timer.stop();
+                    timer.setText("00:00:00");
+                } else if (getCurrentWorkingState().equals(Constants.STATE_NOT_WORKING)) {
+                    showProgressDialog("Registrando su entrada ...");
+                    // Post server
+                    if (lastTimeExited.equals("")) {
+                        registerEntry();
+                    } else {
+                        syncAssistances(lastTimeExited);
+                    }
+                } else if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
+                    Log.d("test", "saliendo con post");
+                    //Post server
+                    registerExit();
+                }
+            } else {
+                showDeviceNotRegisteredMessage();
             }
+
+        } else {
+            showOutRangeMessage();
         }
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-        setUpMap();
+
+    //Dialogs
+
+    public void showProgressDialog(String message) {
+        dialog.setMessage(message);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(false);
     }
 
-    private void setUpMap() {
-        map.getUiSettings().setMapToolbarEnabled(true);
-        map.getUiSettings().setZoomControlsEnabled(true);
-        map.setMyLocationEnabled(true);
-
-        circle();
-    }
-
-    public void circle() {
-        int strokeColor = 0xffff0000; //red outline
-        int shadeColor = 0x44ff0000; //opaque red fill
-
-        circle = map.addCircle(new CircleOptions()
-                .center(new LatLng(company.getLatitude(), company.getLongitude()))
-                .radius(company.getRadius())
-                .fillColor(shadeColor)
-                .strokeColor(strokeColor)
-                .strokeWidth(1));
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if (circle != null) {
-            float[] distance = new float[2];
-            Location.distanceBetween(location.getLatitude(), location.getLongitude(),
-                    circle.getCenter().latitude, circle.getCenter().longitude, distance);
-            this.location = location;
-            isWithinRadius = distance[0] < company.getRadius();
-
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        locationRequest = new LocationRequest();
-        locationRequest.setInterval(10);
-        locationRequest.setFastestInterval(10);
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        locationRequest.setSmallestDisplacement(0.1F);
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this::onLocationChanged);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-//        Toast.makeText(getContext(), "connection suspended", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-//        Toast.makeText(getContext(), "connection failed", Toast.LENGTH_SHORT).show();
-    }
-
-    @OnClick(R.id.open_map)
-    protected void openMap(View view) {
-        mapLayout.setVisibility(View.VISIBLE);
-    }
-
-    @OnClick(R.id.close_map)
-    protected void closeMap(View view) {
-        mapLayout.setVisibility(View.INVISIBLE);
+    public void dimissEntranceDialog() {
+        dialog.dismiss();
     }
 
     private void showOutRangeMessage() {
-        InformationDialog.createDialog(getActivity());
-        InformationDialog.setTitle("Fuera de los límites de la empresa");
-        InformationDialog.setMessage("Para registrar asistencia, por favor diríjase a la empresa.");
-        InformationDialog.showDialog();
+        showDialog("Fuera de los límites de la empresa", "Para registrar asistencia, por favor diríjase a la empresa.");
     }
 
     private void showDeviceDisabledMessage() {
-        InformationDialog.createDialog(getActivity());
-        InformationDialog.setTitle("Equipo deshabilitado");
-        InformationDialog.setMessage("El equipo se encuentra deshabilitado para registrar asistencia. Solicite su activación al administrador de la empresa.");
-        InformationDialog.showDialog();
+        showDialog("Equipo deshabilitado", "El equipo se encuentra deshabilitado para registrar asistencia. Solicite su activación al administrador de la empresa.");
+
     }
 
     private void showOutScheduleMessage() {
-        InformationDialog.createDialog(getActivity());
-        InformationDialog.setTitle("Fuera de horario");
-        InformationDialog.setMessage("Usted se encuentra fuera de horario laboral.");
-        InformationDialog.showDialog();
+        showDialog("Fuera de horario", "Usted se encuentra fuera de horario laboral.");
     }
 
     private void showEntryMessage() {
-        InformationDialog.createDialog(getActivity());
-        InformationDialog.setTitle("Entrada registrada");
-        InformationDialog.setMessage("Se ha registrado satisfactoriamente su entrada.");
-        InformationDialog.showDialog();
+        showDialog("Entrada registrada", "Se ha registrado satisfactoriamente su entrada.");
+
     }
 
     private void showExitMessage() {
-        InformationDialog.createDialog(getActivity());
-        InformationDialog.setTitle("Salida registrada");
-        InformationDialog.setMessage("Se ha registrado satisfactoriamente su salida.");
-        InformationDialog.showDialog();
+        showDialog("Salida registrada", "Se ha registrado satisfactoriamente su salida.");
+
     }
 
+    public void showDeviceNotRegisteredMessage() {
+        showDialog("Equipo no registrado", "Para registrar asistencia, porfavor registre el equipo en la sección de equipos.");
+    }
+
+    public void showDialog(String title, String message) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
 
 }

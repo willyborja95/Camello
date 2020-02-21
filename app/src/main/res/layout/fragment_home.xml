@@ -6,14 +6,14 @@
     android:background="@android:color/white"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <Button
-        android:id="@+id/open_map"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:visibility="invisible"
-        android:text="Mapa"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+<!--    <Button-->
+<!--        android:id="@+id/open_map"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:visibility="invisible"-->
+<!--        android:text="Mapa"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -60,7 +60,7 @@
                     android:paddingBottom="10dp"
                     android:text="00:00:00"
                     android:textAlignment="center"
-                    android:textColor="@android:color/holo_red_light"
+                    android:textColor="@android:color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     />
@@ -109,23 +109,23 @@
 
     </com.appTec.RegistrateApp.view.activities.generic.CurveBgRelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/map_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
-        <fragment
-            class="com.google.android.gms.maps.MapFragment"
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/map_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="invisible">-->
+<!--        <fragment-->
+<!--            class="com.google.android.gms.maps.MapFragment"-->
+<!--            android:id="@+id/map"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"/>-->
 
-        <Button
-            android:id="@+id/close_map"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="Cerrar"/>
+<!--        <Button-->
+<!--            android:id="@+id/close_map"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:text="Cerrar"/>-->
 
-    </RelativeLayout>
+<!--    </RelativeLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

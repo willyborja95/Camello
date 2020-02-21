@@ -12,13 +12,13 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:src="@drawable/logo" />
 
         <TextView
@@ -109,12 +109,6 @@
                 android:src="@drawable/right_arrow"
                 android:text="Acceder" />
         </RelativeLayout>
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
 
     </LinearLayout>
 </RelativeLayout>

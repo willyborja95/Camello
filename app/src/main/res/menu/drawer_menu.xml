@@ -2,26 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_messages"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="Mesaage" />
+            android:id="@+id/politica_privacidad"
+            android:layout_gravity="center"
+            android:title="Política de Privacidad" />
         <item
-            android:id="@+id/nav_chat"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="Mesaage" />
+            android:id="@+id/manual_usuario"
+            android:layout_gravity="center"
+            android:title="Manual de Usuario" />
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="Mesaage" />
+            android:id="@+id/cerrar_sesion"
+            android:layout_gravity="center"
+            android:title="Cerrar Sesión" />
     </group>
-
-    <item android:title="Manuales">
-        <menu>
-            <item
-                android:id="@+id/nav_nav"
-                android:icon="@drawable/ic_home_black_24dp"
-                android:title="Mesaage" />
-        </menu>
-    </item>
-
 </menu>

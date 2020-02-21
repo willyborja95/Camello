@@ -1,6 +1,7 @@
 package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -53,11 +54,7 @@ public class DeviceFragment extends Fragment {
         lstDevice.clear();
         lstDevice.add(device);
         updateListView();
-        if (lstDevice.size() > 0) {
-            fabAddDevice.hide();
-        } else {
-            fabAddDevice.show();
-        }
+        checkDisplayingButton();
     }
 
     private void updateListView() {
@@ -68,11 +65,21 @@ public class DeviceFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         View fragmentDeviceView = inflater.inflate(R.layout.fragment_device, container, false);
+
+        Bundle bundle = this.getArguments();
+        Device device = (Device) bundle.getSerializable("device");
+
+
         fabAddDevice = (FloatingActionButton) fragmentDeviceView.findViewById(R.id.fabAgregarDispositivo);
         txtDeviceName = fragmentDeviceView.findViewById(R.id.txtDeviceName);
         txtDeviceModel = fragmentDeviceView.findViewById(R.id.txtDeviceModel);
         lvDevices = (ListView) fragmentDeviceView.findViewById(R.id.lvEquipos);
         lvDevices.setAdapter(new DeviceListAdapter(getContext(), lstDevice));
+        if(device!=null){
+            lstDevice.clear();
+            lstDevice.add(device);
+        }
+        updateListView();
         pref = getContext().getSharedPreferences("RegistrateApp", 0);
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(getContext());
         telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
@@ -83,11 +90,26 @@ public class DeviceFragment extends Fragment {
                 df.show(getFragmentManager(),"DialogDevice");
             }
         });
+        checkDisplayingButton();
         return fragmentDeviceView;
     }
 
     public void saveDevice(Device device) {
         addDeviceToList(device);
+    }
+
+    public void checkDisplayingButton(){
+        if(lstDevice.size()>0){
+            fabAddDevice.hide();
+        }else{
+            fabAddDevice.show();
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
     }
 }
 
