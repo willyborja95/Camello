@@ -129,7 +129,6 @@ public class HomeFragment extends Fragment implements
         super.onAttach(context);
         this.context = (Context) context;
         pref = this.context.getSharedPreferences("RegistrateApp", 0);
-        this.updateTimer();
     }
 
     @Override
@@ -137,6 +136,8 @@ public class HomeFragment extends Fragment implements
         super.onCreate(savedInstanceState);
     }
 
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -324,6 +325,7 @@ public class HomeFragment extends Fragment implements
     }
 
     public void updateTimer() {
+        timer.setText("00:00:00");
         if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
 
             TimeRetrofit timeRetrofit = ApiClient.getClient().create(TimeRetrofit.class);
