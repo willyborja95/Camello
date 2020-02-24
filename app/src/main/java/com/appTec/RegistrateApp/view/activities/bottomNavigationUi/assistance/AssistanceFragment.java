@@ -1,6 +1,10 @@
 package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.assistance;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +27,7 @@ import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.services.webServices.ApiClient;
 import com.appTec.RegistrateApp.services.webServices.interfaces.AssistanceRetrofitInterface;
 import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionRetrofitInterface;
+import com.appTec.RegistrateApp.util.Constants;
 import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
 import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.adapters.AssistanceListAdapter;
@@ -53,12 +58,13 @@ public class AssistanceFragment extends Fragment {
     SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy");
     Calendar selectedDate = Calendar.getInstance();
     String strSelectedDate;
-    SharedPreferences pref;
+    ProgressDialog progressDialog;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_assistance, container, false);
-        pref = getContext().getSharedPreferences("RegistrateApp", 0);
+        progressDialog = new ProgressDialog(getContext());
         lstAssistances = new ArrayList<Assistance>();
         lvAssistance = (ListView) view.findViewById(R.id.lvAssistance);
         txtAssistanceSelectedDate = (EditText) view.findViewById(R.id.txtAssistanceSelectedDate);
@@ -85,13 +91,14 @@ public class AssistanceFragment extends Fragment {
         imgBtnSearchAssistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Clickeado!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
-                Call<JsonObject> assistanceCall = assistanceRetrofitInterface.get(pref.getString("token", null), strSelectedDate);
+                Call<JsonObject> assistanceCall = assistanceRetrofitInterface.get(getUserToken(), strSelectedDate);
+                showAssistanceProgressDialog(Constants.UPDATING_CHANGES);
                 assistanceCall.enqueue(new Callback<JsonObject>() {
 
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        hideAssistanceProgressDialog();
                         lstAssistances.clear();
                         JsonArray assistanceListJson = response.body().getAsJsonArray("data");
 
@@ -121,6 +128,7 @@ public class AssistanceFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
+                        hideAssistanceProgressDialog();
                         showConectionErrorMessage();
                     }
                 });
@@ -133,10 +141,43 @@ public class AssistanceFragment extends Fragment {
         lvAssistance.setAdapter(new AssistanceListAdapter(getContext(), lstAssistances));
     }
 
+    //Shared preferences methods
+    public String getUserToken(){
+        SharedPreferences sharedPref = getContext().getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.USER_TOKEN,
+                "");
+    }
+
+    //Dialogs
+    public void showAssistanceProgressDialog(String message) {
+        progressDialog.setMessage(message);
+        progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+    }
+
+    public void hideAssistanceProgressDialog() {
+        progressDialog.dismiss();
+    }
+
     public void showConectionErrorMessage() {
-        InformationDialog.createDialog(getContext());
-        InformationDialog.setTitle("Error de conexión");
-        InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
-        InformationDialog.showDialog();
+        showDialog("Error de conexión", "Al parecer no hay conexión a Internet.");
+    }
+
+    public void showDialog(String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext() )
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
+        alertDialog.show();
     }
 }

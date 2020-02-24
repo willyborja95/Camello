@@ -1,6 +1,5 @@
 package com.appTec.RegistrateApp.view;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
@@ -9,13 +8,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,9 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 
-import com.appTec.RegistrateApp.BuildConfig;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
@@ -40,7 +36,6 @@ import com.appTec.RegistrateApp.services.webServices.interfaces.LoginRetrofitInt
 import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionTypeRetrofitInterface;
 import com.appTec.RegistrateApp.util.Constants;
 import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
-import com.google.android.gms.location.LocationServices;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -57,43 +52,40 @@ import retrofit2.Response;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-
     //UI elements
     private ImageButton btnLogin;
     private EditText txtEmail;
     private EditText txtPassword;
-    ProgressDialog dialog;
+    ProgressDialog progressDialog;
 
-    //App elements
+    //Business logic elements
     private String email;
     private String password;
     private String deviceImei;
     private Device device;
     private User user;
     private ArrayList<PermissionType> lstPermissionType;
-    DatabaseAdapter databaseAdapter;
-    TelephonyManager telephonyManager;
-    SharedPreferences pref;
-    SharedPreferences.Editor editor;
+    private DatabaseAdapter databaseAdapter;
+    private TelephonyManager telephonyManager;
 
+    /*
+    =======================================
+    ACTIVITY LIFECYCLE METHODS
+    =======================================
+     */
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.login_activity);
         lstPermissionType = new ArrayList<PermissionType>();
         txtEmail = (EditText) findViewById(R.id.email);
         txtPassword = (EditText) findViewById(R.id.password);
         btnLogin = (ImageButton) findViewById(R.id.loginButton);
         btnLogin.setOnClickListener(this);
-        dialog = new ProgressDialog(this);
-
+        progressDialog = new ProgressDialog(this);
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
-        pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0); // 0 - for private mode
-        editor = pref.edit();
 
         if (getLoginUserStatus().equals(Constants.LOGGED_USER)) {
             this.user = databaseAdapter.getUser();
@@ -118,7 +110,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     }
 
+    /*
+    =======================================
+    BUSINESS LOGIC METHODS
+    =======================================
+     */
 
+    //Layout GUI methods
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -133,7 +131,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         UserCredential userCredential = new UserCredential(email, password);
                         showLoginProgressDialog("Autenticando usuario");
                         login(userCredential);
-                        Log.d("demo", "demostracion");
                     } else {
                         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
                     }
@@ -143,8 +140,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     }
 
+    //Login user
     public void login(final UserCredential userCredential) {
-
         LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
         Call<JsonObject> call = loginRetrofitInterface.login(userCredential);
         call.enqueue(new Callback<JsonObject>() {
@@ -175,87 +172,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
                     company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
                     user.setCompany(company);
-                    String token = response.body().get("token").toString().replace("\"", "");
-                    editor.putString("token", token);
-                    editor.commit();
+                    setUserToken(response.body().get("token").toString().replace("\"", ""));
                     databaseAdapter.insertUser(user);
                     databaseAdapter.insertCompany(company);
                     changeWorkingState(Constants.STATE_NOT_WORKING);
                     setLoggedUser();
-
-                    DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-                    Call<JsonObject> deviceCall = deviceRetrofitInterface.get(token, user.getId());
-                    deviceCall.enqueue(new Callback<JsonObject>() {
-                        @Override
-                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            JsonArray deviceList = response.body().getAsJsonArray("data");
-                            boolean deviceFound = false;
-                            for (int i = 0; i < deviceList.size() && deviceFound == false; i++) {
-                                JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
-                                Log.d("deviceImei", jsonDevice.get("imei").getAsString());
-
-                                if (deviceImei.equals(jsonDevice.get("imei").getAsString())) {
-                                    Log.d("deviceImei", "dispositivo agregado");
-
-                                    int deviceId = jsonDevice.get("id").getAsInt();
-                                    String deviceName = jsonDevice.get("nombre").getAsString();
-                                    String deviceModel = jsonDevice.get("modelo").getAsString();
-                                    String deviceImei = jsonDevice.get("imei").getAsString();
-                                    boolean deviceStatus = jsonDevice.get("estado").getAsBoolean();
-                                    Log.d("deviceImei", "Device info: "+deviceId+" "+deviceName+" "+deviceModel+" "+deviceImei+" "+deviceStatus);
-
-                                    device = new Device(deviceId, deviceName, deviceModel, deviceImei, deviceStatus);
-                                    boolean res = databaseAdapter.insertDevice(device);
-                                    Log.d("deviceImei", "Almacenado: "+res);
-
-
-                                    deviceFound = true;
-                                    hideLoginProgressDialog();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                        }
-                    });
-
-
-                    //Get PermissionType
-                    PermissionTypeRetrofitInterface permissionTypeRetrofitInterface = ApiClient.getClient().create(PermissionTypeRetrofitInterface.class);
-                    final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(token);
-                    permissionTypeCall.enqueue(new Callback<JsonObject>() {
-
-                        @Override
-                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            JsonArray jsonLstPermissionType = response.body().getAsJsonArray("data");
-                            if (jsonLstPermissionType.size() > 0) {
-                                for (int i = 0; i < jsonLstPermissionType.size(); i++) {
-                                    JsonObject jsonPermissionType = jsonLstPermissionType.get(i).getAsJsonObject();
-                                    int permissionTypeId = jsonPermissionType.get("id").getAsInt();
-                                    String permissionTypeName = jsonPermissionType.get("nombre").getAsString();
-                                    PermissionType permissionType = new PermissionType(permissionTypeId, permissionTypeName);
-                                    databaseAdapter.insertPermissionType(permissionType);
-                                    lstPermissionType.add(permissionType);
-                                }
-                            }
-                            navidateToDashboard();
-                        }
-
-                        @Override
-                        public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                        }
-                    });
-
+                    findUserDevice();
                 } else if (response.code() == 404 || response.code() == 401) {
                     hideLoginProgressDialog();
                     showCredentialsErrorMessage();
-                } else if(response.code() == 502 ) {
+                } else if (response.code() == 502) {
                     hideLoginProgressDialog();
-                    showErrorMessage("Se produjo un problema con el servidor, por favor intentelo de nuevo.");
-                }else {
+                } else {
                     hideLoginProgressDialog();
                     try {
                         JSONObject errorJson = new JSONObject(response.errorBody().string());
@@ -268,35 +196,112 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("server", "error en el server");
                 showConectionErrorMessage();
             }
 
         });
     }
 
+    //Get user device
+    public void findUserDevice() {
+        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
+        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(getUserToken(), user.getId());
+        deviceCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Log.d("deviceImei", "DEVICE ON RESPONSE OK");
 
+                JsonArray deviceList = response.body().getAsJsonArray("data");
+                boolean deviceFound = false;
+                for (int i = 0; i < deviceList.size() && deviceFound == false; i++) {
+                    JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
 
+                    if (deviceImei.equals(jsonDevice.get("imei").getAsString())) {
+                        device = new Device();
+                        int deviceId = jsonDevice.get("id").getAsInt();
+                        String deviceName = jsonDevice.get("nombre").getAsString();
+                        String deviceModel = jsonDevice.get("modelo").getAsString();
+                        String deviceImei = jsonDevice.get("imei").getAsString();
+                        boolean deviceStatus = jsonDevice.get("estado").getAsBoolean();
+                        device.setId(deviceId);
+                        device.setNombre(deviceName);
+                        device.setModelo(deviceModel);
+                        device.setImei(deviceImei);
+                        device.setStatus(deviceStatus);
+                        databaseAdapter.insertDevice(device);
+                        deviceFound = true;
+                    }
+                }
+                findPermissionTypes();
+            }
 
-    public void showErrorMessage(String error) {
-        InformationDialog.createDialog(this);
-        InformationDialog.setTitle("Error");
-        InformationDialog.setMessage(error);
-        InformationDialog.showDialog();
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+
     }
 
-    public void showCredentialsErrorMessage() {
-        InformationDialog.createDialog(this);
-        InformationDialog.setTitle("Autenticación fallida");
-        InformationDialog.setMessage("El usuario y contraseña proporcionados no son correctos.");
-        InformationDialog.showDialog();
+    //Get PermissionType
+    public void findPermissionTypes() {
+        PermissionTypeRetrofitInterface permissionTypeRetrofitInterface = ApiClient.getClient().create(PermissionTypeRetrofitInterface.class);
+        final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(getUserToken());
+        permissionTypeCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonArray jsonLstPermissionType = response.body().getAsJsonArray("data");
+                if (jsonLstPermissionType.size() > 0) {
+                    for (int i = 0; i < jsonLstPermissionType.size(); i++) {
+                        JsonObject jsonPermissionType = jsonLstPermissionType.get(i).getAsJsonObject();
+                        int permissionTypeId = jsonPermissionType.get("id").getAsInt();
+                        String permissionTypeName = jsonPermissionType.get("nombre").getAsString();
+                        PermissionType permissionType = new PermissionType(permissionTypeId, permissionTypeName);
+                        databaseAdapter.insertPermissionType(permissionType);
+                        lstPermissionType.add(permissionType);
+                    }
+                }
+                hideLoginProgressDialog();
+                navidateToDashboard();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
     }
 
-    public void showConectionErrorMessage() {
-        InformationDialog.createDialog(this);
-        InformationDialog.setTitle("Error de conexión");
-        InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
-        InformationDialog.showDialog();
+    //Change to BottomNavigation activity
+    public void navidateToDashboard() {
+        Intent intent = new Intent(this, BottomNavigation.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Bundle bundle = new Bundle();
+        if (device != null) {
+            bundle.putSerializable("device", device);
+        }
+        bundle.putSerializable("user", user);
+        bundle.putSerializable("lstPermissionType", lstPermissionType);
+        intent.putExtras(bundle);
+        Log.d("DeviceLog", "navigation activated!");
+        startActivity(intent);
+        finish();
+    }
+
+    //Shared preferences methods
+    public void setUserToken(String token) {
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Constants.USER_TOKEN, token);
+        editor.commit();
+    }
+
+    public String getUserToken() {
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.USER_TOKEN,
+                "");
     }
 
     private void setLoggedUser() {
@@ -307,6 +312,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         editor.commit();
     }
 
+    private String getLoginUserStatus() {
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.LOGIN_USER_STATE,
+                "");
+    }
+
     private void changeWorkingState(String state) {
         SharedPreferences sharedPref = this.getSharedPreferences(
                 Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
@@ -315,39 +327,42 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         editor.commit();
     }
 
-    private String getLoginUserStatus() {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.LOGIN_USER_STATE,
-                "");
-    }
-
-    public void navidateToDashboard() {
-        Intent intent = new Intent(this, BottomNavigation.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        Bundle bundle = new Bundle();
-
-        if (device != null) {
-            Log.d("deviceImei", "Device is null before passing to dashbard!");
-
-            bundle.putSerializable("device", device);
-        }
-        bundle.putSerializable("user", user);
-        bundle.putSerializable("lstPermissionType", lstPermissionType);
-        intent.putExtras(bundle);
-        startActivity(intent);
-        finish();
-    }
-
+    //Dialogs
     public void showLoginProgressDialog(String message) {
-        dialog.setMessage(message);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.show();
-        dialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(message);
+        progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
     }
 
     public void hideLoginProgressDialog() {
-        dialog.dismiss();
+        progressDialog.dismiss();
+    }
+
+    public void showErrorMessage(String error) {
+        showDialog("Error", error);
+    }
+
+    public void showCredentialsErrorMessage() {
+        showDialog("Autenticación fallida", "El usuario y contraseña proporcionados no son correctos.");
+    }
+
+    public void showConectionErrorMessage() {
+        showDialog("Error de conexión", "Al parecer no hay conexión a Internet.");
+    }
+
+    public void showDialog(String title, String message) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
 }

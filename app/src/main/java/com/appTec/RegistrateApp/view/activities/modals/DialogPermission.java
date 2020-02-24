@@ -32,8 +32,8 @@ import java.util.Date;
 public class DialogPermission extends DialogFragment {
 
     //UI elements
-    EditText txtStartDate;
-    EditText txtEndDate;
+    private EditText txtStartDate;
+    private EditText txtEndDate;
     private DatePicker dpStartDate;
     private Spinner spnPermissionType;
     private ArrayAdapter<PermissionType> adapterPermissionType;
@@ -198,6 +198,7 @@ public class DialogPermission extends DialogFragment {
         return builder.create();
     }
 
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         // Verify that the host activity implements the callback interface

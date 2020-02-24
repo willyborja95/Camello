@@ -1,6 +1,9 @@
 package com.appTec.RegistrateApp.view.adapters;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +15,8 @@ import android.widget.TextView;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.services.webServices.ApiClient;
-import com.appTec.RegistrateApp.services.webServices.interfaces.AssistanceRetrofitInterface;
 import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionRetrofitInterface;
-import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
+import com.appTec.RegistrateApp.util.Constants;
 import com.google.gson.JsonObject;
 
 import java.text.SimpleDateFormat;
@@ -25,46 +27,52 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PermissionListAdapter extends BaseAdapter {
-    private static LayoutInflater layoutInflater;
+    //UI elements
+    ProgressDialog progressDialog;
+
+    //Business logic elements
     Context context;
     ArrayList<Permission> lstPermission;
     SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-    SharedPreferences pref;
 
     public PermissionListAdapter(Context context, ArrayList<Permission> lstPermission) {
         this.context = context;
         this.lstPermission = lstPermission;
+        progressDialog = new ProgressDialog(context);
     }
+
+    /*
+    =======================================
+    ADAPTER METHODS
+    =======================================
+     */
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.permission_element, null);
-        pref = convertView.getContext().getSharedPreferences("RegistrateApp", 0);
         ImageButton imgBtnDeletePermission = (ImageButton) convertView.findViewById(R.id.btnDeletePermission);
         imgBtnDeletePermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-                Call<JsonObject> permissionCall = permissionRetrofitInterface.delete(pref.getString("token", null), lstPermission.get(position).getId());
+                Call<JsonObject> permissionCall = permissionRetrofitInterface.delete(getUserToken(), lstPermission.get(position).getId());
+                showPermissionProgressDialog(Constants.UPDATING_CHANGES);
                 permissionCall.enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        hidePermissionProgressDialog();
                         if (response.code() == 200) {
-                            System.out.println(pref.getString("token", null));
-                            System.out.println(response);
                             lstPermission.remove(position);
                             notifyDataSetChanged();
-                        }else{
-                            InformationDialog.createDialog(context);
-                            InformationDialog.setTitle("Error");
-                            InformationDialog.setMessage("No ha sido posible eliminar el permiso.");
-                            InformationDialog.showDialog();
+                        } else {
+                            showDialog("Error", "No ha sido posible eliminar el permiso.");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
-                        showConectionErrorMessage(v.getContext());
+                        hidePermissionProgressDialog();
+                        showConectionErrorMessage();
                     }
                 });
             }
@@ -103,11 +111,50 @@ public class PermissionListAdapter extends BaseAdapter {
         return 0;
     }
 
-    public void showConectionErrorMessage(Context context) {
-        InformationDialog.createDialog(context);
-        InformationDialog.setTitle("Error de conexión");
-        InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
-        InformationDialog.showDialog();
+    /*
+    =======================================
+    BUSINESS LOGIC METHODS
+    =======================================
+     */
+
+    //Shared preferences methods
+    public String getUserToken() {
+        SharedPreferences sharedPref = this.context.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.USER_TOKEN,
+                "");
+    }
+
+    //Dialogs
+    public void showPermissionProgressDialog(String message) {
+        progressDialog.setMessage(message);
+        progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+    }
+
+    public void hidePermissionProgressDialog() {
+        progressDialog.dismiss();
+    }
+
+    public void showConectionErrorMessage() {
+        showDialog("Error de conexión", "Al parecer no hay conexión a Internet.");
+    }
+
+    public void showDialog(String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
+        alertDialog.show();
     }
 
 }

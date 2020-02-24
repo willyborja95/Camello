@@ -11,10 +11,10 @@ public class Constants {
     public static final String LOGGED_USER = "LOGGED";
     public static final String NOT_LOGGED_USER = "NOT LOGGED";
 
+    public static final String USER_TOKEN = "USERTOKEN";
 
-
-    public static final double LATITUDE_TESTING = -3.9000;
-    public static final double LONGITUDE_TESTING = -79.2000;
     public static final String LAST_EXIT_TIME = "LAST_EXIT_TIME";
 
+    //String messages
+    public static final String UPDATING_CHANGES = "Actualizando datos";
 }

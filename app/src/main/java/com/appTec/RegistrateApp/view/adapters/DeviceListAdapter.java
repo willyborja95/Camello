@@ -13,7 +13,6 @@ import com.appTec.RegistrateApp.models.Device;
 import java.util.ArrayList;
 
 public class DeviceListAdapter extends BaseAdapter {
-    private static LayoutInflater layoutInflater;
     Context context;
     ArrayList<Device> lstDevices;
 
@@ -21,6 +20,12 @@ public class DeviceListAdapter extends BaseAdapter {
         this.context = context;
         this.lstDevices = lstDevices;
     }
+
+    /*
+   =======================================
+   ACTIVITY LIFECYCLE METHODS
+   =======================================
+    */
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

@@ -3,6 +3,7 @@ package com.appTec.RegistrateApp.view.activities.modals;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -10,8 +11,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.Manifest.permission;
 
@@ -25,6 +28,7 @@ import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
 import com.appTec.RegistrateApp.services.webServices.ApiClient;
 import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
+import com.appTec.RegistrateApp.util.Constants;
 import com.google.gson.JsonObject;
 
 import retrofit2.Call;
@@ -35,8 +39,8 @@ public class DialogDevice extends DialogFragment {
     NoticeDialogListener listener;
     EditText txtDeviceName;
     EditText txtDeviceModel;
-    String token;
-    SharedPreferences pref;
+    ProgressDialog progressDialog;
+
     DatabaseAdapter databaseAdapter;
     TelephonyManager telephonyManager;
 
@@ -46,8 +50,8 @@ public class DialogDevice extends DialogFragment {
 
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        //token = databaseAdapter.getToken();
 
+        progressDialog = new ProgressDialog(getContext());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -56,7 +60,6 @@ public class DialogDevice extends DialogFragment {
         txtDeviceName = (EditText) viewDialog.findViewById(R.id.txtDeviceName);
         txtDeviceModel = (EditText) viewDialog.findViewById(R.id.txtDeviceModel);
 
-        pref = getContext().getSharedPreferences("RegistrateApp", 0);
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(getContext());
         telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -64,7 +67,11 @@ public class DialogDevice extends DialogFragment {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Device deviceDialog = new Device(txtDeviceName.getText().toString(), txtDeviceModel.getText().toString());
+                        Log.d("deviceLog", "click en ok");
+
+                        Device deviceDialog = new Device();
+                        deviceDialog.setNombre(txtDeviceName.getText().toString());
+                        deviceDialog.setModelo(txtDeviceModel.getText().toString());
                         saveDevice(deviceDialog);
                     }
                 })
@@ -89,12 +96,16 @@ public class DialogDevice extends DialogFragment {
             }
         }
         deviceDialog.setImei(deviceImei);
+
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> call = deviceRetrofitInterface.post(pref.getString("token", null), deviceDialog);
+        Call<JsonObject> call = deviceRetrofitInterface.post(getUserToken(), deviceDialog);
+        showDeviceProgressDialog(Constants.UPDATING_CHANGES);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                System.out.println(response.body());
+                Log.d("deviceLog", "hello from dialog device");
+                Log.d("deviceLog", response.toString());
+                hideDeviceProgressDialog();
                 if(response.code()==200){
                     int id = response.body().getAsJsonObject("data").get("id").getAsInt();
                     String deviceName = response.body().getAsJsonObject("data").get("nombre").getAsString();
@@ -102,16 +113,26 @@ public class DialogDevice extends DialogFragment {
                     String deviceImei = response.body().getAsJsonObject("data").get("imei").getAsString();
                     boolean deviceStatus = response.body().getAsJsonObject("data").get("estado").getAsBoolean();
 
-                    Device device = new Device(id, deviceName, deviceModel, deviceImei, deviceStatus);
+                    Device device = new Device();
+                    device.setId(id);
+                    device.setNombre(deviceName);
+                    device.setModelo(deviceModel);
+                    device.setImei(deviceImei);
+                    device.setStatus(deviceStatus);
+                    Log.d("deviceStatus", String.valueOf(device.getId()));
+                    Log.d("deviceStatus", device.getImei());
+                    Log.d("deviceStatus", device.getNombre());
+                    Log.d("deviceStatus", device.getModelo());
+                    Log.d("deviceStatus", String.valueOf(device.isStatus()));
                     databaseAdapter.insertDevice(device);
                     listener.onDeviceSaved(device);
-
                 }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                hideDeviceProgressDialog();
+                showConectionErrorMessage();
             }
         });
 
@@ -126,5 +147,46 @@ public class DialogDevice extends DialogFragment {
             throw new ClassCastException(getActivity().toString()
                     + " must implement NoticeDialogListener");
         }
+    }
+
+    //Shared preferences methods
+    public String getUserToken() {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.USER_TOKEN,
+                "");
+    }
+
+
+    //Dialogs
+    public void showDeviceProgressDialog(String message) {
+        progressDialog.setMessage(message);
+        progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+    }
+
+    public void hideDeviceProgressDialog() {
+        progressDialog.dismiss();
+    }
+
+    public void showConectionErrorMessage() {
+        showDialog("Error de conexión", "Al parecer no hay conexión a Internet.");
+    }
+
+    public void showDialog(String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
+        alertDialog.show();
     }
 }

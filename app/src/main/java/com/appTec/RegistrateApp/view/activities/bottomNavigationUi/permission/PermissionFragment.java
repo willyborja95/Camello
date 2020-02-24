@@ -1,6 +1,9 @@
 package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,27 +12,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.appTec.RegistrateApp.R;
-import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.models.PermissionStatus;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.services.webServices.ApiClient;
 import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionRetrofitInterface;
-import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
+import com.appTec.RegistrateApp.util.Constants;
 import com.appTec.RegistrateApp.view.activities.modals.DialogPermission;
 import com.appTec.RegistrateApp.view.adapters.PermissionListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -40,48 +40,39 @@ import retrofit2.Response;
 
 public class PermissionFragment extends Fragment {
 
+    //UI elements
+    ProgressDialog progressDialog;
+    private ListView lvPermission;
     private FloatingActionButton fabAddPermission;
+
+    //Bussiness logic elements
     private ArrayList<PermissionType> lstPermissionType;
     private ArrayList<Permission> lstPermission = new ArrayList<Permission>();;
-    private ListView lvPermission;
-    private SharedPreferences pref;
     private User user;
-
 
     public static PermissionFragment newInstance() {
         return new PermissionFragment();
     }
 
-    public void addArrayListPermissionType(ArrayList<PermissionType> lstPermissionType){
-        this.lstPermissionType = lstPermissionType;
-
-    }
+    /*
+    =======================================
+    ACTIVITY LIFECYCLE METHODS
+    =======================================
+     */
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d("hello","Hello from onCreate (1)! ");
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
-        Log.d("hello","Hello from onCreate (2)! ");
-
-        super.onCreate(savedInstanceState);
+        lstPermissionType = (ArrayList<PermissionType>) bundle.getSerializable("lstPermissionType");
+        progressDialog = new ProgressDialog(context);
+        updatePermissions();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
-
-
-        updatePermissions();
-        Log.d("hello","Hello from onCreateView!");
-
-
-
-
         View root = inflater.inflate(R.layout.fragment_permission, container, false);
-
-
         lvPermission = (ListView) root.findViewById(R.id.lvPermission);
         fabAddPermission = (FloatingActionButton) root.findViewById(R.id.fabAddPermission);
         fabAddPermission.setOnClickListener(new View.OnClickListener() {
@@ -96,13 +87,75 @@ public class PermissionFragment extends Fragment {
         return root;
     }
 
-    public void addPermissionToList(Permission permission){
-        lstPermission.add(permission);
-        updateListView();
+    /*
+    =======================================
+    BUSINESS LOGIC METHODS
+    =======================================
+     */
+
+    //Save new permission
+    public void savePermission(Permission permission){
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        permission.getStartDate().getTime().setMonth(permission.getStartDate().getTime().getMonth()-1);
+        permission.getEndDate().getTime().setMonth(permission.getEndDate().getTime().getMonth()-1);
+        String strStartDate = dateformat.format(permission.getStartDate().getTime());
+        final String strEndDate = dateformat.format(permission.getEndDate().getTime());
+        JsonObject jsonPermission = new JsonObject();
+        jsonPermission.addProperty("fechainicio", strStartDate);
+        jsonPermission.addProperty("fechafin", strEndDate);
+        jsonPermission.addProperty("permisoid", permission.getPermissionType().getId());
+        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
+        Call<JsonObject> permissionCall = permissionRetrofitInterface.post(getUserToken(), jsonPermission);
+        showPermissionProgressDialog(Constants.UPDATING_CHANGES);
+        permissionCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                hidePermissionProgressDialog();
+                int id = response.body().getAsJsonObject("data").get("id").getAsInt();
+                String strStartDate = response.body().getAsJsonObject("data").get("fechainicio").getAsString();
+                String strEndDate = response.body().getAsJsonObject("data").get("fechafin").getAsString();
+                int idPermission = Integer.parseInt(response.body().getAsJsonObject("data").get("permisoid").getAsString());
+                String strPermissionStatus = response.body().getAsJsonObject("data").get("estado").getAsString();
+                String[] arrayStartDateTime = strStartDate.split(" ");
+                String[] arrayStartTime = arrayStartDateTime[1].split(":");
+                String[] arrayStartDate = arrayStartDateTime[0].split("/");
+                String[] arrayEndDateTime = strEndDate.split(" ");
+                String[] arrayEndTime = arrayEndDateTime[1].split(":");
+                String[] arrayEndDate = arrayEndDateTime[0].split("/");
+                Calendar calendarStartDate = Calendar.getInstance();
+                calendarStartDate.set(Integer.parseInt(arrayStartDate[2]), Integer.parseInt(arrayStartDate[1]), Integer.parseInt(arrayStartDate[0]), Integer.parseInt(arrayStartTime[0]), Integer.parseInt(arrayStartTime[1]));
+                Calendar calendarEndDate = Calendar.getInstance();
+                calendarEndDate.set(Integer.parseInt(arrayEndDate[2]), Integer.parseInt(arrayEndDate[1]), Integer.parseInt(arrayEndDate[0]), Integer.parseInt(arrayEndTime[0]), Integer.parseInt(arrayEndTime[1]));
+                PermissionType permission = null;
+                PermissionStatus permissionStatus = null;
+
+                for (int i = 0; i < lstPermissionType.size(); i++) {
+                    if (idPermission == lstPermissionType.get(i).getId()) {
+                        permission = lstPermissionType.get(i);
+                    }
+                }
+
+                if (strPermissionStatus.equals("enrevision")) {
+                    permissionStatus = PermissionStatus.Revisando;
+                } else if (strPermissionStatus.equals("aprobado")) {
+                    permissionStatus = PermissionStatus.Aprobado;
+                } else if (strPermissionStatus.equals("rechazado")) {
+                    permissionStatus = PermissionStatus.Rechazado;
+                }
+                Permission permission1 = new Permission(id, permission, permissionStatus, calendarStartDate, calendarEndDate);
+                addPermissionList(permission1);
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                hidePermissionProgressDialog();
+                showConectionErrorMessage();
+            }
+        });
     }
 
-    public void addPermissionList(ArrayList<Permission> lstPermission){
-        this.lstPermission = lstPermission;
+    public void addPermissionList(Permission permission){
+        lstPermission.add(permission);
         updateListView();
     }
 
@@ -111,14 +164,14 @@ public class PermissionFragment extends Fragment {
     }
 
     public void updatePermissions(){
-        SharedPreferences pref = getActivity().getSharedPreferences("RegistrateApp", 0);
-
         lstPermission.clear();
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-        Call<JsonObject> permissionCall = permissionRetrofitInterface.get(pref.getString("token", null), user.getId());
+        Call<JsonObject> permissionCall = permissionRetrofitInterface.get(getUserToken(), user.getId());
+        showPermissionProgressDialog(Constants.UPDATING_CHANGES);
         permissionCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                hidePermissionProgressDialog();
                 JsonArray permissionListJson = response.body().getAsJsonArray("data");
                 lstPermission.clear();
                 for (int i = 0; i < permissionListJson.size(); i++) {
@@ -162,26 +215,49 @@ public class PermissionFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                hidePermissionProgressDialog();
                 showConectionErrorMessage();
             }
         });
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    //Shared preferences methods
+    public String getUserToken(){
+        SharedPreferences sharedPref = getContext().getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.USER_TOKEN,
+                "");
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    //Dialogs
+    public void showPermissionProgressDialog(String message) {
+        progressDialog.setMessage(message);
+        progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+    }
 
+    public void hidePermissionProgressDialog() {
+        progressDialog.dismiss();
     }
 
     public void showConectionErrorMessage() {
-        InformationDialog.createDialog(getContext());
-        InformationDialog.setTitle("Error de conexión");
-        InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
-        InformationDialog.showDialog();
+        showDialog("Error de conexión", "Al parecer no hay conexión a Internet.");
+    }
+
+    public void showDialog(String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
+        alertDialog.show();
     }
 }

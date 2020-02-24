@@ -118,7 +118,7 @@ public class HomeFragment extends Fragment implements
 
     /*
     =======================================
-    FRAGMENT LYFICYCLE METHODS
+    FRAGMENT LYFECYCLE METHODS
     =======================================
      */
 
@@ -330,7 +330,7 @@ public class HomeFragment extends Fragment implements
 
             TimeRetrofit timeRetrofit = ApiClient.getClient().create(TimeRetrofit.class);
 
-            Call<JsonObject> timeCall = timeRetrofit.get(pref.getString("token", null));
+            Call<JsonObject> timeCall = timeRetrofit.get(getUserToken());
             timeCall.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -362,7 +362,7 @@ public class HomeFragment extends Fragment implements
         Log.d("log", "funcion syncAssistances");
         AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Assistance assistance = new Assistance(device.getId(), this.location.getLatitude(), this.location.getLongitude(), lastTimeExited);
-        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.sync(pref.getString("token", null), assistance);
+        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.sync(getUserToken(), assistance);
         assistanceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -397,7 +397,7 @@ public class HomeFragment extends Fragment implements
     private void registerEntry() {
         AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Assistance assistanceLog = new Assistance(device.getId(), this.location.getLatitude(), this.location.getLongitude());
-        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(pref.getString("token", null), assistanceLog);
+        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(getUserToken(), assistanceLog);
         assistanceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -466,7 +466,7 @@ public class HomeFragment extends Fragment implements
     private void registerExit() {
         AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Assistance assistanceLog = new Assistance(device.getId(), this.location.getLatitude(), this.location.getLongitude());
-        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(pref.getString("token", null), assistanceLog);
+        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(getUserToken(), assistanceLog);
         assistanceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -504,6 +504,13 @@ public class HomeFragment extends Fragment implements
         });
     }
 
+    private String getButtonTextForState(String workingState) {
+        if (workingState.equals(Constants.STATE_WORKING))
+            return "Finalizar";
+        return "Iniciar";
+    }
+
+    //Shared preferences methods
     private String getLastTimeExited() {
         SharedPreferences sharedPref = this.context.getSharedPreferences(
                 Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
@@ -531,15 +538,16 @@ public class HomeFragment extends Fragment implements
         editor.commit();
     }
 
-    private String getButtonTextForState(String workingState) {
-        if (workingState.equals(Constants.STATE_WORKING))
-            return "Finalizar"; // Extraer a values/strings.xml
-        return "Iniciar";
+    //Shared preferences methods
+    public String getUserToken(){
+        SharedPreferences sharedPref = getContext().getSharedPreferences(
+                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
+        return sharedPref.getString(Constants.USER_TOKEN,
+                "");
     }
 
 
     //Layout GUI methods
-
     @OnClick(R.id.start_timer_btn)
     public void startTimer(View view) {
         Log.d("userLoc", "Comapny values");
@@ -581,7 +589,6 @@ public class HomeFragment extends Fragment implements
 
 
     //Dialogs
-
     public void showProgressDialog(String message) {
         dialog.setMessage(message);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
