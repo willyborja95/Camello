@@ -38,4 +38,7 @@
         functionality.</string>
     <string name="settings">Settings</string>
 
+    <!-- UI string values -->
+    <string name="empty_notifications_message">No hay notificaciones nuevas en este momento.</string>
+
 </resources>
