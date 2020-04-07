@@ -37,6 +37,7 @@ import com.appTec.RegistrateApp.services.webServices.ApiClient;
 import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionRetrofitInterface;
 import com.appTec.RegistrateApp.util.Constants;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.assistance.AssistanceFragment;
+import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications.NotificationsFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home.HomeFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device.DeviceFragment;
@@ -99,10 +100,12 @@ public class BottomNavigation extends AppCompatActivity implements
     private List<Geofence> geofenceList;
     private PendingIntent geofencePendingIntent;
 
+    // Fragments
     final HomeFragment homeFragment = HomeFragment.newInstance();
     final PermissionFragment permissionFragment = PermissionFragment.newInstance();
     final DeviceFragment deviceFragment = new DeviceFragment();
     final AssistanceFragment assistanceFragment = new AssistanceFragment();
+    final NotificationsFragment notificationsFragment = new NotificationsFragment();
 
 
     TelephonyManager telephonyManager;
@@ -232,14 +235,15 @@ public class BottomNavigation extends AppCompatActivity implements
                         homeFragment.setCompany(user.getCompany());
                         homeFragment.setDevice(device);
                         break;
-                    case R.id.navigation_assistance:
-                        lblToolbarName.setText("Historial");
+                    case R.id.navigation_notifications:
+                        lblToolbarName.setText("Notificaciones");
                         toolbar.getMenu().clear();
                         getSupportActionBar().show();
-                        ft.replace(R.id.nav_host_fragment, assistanceFragment);
+                        ft.replace(R.id.nav_host_fragment, notificationsFragment);
                         break;
 
                     case R.id.navigation_permission:
+                        lblToolbarName.setText("Permisos");
                         Bundle permissionBundle = new Bundle();
                         permissionBundle.putSerializable("user", user);
                         permissionBundle.putSerializable("lstPermissionType", lstPermissionType);
