@@ -16,10 +16,15 @@ import java.util.ArrayList;
 
 public class NotificationsListAdapter extends BaseAdapter {
 
+    // Attributes
     Context context;
     ArrayList<Notification> notifications;
 
+
     public NotificationsListAdapter(Context context, ArrayList<Notification> notifications ){
+        /*
+        * Constructor
+        * */
         this.context = context;
         this.notifications = notifications;
     }
@@ -39,6 +44,7 @@ public class NotificationsListAdapter extends BaseAdapter {
         TextView sentDate = convertView.findViewById(R.id.notification_sent_date);
 
         title.setText(notification.getTitle());
+        sentDate.setText(notification.getSentDate().toString());
 
         return convertView;
     }
@@ -58,8 +64,6 @@ public class NotificationsListAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return notifications.indexOf(position);
     }
-
-
 
 
 
