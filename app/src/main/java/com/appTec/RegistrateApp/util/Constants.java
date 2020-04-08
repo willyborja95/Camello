@@ -15,6 +15,10 @@ public class Constants {
 
     public static final String LAST_EXIT_TIME = "LAST_EXIT_TIME";
 
-    //String messages
+    // String messages
     public static final String UPDATING_CHANGES = "Actualizando datos";
+
+    // Urls
+    public static final String BASE_URL = "https://registrateapp.com.ec/api/";
+    public static final String NOTIFICATIONS_URL = "notifications";
 }
