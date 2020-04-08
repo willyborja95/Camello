@@ -39,7 +39,7 @@ public class NotificationInteractorImpl implements NotificationInteractor {
         * Here goes the interaction with the source of data. In this case the source is a web service
         * */
         NotificationsRetrofitInterface notificationsRetrofitInterface = ApiClient.getClient().create(NotificationsRetrofitInterface.class);
-        Call<JsonObject> notificationCall = notificationsRetrofitInterface.get(getUserToken());
+        Call<JsonObject> notificationCall = notificationsRetrofitInterface.get(ApiClient.getToken());
 
         notificationCall.enqueue(new Callback<JsonObject>() {
             @Override
