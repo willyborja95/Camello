@@ -1,4 +1,11 @@
 package com.appTec.RegistrateApp.presenter;
 
-public class NotificationPresenter {
+import android.view.View;
+
+public interface NotificationPresenter {
+
+    void getNotifications(); // To interactor
+    void showNotifications(); // To view
+
+
 }
