@@ -4,6 +4,9 @@ import android.view.View;
 
 import com.appTec.RegistrateApp.interactor.NotificationInteractor;
 import com.appTec.RegistrateApp.interactor.NotificationInteractorImpl;
+import com.appTec.RegistrateApp.models.Notification;
+
+import java.util.ArrayList;
 
 public class NotificationPresenterImpl implements NotificationPresenter{
     /*
@@ -32,7 +35,7 @@ public class NotificationPresenterImpl implements NotificationPresenter{
     }
 
     @Override
-    public void showNotifications() {
+    public void showNotifications(ArrayList<Notification> notifications) {
         /*
         * Calling the view
         * */
