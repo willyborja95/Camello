@@ -5,26 +5,26 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 
     <application
         android:allowBackup="false"
-        android:label="@string/app_name"
         android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:resizeableActivity="false"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:resizeableActivity="false">
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA1xA6dIzFsB2vS26HFVqLrGhaeEsshW9o"/>
+            android:value="AIzaSyA1xA6dIzFsB2vS26HFVqLrGhaeEsshW9o" />
 
         <activity
             android:name=".view.BottomNavigation"
@@ -33,15 +33,17 @@
         <activity
             android:name=".view.SplashActivity"
             android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.LoginActivity"
-            android:screenOrientation="portrait">
-        </activity>
+
         <receiver
             android:name=".services.geofence.GeofenceBroadcastReceiver"
             android:enabled="true"
@@ -52,10 +54,10 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name=".services.alarmmanager.AlarmBroadcastReceiver"
+        <receiver
+            android:name=".services.alarmmanager.AlarmBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"
-            />
+            android:exported="true" />
     </application>
 
 </manifest>
