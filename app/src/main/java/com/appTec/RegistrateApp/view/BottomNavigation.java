@@ -28,6 +28,8 @@ import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.models.PermissionStatus;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
+import com.appTec.RegistrateApp.presenter.NotificationPresenter;
+import com.appTec.RegistrateApp.presenter.NotificationPresenterImpl;
 import com.appTec.RegistrateApp.services.alarmmanager.AlarmBroadcastReceiver;
 import com.appTec.RegistrateApp.services.geofence.GeofenceBroadcastReceiver;
 import com.appTec.RegistrateApp.services.geofence.GeofenceConstants;
@@ -118,7 +120,6 @@ public class BottomNavigation extends AppCompatActivity implements
     private DrawerLayout drawer;
     private TextView companyName;
     private TextView userFullName;
-
 
 
     //User data
@@ -239,6 +240,7 @@ public class BottomNavigation extends AppCompatActivity implements
                         lblToolbarName.setText("Notificaciones");
                         toolbar.getMenu().clear();
                         getSupportActionBar().show();
+
                         ft.replace(R.id.nav_host_fragment, notificationsFragment);
                         break;
 
