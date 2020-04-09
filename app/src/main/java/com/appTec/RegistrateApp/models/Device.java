@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class Device implements Serializable {
     private int id;
-    private String nombre;
-    private String modelo;
+    private String name;
+    private String model;
     private String imei;
     private boolean status;
 
@@ -17,20 +17,20 @@ public class Device implements Serializable {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getModelo() {
-        return modelo;
+    public String getModel() {
+        return model;
     }
 
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public String getImei() {
