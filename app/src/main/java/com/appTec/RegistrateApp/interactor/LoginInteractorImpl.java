@@ -80,18 +80,18 @@ public class LoginInteractorImpl implements LoginInteractor {
 
                 }else{
                     // ToDo: Order this code
-                    if (android.os.Build.VERSION.SDK_INT >= 23) {
-                        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
-                        } else {
-                            if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
-                                deviceImei = telephonyManager.getDeviceId();
-                            }
-                            if (android.os.Build.VERSION.SDK_INT >= 26) {
-                                deviceImei = telephonyManager.getImei();
-                            }
-                        }
-                    }
+//                    if (android.os.Build.VERSION.SDK_INT >= 23) {
+//                        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//                            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
+//                        } else {
+//                            if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
+//                                deviceImei = telephonyManager.getDeviceId();
+//                            }
+//                            if (android.os.Build.VERSION.SDK_INT >= 26) {
+//                                deviceImei = telephonyManager.getImei();
+//                            }
+//                        }
+//                    }
 
 
                     User user = new User();
@@ -106,12 +106,18 @@ public class LoginInteractorImpl implements LoginInteractor {
                     company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
                     company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
                     user.setCompany(company);
-                    setUserToken(response.body().get("token").toString().replace("\"", ""));
+
+                    // Get the token
+                    String token = response.body().get("token").toString().replace("\"", "");
+
+                    // Save data on local database
+
                     databaseAdapter.insertUser(user);
                     databaseAdapter.insertCompany(company);
                     changeWorkingState(Constants.STATE_NOT_WORKING);
                     setLoggedUser();
                     findUserDevice();
+
                 }
 
             }
