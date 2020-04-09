@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,11 +30,11 @@ import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.models.UserCredential;
 import com.appTec.RegistrateApp.models.WorkingPeriod;
 import com.appTec.RegistrateApp.presenter.LoginPresenterImpl;
-import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
-import com.appTec.RegistrateApp.services.webServices.ApiClient;
-import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
-import com.appTec.RegistrateApp.services.webServices.interfaces.LoginRetrofitInterface;
-import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionTypeRetrofitInterface;
+import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.repository.webServices.ApiClient;
+import com.appTec.RegistrateApp.repository.webServices.interfaces.DeviceRetrofitInterface;
+import com.appTec.RegistrateApp.repository.webServices.interfaces.LoginRetrofitInterface;
+import com.appTec.RegistrateApp.repository.webServices.interfaces.PermissionTypeRetrofitInterface;
 import com.appTec.RegistrateApp.util.Constants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -178,8 +177,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                     Company company = new Company();
                     ArrayList<WorkingPeriod> workingPeriodList = new ArrayList<WorkingPeriod>();
                     user.setId(response.body().getAsJsonObject("data").get("id").getAsInt());
-                    user.setNombres(response.body().getAsJsonObject("data").get("nombres").getAsString());
-                    user.setApellidos(response.body().getAsJsonObject("data").get("apellidos").getAsString());
+                    user.setName(response.body().getAsJsonObject("data").get("nombres").getAsString());
+                    user.setLastName(response.body().getAsJsonObject("data").get("apellidos").getAsString());
                     user.setEmail(response.body().getAsJsonObject("data").get("email").getAsString());
                     company.setName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").getAsString());
                     company.setLatitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("latitud").getAsDouble());
@@ -395,6 +394,17 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         /**
          *  From the presenter
          */
+
+    }
+
+    @Override
+    public void handleLogin(String email, String password) {
+        /**
+         * Send the credentials to the presenter
+         */
+        email = txtEmail.getText().toString().replaceAll("\\s", "");
+        password = txtPassword.getText().toString().replaceAll("\\s", "");
+        loginPresenter.handleLogin(email, password);
 
     }
 }

@@ -1,12 +1,8 @@
-package com.appTec.RegistrateApp.services.localDatabase;
+package com.appTec.RegistrateApp.repository.localDatabase;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.io.File;
 

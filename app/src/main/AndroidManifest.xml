@@ -45,17 +45,17 @@
         </activity>
 
         <receiver
-            android:name=".services.geofence.GeofenceBroadcastReceiver"
+            android:name=".repository.geofence.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
 
         <service
-            android:name=".services.geofence.GeofenceTransitionsJobIntentService"
+            android:name=".repository.geofence.GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
-            android:name=".services.alarmmanager.AlarmBroadcastReceiver"
+            android:name=".repository.alarmmanager.AlarmBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
     </application>

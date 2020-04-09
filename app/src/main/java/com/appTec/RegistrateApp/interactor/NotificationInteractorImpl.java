@@ -1,14 +1,9 @@
 package com.appTec.RegistrateApp.interactor;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.appTec.RegistrateApp.models.Notification;
-import com.appTec.RegistrateApp.presenter.NotificationPresenter;
 import com.appTec.RegistrateApp.presenter.NotificationPresenterImpl;
-import com.appTec.RegistrateApp.services.webServices.ApiClient;
-import com.appTec.RegistrateApp.services.webServices.interfaces.NotificationsRetrofitInterface;
-import com.appTec.RegistrateApp.util.Constants;
+import com.appTec.RegistrateApp.repository.webServices.ApiClient;
+import com.appTec.RegistrateApp.repository.webServices.interfaces.NotificationsRetrofitInterface;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
