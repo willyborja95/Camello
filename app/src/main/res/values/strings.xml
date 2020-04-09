@@ -42,5 +42,7 @@
     <string name="empty_notifications_message">No hay notificaciones nuevas en este momento.</string>
     <string name="notifications_fragment_title">Notificaciones</string>
     <string name="permissions_fragment_title">Permisos</string>
+    <string name="parameter_missing_error">Parámetro requerido</string>
+    <string name="login_progress_dialog_message">Autenticando usuario</string>
 
 </resources>
