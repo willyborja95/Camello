@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
@@ -39,8 +38,8 @@ public class DatabaseAdapter {
     public boolean insertUser(User user) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", user.getId());
-        contentValues.put("names", user.getNombres());
-        contentValues.put("lastnames", user.getApellidos());
+        contentValues.put("names", user.getName());
+        contentValues.put("lastnames", user.getLastName());
         contentValues.put("email", user.getEmail());
         return sqLiteDatabase.insert("User", null, contentValues) > 0;
     }
@@ -51,8 +50,8 @@ public class DatabaseAdapter {
         if (cursor != null & cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 user.setId(cursor.getInt(0));
-                user.setNombres(cursor.getString(1));
-                user.setApellidos(cursor.getString(2));
+                user.setName(cursor.getString(1));
+                user.setLastName(cursor.getString(2));
                 user.setEmail(cursor.getString(3));
             }
         }
