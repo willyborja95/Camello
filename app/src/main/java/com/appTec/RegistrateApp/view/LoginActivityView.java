@@ -9,8 +9,6 @@ public interface LoginActivityView {
 
     void getInitialData(); // To the presenter
     void loadInitialData(); // From the presenter // ToDo: Add the necessary attributes
-    void handleLogin(String email, String password); // To the presenter
-
 
 
 }

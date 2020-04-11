@@ -396,15 +396,4 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
          */
 
     }
-
-    @Override
-    public void handleLogin(String email, String password) {
-        /**
-         * Send the credentials to the presenter
-         */
-        email = txtEmail.getText().toString().replaceAll("\\s", "");
-        password = txtPassword.getText().toString().replaceAll("\\s", "");
-        loginPresenter.handleLogin(email, password);
-
-    }
 }
