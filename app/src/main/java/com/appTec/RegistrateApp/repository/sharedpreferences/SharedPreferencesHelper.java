@@ -14,24 +14,26 @@ public class SharedPreferencesHelper {
     private static SharedPreferences sharedPreferences;
 
 
-    public static SharedPreferences getSharedPreferences(Context context){
+    public static SharedPreferences getSharedPreferencesInstance(Context context){
         /**
          * Return a instance for the shared preferences using the context of the app.
          */
         if(sharedPreferences == null){
-            sharedPreferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-
-            
+            sharedPreferences = context.getApplicationContext().getSharedPreferences(Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
         }
-
-        return this.sharedPreferences;
-
-
+        return sharedPreferences;
     }
 
-    SharedPreferences sharedPref = this.getSharedPreferences(
-            Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-    SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constants.USER_TOKEN, token);
+    public static String getStringValue(Context context, String key, String defaultValue) {
+        /** Method to get a string value */
+        return getSharedPreferencesInstance(context).getString(key, defaultValue);
+    }
+
+    public static void putStringValue(Context context, String key, String value) {
+        /** Method to save a string value */
+        final SharedPreferences.Editor editor = getSharedPreferencesInstance(context).edit();
+        editor.putString(key , value);
         editor.commit();
+    }
+
 }
