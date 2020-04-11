@@ -10,8 +10,12 @@ public interface NotificationView {
     * */
 
 
-    void getNotifications(); // Presenter
+
     void showNotifications(ArrayList<Notification> notifications);
+    void showNotNewNotificationsMessage();
 
-
+    void showAssistanceProgressDialog(String string);
+    void hideAssistanceProgressDialog();
+    void showConnectionErrorMessage();
+    void showDialog(String title, String message);
 }
