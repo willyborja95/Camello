@@ -178,8 +178,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                     Company company = new Company();
                     ArrayList<WorkingPeriod> workingPeriodList = new ArrayList<WorkingPeriod>();
                     user.setId(response.body().getAsJsonObject("data").get("id").getAsInt());
-                    user.setNombres(response.body().getAsJsonObject("data").get("nombres").getAsString());
-                    user.setApellidos(response.body().getAsJsonObject("data").get("apellidos").getAsString());
+                    user.setName(response.body().getAsJsonObject("data").get("nombres").getAsString());
+                    user.setLastName(response.body().getAsJsonObject("data").get("apellidos").getAsString());
                     user.setEmail(response.body().getAsJsonObject("data").get("email").getAsString());
                     company.setName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").getAsString());
                     company.setLatitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("latitud").getAsDouble());
