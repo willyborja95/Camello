@@ -41,7 +41,29 @@ public class NotificationPresenterImpl implements NotificationPresenter{
         /*
         * Calling the view
         * */
-        notificationView.showNotifications(notifications);
+        if(notificationView!=null) {
+            notificationView.showNotifications(notifications);
+        }
+    }
 
+    @Override
+    public void showNotNewNotificationsMessage() {
+        /**
+         * Calling the view
+         */
+        if(notificationView!=null) {
+        notificationView.showNotNewNotificationsMessage();}
+    }
+
+    @Override
+    public void detachView() {
+        if(notificationView!=null) {
+        notificationView = null;}
+    }
+
+    @Override
+    public void detachJob() {
+        notificationInteractor.detachJob();
+        notificationInteractor = null;
     }
 }

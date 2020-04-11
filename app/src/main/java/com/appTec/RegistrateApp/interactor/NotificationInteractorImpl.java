@@ -15,24 +15,25 @@ import retrofit2.Response;
 
 public class NotificationInteractorImpl implements NotificationInteractor {
     /*
-    * This class will get for the presenter all the data requested
-    * */
+     * This class will get for the presenter all the data requested
+     * */
 
     // Attributes
     private NotificationPresenterImpl notificationPresenter;
+    private boolean canceled;
 
     public NotificationInteractorImpl(NotificationPresenterImpl notificationPresenter) {
         /*
-        * Constructor
-        * */
+         * Constructor
+         * */
         this.notificationPresenter = notificationPresenter;
     }
 
     @Override
     public void getNotifications() {
         /*
-        * Here goes the interaction with the source of data. In this case the source is a web service
-        * */
+         * Here goes the interaction with the source of data. In this case the source is a web service
+         * */
         NotificationsRetrofitInterface notificationsRetrofitInterface = ApiClient.getClient().create(NotificationsRetrofitInterface.class);
         Call<JsonObject> notificationCall = notificationsRetrofitInterface.get(ApiClient.getToken());
 
@@ -42,23 +43,25 @@ public class NotificationInteractorImpl implements NotificationInteractor {
 
                 ArrayList<Notification> notificationsResult = new ArrayList<Notification>();        // Result array that will be sent to the Presenter
 
-                JsonArray notificationListJson = response.body().getAsJsonArray("data");
+                JsonArray notificationListJson = new JsonArray(); //response.body().getAsJsonArray("data");
 
                 if (notificationListJson.size() == 0) {
                     /*
-                    * Todo
-                    * */
-
+                     * Todo
+                     * */
+                    notificationPresenter.showNotNewNotificationsMessage();
                 } else {
                     /*
-                    * Parse the data into notifications objects
-                    * */
+                     * Parse the data into notifications objects
+                     * */
+
+
                     for (int i = 0; i < notificationListJson.size(); i++) {
 
 
                         JsonObject notificationJson = notificationListJson.get(i).getAsJsonObject();
 
-                          // Todo: Parse the data
+                        // Todo: Parse the data
 //                        String title = notificationJson.get("title").getAsString();
 //                        String sentDate = notificationJson.get("sentDate").getAsString();
 //
@@ -70,11 +73,12 @@ public class NotificationInteractorImpl implements NotificationInteractor {
                     }
 
                     // Sent the result array to the Presenter
-                    showNotifications(notificationsResult);
+                    if (!canceled) {
+                        notificationPresenter.showNotifications(notificationsResult);
+                    } else {
+                        notificationCall.cancel();
+                    }
                 }
-
-
-
 
 
             }
@@ -82,8 +86,11 @@ public class NotificationInteractorImpl implements NotificationInteractor {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 /*
-                * Todo
-                * */
+                 * Todo
+                 * */
+                if (notificationCall != null) {
+                    notificationCall.cancel();
+                }
             }
         });
 
@@ -91,8 +98,9 @@ public class NotificationInteractorImpl implements NotificationInteractor {
     }
 
     @Override
-    public void showNotifications(ArrayList<Notification> notifications) {
-        notificationPresenter.showNotifications(notifications);
+    public void detachJob() {
+        canceled = true;
+        notificationPresenter = null;
     }
 
 
