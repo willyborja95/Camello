@@ -1,9 +1,14 @@
 package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +21,19 @@ import androidx.fragment.app.Fragment;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.presenter.DevicePresenterImpl;
-import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.services.webServices.ApiClient;
+import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
 import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.adapters.DeviceListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class DeviceFragment extends Fragment implements DeviceView {
