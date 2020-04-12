@@ -30,7 +30,6 @@ import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.models.UserCredential;
 import com.appTec.RegistrateApp.models.WorkingPeriod;
-import com.appTec.RegistrateApp.presenter.LoginPresenterImpl;
 import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
 import com.appTec.RegistrateApp.services.webServices.ApiClient;
 import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
@@ -51,7 +50,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends Activity implements View.OnClickListener, LoginActivityView {
+public class LoginActivity extends Activity implements View.OnClickListener {
 
     //UI elements
     private ImageButton btnLogin;
@@ -75,31 +74,19 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     =======================================
      */
 
-    // Instance the presenter
-    LoginPresenterImpl loginPresenter = new LoginPresenterImpl(this);
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
-        // Binding UI elements
+        lstPermissionType = new ArrayList<PermissionType>();
         txtEmail = (EditText) findViewById(R.id.email);
         txtPassword = (EditText) findViewById(R.id.password);
         btnLogin = (ImageButton) findViewById(R.id.loginButton);
-        progressDialog = new ProgressDialog(this);
-
-
-        lstPermissionType = new ArrayList<PermissionType>();
-
-
         btnLogin.setOnClickListener(this);
-
+        progressDialog = new ProgressDialog(this);
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
-
-        getInitialData();
 
         if (getLoginUserStatus().equals(Constants.LOGGED_USER)) {
             this.user = databaseAdapter.getUser();
@@ -138,12 +125,12 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                 email = txtEmail.getText().toString().replaceAll("\\s", "");
                 password = txtPassword.getText().toString().replaceAll("\\s", "");
                 if ((TextUtils.isEmpty(email) || (TextUtils.isEmpty(password)))) {
-                    txtEmail.setError(getString(R.string.parameter_missing_error));
-                    txtPassword.setError(getString(R.string.parameter_missing_error));
+                    txtEmail.setError("Parámetro requerido");
+                    txtPassword.setError("Parámetro requerido");
                 } else {
                     if (checkSelfPermission(permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                         UserCredential userCredential = new UserCredential(email, password);
-                        showLoginProgressDialog(getString(R.string.login_progress_dialog_message));
+                        showLoginProgressDialog("Autenticando usuario");
                         login(userCredential);
                     } else {
                         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
@@ -379,22 +366,4 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                 .show();
     }
 
-
-    // LoginActivityVIew interface view methods
-    @Override
-    public void getInitialData() {
-        /**
-         * Calling the presenter
-         */
-        loginPresenter.getInitialData();
-
-    }
-
-    @Override
-    public void loadInitialData() {
-        /**
-         *  From the presenter
-         */
-
-    }
 }
