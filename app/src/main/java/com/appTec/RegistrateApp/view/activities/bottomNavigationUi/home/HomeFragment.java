@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment implements
         OnMapReadyCallback {
 
     public static final Locale LOCALE_ES = Locale.forLanguageTag("es-419");
-    private HomeViewModel homeViewModel;
+
 
     @BindView(R.id.timer)
     Chronometer timer;
@@ -128,8 +128,7 @@ public class HomeFragment extends Fragment implements
                              ViewGroup container, Bundle savedInstanceState) {
 
         AndroidThreeTen.init(getActivity());
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, root);
 

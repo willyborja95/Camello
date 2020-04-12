@@ -44,5 +44,7 @@
     <string name="permissions_fragment_title">Permisos</string>
     <string name="parameter_missing_error">Parámetro requerido</string>
     <string name="login_progress_dialog_message">Autenticando usuario</string>
+    <string name="home_text_view_start_message">Bienvenido</string>
+    <string name="home_button_start_message">Iniciar</string>
 
 </resources>
