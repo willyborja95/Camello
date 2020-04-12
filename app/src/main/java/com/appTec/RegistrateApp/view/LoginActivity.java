@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -76,7 +75,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         lstPermissionType = new ArrayList<PermissionType>();
