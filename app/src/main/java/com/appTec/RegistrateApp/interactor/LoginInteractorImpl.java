@@ -112,11 +112,11 @@ public class LoginInteractorImpl implements LoginInteractor {
 
                     // Save data on local database
 
-//                    databaseAdapter.insertUser(user);
-//                    databaseAdapter.insertCompany(company);
-//                    changeWorkingState(Constants.STATE_NOT_WORKING);
-//                    setLoggedUser();
-//                    findUserDevice();
+                    databaseAdapter.insertUser(user);
+                    databaseAdapter.insertCompany(company);
+                    changeWorkingState(Constants.STATE_NOT_WORKING);
+                    setLoggedUser();
+                    findUserDevice();
 
                 }
 
