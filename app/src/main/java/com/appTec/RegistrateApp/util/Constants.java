@@ -1,6 +1,20 @@
 package com.appTec.RegistrateApp.util;
 
 public class Constants {
+    /**
+     * Here goes the constants for no hardcoding
+     * */
+
+
+    // Urls
+    public static final String BASE_URL = "https://registrate-app.herokuapp.com/api/";
+    public static final String NOTIFICATIONS_URL = "notifications";
+
+
+    // String messages (Logs)
+    public static final String UPDATING_CHANGES = "Actualizando datos";
+
+
     public static final String SHARED_PREFERENCES_GLOBAL = "com.appTec.RegistrateApp.PREFERENCES_FILE_KEY";
     public static final String CURRENT_STATE = "CURRENT_STATE";
     public static final String LOGIN_USER_STATE = "LOGGED";
@@ -15,6 +29,6 @@ public class Constants {
 
     public static final String LAST_EXIT_TIME = "LAST_EXIT_TIME";
 
-    //String messages
-    public static final String UPDATING_CHANGES = "Actualizando datos";
+
+
 }

@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Regístrate</string>
     <string name="title_activity_bottom_navigation">BottomNavigation</string>
-    <string name="title_home">Panel Principal</string>
+    <string name="home_fragment_title">Panel Principal</string>
     <string name="title_dashboard">Historial</string>
-    <string name="title_notifications">Permisos</string>
-    <string name="title_devices">Equipos</string>
+
+    <string name="devices_fragment_title">Equipos</string>
 
     <string name="geofences_added">Geofences added</string>
     <string name="geofences_removed">Geofences removed</string>
@@ -37,5 +37,14 @@
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.</string>
     <string name="settings">Settings</string>
+
+    <!-- UI string values -->
+    <string name="empty_notifications_message">No hay notificaciones nuevas en este momento.</string>
+    <string name="notifications_fragment_title">Notificaciones</string>
+    <string name="permissions_fragment_title">Permisos</string>
+    <string name="parameter_missing_error">Parámetro requerido</string>
+    <string name="login_progress_dialog_message">Autenticando usuario</string>
+    <string name="home_text_view_start_message">Bienvenido</string>
+    <string name="home_button_start_message">Iniciar</string>
 
 </resources>

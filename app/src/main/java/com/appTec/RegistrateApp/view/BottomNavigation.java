@@ -1,7 +1,6 @@
 package com.appTec.RegistrateApp.view;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -9,34 +8,29 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.appTec.RegistrateApp.BuildConfig;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.Permission;
-import com.appTec.RegistrateApp.models.PermissionStatus;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
-import com.appTec.RegistrateApp.services.alarmmanager.AlarmBroadcastReceiver;
-import com.appTec.RegistrateApp.services.geofence.GeofenceBroadcastReceiver;
-import com.appTec.RegistrateApp.services.geofence.GeofenceConstants;
-import com.appTec.RegistrateApp.services.geofence.GeofenceErrorMessages;
-import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
-import com.appTec.RegistrateApp.services.webServices.ApiClient;
-import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionRetrofitInterface;
+import com.appTec.RegistrateApp.presenter.HomePresenterImpl;
+import com.appTec.RegistrateApp.repository.geofence.GeofenceBroadcastReceiver;
+import com.appTec.RegistrateApp.repository.geofence.GeofenceConstants;
+import com.appTec.RegistrateApp.repository.geofence.GeofenceErrorMessages;
+import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
 import com.appTec.RegistrateApp.util.Constants;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.assistance.AssistanceFragment;
+import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications.NotificationsFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home.HomeFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device.DeviceFragment;
@@ -47,16 +41,11 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -64,19 +53,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class BottomNavigation extends AppCompatActivity implements
         DialogDevice.NoticeDialogListener,
@@ -99,10 +80,12 @@ public class BottomNavigation extends AppCompatActivity implements
     private List<Geofence> geofenceList;
     private PendingIntent geofencePendingIntent;
 
+    // Fragments
     final HomeFragment homeFragment = HomeFragment.newInstance();
     final PermissionFragment permissionFragment = PermissionFragment.newInstance();
     final DeviceFragment deviceFragment = new DeviceFragment();
     final AssistanceFragment assistanceFragment = new AssistanceFragment();
+    final NotificationsFragment notificationsFragment = new NotificationsFragment();
 
 
     TelephonyManager telephonyManager;
@@ -115,7 +98,6 @@ public class BottomNavigation extends AppCompatActivity implements
     private DrawerLayout drawer;
     private TextView companyName;
     private TextView userFullName;
-
 
 
     //User data
@@ -134,6 +116,8 @@ public class BottomNavigation extends AppCompatActivity implements
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
         user = (User) bundle.getSerializable("user");
+
+
 
         //Hay casos en los quedevice puede venir en null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! bug
         device = (Device) bundle.getSerializable("device");
@@ -162,7 +146,7 @@ public class BottomNavigation extends AppCompatActivity implements
         companyName = (TextView) viewNavHeader.findViewById(R.id.company_name);
         userFullName = (TextView) viewNavHeader.findViewById(R.id.user_fullname);
         companyName.setText(user.getCompany().getName());
-        userFullName.setText(user.getNombres()+" "+user.getApellidos());
+        userFullName.setText(user.getName()+" "+user.getLastName());
 
 
 
@@ -232,14 +216,16 @@ public class BottomNavigation extends AppCompatActivity implements
                         homeFragment.setCompany(user.getCompany());
                         homeFragment.setDevice(device);
                         break;
-                    case R.id.navigation_assistance:
-                        lblToolbarName.setText("Historial");
+                    case R.id.navigation_notifications:
+                        lblToolbarName.setText("Notificaciones");
                         toolbar.getMenu().clear();
                         getSupportActionBar().show();
-                        ft.replace(R.id.nav_host_fragment, assistanceFragment);
+
+                        ft.replace(R.id.nav_host_fragment, notificationsFragment);
                         break;
 
                     case R.id.navigation_permission:
+                        lblToolbarName.setText("Permisos");
                         Bundle permissionBundle = new Bundle();
                         permissionBundle.putSerializable("user", user);
                         permissionBundle.putSerializable("lstPermissionType", lstPermissionType);

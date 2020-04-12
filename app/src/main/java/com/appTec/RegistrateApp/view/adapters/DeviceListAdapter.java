@@ -35,8 +35,8 @@ public class DeviceListAdapter extends BaseAdapter {
         TextView txtDeviceImei = (TextView) convertView.findViewById(R.id.txtDeviceImei);
         TextView txtDeviceStatus = (TextView) convertView.findViewById(R.id.txtDeviceStatus);
 
-        txtDeviceName.setText(lstDevices.get(position).getNombre());
-        txtDeviceModel.setText(lstDevices.get(position).getModelo());
+        txtDeviceName.setText(lstDevices.get(position).getName());
+        txtDeviceModel.setText(lstDevices.get(position).getModel());
         txtDeviceImei.setText(lstDevices.get(position).getImei());
         if(lstDevices.get(position).isStatus()){
             txtDeviceStatus.setText("Habilitado");

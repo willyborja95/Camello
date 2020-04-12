@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Permission;
-import com.appTec.RegistrateApp.services.webServices.ApiClient;
-import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionRetrofitInterface;
+import com.appTec.RegistrateApp.repository.webServices.ApiClient;
+import com.appTec.RegistrateApp.repository.webServices.interfaces.PermissionRetrofitInterface;
 import com.appTec.RegistrateApp.util.Constants;
 import com.google.gson.JsonObject;
 

@@ -1,14 +1,9 @@
 package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,22 +15,16 @@ import androidx.fragment.app.Fragment;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Device;
-import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
-import com.appTec.RegistrateApp.services.webServices.ApiClient;
-import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
+import com.appTec.RegistrateApp.presenter.DevicePresenterImpl;
+import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
 import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.adapters.DeviceListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-
-public class DeviceFragment extends Fragment {
+public class DeviceFragment extends Fragment implements DeviceView {
 
     //UI elements
     private FloatingActionButton fabAddDevice;
@@ -48,6 +37,9 @@ public class DeviceFragment extends Fragment {
     SharedPreferences pref;
     DatabaseAdapter databaseAdapter;
     TelephonyManager telephonyManager;
+
+    // ? Instance of device presenter here.
+    DevicePresenterImpl devicePresenter;
 
 
     public void addDeviceToList(Device device) {
@@ -68,6 +60,9 @@ public class DeviceFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         Device device = (Device) bundle.getSerializable("device");
+
+        // Initialize the presenter
+        devicePresenter = new DevicePresenterImpl(this);
 
 
         fabAddDevice = (FloatingActionButton) fragmentDeviceView.findViewById(R.id.fabAgregarDispositivo);
@@ -109,6 +104,18 @@ public class DeviceFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
+    }
+
+    @Override
+    public void getDevices() {
+        /** Call the presenter */
+
+    }
+
+    @Override
+    public void showDevices(ArrayList<Device> devices) {
+        /** Show the devices on screen */
 
     }
 }
