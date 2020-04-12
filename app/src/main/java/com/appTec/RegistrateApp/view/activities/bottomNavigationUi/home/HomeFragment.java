@@ -8,19 +8,20 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
+import android.widget.Chronometer;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Assistance;
@@ -73,6 +74,8 @@ public class HomeFragment extends Fragment implements
     public static final Locale LOCALE_ES = Locale.forLanguageTag("es-419");
 
 
+    @BindView(R.id.timer)
+    Chronometer timer;
     @BindView(R.id.calendarView)
     CalendarView calendarView;
     @BindView(R.id.start_timer_btn)
@@ -129,7 +132,16 @@ public class HomeFragment extends Fragment implements
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, root);
 
-
+        timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            public void onChronometerTick(Chronometer cArg) {
+                long time = SystemClock.elapsedRealtime() - cArg.getBase();
+                int h = (int) (time / 3600000);
+                int m = (int) (time - h * 3600000) / 60000;
+                int s = (int) (time - h * 3600000 - m * 60000) / 1000;
+                cArg.setText(String.format("%02d:%02d:%02d", h, m, s));
+            }
+        });
+        timer.setText("00:00:00");
         bottomNavigationActivity = (BottomNavigation) getActivity();
         dialog = new ProgressDialog(getActivity());
 
@@ -182,7 +194,11 @@ public class HomeFragment extends Fragment implements
         calendarView.setup(firstMonth, lastMonth, firstDayOfWeek);
         calendarView.scrollToMonth(currentMonth);
 
-
+        homeViewModel.getText().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+            }
+        });
         return root;
     }
 
@@ -294,7 +310,7 @@ public class HomeFragment extends Fragment implements
     }
 
     public void updateTimer() {
-
+        timer.setText("00:00:00");
         if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
 
             TimeRetrofit timeRetrofit = ApiClient.getClient().create(TimeRetrofit.class);
@@ -314,7 +330,8 @@ public class HomeFragment extends Fragment implements
                             int seconds = Integer.valueOf(workingTime.split(":")[2]);
                             workingTimeMilis = TimeUnit.HOURS.toMillis(hours) + TimeUnit.MINUTES.toMillis(minutes) + TimeUnit.SECONDS.toMillis(seconds);
                         }
-
+                        timer.setBase(SystemClock.elapsedRealtime() - workingTimeMilis);
+                        timer.start();
                     }
                 }
 
@@ -444,7 +461,7 @@ public class HomeFragment extends Fragment implements
                 // Unregister geofencing
                 bottomNavigationActivity.removeGeofencesHandler();
                 dimissEntranceDialog();
-
+                timer.stop();
                 showExitMessage();
 
                 // Cancelar AlarmManager
@@ -526,12 +543,13 @@ public class HomeFragment extends Fragment implements
             //Change to working status
             if (this.device != null) {
                 String lastTimeExited = getLastTimeExited();
-
-                if ((getCurrentWorkingState().equals(Constants.STATE_NOT_WORKING)) && !lastTimeExited.equals("")) {
+                boolean timerIsRunning = timer.getText() != "00:00:00";
+                if ((getCurrentWorkingState().equals(Constants.STATE_NOT_WORKING)) && !lastTimeExited.equals("") && timerIsRunning) {
                     bottomNavigationActivity.removeGeofencesHandler();
                     showExitMessage();
                     startTimerButton.setText(getButtonTextForState(getCurrentWorkingState()));
-
+                    timer.stop();
+                    timer.setText("00:00:00");
                 } else if (getCurrentWorkingState().equals(Constants.STATE_NOT_WORKING)) {
                     showProgressDialog("Registrando su entrada ...");
                     // Post server
