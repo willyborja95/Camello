@@ -49,7 +49,9 @@ public class NotificationInteractorImpl implements NotificationInteractor {
                     /*
                      * Todo
                      * */
-                    notificationPresenter.showNotNewNotificationsMessage();
+                    if (notificationPresenter != null) {
+                        notificationPresenter.showNotNewNotificationsMessage();
+                    }
                 } else {
                     /*
                      * Parse the data into notifications objects
