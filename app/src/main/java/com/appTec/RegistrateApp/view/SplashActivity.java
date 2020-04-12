@@ -10,10 +10,6 @@ import android.os.Handler;
 import com.appTec.RegistrateApp.R;
 
 public class SplashActivity extends AppCompatActivity {
-    /**
-     * Deprecated activity. It is don't used anymore.
-     * @param savedInstanceState
-     */
 
 
     @Override
