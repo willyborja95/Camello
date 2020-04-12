@@ -8,6 +8,6 @@ public interface NotificationInteractor {
 
 
     void getNotifications(); // Get the notifications from web service
-    void showNotifications(ArrayList<Notification> notifications); // To presenter
+    void returnNotifications(ArrayList<Notification> notifications); // To presenter
 
 }
