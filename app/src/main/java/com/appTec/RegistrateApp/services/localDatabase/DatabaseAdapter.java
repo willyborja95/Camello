@@ -25,7 +25,7 @@ public class DatabaseAdapter {
 
     private DatabaseAdapter(Context context) {
         this.context = context;
-        sqLiteDatabase = DataBaseHelper.getInstance(this.context, DB_NAME, null, DB_VERSION).getWritableDatabase();
+        sqLiteDatabase = new DatabaseHelper(this.context, DB_NAME, null, DB_VERSION).getWritableDatabase();
     }
 
     public static DatabaseAdapter getDatabaseAdapterInstance(Context context) {
@@ -164,7 +164,36 @@ public class DatabaseAdapter {
     }
 
 
+    private static class DatabaseHelper extends SQLiteOpenHelper {
 
+        public DatabaseHelper(Context context, String databaseName, SQLiteDatabase.CursorFactory factory, int dbVersion) {
+            super(context, databaseName, factory, dbVersion);
+        }
+
+        @Override
+        public void onConfigure(SQLiteDatabase db) {
+            super.onConfigure(db);
+            db.setForeignKeyConstraintsEnabled(true);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase sqLiteDatabase) {
+            String sqlCompanyScript = "CREATE TABLE IF NOT EXISTS Company (id INTEGER primary key, name TEXT, latitude TEXT, longitude TEXT, radius REAL) ";
+            String sqlUserScript = "CREATE TABLE IF NOT EXISTS User (id INTEGER primary key, names TEXT not null, lastnames TEXT not null, email TEXT not null) ";
+            String sqlDeviceScript = "CREATE TABLE IF NOT EXISTS Device (id INTEGER primary key, name TEXT, model TEXT, imei TEXT, status INTEGER) ";
+            String sqlPermissionTypeScript = "CREATE TABLE IF NOT EXISTS PermissionType (id INTEGER primary key, name TEXT) ";
+            sqLiteDatabase.execSQL(sqlCompanyScript);
+            sqLiteDatabase.execSQL(sqlUserScript);
+            sqLiteDatabase.execSQL(sqlDeviceScript);
+            sqLiteDatabase.execSQL(sqlPermissionTypeScript);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS User");
+            onCreate(sqLiteDatabase);
+        }
+    }
 
 
 }
