@@ -6,8 +6,7 @@ public interface LoginPresenter {
      */
 
     void getInitialData();  // From the view
-    void loadInitialData(); // To the interactor
-    void handleLogin(String email, String password);     // To the interactor
+    void loadInitialData(); // TO the interactor
 
 
 

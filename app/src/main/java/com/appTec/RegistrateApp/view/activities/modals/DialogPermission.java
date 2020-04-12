@@ -20,12 +20,14 @@ import androidx.fragment.app.DialogFragment;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Permission;
+import com.appTec.RegistrateApp.models.PermissionStatus;
 import com.appTec.RegistrateApp.models.PermissionType;
-import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class DialogPermission extends DialogFragment {
 

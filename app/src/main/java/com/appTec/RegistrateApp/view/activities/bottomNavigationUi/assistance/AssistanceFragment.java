@@ -17,14 +17,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Assistance;
-import com.appTec.RegistrateApp.repository.webServices.ApiClient;
-import com.appTec.RegistrateApp.repository.webServices.interfaces.AssistanceRetrofitInterface;
+import com.appTec.RegistrateApp.models.Device;
+import com.appTec.RegistrateApp.models.Permission;
+import com.appTec.RegistrateApp.services.webServices.ApiClient;
+import com.appTec.RegistrateApp.services.webServices.interfaces.AssistanceRetrofitInterface;
+import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionRetrofitInterface;
 import com.appTec.RegistrateApp.util.Constants;
+import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
+import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.adapters.AssistanceListAdapter;
+import com.appTec.RegistrateApp.view.adapters.DeviceListAdapter;
+import com.appTec.RegistrateApp.view.adapters.PermissionListAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -32,6 +41,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -6,8 +6,8 @@ import com.appTec.RegistrateApp.view.LoginActivityView;
 public class LoginPresenterImpl implements LoginPresenter {
 
     // Attributes
-    private LoginActivityView loginActivityView; // Passed as attribute
-    private LoginInteractorImpl loginInteractor; // Instanced here
+    LoginActivityView loginActivityView; // Passed as attribute
+    LoginInteractorImpl loginInteractor; // Instanced here
 
 
     // Constructor
@@ -37,14 +37,4 @@ public class LoginPresenterImpl implements LoginPresenter {
          */
         loginActivityView.loadInitialData();
     }
-
-    @Override
-    public void handleLogin(String email, String password) {
-        /**
-         *
-         */
-
-    }
-
-
 }
