@@ -1,12 +1,10 @@
 package com.appTec.RegistrateApp.presenter;
 
-import android.app.Activity;
 import android.view.View;
 
 import com.appTec.RegistrateApp.interactor.NotificationInteractor;
 import com.appTec.RegistrateApp.interactor.NotificationInteractorImpl;
 import com.appTec.RegistrateApp.models.Notification;
-import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications.NotificationView;
 
 import java.util.ArrayList;
 
@@ -17,10 +15,10 @@ public class NotificationPresenterImpl implements NotificationPresenter{
     * */
 
     // Instance of Interactor and View
-    private NotificationView notificationView;
+    private View notificationView;
     private NotificationInteractorImpl notificationInteractor;
 
-    public NotificationPresenterImpl(NotificationView notificationView) {
+    public NotificationPresenterImpl(View notificationView) {
         /*
         * Constructor
         * */
@@ -41,7 +39,6 @@ public class NotificationPresenterImpl implements NotificationPresenter{
         /*
         * Calling the view
         * */
-        notificationView.showNotifications(notifications);
-
+        // notificationView.showNotifications();
     }
 }
