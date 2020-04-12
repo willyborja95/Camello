@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 public class User implements Serializable {
     private int id;
-    private String name;
-    private String lastName;
+    private String nombres;
+    private String apellidos;
     private String email;
     private Company company;
     private ArrayList<WorkingPeriod> workingPeriodList;
@@ -19,20 +19,20 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNombres() {
+        return nombres;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getApellidos() {
+        return apellidos;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 
     public String getEmail() {
