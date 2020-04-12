@@ -35,6 +35,7 @@ import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitIn
 import com.appTec.RegistrateApp.services.webServices.interfaces.LoginRetrofitInterface;
 import com.appTec.RegistrateApp.services.webServices.interfaces.PermissionTypeRetrofitInterface;
 import com.appTec.RegistrateApp.util.Constants;
+import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -223,8 +224,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         String deviceImei = jsonDevice.get("imei").getAsString();
                         boolean deviceStatus = jsonDevice.get("estado").getAsBoolean();
                         device.setId(deviceId);
-                        device.setName(deviceName);
-                        device.setModel(deviceModel);
+                        device.setNombre(deviceName);
+                        device.setModelo(deviceModel);
                         device.setImei(deviceImei);
                         device.setStatus(deviceStatus);
                         databaseAdapter.insertDevice(device);

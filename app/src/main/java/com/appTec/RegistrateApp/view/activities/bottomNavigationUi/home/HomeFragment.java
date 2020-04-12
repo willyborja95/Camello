@@ -1,9 +1,13 @@
 package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home;
 
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,11 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -27,6 +34,7 @@ import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Assistance;
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
+import com.appTec.RegistrateApp.services.alarmmanager.AlarmBroadcastReceiver;
 import com.appTec.RegistrateApp.services.webServices.ApiClient;
 import com.appTec.RegistrateApp.services.webServices.interfaces.AssistanceRetrofitInterface;
 import com.appTec.RegistrateApp.services.webServices.interfaces.TimeRetrofit;
@@ -40,8 +48,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.kizitonwose.calendarview.CalendarView;
@@ -50,12 +62,14 @@ import com.kizitonwose.calendarview.model.CalendarMonth;
 import com.kizitonwose.calendarview.ui.DayBinder;
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.YearMonth;
 import org.threeten.bp.format.TextStyle;
 import org.threeten.bp.temporal.WeekFields;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -414,7 +428,7 @@ public class HomeFragment extends Fragment implements
                         Log.d("log", errorJson.toString());
                         Log.d("log", "deviceId");
                         Log.d("log", String.valueOf(device.getId()));
-                        Log.d("log", String.valueOf(device.getName()));
+                        Log.d("log", String.valueOf(device.getNombre()));
 
                     } catch (Exception e) {
                         e.printStackTrace();

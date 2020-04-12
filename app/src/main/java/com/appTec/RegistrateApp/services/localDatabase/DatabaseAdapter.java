@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
@@ -74,8 +75,8 @@ public class DatabaseAdapter {
         }
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", device.getId());
-        contentValues.put("name", device.getName());
-        contentValues.put("model", device.getModel());
+        contentValues.put("name", device.getNombre());
+        contentValues.put("model", device.getModelo());
         contentValues.put("imei", device.getImei());
         contentValues.put("status", deviceStatus);
         return sqLiteDatabase.insert("Device", null, contentValues) > 0;
@@ -89,8 +90,8 @@ public class DatabaseAdapter {
                 device = new Device();
                 int deviceStatus = cursor.getInt(4);
                 device.setId(cursor.getInt(0));
-                device.setName(cursor.getString(1));
-                device.setModel(cursor.getString(2));
+                device.setNombre(cursor.getString(1));
+                device.setModelo(cursor.getString(2));
                 device.setImei(cursor.getString(3));
                 if (deviceStatus == 0) {
                     device.setStatus(false);
