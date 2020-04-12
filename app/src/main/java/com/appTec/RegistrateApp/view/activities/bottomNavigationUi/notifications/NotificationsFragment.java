@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.appTec.RegistrateApp.R;
@@ -23,9 +25,10 @@ import java.util.ArrayList;
 
 public class NotificationsFragment extends Fragment implements NotificationView {
 
+    private final String TAG = "NotificationsFragment";
 
     //UI elements
-    private ListView notificationsListVIew;
+    private ListView notificationsListView;
     private TextView notificationTextView;
     ProgressDialog progressDialog;
 
@@ -36,27 +39,31 @@ public class NotificationsFragment extends Fragment implements NotificationView 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View fragmentDeviceView = inflater.inflate(R.layout.fragment_device, container, false);
+        View fragmentDeviceView = inflater.inflate(R.layout.notifications_fragment_notification, container, false);
 
         Bundle bundle = this.getArguments();
 
 
+        return fragmentDeviceView;
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         // Attached the presenter
         notificationPresenter = new NotificationPresenterImpl(this);
 
         // Calling the presenter
         notificationPresenter.getNotifications();
 
-
-
         // Linking UI elements
         progressDialog = new ProgressDialog(getContext());
-        notificationsListVIew = fragmentDeviceView.findViewById(R.id.notification_list_view);
-        notificationTextView = fragmentDeviceView.findViewById(R.id.notification_text_view);
+        notificationsListView = view.findViewById(R.id.notification_list_view);
+        notificationTextView = view.findViewById(R.id.notification_text_view);
 
-        return fragmentDeviceView;
+        showNotNewNotificationsMessage();
     }
-
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -65,14 +72,14 @@ public class NotificationsFragment extends Fragment implements NotificationView 
     }
 
 
-
-
     @Override
     public void showNotifications(ArrayList<Notification> notifications) {
         /*
          * Show notifications on screen
          * */
-        notificationsListVIew.setAdapter(new NotificationsListAdapter(getContext(), notifications));
+
+
+        notificationsListView.setAdapter(new NotificationsListAdapter(getContext(), notifications));
     }
 
     //Dialogs
@@ -113,8 +120,17 @@ public class NotificationsFragment extends Fragment implements NotificationView 
 
     @Override
     public void showNotNewNotificationsMessage() {
-        if(notificationTextView != null){
+        if (notificationTextView != null) {
+
             notificationTextView.setVisibility(View.VISIBLE);
+        } else {
+            Log.d(TAG, "notificationTextView it is null");
+        }
+        if (notificationsListView != null) {
+
+            notificationsListView.setVisibility(View.GONE);
+        } else {
+            Log.d(TAG, "notificationListView it is null");
         }
 
     }
