@@ -23,7 +23,6 @@ import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
-import com.appTec.RegistrateApp.presenter.HomePresenterImpl;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceBroadcastReceiver;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceConstants;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceErrorMessages;
@@ -116,8 +115,6 @@ public class BottomNavigation extends AppCompatActivity implements
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
         user = (User) bundle.getSerializable("user");
-
-
 
         //Hay casos en los quedevice puede venir en null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! bug
         device = (Device) bundle.getSerializable("device");
