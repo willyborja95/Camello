@@ -166,7 +166,7 @@ public class BottomNavigation extends AppCompatActivity implements
         companyName = (TextView) viewNavHeader.findViewById(R.id.company_name);
         userFullName = (TextView) viewNavHeader.findViewById(R.id.user_fullname);
         companyName.setText(user.getCompany().getName());
-        userFullName.setText(user.getName()+" "+user.getLastName());
+        userFullName.setText(user.getNombres()+" "+user.getApellidos());
 
 
 
