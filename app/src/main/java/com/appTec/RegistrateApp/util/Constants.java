@@ -7,7 +7,7 @@ public class Constants {
 
 
     // Urls
-    public static final String BASE_URL = "https://registrateapp.com.ec/api/";
+    public static final String BASE_URL = "https://registrate-app.herokuapp.com/api/";
     public static final String NOTIFICATIONS_URL = "notifications";
 
 
@@ -28,6 +28,8 @@ public class Constants {
     public static final String USER_TOKEN = "USERTOKEN";
 
     public static final String LAST_EXIT_TIME = "LAST_EXIT_TIME";
+
+
 
 
 

@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.services.webServices;
+package com.appTec.RegistrateApp.repository.webServices;
 
 import android.content.Context;
 import android.content.SharedPreferences;
