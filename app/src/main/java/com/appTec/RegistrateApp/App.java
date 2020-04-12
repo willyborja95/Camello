@@ -2,7 +2,7 @@ package com.appTec.RegistrateApp;
 
 import android.app.Application;
 
-import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
 
 public class App extends Application {
     DatabaseAdapter databaseAdapter;

@@ -1,17 +1,24 @@
-package com.appTec.RegistrateApp.repository.alarmmanager;
+package com.appTec.RegistrateApp.services.alarmmanager;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
+import com.appTec.RegistrateApp.services.location.LocationUpdaterService;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.repository.geofence;
+package com.appTec.RegistrateApp.services.geofence;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
