@@ -16,8 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.Manifest.permission;
 
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.appTec.RegistrateApp.R;
@@ -67,8 +70,8 @@ public class DialogDevice extends DialogFragment {
                         Log.d("deviceLog", "click en ok");
 
                         Device deviceDialog = new Device();
-                        deviceDialog.setName(txtDeviceName.getText().toString());
-                        deviceDialog.setModel(txtDeviceModel.getText().toString());
+                        deviceDialog.setNombre(txtDeviceName.getText().toString());
+                        deviceDialog.setModelo(txtDeviceModel.getText().toString());
                         saveDevice(deviceDialog);
                     }
                 })
@@ -112,14 +115,14 @@ public class DialogDevice extends DialogFragment {
 
                     Device device = new Device();
                     device.setId(id);
-                    device.setName(deviceName);
-                    device.setModel(deviceModel);
+                    device.setNombre(deviceName);
+                    device.setModelo(deviceModel);
                     device.setImei(deviceImei);
                     device.setStatus(deviceStatus);
                     Log.d("deviceStatus", String.valueOf(device.getId()));
                     Log.d("deviceStatus", device.getImei());
-                    Log.d("deviceStatus", device.getName());
-                    Log.d("deviceStatus", device.getModel());
+                    Log.d("deviceStatus", device.getNombre());
+                    Log.d("deviceStatus", device.getModelo());
                     Log.d("deviceStatus", String.valueOf(device.isStatus()));
                     databaseAdapter.insertDevice(device);
                     listener.onDeviceSaved(device);

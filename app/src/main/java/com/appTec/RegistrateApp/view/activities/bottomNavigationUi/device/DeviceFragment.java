@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Device;
-import com.appTec.RegistrateApp.presenter.DevicePresenterImpl;
 import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
 import com.appTec.RegistrateApp.services.webServices.ApiClient;
 import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
@@ -36,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class DeviceFragment extends Fragment implements DeviceView {
+public class DeviceFragment extends Fragment {
 
     //UI elements
     private FloatingActionButton fabAddDevice;
@@ -49,9 +48,6 @@ public class DeviceFragment extends Fragment implements DeviceView {
     SharedPreferences pref;
     DatabaseAdapter databaseAdapter;
     TelephonyManager telephonyManager;
-
-    // ? Instance of device presenter here.
-    DevicePresenterImpl devicePresenter;
 
 
     public void addDeviceToList(Device device) {
@@ -72,9 +68,6 @@ public class DeviceFragment extends Fragment implements DeviceView {
 
         Bundle bundle = this.getArguments();
         Device device = (Device) bundle.getSerializable("device");
-
-        // Initialize the presenter
-        devicePresenter = new DevicePresenterImpl(this);
 
 
         fabAddDevice = (FloatingActionButton) fragmentDeviceView.findViewById(R.id.fabAgregarDispositivo);
@@ -116,18 +109,6 @@ public class DeviceFragment extends Fragment implements DeviceView {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
-    }
-
-    @Override
-    public void getDevices() {
-        /** Call the presenter */
-
-    }
-
-    @Override
-    public void showDevices(ArrayList<Device> devices) {
-        /** Show the devices on screen */
 
     }
 }
