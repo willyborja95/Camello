@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.repository.sharedpreferences;
+package com.appTec.RegistrateApp.services.sharedpreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

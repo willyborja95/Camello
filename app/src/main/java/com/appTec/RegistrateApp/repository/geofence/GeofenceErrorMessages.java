@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.repository.geofence;
+package com.appTec.RegistrateApp.services.geofence;
 
 import android.content.Context;
 import android.content.res.Resources;
