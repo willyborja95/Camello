@@ -4,21 +4,21 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/home_fragment_title" />
+        android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_assistance"
         android:icon="@drawable/ic_assistance"
-        android:title="@string/notifications_fragment_title" />
+        android:title="Historial" />
 
     <item
         android:id="@+id/navigation_permission"
         android:icon="@drawable/ic_permission"
-        android:title="@string/permissions_fragment_title" />
+        android:title="@string/title_notifications" />
 
     <item
         android:id="@+id/navigation_device"
         android:icon="@drawable/ic_device"
-        android:title="@string/devices_fragment_title" />
+        android:title="@string/title_devices" />
 
 </menu>
