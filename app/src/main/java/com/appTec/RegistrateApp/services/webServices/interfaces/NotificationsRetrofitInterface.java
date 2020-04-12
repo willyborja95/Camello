@@ -12,5 +12,5 @@ public interface NotificationsRetrofitInterface {
 
     // Get all the notifications
     @GET(Constants.NOTIFICATIONS_URL)
-    Call<JsonObject> get(@Header("authorization") String token);
+    Call<JsonObject> get(@Header("authorization") String token, @Path("userId") int userId);
 }
