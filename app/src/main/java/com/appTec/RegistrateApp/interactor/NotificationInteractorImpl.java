@@ -63,7 +63,7 @@ public class NotificationInteractorImpl implements NotificationInteractor {
 
                         JsonObject notificationJson = notificationListJson.get(i).getAsJsonObject();
 
-                          // Todo: Parse the data
+                        // Todo: Parse the data
 //                        String title = notificationJson.get("title").getAsString();
 //                        String sentDate = notificationJson.get("sentDate").getAsString();
 //
@@ -75,7 +75,7 @@ public class NotificationInteractorImpl implements NotificationInteractor {
                     }
 
                     // Sent the result array to the Presenter
-                    showNotifications(notificationsResult);
+                    notificationPresenter.showNotifications(notificationsResult);
                 }
 
 
