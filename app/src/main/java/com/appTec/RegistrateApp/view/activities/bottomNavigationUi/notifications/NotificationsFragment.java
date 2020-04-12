@@ -12,20 +12,24 @@ import androidx.fragment.app.Fragment;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Notification;
-import com.appTec.RegistrateApp.presenter.NotificationPresenterImpl;
 import com.appTec.RegistrateApp.view.adapters.NotificationsListAdapter;
 
 import java.util.ArrayList;
 
-public class NotificationsFragment extends Fragment implements NotificationView {
+public class NotificationsFragment extends Fragment {
 
 
     //UI elements
     private ListView notificationsListVIew;
 
+    //Business logic elements
+    private ArrayList<Notification> notifications = new ArrayList<Notification>();
 
-    // ? Presenter instance here. Not sure if this is the best way.
-    NotificationPresenterImpl notificationPresenter;
+
+
+    private void updateListView() {
+        notificationsListVIew.setAdapter(new NotificationsListAdapter(getContext(), notifications));
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -34,15 +38,14 @@ public class NotificationsFragment extends Fragment implements NotificationView 
 
         Bundle bundle = this.getArguments();
 
+        Notification device = (Notification) bundle.getSerializable("notification");
 
-        notificationsListVIew = fragmentDeviceView.findViewById(R.id.notification_list_view);
 
 
-        // Attached the presenter
-        notificationPresenter = new NotificationPresenterImpl(this);
+        notificationsListVIew = (ListView) fragmentDeviceView.findViewById(R.id.notification_list_view);
+        notificationsListVIew.setAdapter(new NotificationsListAdapter(getContext(), notifications));
 
-        // Calling the presenter
-        notificationPresenter.getNotifications();
+        updateListView();
 
 
         return fragmentDeviceView;
@@ -57,17 +60,5 @@ public class NotificationsFragment extends Fragment implements NotificationView 
     }
 
 
-    @Override
-    public void getNotifications() {
-        // Call to presenter
-        notificationPresenter.getNotifications();
-    }
 
-    @Override
-    public void showNotifications(ArrayList<Notification> notifications) {
-        /*
-        * Show notifications on screen
-        * */
-        notificationsListVIew.setAdapter(new NotificationsListAdapter(getContext(), notifications));
-    }
 }
