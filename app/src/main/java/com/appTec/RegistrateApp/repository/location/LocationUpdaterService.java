@@ -1,5 +1,6 @@
-package com.appTec.RegistrateApp.repository.location;
+package com.appTec.RegistrateApp.services.location;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;

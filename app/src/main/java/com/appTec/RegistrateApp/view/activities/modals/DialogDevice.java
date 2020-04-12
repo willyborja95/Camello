@@ -22,9 +22,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Device;
-import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
-import com.appTec.RegistrateApp.repository.webServices.ApiClient;
-import com.appTec.RegistrateApp.repository.webServices.interfaces.DeviceRetrofitInterface;
+import com.appTec.RegistrateApp.services.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.services.webServices.ApiClient;
+import com.appTec.RegistrateApp.services.webServices.interfaces.DeviceRetrofitInterface;
 import com.appTec.RegistrateApp.util.Constants;
 import com.google.gson.JsonObject;
 

@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.repository.webServices.interfaces;
+package com.appTec.RegistrateApp.services.webServices.interfaces;
 
 import com.google.gson.JsonObject;
 

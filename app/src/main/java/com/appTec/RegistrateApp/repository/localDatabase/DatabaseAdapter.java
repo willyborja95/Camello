@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.repository.localDatabase;
+package com.appTec.RegistrateApp.services.localDatabase;
 
 import android.content.ContentValues;
 import android.content.Context;
