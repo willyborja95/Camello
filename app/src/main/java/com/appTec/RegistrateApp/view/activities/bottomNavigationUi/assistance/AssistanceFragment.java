@@ -49,9 +49,6 @@ import retrofit2.Response;
 
 
 public class AssistanceFragment extends Fragment {
-    /**
-     * Warning: This fragment is not used anymore
-     */
 
     ArrayList<Assistance> lstAssistances;
     ListView lvAssistance;
