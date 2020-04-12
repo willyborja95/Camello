@@ -9,13 +9,13 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home.HomeFragment"
-        android:label="@string/home_fragment_title"
+        android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_assistance"
         android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment"
-        android:label="@string/notifications_fragment_title"
+        android:label="Historial"
         tools:layout="@layout/fragment_assistance" />
 
     <fragment
