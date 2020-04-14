@@ -98,7 +98,9 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
 
-        getInitialData();
+        // Previous
+        loginPresenter.verifyPreviousLogin();
+        loginPresenter.getInitialData();
 
         if (getLoginUserStatus().equals(Constants.LOGGED_USER)) {
             this.user = databaseAdapter.getUser();
@@ -379,21 +381,5 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     }
 
 
-    // LoginActivityVIew interface view methods
-    @Override
-    public void getInitialData() {
-        /**
-         * Calling the presenter
-         */
-        loginPresenter.getInitialData();
 
-    }
-
-    @Override
-    public void loadInitialData() {
-        /**
-         *  From the presenter
-         */
-
-    }
 }

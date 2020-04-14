@@ -36,5 +36,13 @@ public class LoginInteractorImpl implements LoginInteractor {
         loginPresenter.loadInitialData();
 
     }
+
+    @Override
+    public void verifyPreviousLogin() {
+        /**
+         * Verifying if credentials are saved
+         */
+
+    }
 }
 

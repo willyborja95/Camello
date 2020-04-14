@@ -7,8 +7,5 @@ public interface LoginActivityView {
 
     // ToDo: Pass the LoginActivity methods here
 
-    void getInitialData(); // To the presenter
-    void loadInitialData(); // From the presenter // ToDo: Add the necessary attributes
-
 
 }
