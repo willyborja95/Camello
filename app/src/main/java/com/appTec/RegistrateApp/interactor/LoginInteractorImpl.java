@@ -65,7 +65,7 @@ public class LoginInteractorImpl implements LoginInteractor {
     }
 
     @Override
-    public void verifyPreviousLogin(Context context) {
+    public void verifyPreviousLogin() {
         /**
          * Verifying if credentials are saved
          */

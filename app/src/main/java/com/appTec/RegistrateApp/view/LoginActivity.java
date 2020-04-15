@@ -91,7 +91,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
 
         // Verified if a user is still saved
-        loginPresenter.verifyPreviousLogin(this);
+        loginPresenter.verifyPreviousLogin();
 
 
         loginPresenter.getInitialData(this);

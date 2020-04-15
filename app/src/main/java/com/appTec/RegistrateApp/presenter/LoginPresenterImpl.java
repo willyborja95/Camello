@@ -42,11 +42,11 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public void verifyPreviousLogin(Context context) {
+    public void verifyPreviousLogin() {
         /**
          * Call the interactor
          */
-        loginInteractor.verifyPreviousLogin(context);
+        loginInteractor.verifyPreviousLogin();
 
     }
 
