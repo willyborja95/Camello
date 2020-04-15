@@ -161,9 +161,11 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                     company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
                     company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
                     user.setCompany(company);
-                    setUserToken(response.body().get("token").toString().replace("\"", ""));
+                    ApiClient.setToken(response.body().get("token").toString().replace("\"", ""), getApplicationContext());
                     DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertUser(user);
                     DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertCompany(company);
+                    StaticData.setCurrentUser(user);
+                    StaticData.setCurrentCompany(company);
                     changeWorkingState(Constants.STATE_NOT_WORKING);
                     setLoggedUser();
                     findUserDevice();
@@ -194,19 +196,23 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     //Get user device
     public void findUserDevice() {
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(getUserToken(), StaticData.getCurrentUser().getId());
+        Log.d("User ", StaticData.getCurrentUser().getId()+"");
+        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(ApiClient.getToken(getApplicationContext()), StaticData.getCurrentUser().getId());
+        Log.d("Tokeen", ApiClient.getToken(getApplicationContext()));
         deviceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Log.d("deviceImei", "DEVICE ON RESPONSE OK");
 
+
                 JsonArray deviceList = response.body().getAsJsonArray("data");
+                Log.d("REEEEESSSPOONSE", deviceList.size()+"");
                 boolean deviceFound = false;
                 for (int i = 0; i < deviceList.size() && deviceFound == false; i++) {
                     JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
 
-                    if (deviceImei.equals(jsonDevice.get("imei").getAsString())) {
-                        device = new Device();
+                    if (StaticData.getCurrentImei().equals(jsonDevice.get("imei").getAsString())) {
+                        Device device = new Device();
                         int deviceId = jsonDevice.get("id").getAsInt();
                         String deviceName = jsonDevice.get("nombre").getAsString();
                         String deviceModel = jsonDevice.get("modelo").getAsString();
@@ -217,7 +223,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                         device.setModel(deviceModel);
                         device.setImei(deviceImei);
                         device.setStatus(deviceStatus);
-                        databaseAdapter.insertDevice(device);
+                        DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertDevice(device);
                         deviceFound = true;
                     }
                 }
@@ -277,14 +283,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         finish();
     }
 
-    //Shared preferences methods
-    public void setUserToken(String token) {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constants.USER_TOKEN, token);
-        editor.commit();
-    }
+
 
     public String getUserToken() {
         SharedPreferences sharedPref = this.getSharedPreferences(

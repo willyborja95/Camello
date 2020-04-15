@@ -1,5 +1,7 @@
 package com.appTec.RegistrateApp.presenter;
 
+import android.content.Context;
+
 import com.appTec.RegistrateApp.models.Notification;
 
 import java.util.ArrayList;

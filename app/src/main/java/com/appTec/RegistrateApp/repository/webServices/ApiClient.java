@@ -3,6 +3,7 @@ package com.appTec.RegistrateApp.repository.webServices;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.util.Constants;
 
 import java.util.concurrent.TimeUnit;
@@ -15,7 +16,6 @@ public class ApiClient {
 
     private static Retrofit retrofit = null;
 
-    private static String token = null;
 
     public static Retrofit getClient() {
         if (retrofit == null) {
@@ -37,23 +37,20 @@ public class ApiClient {
 
 
 
-    public static String getToken(){
-        /*
+    public static String getToken(Context context){
+        /**
         * Get the token previously saved without context
         * */
-        return ApiClient.token;
+        return SharedPreferencesHelper.getStringValue(context, Constants.USER_TOKEN, "");
     }
 
 
     public static void setToken(String value, Context context){
-        /*
+        /**
         * Save the token into shared preferences in private mode
         * */
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constants.USER_TOKEN, value);
-        editor.commit();
+        SharedPreferencesHelper.putStringValue(context,Constants.USER_TOKEN, value);
+
     }
 
 }
