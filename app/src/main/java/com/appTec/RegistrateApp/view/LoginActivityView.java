@@ -6,6 +6,6 @@ public interface LoginActivityView {
     * */
 
     // ToDo: Pass the LoginActivity methods here
-
+    void navigateToNextView();
 
 }

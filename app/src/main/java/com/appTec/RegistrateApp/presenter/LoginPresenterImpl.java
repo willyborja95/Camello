@@ -1,5 +1,8 @@
 package com.appTec.RegistrateApp.presenter;
 
+import android.app.Activity;
+import android.content.Context;
+
 import com.appTec.RegistrateApp.interactor.LoginInteractorImpl;
 import com.appTec.RegistrateApp.view.LoginActivityView;
 
@@ -23,11 +26,11 @@ public class LoginPresenterImpl implements LoginPresenter {
 
 
     @Override
-    public void getInitialData() {
+    public void getInitialData(Activity activity) {
         /**
          * Call the interactor
          */
-        loginInteractor.getInitialData();
+        loginInteractor.getInitialData(activity);
     }
 
     @Override
@@ -39,11 +42,27 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public void verifyPreviousLogin() {
+    public void verifyPreviousLogin(Context context) {
         /**
          * Call the interactor
          */
+        loginInteractor.verifyPreviousLogin(context);
 
+    }
 
+    @Override
+    public void navigateToNextView() {
+        /**
+         * Call the view
+         */
+        loginActivityView.navigateToNextView();
+    }
+
+    @Override
+    public void handleLogin(String email, String password) {
+        /**
+         * Calling the interactor
+         */
+        loginInteractor.handleLogin(email, password);
     }
 }

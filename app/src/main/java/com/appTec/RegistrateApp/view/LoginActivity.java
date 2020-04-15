@@ -30,6 +30,7 @@ import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.models.UserCredential;
 import com.appTec.RegistrateApp.models.WorkingPeriod;
 import com.appTec.RegistrateApp.presenter.LoginPresenterImpl;
+import com.appTec.RegistrateApp.repository.StaticData;
 import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
 import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.DeviceRetrofitInterface;
@@ -59,13 +60,6 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     ProgressDialog progressDialog;
 
     //Business logic elements
-    private String email;
-    private String password;
-    private String deviceImei;
-    private Device device;
-    private User user;
-    private ArrayList<PermissionType> lstPermissionType;
-    private DatabaseAdapter databaseAdapter;
     private TelephonyManager telephonyManager;
 
     /*
@@ -90,38 +84,18 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         progressDialog = new ProgressDialog(this);
 
 
-        lstPermissionType = new ArrayList<PermissionType>();
-
 
         btnLogin.setOnClickListener(this);
 
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
+
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
 
-        // Previous
-        loginPresenter.verifyPreviousLogin();
-        loginPresenter.getInitialData();
+        // Verified if a user is still saved
+        loginPresenter.verifyPreviousLogin(this);
 
-        if (getLoginUserStatus().equals(Constants.LOGGED_USER)) {
-            this.user = databaseAdapter.getUser();
-            this.device = databaseAdapter.getDevice();
-            this.user.setCompany(databaseAdapter.getCompany());
-            this.lstPermissionType = databaseAdapter.getPermissionType();
-            navidateToDashboard();
-        }
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
-                    checkSelfPermission(permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    checkSelfPermission(permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{
-                        android.Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                }, 225);
-            }
-        }
+        loginPresenter.getInitialData(this);
+
 
     }
 
@@ -136,8 +110,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.loginButton:
-                email = txtEmail.getText().toString().replaceAll("\\s", "");
-                password = txtPassword.getText().toString().replaceAll("\\s", "");
+                String email = txtEmail.getText().toString().replaceAll("\\s", "");
+                String password = txtPassword.getText().toString().replaceAll("\\s", "");
                 if ((TextUtils.isEmpty(email) || (TextUtils.isEmpty(password)))) {
                     txtEmail.setError(getString(R.string.parameter_missing_error));
                     txtPassword.setError(getString(R.string.parameter_missing_error));
@@ -168,14 +142,14 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                             ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
                         } else {
                             if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
-                                deviceImei = telephonyManager.getDeviceId();
+                                String deviceImei = telephonyManager.getDeviceId();
                             }
                             if (android.os.Build.VERSION.SDK_INT >= 26) {
-                                deviceImei = telephonyManager.getImei();
+                                String deviceImei = telephonyManager.getImei();
                             }
                         }
                     }
-                    user = new User();
+                    User user = new User();
                     Company company = new Company();
                     ArrayList<WorkingPeriod> workingPeriodList = new ArrayList<WorkingPeriod>();
                     user.setId(response.body().getAsJsonObject("data").get("id").getAsInt());
@@ -188,8 +162,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                     company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
                     user.setCompany(company);
                     setUserToken(response.body().get("token").toString().replace("\"", ""));
-                    databaseAdapter.insertUser(user);
-                    databaseAdapter.insertCompany(company);
+                    DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertUser(user);
+                    DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertCompany(company);
                     changeWorkingState(Constants.STATE_NOT_WORKING);
                     setLoggedUser();
                     findUserDevice();
@@ -220,7 +194,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     //Get user device
     public void findUserDevice() {
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(getUserToken(), user.getId());
+        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(getUserToken(), StaticData.getCurrentUser().getId());
         deviceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -272,12 +246,12 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                         int permissionTypeId = jsonPermissionType.get("id").getAsInt();
                         String permissionTypeName = jsonPermissionType.get("nombre").getAsString();
                         PermissionType permissionType = new PermissionType(permissionTypeId, permissionTypeName);
-                        databaseAdapter.insertPermissionType(permissionType);
-                        lstPermissionType.add(permissionType);
+                        DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertPermissionType(permissionType);
+                        StaticData.getPermissionTypes().add(permissionType);
                     }
                 }
                 hideLoginProgressDialog();
-                navidateToDashboard();
+                navigateToNextView();
             }
 
             @Override
@@ -288,15 +262,15 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     }
 
     //Change to BottomNavigation activity
-    public void navidateToDashboard() {
+    public void navigateToNextView() {
         Intent intent = new Intent(this, BottomNavigation.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle = new Bundle();
-        if (device != null) {
-            bundle.putSerializable("device", device);
+        if (StaticData.getCurrentDevice() != null) {
+            bundle.putSerializable("device", StaticData.getCurrentDevice());
         }
-        bundle.putSerializable("user", user);
-        bundle.putSerializable("lstPermissionType", lstPermissionType);
+        bundle.putSerializable("user", StaticData.getCurrentUser());
+        bundle.putSerializable("lstPermissionType", StaticData.getPermissionTypes());
         intent.putExtras(bundle);
         Log.d("DeviceLog", "navigation activated!");
         startActivity(intent);
@@ -327,12 +301,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         editor.commit();
     }
 
-    private String getLoginUserStatus() {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.LOGIN_USER_STATE,
-                "");
-    }
+
 
     private void changeWorkingState(String state) {
         SharedPreferences sharedPref = this.getSharedPreferences(

@@ -1,10 +1,14 @@
 package com.appTec.RegistrateApp.interactor;
 
+import android.app.Activity;
+import android.content.Context;
+
 public interface LoginInteractor {
 
 
-    void getInitialData();  // From the presenter
+    void getInitialData(Activity activity);  // From the presenter
     void loadInitialData(); // To the presenter
-    void verifyPreviousLogin(); //
+    void verifyPreviousLogin(Context context); // From the presenter
+    void handleLogin(String email, String password);    // From the presenter
 
 }
