@@ -65,4 +65,17 @@ public class LoginPresenterImpl implements LoginPresenter {
          */
         loginInteractor.handleLogin(email, password);
     }
+
+    @Override
+    public void handleFirstRun(Activity activity) {
+        /**
+         * When the app is running by first time
+         */
+        loginInteractor.handleFirstRun(activity);
+    }
+
+    @Override
+    public boolean isTheFirstRun() {
+        return loginInteractor.isTheFirstRun();
+    }
 }

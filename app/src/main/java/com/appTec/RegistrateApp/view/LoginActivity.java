@@ -32,6 +32,7 @@ import com.appTec.RegistrateApp.models.WorkingPeriod;
 import com.appTec.RegistrateApp.presenter.LoginPresenterImpl;
 import com.appTec.RegistrateApp.repository.StaticData;
 import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.DeviceRetrofitInterface;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.LoginRetrofitInterface;
@@ -89,6 +90,12 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
 
 
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
+
+        // Checking if it is the first running
+        if (loginPresenter.isTheFirstRun()){
+            loginPresenter.handleFirstRun(this);
+        }
+
 
         // Verified if a user is still saved
         loginPresenter.verifyPreviousLogin();
@@ -211,7 +218,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                 for (int i = 0; i < deviceList.size() && deviceFound == false; i++) {
                     JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
 
-                    if (StaticData.getCurrentDevice().getImei().equals(jsonDevice.get("imei").getAsString())) {
+                    if (SharedPreferencesHelper.getSharedPreferencesInstance().getString(Constants.CURRENT_IMEI, "").equals(jsonDevice.get("imei").getAsString())) {
                         Device device = new Device();
                         int deviceId = jsonDevice.get("id").getAsInt();
                         String deviceName = jsonDevice.get("nombre").getAsString();

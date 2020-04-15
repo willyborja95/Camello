@@ -32,8 +32,15 @@ public class SharedPreferencesHelper {
 
     public static void putStringValue(String key, String value) {
         /** Method to save a string value */
-        final SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
+        SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
         editor.putString(key , value);
+        editor.commit();
+    }
+
+    public static void putBooleanValue(String key, boolean value){
+        /** Method to save a boolean value */
+        SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
+        editor.putBoolean(key, value);
         editor.commit();
     }
 
