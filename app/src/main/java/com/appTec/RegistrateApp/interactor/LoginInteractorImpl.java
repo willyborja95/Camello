@@ -77,7 +77,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 
             StaticData.setCurrentUser(databaseAdapter.getUser());
             StaticData.setCurrentDevice(databaseAdapter.getDevice());
-            StaticData.setCurrentCompany(databaseAdapter.getCompany());
+            StaticData.getCurrentUser().setCompany(databaseAdapter.getCompany());
             StaticData.getCurrentUser().setCompany(databaseAdapter.getCompany());
             StaticData.setPermissionTypes(databaseAdapter.getPermissionType());
 

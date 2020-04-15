@@ -165,7 +165,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                     DatabaseAdapter.getDatabaseAdapterInstance().insertUser(user);
                     DatabaseAdapter.getDatabaseAdapterInstance().insertCompany(company);
                     StaticData.setCurrentUser(user);
-                    StaticData.setCurrentCompany(company);
+                    StaticData.getCurrentUser().setCompany(company);
                     changeWorkingState(Constants.STATE_NOT_WORKING);
                     setLoggedUser();
                     findUserDevice();
@@ -211,7 +211,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                 for (int i = 0; i < deviceList.size() && deviceFound == false; i++) {
                     JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
 
-                    if (StaticData.getCurrentImei().equals(jsonDevice.get("imei").getAsString())) {
+                    if (StaticData.getCurrentDevice().getImei().equals(jsonDevice.get("imei").getAsString())) {
                         Device device = new Device();
                         int deviceId = jsonDevice.get("id").getAsInt();
                         String deviceName = jsonDevice.get("nombre").getAsString();
