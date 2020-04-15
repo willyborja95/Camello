@@ -9,8 +9,7 @@ public interface LoginPresenter {
      */
 
 
-    void getInitialData(Activity activity);  // From the view
-    void loadInitialData(); // To the interactor
+
     void verifyPreviousLogin(); // To the interactor
     void navigateToNextView();  // To the view
     void handleLogin(String email, String password); // To the interactor

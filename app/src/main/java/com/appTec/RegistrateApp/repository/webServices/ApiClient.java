@@ -50,7 +50,6 @@ public class ApiClient {
         * Save the token into shared preferences in private mode
         * */
         SharedPreferencesHelper.putStringValue(Constants.USER_TOKEN, value);
-
     }
 
 }

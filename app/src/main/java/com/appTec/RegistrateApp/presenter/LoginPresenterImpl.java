@@ -26,22 +26,6 @@ public class LoginPresenterImpl implements LoginPresenter {
 
 
     @Override
-    public void getInitialData(Activity activity) {
-        /**
-         * Call the interactor
-         */
-        loginInteractor.getInitialData(activity);
-    }
-
-    @Override
-    public void loadInitialData() {
-        /**
-         * Call the view
-         */
-        // loginActivityView.loadInitialData();
-    }
-
-    @Override
     public void verifyPreviousLogin() {
         /**
          * Call the interactor

@@ -35,35 +35,6 @@ public class LoginInteractorImpl implements LoginInteractor {
     }
 
 
-    @Override
-    public void getInitialData(Activity activity) {
-        /**
-         * Get the data needed
-         */
-        // ToDo: Get tha data needed to the login case
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activity.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
-                    activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    activity.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, new String[]{
-                        android.Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                }, 225);
-            }
-        }
-    }
-
-    @Override
-    public void loadInitialData() {
-        /**
-         * Call the presenter
-         */
-        loginPresenter.loadInitialData();
-
-    }
 
     @Override
     public void verifyPreviousLogin() {

@@ -101,9 +101,6 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         loginPresenter.verifyPreviousLogin();
 
 
-        loginPresenter.getInitialData(this);
-
-
     }
 
     /*
@@ -248,7 +245,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     //Get PermissionType
     public void findPermissionTypes() {
         PermissionTypeRetrofitInterface permissionTypeRetrofitInterface = ApiClient.getClient().create(PermissionTypeRetrofitInterface.class);
-        final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(getUserToken());
+        final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(ApiClient.getToken());
         permissionTypeCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -292,12 +289,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
 
 
 
-    public String getUserToken() {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
+
 
     private void setLoggedUser() {
         SharedPreferences sharedPref = this.getSharedPreferences(
