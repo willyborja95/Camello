@@ -37,19 +37,19 @@ public class ApiClient {
 
 
 
-    public static String getToken(Context context){
+    public static String getToken(){
         /**
         * Get the token previously saved without context
         * */
-        return SharedPreferencesHelper.getStringValue(context, Constants.USER_TOKEN, "");
+        return SharedPreferencesHelper.getStringValue(Constants.USER_TOKEN, "");
     }
 
 
-    public static void setToken(String value, Context context){
+    public static void setToken(String value){
         /**
         * Save the token into shared preferences in private mode
         * */
-        SharedPreferencesHelper.putStringValue(context,Constants.USER_TOKEN, value);
+        SharedPreferencesHelper.putStringValue(Constants.USER_TOKEN, value);
 
     }
 

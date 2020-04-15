@@ -57,7 +57,7 @@ public class DialogDevice extends DialogFragment {
         txtDeviceName = (EditText) viewDialog.findViewById(R.id.txtDeviceName);
         txtDeviceModel = (EditText) viewDialog.findViewById(R.id.txtDeviceModel);
 
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(getContext());
+        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
         telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
 
         builder.setView(viewDialog)

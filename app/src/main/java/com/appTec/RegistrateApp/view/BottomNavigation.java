@@ -130,7 +130,7 @@ public class BottomNavigation extends AppCompatActivity implements
 
 
 
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
+        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
 
 

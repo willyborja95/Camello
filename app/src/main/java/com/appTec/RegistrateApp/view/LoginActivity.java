@@ -161,9 +161,9 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                     company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
                     company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
                     user.setCompany(company);
-                    ApiClient.setToken(response.body().get("token").toString().replace("\"", ""), getApplicationContext());
-                    DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertUser(user);
-                    DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertCompany(company);
+                    ApiClient.setToken(response.body().get("token").toString().replace("\"", ""));
+                    DatabaseAdapter.getDatabaseAdapterInstance().insertUser(user);
+                    DatabaseAdapter.getDatabaseAdapterInstance().insertCompany(company);
                     StaticData.setCurrentUser(user);
                     StaticData.setCurrentCompany(company);
                     changeWorkingState(Constants.STATE_NOT_WORKING);
@@ -197,8 +197,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     public void findUserDevice() {
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Log.d("User ", StaticData.getCurrentUser().getId()+"");
-        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(ApiClient.getToken(getApplicationContext()), StaticData.getCurrentUser().getId());
-        Log.d("Tokeen", ApiClient.getToken(getApplicationContext()));
+        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(ApiClient.getToken(), StaticData.getCurrentUser().getId());
+        Log.d("Tokeen", ApiClient.getToken());
         deviceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -223,7 +223,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                         device.setModel(deviceModel);
                         device.setImei(deviceImei);
                         device.setStatus(deviceStatus);
-                        DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertDevice(device);
+                        DatabaseAdapter.getDatabaseAdapterInstance().insertDevice(device);
                         deviceFound = true;
                     }
                 }
@@ -252,7 +252,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                         int permissionTypeId = jsonPermissionType.get("id").getAsInt();
                         String permissionTypeName = jsonPermissionType.get("nombre").getAsString();
                         PermissionType permissionType = new PermissionType(permissionTypeId, permissionTypeName);
-                        DatabaseAdapter.getDatabaseAdapterInstance(getApplicationContext()).insertPermissionType(permissionType);
+                        DatabaseAdapter.getDatabaseAdapterInstance().insertPermissionType(permissionType);
                         StaticData.getPermissionTypes().add(permissionType);
                     }
                 }

@@ -76,7 +76,7 @@ public class DeviceFragment extends Fragment implements DeviceView {
         }
         updateListView();
         pref = getContext().getSharedPreferences("RegistrateApp", 0);
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(getContext());
+        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
         telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         fabAddDevice.setOnClickListener(new View.OnClickListener() {
             @Override

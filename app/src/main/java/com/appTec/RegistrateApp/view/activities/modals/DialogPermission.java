@@ -58,7 +58,7 @@ public class DialogPermission extends DialogFragment {
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this.getContext());
+        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View viewDialog = inflater.inflate(R.layout.dialog_permission, null);

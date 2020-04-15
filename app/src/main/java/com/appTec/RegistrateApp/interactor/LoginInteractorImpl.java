@@ -71,9 +71,9 @@ public class LoginInteractorImpl implements LoginInteractor {
          */
 
 
-        if (getLoginUserStatus(context).equals(Constants.LOGGED_USER)) { // If is a previous user logged
+        if (getLoginUserStatus().equals(Constants.LOGGED_USER)) { // If is a previous user logged
 
-            DatabaseAdapter databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(context);
+            DatabaseAdapter databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
 
             StaticData.setCurrentUser(databaseAdapter.getUser());
             StaticData.setCurrentDevice(databaseAdapter.getDevice());
@@ -91,8 +91,8 @@ public class LoginInteractorImpl implements LoginInteractor {
     }
 
 
-    private String getLoginUserStatus(Context context) {
-        return SharedPreferencesHelper.getStringValue(context, Constants.LOGIN_USER_STATE, "");
+    private String getLoginUserStatus() {
+        return SharedPreferencesHelper.getStringValue(Constants.LOGIN_USER_STATE, "");
     }
 
 }
