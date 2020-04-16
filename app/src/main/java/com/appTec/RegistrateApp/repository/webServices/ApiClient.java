@@ -37,19 +37,63 @@ public class ApiClient {
 
 
 
-    public static String getToken(){
+    public static String getAccessToken(){
         /**
-        * Get the token previously saved without context
+        * Get the access token previously saved into shared preferences
         * */
         return SharedPreferencesHelper.getStringValue(Constants.USER_ACCESS_TOKEN, "");
     }
 
 
-    public static void setToken(String value){
+    public static void saveAccessToken(String value){
         /**
-        * Save the token into shared preferences in private mode
+        * Save the access token into shared preferences in private mode
         * */
         SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, value);
     }
+
+    public static String getRefreshToken(){
+        /**
+         * Get the refresh token previously save in shared preferences
+         */
+        return SharedPreferencesHelper.getStringValue(Constants.USER_REFRESH_TOKEN, "");
+    }
+
+    public static void saveRefreshToken(String value){
+        /**
+         * Save the refresh token into shared preferences in private mode
+         */
+        SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, value);
+    }
+
+    public static void askNewTokenWithRefreshToken(){
+        /**
+         * When the access token has expired. We request a new one with the refresh token.
+         *
+         * Ask for a new token.
+         * Save it on shared preferences
+         */
+
+        // ToDo:
+
+
+    }
+
+    public static boolean isRefreshTokenExpired(){
+        /**
+         * Return true when the refresh token is already expired
+         */
+        // ToDo:
+        return true;
+    }
+
+    public static boolean isAccessTokenExpired(){
+        /**
+         * Return true when the access token is already expired
+         */
+        // ToDo:
+        return true;
+    }
+
 
 }

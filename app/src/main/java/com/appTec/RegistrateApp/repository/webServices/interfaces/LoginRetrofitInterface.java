@@ -1,6 +1,7 @@
 package com.appTec.RegistrateApp.repository.webServices.interfaces;
 
 import com.appTec.RegistrateApp.models.UserCredential;
+import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.google.gson.JsonObject;
 
 import retrofit2.Call;
@@ -12,4 +13,8 @@ public interface LoginRetrofitInterface {
     @Headers({"Accept: application/json"})
     @POST("login/")
     Call<JsonObject> login(@Body UserCredential credential);
+
+//    @POST("login/refresh")
+//    Call<JsonObject> login(@Body refreshToken);
+
 }

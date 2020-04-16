@@ -2,7 +2,6 @@ package com.appTec.RegistrateApp.interactor;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
@@ -26,7 +25,6 @@ import com.appTec.RegistrateApp.util.Constants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import android.Manifest.permission;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -100,7 +98,12 @@ public class LoginInteractorImpl implements LoginInteractor {
                     company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
                     company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
                     user.setCompany(company);
-                    ApiClient.setToken(response.body().get("token").toString().replace("\"", ""));
+
+
+                    SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().get("token").toString().replace("\"", ""));
+                    // SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, refresh_token);
+
+
                     DatabaseAdapter.getDatabaseAdapterInstance().insertUser(user);
                     DatabaseAdapter.getDatabaseAdapterInstance().insertCompany(company);
                     StaticData.setCurrentUser(user);
@@ -203,8 +206,8 @@ public class LoginInteractorImpl implements LoginInteractor {
     public void findUserDevice() {
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Log.d("User ", StaticData.getCurrentUser().getId()+"");
-        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(ApiClient.getToken(), StaticData.getCurrentUser().getId());
-        Log.d("Tokeen", ApiClient.getToken());
+        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(ApiClient.getAccessToken(), StaticData.getCurrentUser().getId());
+        Log.d("Tokeen", ApiClient.getAccessToken());
         deviceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -247,7 +250,7 @@ public class LoginInteractorImpl implements LoginInteractor {
     //Get PermissionType
     public void findPermissionTypes() {
         PermissionTypeRetrofitInterface permissionTypeRetrofitInterface = ApiClient.getClient().create(PermissionTypeRetrofitInterface.class);
-        final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(ApiClient.getToken());
+        final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(ApiClient.getAccessToken());
         permissionTypeCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

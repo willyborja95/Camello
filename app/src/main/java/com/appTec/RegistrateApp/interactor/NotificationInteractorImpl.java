@@ -1,9 +1,5 @@
 package com.appTec.RegistrateApp.interactor;
 
-import android.app.Activity;
-import android.content.Context;
-
-import com.appTec.RegistrateApp.App;
 import com.appTec.RegistrateApp.models.Notification;
 import com.appTec.RegistrateApp.presenter.NotificationPresenterImpl;
 import com.appTec.RegistrateApp.repository.webServices.ApiClient;
@@ -40,7 +36,7 @@ public class NotificationInteractorImpl implements NotificationInteractor {
          * Here goes the interaction with the source of data. In this case the source is a web service
          * */
         NotificationsRetrofitInterface notificationsRetrofitInterface = ApiClient.getClient().create(NotificationsRetrofitInterface.class);
-        Call<JsonObject> notificationCall = notificationsRetrofitInterface.get(ApiClient.getToken());
+        Call<JsonObject> notificationCall = notificationsRetrofitInterface.get(ApiClient.getAccessToken());
 
         notificationCall.enqueue(new Callback<JsonObject>() {
             @Override

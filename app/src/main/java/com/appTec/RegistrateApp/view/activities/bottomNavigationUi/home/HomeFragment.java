@@ -300,7 +300,7 @@ public class HomeFragment extends Fragment implements
 
             TimeRetrofit timeRetrofit = ApiClient.getClient().create(TimeRetrofit.class);
 
-            Call<JsonObject> timeCall = timeRetrofit.get(ApiClient.getToken());
+            Call<JsonObject> timeCall = timeRetrofit.get(ApiClient.getAccessToken());
             timeCall.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -331,7 +331,7 @@ public class HomeFragment extends Fragment implements
         Log.d("log", "funcion syncAssistances");
         AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Assistance assistance = new Assistance(device.getId(), this.location.getLatitude(), this.location.getLongitude(), lastTimeExited);
-        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.sync(ApiClient.getToken(), assistance);
+        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.sync(ApiClient.getAccessToken(), assistance);
         assistanceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -366,7 +366,7 @@ public class HomeFragment extends Fragment implements
     private void registerEntry() {
         AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Assistance assistanceLog = new Assistance(device.getId(), this.location.getLatitude(), this.location.getLongitude());
-        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(ApiClient.getToken(), assistanceLog);
+        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(ApiClient.getAccessToken(), assistanceLog);
         assistanceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -436,7 +436,7 @@ public class HomeFragment extends Fragment implements
     private void registerExit() {
         AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Assistance assistanceLog = new Assistance(device.getId(), this.location.getLatitude(), this.location.getLongitude());
-        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(ApiClient.getToken(), assistanceLog);
+        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(ApiClient.getAccessToken(), assistanceLog);
         assistanceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

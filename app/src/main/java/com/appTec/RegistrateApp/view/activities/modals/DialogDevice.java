@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,7 +94,7 @@ public class DialogDevice extends DialogFragment {
         deviceDialog.setImei(deviceImei);
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> call = deviceRetrofitInterface.post(ApiClient.getToken(), deviceDialog);
+        Call<JsonObject> call = deviceRetrofitInterface.post(ApiClient.getAccessToken(), deviceDialog);
         showDeviceProgressDialog(Constants.UPDATING_CHANGES);
         call.enqueue(new Callback<JsonObject>() {
             @Override
