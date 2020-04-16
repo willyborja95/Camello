@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.appTec.RegistrateApp.App;
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.PermissionType;
@@ -22,14 +23,14 @@ public class DatabaseAdapter {
     private Context context;
     private static DatabaseAdapter databaseAdapterInstance;
 
-    private DatabaseAdapter(Context context) {
-        this.context = context;
+    private DatabaseAdapter() {
+        this.context = App.getContext();
         sqLiteDatabase = DataBaseHelper.getInstance(this.context, DB_NAME, null, DB_VERSION).getWritableDatabase();
     }
 
-    public static DatabaseAdapter getDatabaseAdapterInstance(Context context) {
+    public static DatabaseAdapter getDatabaseAdapterInstance() {
         if (databaseAdapterInstance == null) {
-            databaseAdapterInstance = new DatabaseAdapter(context);
+            databaseAdapterInstance = new DatabaseAdapter();
         }
         return databaseAdapterInstance;
     }

@@ -1,6 +1,7 @@
 package com.appTec.RegistrateApp.presenter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 
 import com.appTec.RegistrateApp.interactor.NotificationInteractor;

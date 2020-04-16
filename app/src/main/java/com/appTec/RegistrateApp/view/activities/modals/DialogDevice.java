@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -57,7 +56,7 @@ public class DialogDevice extends DialogFragment {
         txtDeviceName = (EditText) viewDialog.findViewById(R.id.txtDeviceName);
         txtDeviceModel = (EditText) viewDialog.findViewById(R.id.txtDeviceModel);
 
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(getContext());
+        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
         telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
 
         builder.setView(viewDialog)
@@ -95,7 +94,7 @@ public class DialogDevice extends DialogFragment {
         deviceDialog.setImei(deviceImei);
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> call = deviceRetrofitInterface.post(getUserToken(), deviceDialog);
+        Call<JsonObject> call = deviceRetrofitInterface.post(ApiClient.getAccessToken(), deviceDialog);
         showDeviceProgressDialog(Constants.UPDATING_CHANGES);
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -146,13 +145,7 @@ public class DialogDevice extends DialogFragment {
         }
     }
 
-    //Shared preferences methods
-    public String getUserToken() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
+
 
 
     //Dialogs

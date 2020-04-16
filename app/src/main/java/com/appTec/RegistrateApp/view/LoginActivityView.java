@@ -6,9 +6,12 @@ public interface LoginActivityView {
     * */
 
     // ToDo: Pass the LoginActivity methods here
+    void navigateToNextView();
 
-    void getInitialData(); // To the presenter
-    void loadInitialData(); // From the presenter // ToDo: Add the necessary attributes
+    void showMessage(String title, String message);
+    void showAlertDialog(String title, String message);
 
+    void showLoginProgressDialog(String message);
+    void hideLoginProgressDialog();
 
 }

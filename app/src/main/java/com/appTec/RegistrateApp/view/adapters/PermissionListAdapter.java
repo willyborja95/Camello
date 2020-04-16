@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +54,7 @@ public class PermissionListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-                Call<JsonObject> permissionCall = permissionRetrofitInterface.delete(getUserToken(), lstPermission.get(position).getId());
+                Call<JsonObject> permissionCall = permissionRetrofitInterface.delete(ApiClient.getAccessToken(), lstPermission.get(position).getId());
                 showPermissionProgressDialog(Constants.UPDATING_CHANGES);
                 permissionCall.enqueue(new Callback<JsonObject>() {
                     @Override
@@ -117,13 +116,7 @@ public class PermissionListAdapter extends BaseAdapter {
     =======================================
      */
 
-    //Shared preferences methods
-    public String getUserToken() {
-        SharedPreferences sharedPref = this.context.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
+
 
     //Dialogs
     public void showPermissionProgressDialog(String message) {

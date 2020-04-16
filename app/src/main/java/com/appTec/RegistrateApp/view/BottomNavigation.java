@@ -28,6 +28,7 @@ import com.appTec.RegistrateApp.repository.geofence.GeofenceBroadcastReceiver;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceConstants;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceErrorMessages;
 import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.util.Constants;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.assistance.AssistanceFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications.NotificationsFragment;
@@ -130,7 +131,7 @@ public class BottomNavigation extends AppCompatActivity implements
 
 
 
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
+        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
 
 
@@ -497,7 +498,7 @@ public class BottomNavigation extends AppCompatActivity implements
                 permissionFragment.updatePermissions();
                 break;
             case R.id.btnLogout:
-                setNotLoggedUser();
+                SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
                 closeSession();
                 break;
         }
@@ -523,18 +524,12 @@ public class BottomNavigation extends AppCompatActivity implements
         InformationDialog.showDialog();
     }
 
-    private void setNotLoggedUser() {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constants.LOGIN_USER_STATE, Constants.NOT_LOGGED_USER);
-        editor.commit();
-    }
+
 
     public void closeSession(){
         Intent loginIntent = new Intent(BottomNavigation.this, LoginActivity.class);
         databaseAdapter.removeData();
-        setNotLoggedUser();
+        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
         startActivity(loginIntent);
         finish();
     }

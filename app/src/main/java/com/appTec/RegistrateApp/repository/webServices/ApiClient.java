@@ -3,6 +3,7 @@ package com.appTec.RegistrateApp.repository.webServices;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.util.Constants;
 
 import java.util.concurrent.TimeUnit;
@@ -15,7 +16,6 @@ public class ApiClient {
 
     private static Retrofit retrofit = null;
 
-    private static String token = null;
 
     public static Retrofit getClient() {
         if (retrofit == null) {
@@ -37,23 +37,63 @@ public class ApiClient {
 
 
 
-    public static String getToken(){
-        /*
-        * Get the token previously saved without context
+    public static String getAccessToken(){
+        /**
+        * Get the access token previously saved into shared preferences
         * */
-        return ApiClient.token;
+        return SharedPreferencesHelper.getStringValue(Constants.USER_ACCESS_TOKEN, "");
     }
 
 
-    public static void setToken(String value, Context context){
-        /*
-        * Save the token into shared preferences in private mode
+    public static void saveAccessToken(String value){
+        /**
+        * Save the access token into shared preferences in private mode
         * */
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constants.USER_TOKEN, value);
-        editor.commit();
+        SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, value);
     }
+
+    public static String getRefreshToken(){
+        /**
+         * Get the refresh token previously save in shared preferences
+         */
+        return SharedPreferencesHelper.getStringValue(Constants.USER_REFRESH_TOKEN, "");
+    }
+
+    public static void saveRefreshToken(String value){
+        /**
+         * Save the refresh token into shared preferences in private mode
+         */
+        SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, value);
+    }
+
+    public static void askNewTokenWithRefreshToken(){
+        /**
+         * When the access token has expired. We request a new one with the refresh token.
+         *
+         * Ask for a new token.
+         * Save it on shared preferences
+         */
+
+        // ToDo:
+
+
+    }
+
+    public static boolean isRefreshTokenExpired(){
+        /**
+         * Return true when the refresh token is already expired
+         */
+        // ToDo:
+        return true;
+    }
+
+    public static boolean isAccessTokenExpired(){
+        /**
+         * Return true when the access token is already expired
+         */
+        // ToDo:
+        return true;
+    }
+
 
 }

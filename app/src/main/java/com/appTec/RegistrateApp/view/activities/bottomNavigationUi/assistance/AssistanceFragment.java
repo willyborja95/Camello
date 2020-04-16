@@ -3,9 +3,7 @@ package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.assistance;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,7 +83,7 @@ public class AssistanceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
-                Call<JsonObject> assistanceCall = assistanceRetrofitInterface.get(getUserToken(), strSelectedDate);
+                Call<JsonObject> assistanceCall = assistanceRetrofitInterface.get(ApiClient.getAccessToken(), strSelectedDate);
                 showAssistanceProgressDialog(Constants.UPDATING_CHANGES);
                 assistanceCall.enqueue(new Callback<JsonObject>() {
 
@@ -134,13 +132,7 @@ public class AssistanceFragment extends Fragment {
         lvAssistance.setAdapter(new AssistanceListAdapter(getContext(), lstAssistances));
     }
 
-    //Shared preferences methods
-    public String getUserToken(){
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
+
 
     //Dialogs
     public void showAssistanceProgressDialog(String message) {

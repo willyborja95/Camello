@@ -1,6 +1,10 @@
 package com.appTec.RegistrateApp.presenter;
 
+import android.app.Activity;
+import android.content.Context;
+
 import com.appTec.RegistrateApp.interactor.LoginInteractorImpl;
+import com.appTec.RegistrateApp.models.UserCredential;
 import com.appTec.RegistrateApp.view.LoginActivityView;
 
 public class LoginPresenterImpl implements LoginPresenter {
@@ -23,18 +27,60 @@ public class LoginPresenterImpl implements LoginPresenter {
 
 
     @Override
-    public void getInitialData() {
+    public void verifyPreviousLogin() {
         /**
          * Call the interactor
          */
-        loginInteractor.getInitialData();
+        loginInteractor.verifyPreviousLogin();
+
     }
 
     @Override
-    public void loadInitialData() {
+    public void navigateToNextView() {
         /**
          * Call the view
          */
-        loginActivityView.loadInitialData();
+        loginActivityView.navigateToNextView();
+    }
+
+    @Override
+    public void handleLogin(UserCredential userCredential) {
+        /**
+         * Calling the interactor
+         */
+        loginInteractor.handleLogin(userCredential);
+    }
+
+    @Override
+    public void handleFirstRun(Activity activity) {
+        /**
+         * When the app is running by first time
+         */
+        loginInteractor.handleFirstRun(activity);
+    }
+
+    @Override
+    public boolean isTheFirstRun() {
+        return loginInteractor.isTheFirstRun();
+    }
+
+    @Override
+    public void showLoginProgressDialog(String message) {
+        loginActivityView.showLoginProgressDialog(message);
+    }
+
+    @Override
+    public void hideLoginProgressDialog() {
+        loginActivityView.hideLoginProgressDialog();
+    }
+
+    @Override
+    public void showMessage(String title, String message) {
+        loginActivityView.showMessage(title, message);
+    }
+
+    @Override
+    public void showAlertDialog(String title, String message) {
+        loginActivityView.showAlertDialog(title, message);
     }
 }

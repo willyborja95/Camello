@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,7 +103,7 @@ public class PermissionFragment extends Fragment {
         jsonPermission.addProperty("fechafin", strEndDate);
         jsonPermission.addProperty("permisoid", permission.getPermissionType().getId());
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-        Call<JsonObject> permissionCall = permissionRetrofitInterface.post(getUserToken(), jsonPermission);
+        Call<JsonObject> permissionCall = permissionRetrofitInterface.post(ApiClient.getAccessToken(), jsonPermission);
         showPermissionProgressDialog(Constants.UPDATING_CHANGES);
         permissionCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -165,7 +164,7 @@ public class PermissionFragment extends Fragment {
     public void updatePermissions(){
         lstPermission.clear();
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-        Call<JsonObject> permissionCall = permissionRetrofitInterface.get(getUserToken(), user.getId());
+        Call<JsonObject> permissionCall = permissionRetrofitInterface.get(ApiClient.getAccessToken(), user.getId());
         showPermissionProgressDialog(Constants.UPDATING_CHANGES);
         permissionCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -220,13 +219,7 @@ public class PermissionFragment extends Fragment {
         });
     }
 
-    //Shared preferences methods
-    public String getUserToken(){
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
+
 
     //Dialogs
     public void showPermissionProgressDialog(String message) {

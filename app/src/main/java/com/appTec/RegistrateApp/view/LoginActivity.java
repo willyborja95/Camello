@@ -12,7 +12,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -30,7 +29,9 @@ import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.models.UserCredential;
 import com.appTec.RegistrateApp.models.WorkingPeriod;
 import com.appTec.RegistrateApp.presenter.LoginPresenterImpl;
+import com.appTec.RegistrateApp.repository.StaticData;
 import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.DeviceRetrofitInterface;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.LoginRetrofitInterface;
@@ -52,36 +53,25 @@ import retrofit2.Response;
 
 public class LoginActivity extends Activity implements View.OnClickListener, LoginActivityView {
 
-    //UI elements
+    // UI elements
     private ImageButton btnLogin;
     private EditText txtEmail;
     private EditText txtPassword;
     ProgressDialog progressDialog;
 
-    //Business logic elements
-    private String email;
-    private String password;
-    private String deviceImei;
-    private Device device;
-    private User user;
-    private ArrayList<PermissionType> lstPermissionType;
-    private DatabaseAdapter databaseAdapter;
+    // Business logic elements
     private TelephonyManager telephonyManager;
 
-    /*
-    =======================================
-    ACTIVITY LIFECYCLE METHODS
-    =======================================
-     */
+
 
     // Instance the presenter
     LoginPresenterImpl loginPresenter = new LoginPresenterImpl(this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.SplashTheme);
+        setTheme(R.style.SplashTheme);                                                  // Showing the splash screen for until the activity is ready
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity);
+        setContentView(R.layout.login_activity);                                        // Binding the layout
 
         // Binding UI elements
         txtEmail = (EditText) findViewById(R.id.email);
@@ -90,36 +80,21 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         progressDialog = new ProgressDialog(this);
 
 
-        lstPermissionType = new ArrayList<PermissionType>();
-
 
         btnLogin.setOnClickListener(this);
 
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance(this);
+
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
 
-        getInitialData();
-
-        if (getLoginUserStatus().equals(Constants.LOGGED_USER)) {
-            this.user = databaseAdapter.getUser();
-            this.device = databaseAdapter.getDevice();
-            this.user.setCompany(databaseAdapter.getCompany());
-            this.lstPermissionType = databaseAdapter.getPermissionType();
-            navidateToDashboard();
+        // Checking if it is the first running
+        if (loginPresenter.isTheFirstRun()){
+            loginPresenter.handleFirstRun(this);
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
-                    checkSelfPermission(permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    checkSelfPermission(permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{
-                        android.Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                }, 225);
-            }
-        }
+
+        // Verified if a user is still saved
+        loginPresenter.verifyPreviousLogin();
+
 
     }
 
@@ -134,8 +109,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.loginButton:
-                email = txtEmail.getText().toString().replaceAll("\\s", "");
-                password = txtPassword.getText().toString().replaceAll("\\s", "");
+                String email = txtEmail.getText().toString().replaceAll("\\s", "");
+                String password = txtPassword.getText().toString().replaceAll("\\s", "");
                 if ((TextUtils.isEmpty(email) || (TextUtils.isEmpty(password)))) {
                     txtEmail.setError(getString(R.string.parameter_missing_error));
                     txtPassword.setError(getString(R.string.parameter_missing_error));
@@ -143,7 +118,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
                     if (checkSelfPermission(permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                         UserCredential userCredential = new UserCredential(email, password);
                         showLoginProgressDialog(getString(R.string.login_progress_dialog_message));
-                        login(userCredential);
+                        loginPresenter.handleLogin(userCredential);
                     } else {
                         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
                     }
@@ -153,192 +128,28 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
 
     }
 
-    //Login user
-    public void login(final UserCredential userCredential) {
-        LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
-        Call<JsonObject> call = loginRetrofitInterface.login(userCredential);
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.code() == 200) {
-                    if (android.os.Build.VERSION.SDK_INT >= 23) {
-                        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
-                        } else {
-                            if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
-                                deviceImei = telephonyManager.getDeviceId();
-                            }
-                            if (android.os.Build.VERSION.SDK_INT >= 26) {
-                                deviceImei = telephonyManager.getImei();
-                            }
-                        }
-                    }
-                    user = new User();
-                    Company company = new Company();
-                    ArrayList<WorkingPeriod> workingPeriodList = new ArrayList<WorkingPeriod>();
-                    user.setId(response.body().getAsJsonObject("data").get("id").getAsInt());
-                    user.setName(response.body().getAsJsonObject("data").get("nombres").getAsString());
-                    user.setLastName(response.body().getAsJsonObject("data").get("apellidos").getAsString());
-                    user.setEmail(response.body().getAsJsonObject("data").get("email").getAsString());
-                    company.setName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").getAsString());
-                    company.setLatitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("latitud").getAsDouble());
-                    company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
-                    company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
-                    user.setCompany(company);
-                    setUserToken(response.body().get("token").toString().replace("\"", ""));
-                    databaseAdapter.insertUser(user);
-                    databaseAdapter.insertCompany(company);
-                    changeWorkingState(Constants.STATE_NOT_WORKING);
-                    setLoggedUser();
-                    findUserDevice();
-                } else if (response.code() == 404 || response.code() == 401) {
-                    hideLoginProgressDialog();
-                    showCredentialsErrorMessage();
-                } else if (response.code() == 502) {
-                    hideLoginProgressDialog();
-                } else {
-                    hideLoginProgressDialog();
-                    try {
-                        JSONObject errorJson = new JSONObject(response.errorBody().string());
-                        showErrorMessage(errorJson.toString());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                showConectionErrorMessage();
-            }
-
-        });
-    }
-
-    //Get user device
-    public void findUserDevice() {
-        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(getUserToken(), user.getId());
-        deviceCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("deviceImei", "DEVICE ON RESPONSE OK");
-
-                JsonArray deviceList = response.body().getAsJsonArray("data");
-                boolean deviceFound = false;
-                for (int i = 0; i < deviceList.size() && deviceFound == false; i++) {
-                    JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
-
-                    if (deviceImei.equals(jsonDevice.get("imei").getAsString())) {
-                        device = new Device();
-                        int deviceId = jsonDevice.get("id").getAsInt();
-                        String deviceName = jsonDevice.get("nombre").getAsString();
-                        String deviceModel = jsonDevice.get("modelo").getAsString();
-                        String deviceImei = jsonDevice.get("imei").getAsString();
-                        boolean deviceStatus = jsonDevice.get("estado").getAsBoolean();
-                        device.setId(deviceId);
-                        device.setName(deviceName);
-                        device.setModel(deviceModel);
-                        device.setImei(deviceImei);
-                        device.setStatus(deviceStatus);
-                        databaseAdapter.insertDevice(device);
-                        deviceFound = true;
-                    }
-                }
-                findPermissionTypes();
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
-
-    }
-
-    //Get PermissionType
-    public void findPermissionTypes() {
-        PermissionTypeRetrofitInterface permissionTypeRetrofitInterface = ApiClient.getClient().create(PermissionTypeRetrofitInterface.class);
-        final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(getUserToken());
-        permissionTypeCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonArray jsonLstPermissionType = response.body().getAsJsonArray("data");
-                if (jsonLstPermissionType.size() > 0) {
-                    for (int i = 0; i < jsonLstPermissionType.size(); i++) {
-                        JsonObject jsonPermissionType = jsonLstPermissionType.get(i).getAsJsonObject();
-                        int permissionTypeId = jsonPermissionType.get("id").getAsInt();
-                        String permissionTypeName = jsonPermissionType.get("nombre").getAsString();
-                        PermissionType permissionType = new PermissionType(permissionTypeId, permissionTypeName);
-                        databaseAdapter.insertPermissionType(permissionType);
-                        lstPermissionType.add(permissionType);
-                    }
-                }
-                hideLoginProgressDialog();
-                navidateToDashboard();
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
-    }
 
     //Change to BottomNavigation activity
-    public void navidateToDashboard() {
+    public void navigateToNextView() {
         Intent intent = new Intent(this, BottomNavigation.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle = new Bundle();
-        if (device != null) {
-            bundle.putSerializable("device", device);
+        if (StaticData.getCurrentDevice() != null) {
+            bundle.putSerializable("device", StaticData.getCurrentDevice());
         }
-        bundle.putSerializable("user", user);
-        bundle.putSerializable("lstPermissionType", lstPermissionType);
+        bundle.putSerializable("user", StaticData.getCurrentUser());
+        bundle.putSerializable("lstPermissionType", StaticData.getPermissionTypes());
         intent.putExtras(bundle);
         Log.d("DeviceLog", "navigation activated!");
         startActivity(intent);
         finish();
     }
 
-    //Shared preferences methods
-    public void setUserToken(String token) {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constants.USER_TOKEN, token);
-        editor.commit();
-    }
 
-    public String getUserToken() {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
 
-    private void setLoggedUser() {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constants.LOGIN_USER_STATE, Constants.LOGGED_USER);
-        editor.commit();
-    }
 
-    private String getLoginUserStatus() {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.LOGIN_USER_STATE,
-                "");
-    }
 
-    private void changeWorkingState(String state) {
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constants.CURRENT_STATE, state);
-        editor.commit();
-    }
 
     //Dialogs
     public void showLoginProgressDialog(String message) {
@@ -352,19 +163,16 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         progressDialog.dismiss();
     }
 
-    public void showErrorMessage(String error) {
-        showDialog("Error", error);
+
+    @Override
+    public void showMessage(String title, String message) {
+        showAlertDialog(title, message);
     }
 
-    public void showCredentialsErrorMessage() {
-        showDialog("Autenticación fallida", "El usuario y contraseña proporcionados no son correctos.");
-    }
 
-    public void showConectionErrorMessage() {
-        showDialog("Error de conexión", "Al parecer no hay conexión a Internet.");
-    }
 
-    public void showDialog(String title, String message) {
+    @Override
+    public void showAlertDialog(String title, String message) {
         new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
@@ -379,21 +187,5 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     }
 
 
-    // LoginActivityVIew interface view methods
-    @Override
-    public void getInitialData() {
-        /**
-         * Calling the presenter
-         */
-        loginPresenter.getInitialData();
 
-    }
-
-    @Override
-    public void loadInitialData() {
-        /**
-         *  From the presenter
-         */
-
-    }
 }
