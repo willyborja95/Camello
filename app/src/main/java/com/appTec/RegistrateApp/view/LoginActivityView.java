@@ -8,4 +8,10 @@ public interface LoginActivityView {
     // ToDo: Pass the LoginActivity methods here
     void navigateToNextView();
 
+    void showMessage(String title, String message);
+    void showAlertDialog(String title, String message);
+
+    void showLoginProgressDialog(String message);
+    void hideLoginProgressDialog();
+
 }

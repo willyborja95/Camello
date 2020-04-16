@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.appTec.RegistrateApp.interactor.LoginInteractorImpl;
+import com.appTec.RegistrateApp.models.UserCredential;
 import com.appTec.RegistrateApp.view.LoginActivityView;
 
 public class LoginPresenterImpl implements LoginPresenter {
@@ -43,11 +44,11 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public void handleLogin(String email, String password) {
+    public void handleLogin(UserCredential userCredential) {
         /**
          * Calling the interactor
          */
-        loginInteractor.handleLogin(email, password);
+        loginInteractor.handleLogin(userCredential);
     }
 
     @Override
@@ -61,5 +62,25 @@ public class LoginPresenterImpl implements LoginPresenter {
     @Override
     public boolean isTheFirstRun() {
         return loginInteractor.isTheFirstRun();
+    }
+
+    @Override
+    public void showLoginProgressDialog(String message) {
+        loginActivityView.showLoginProgressDialog(message);
+    }
+
+    @Override
+    public void hideLoginProgressDialog() {
+        loginActivityView.hideLoginProgressDialog();
+    }
+
+    @Override
+    public void showMessage(String title, String message) {
+        loginActivityView.showMessage(title, message);
+    }
+
+    @Override
+    public void showAlertDialog(String title, String message) {
+        loginActivityView.showAlertDialog(title, message);
     }
 }

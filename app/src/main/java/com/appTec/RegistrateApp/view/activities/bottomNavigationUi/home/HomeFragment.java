@@ -26,6 +26,7 @@ import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Assistance;
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
+import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.AssistanceRetrofitInterface;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.TimeRetrofit;
@@ -138,7 +139,7 @@ public class HomeFragment extends Fragment implements
         googleApiClient.connect();
 
         // Set button text to the current state of the worker
-        startTimerButton.setText(getButtonTextForState(getCurrentWorkingState()));
+        startTimerButton.setText(getButtonTextForState());
 
         // Calendar
         calendarView.setDayBinder(new DayBinder<DayViewContainer>() {
@@ -295,11 +296,11 @@ public class HomeFragment extends Fragment implements
 
     public void updateTimer() {
 
-        if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
+        if (isUserWorkingState()) {
 
             TimeRetrofit timeRetrofit = ApiClient.getClient().create(TimeRetrofit.class);
 
-            Call<JsonObject> timeCall = timeRetrofit.get(getUserToken());
+            Call<JsonObject> timeCall = timeRetrofit.get(ApiClient.getToken());
             timeCall.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -330,7 +331,7 @@ public class HomeFragment extends Fragment implements
         Log.d("log", "funcion syncAssistances");
         AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Assistance assistance = new Assistance(device.getId(), this.location.getLatitude(), this.location.getLongitude(), lastTimeExited);
-        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.sync(getUserToken(), assistance);
+        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.sync(ApiClient.getToken(), assistance);
         assistanceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -365,16 +366,17 @@ public class HomeFragment extends Fragment implements
     private void registerEntry() {
         AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Assistance assistanceLog = new Assistance(device.getId(), this.location.getLatitude(), this.location.getLongitude());
-        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(getUserToken(), assistanceLog);
+        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(ApiClient.getToken(), assistanceLog);
         assistanceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 dimissEntranceDialog();
                 if (response.code() == 200) {
                     showEntryMessage();
-                    changeWorkingState(Constants.STATE_WORKING);
+                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, true);
+                    // changeWorkingState(Constants.STATE_WORKING);
                     // Cambiar texto de boton
-                    startTimerButton.setText(getButtonTextForState(getCurrentWorkingState()));
+                    startTimerButton.setText(getButtonTextForState());
                     // Register geofencing
                     bottomNavigationActivity.addGeofencesHandler();
                     updateTimer();
@@ -434,13 +436,14 @@ public class HomeFragment extends Fragment implements
     private void registerExit() {
         AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Assistance assistanceLog = new Assistance(device.getId(), this.location.getLatitude(), this.location.getLongitude());
-        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(getUserToken(), assistanceLog);
+        Call<JsonObject> assistanceCall = assistanceRetrofitInterface.post(ApiClient.getToken(), assistanceLog);
         assistanceCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 dimissEntranceDialog();
-                changeWorkingState(Constants.STATE_NOT_WORKING);
-                startTimerButton.setText(getButtonTextForState(getCurrentWorkingState()));
+                SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
+                // changeWorkingState(Constants.STATE_NOT_WORKING);
+                startTimerButton.setText(getButtonTextForState());
                 // Unregister geofencing
                 bottomNavigationActivity.removeGeofencesHandler();
                 dimissEntranceDialog();
@@ -472,8 +475,8 @@ public class HomeFragment extends Fragment implements
         });
     }
 
-    private String getButtonTextForState(String workingState) {
-        if (workingState.equals(Constants.STATE_WORKING))
+    private String getButtonTextForState() {
+        if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_WORKING, false))
             return "Finalizar";
         return "Iniciar";
     }
@@ -492,27 +495,11 @@ public class HomeFragment extends Fragment implements
         sharedPref.edit().remove(Constants.LAST_EXIT_TIME).commit();
     }
 
-    private String getCurrentWorkingState() {
-        SharedPreferences sharedPref = this.context.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.CURRENT_STATE, "");
+    private boolean isUserWorkingState() {
+         return SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_WORKING, false);
     }
 
-    private void changeWorkingState(String state) {
-        SharedPreferences sharedPref = this.context.getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constants.CURRENT_STATE, state);
-        editor.commit();
-    }
 
-    //Shared preferences methods
-    public String getUserToken(){
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
 
 
     //Layout GUI methods
@@ -527,12 +514,13 @@ public class HomeFragment extends Fragment implements
             if (this.device != null) {
                 String lastTimeExited = getLastTimeExited();
 
-                if ((getCurrentWorkingState().equals(Constants.STATE_NOT_WORKING)) && !lastTimeExited.equals("")) {
+                if (!(SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_WORKING, false)) && !lastTimeExited.equals("")) {
                     bottomNavigationActivity.removeGeofencesHandler();
                     showExitMessage();
-                    startTimerButton.setText(getButtonTextForState(getCurrentWorkingState()));
+                    startTimerButton.setText(getButtonTextForState());
 
-                } else if (getCurrentWorkingState().equals(Constants.STATE_NOT_WORKING)) {
+                // } else if (isUserWorkingState().equals(Constants.STATE_NOT_WORKING)) {
+                } else if (!SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_WORKING, false)) {
                     showProgressDialog("Registrando su entrada ...");
                     // Post server
                     if (lastTimeExited.equals("")) {
@@ -540,7 +528,8 @@ public class HomeFragment extends Fragment implements
                     } else {
                         syncAssistances(lastTimeExited);
                     }
-                } else if (getCurrentWorkingState().equals(Constants.STATE_WORKING)) {
+                // } else if (isUserWorkingState().equals(Constants.STATE_WORKING)) {
+                } else if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_WORKING, false)) {
                     Log.d("test", "saliendo con post");
                     //Post server
                     registerExit();

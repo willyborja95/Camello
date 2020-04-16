@@ -85,7 +85,7 @@ public class AssistanceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AssistanceRetrofitInterface assistanceRetrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
-                Call<JsonObject> assistanceCall = assistanceRetrofitInterface.get(getUserToken(), strSelectedDate);
+                Call<JsonObject> assistanceCall = assistanceRetrofitInterface.get(ApiClient.getToken(), strSelectedDate);
                 showAssistanceProgressDialog(Constants.UPDATING_CHANGES);
                 assistanceCall.enqueue(new Callback<JsonObject>() {
 
@@ -134,13 +134,7 @@ public class AssistanceFragment extends Fragment {
         lvAssistance.setAdapter(new AssistanceListAdapter(getContext(), lstAssistances));
     }
 
-    //Shared preferences methods
-    public String getUserToken(){
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
+
 
     //Dialogs
     public void showAssistanceProgressDialog(String message) {

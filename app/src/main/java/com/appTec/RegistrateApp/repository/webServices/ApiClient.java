@@ -41,7 +41,7 @@ public class ApiClient {
         /**
         * Get the token previously saved without context
         * */
-        return SharedPreferencesHelper.getStringValue(Constants.USER_TOKEN, "");
+        return SharedPreferencesHelper.getStringValue(Constants.USER_ACCESS_TOKEN, "");
     }
 
 
@@ -49,7 +49,7 @@ public class ApiClient {
         /**
         * Save the token into shared preferences in private mode
         * */
-        SharedPreferencesHelper.putStringValue(Constants.USER_TOKEN, value);
+        SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, value);
     }
 
 }

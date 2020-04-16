@@ -104,7 +104,7 @@ public class PermissionFragment extends Fragment {
         jsonPermission.addProperty("fechafin", strEndDate);
         jsonPermission.addProperty("permisoid", permission.getPermissionType().getId());
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-        Call<JsonObject> permissionCall = permissionRetrofitInterface.post(getUserToken(), jsonPermission);
+        Call<JsonObject> permissionCall = permissionRetrofitInterface.post(ApiClient.getToken(), jsonPermission);
         showPermissionProgressDialog(Constants.UPDATING_CHANGES);
         permissionCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -165,7 +165,7 @@ public class PermissionFragment extends Fragment {
     public void updatePermissions(){
         lstPermission.clear();
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-        Call<JsonObject> permissionCall = permissionRetrofitInterface.get(getUserToken(), user.getId());
+        Call<JsonObject> permissionCall = permissionRetrofitInterface.get(ApiClient.getToken(), user.getId());
         showPermissionProgressDialog(Constants.UPDATING_CHANGES);
         permissionCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -220,13 +220,7 @@ public class PermissionFragment extends Fragment {
         });
     }
 
-    //Shared preferences methods
-    public String getUserToken(){
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
+
 
     //Dialogs
     public void showPermissionProgressDialog(String message) {

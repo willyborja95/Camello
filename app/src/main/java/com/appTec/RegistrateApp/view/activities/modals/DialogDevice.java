@@ -95,7 +95,7 @@ public class DialogDevice extends DialogFragment {
         deviceDialog.setImei(deviceImei);
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> call = deviceRetrofitInterface.post(getUserToken(), deviceDialog);
+        Call<JsonObject> call = deviceRetrofitInterface.post(ApiClient.getToken(), deviceDialog);
         showDeviceProgressDialog(Constants.UPDATING_CHANGES);
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -146,13 +146,7 @@ public class DialogDevice extends DialogFragment {
         }
     }
 
-    //Shared preferences methods
-    public String getUserToken() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
-                Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
-        return sharedPref.getString(Constants.USER_TOKEN,
-                "");
-    }
+
 
 
     //Dialogs
