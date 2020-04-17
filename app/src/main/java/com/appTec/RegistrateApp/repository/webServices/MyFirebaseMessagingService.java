@@ -5,12 +5,19 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.appTec.RegistrateApp.models.Notification;
 import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.TokenFirebaseInterface;
 import com.appTec.RegistrateApp.util.Constants;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
+
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,17 +40,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-
-
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-                // ToDo: scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                // ToDo: handleNow();
-            }
-
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData().getClass());
+            Log.d(TAG, "Message data: " + remoteMessage.getData());
         }
 
         // Check if message contains a notification payload.
@@ -51,6 +49,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             Log.d(TAG, "Notification title: " + remoteMessage.getNotification().getTitle());
 
+            String title = remoteMessage.getNotification().getTitle();
+            String text = remoteMessage.getNotification().getBody();
+            Map map = remoteMessage.getData();
+
+            Log.d(TAG, "expirationDate: " + map.get("expirationDate").toString());
+            Log.d(TAG, "sentDate" + map.get("sentDate").toString());
+
+
+//            Date expirationDate = Timestamp.valueOf(map.get("expirationDate")).getTime();
+//            Date sentDate = Date.valueOf(map.get("sentDate").toString());
+//
+//
+//            Notification notification = new Notification(title, text, expirationDate, sentDate);
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

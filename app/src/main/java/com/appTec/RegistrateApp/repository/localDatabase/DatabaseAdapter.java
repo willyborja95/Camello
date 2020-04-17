@@ -8,11 +8,15 @@ import android.database.sqlite.SQLiteDatabase;
 import com.appTec.RegistrateApp.App;
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
+import com.appTec.RegistrateApp.models.Notification;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
 
 import java.io.File;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class DatabaseAdapter {
 
@@ -164,7 +168,42 @@ public class DatabaseAdapter {
     }
 
 
+    // Insert notification
+    public boolean insertNotification(Notification notification){
+        /**
+         * It is messy
+         */
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("title", notification.getTitle());
+        contentValues.put("text", notification.getText());
+        contentValues.put("expirationDate", notification.getExpirationDate().toString());
+        contentValues.put("sentDate", notification.getSentDate().toString());
+        return sqLiteDatabase.insert("Notification", null, contentValues) > 0;
+    }
 
+    public ArrayList<Notification> getNotifications(){
+        /**
+         * It is messy
+         */
+        ArrayList<Notification> notifications = new ArrayList<Notification>();
+        Cursor cursor = sqLiteDatabase.query("Notification", null, null, null, null, null, null);
+        if (cursor != null & cursor.getCount() > 0){
+            while (cursor.moveToNext()){
+                SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                String title = cursor.getString(0);
+                String text = cursor.getString(1);
+                Date expirationDate = Date.valueOf(cursor.getString(2));
+                Date sentDate = Date.valueOf(cursor.getString(3));
+
+                Notification notification = new Notification(title, text, expirationDate, sentDate);
+
+                notifications.add(notification);
+            }
+
+        }
+        return notifications;
+
+    }
 
 
 }

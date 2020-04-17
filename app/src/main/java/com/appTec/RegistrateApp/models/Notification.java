@@ -1,6 +1,7 @@
 package com.appTec.RegistrateApp.models;
 
 
+
 import java.sql.Date;
 
 public class Notification {
@@ -12,16 +13,16 @@ public class Notification {
 
     // Attributes
     private String title;
-    private Date sentDate;
-    private String content;
+    private String text;
     private Date expirationDate;
+    private Date sentDate;
 
     // Constructor
-    public Notification(String title, Date sentDate, String content, Date expirationDate) {
+    public Notification(String title, String text, Date expirationDate, Date sentDate) {
         this.title = title;
-        this.sentDate = sentDate;
-        this.content = content;
+        this.text = text;
         this.expirationDate = expirationDate;
+        this.sentDate = sentDate;
     }
 
 
@@ -34,20 +35,12 @@ public class Notification {
         this.title = title;
     }
 
-    public Date getSentDate() {
-        return sentDate;
+    public String getText() {
+        return text;
     }
 
-    public void setSentDate(Date sentDate) {
-        this.sentDate = sentDate;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public Date getExpirationDate() {
@@ -58,5 +51,22 @@ public class Notification {
         this.expirationDate = expirationDate;
     }
 
+    public Date getSentDate() {
+        return sentDate;
+    }
 
+    public void setSentDate(Date sentDate) {
+        this.sentDate = sentDate;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Notification{" +
+                "title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", expirationDate=" + expirationDate +
+                ", sentDate=" + sentDate +
+                '}';
+    }
 }
