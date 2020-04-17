@@ -44,7 +44,7 @@ public class NotificationsListAdapter extends BaseAdapter {
         TextView sentDate = convertView.findViewById(R.id.notification_sent_date);
 
         title.setText(notification.getTitle());
-        sentDate.setText(notification.getSentDate().toString());
+        sentDate.setText(notification.getText());
 
         return convertView;
     }
