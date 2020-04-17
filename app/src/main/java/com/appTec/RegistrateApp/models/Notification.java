@@ -2,8 +2,13 @@ package com.appTec.RegistrateApp.models;
 
 
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.sql.Date;
 
+@Entity
 public class Notification {
     /*
      * Model of a notification.
@@ -12,9 +17,19 @@ public class Notification {
      * */
 
     // Attributes
+    @PrimaryKey
+    private int id;
+
+    @ColumnInfo(name = "title")
     private String title;
+
+    @ColumnInfo(name = "text")
     private String text;
+
+    @ColumnInfo(name = "expirationDate")
     private Date expirationDate;
+
+    @ColumnInfo(name = "sentDate")
     private Date sentDate;
 
     // Constructor

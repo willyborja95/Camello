@@ -1,5 +1,7 @@
 package com.appTec.RegistrateApp.models;
 
+import androidx.room.Entity;
+
 import java.util.Calendar;
 
 public class WorkingPeriod {

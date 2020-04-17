@@ -1,15 +1,31 @@
 package com.appTec.RegistrateApp.models;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
+@Entity
 public class Permission implements Serializable {
+
+    @PrimaryKey
     private int id;
+
+    @ColumnInfo(name = "permissionType")
     private PermissionType permissionType;
+
+    @ColumnInfo(name = "permissionStatus")
     private PermissionStatus permissionStatus;
+
+    @ColumnInfo(name = "startDate")
     private Calendar startDate;
+
+    @ColumnInfo(name = "endDate")
     private Calendar endDate;
 
     public Permission(PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
