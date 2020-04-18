@@ -12,9 +12,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
-    <TextView
+  <!--  <TextView
         android:id="@+id/notification_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,6 +22,6 @@
         android:layout_centerHorizontal="true"
         android:text="No hay nuevas notificaciones"
         android:visibility="visible"
-        ></TextView>
+        ></TextView>-->
 
 </RelativeLayout>

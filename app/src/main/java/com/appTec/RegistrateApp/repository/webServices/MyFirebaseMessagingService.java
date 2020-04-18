@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.appTec.RegistrateApp.models.Notification;
+import com.appTec.RegistrateApp.repository.localDatabase.RoomHelper;
 import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.TokenFirebaseInterface;
 import com.appTec.RegistrateApp.util.Constants;
@@ -13,10 +14,10 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
 
-import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Date;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -57,11 +58,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "sentDate" + map.get("sentDate").toString());
 
 
-//            Date expirationDate = Timestamp.valueOf(map.get("expirationDate")).getTime();
-//            Date sentDate = Date.valueOf(map.get("sentDate").toString());
-//
-//
-//            Notification notification = new Notification(title, text, expirationDate, sentDate);
+            Date expirationDate =  new Date(Long.parseLong(map.get("expirationDate").toString())*1000);
+            Date sentDate = new Date(Long.parseLong(map.get("sentDate").toString())* 1000);
+
+            Notification notification = new Notification(title, text, expirationDate, sentDate);
+
+
+            /**
+             * Saving it at database
+             */
+            RoomHelper.getAppDatabaseInstance().notificationDao().insert(notification);
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

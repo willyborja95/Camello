@@ -15,13 +15,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.appTec.RegistrateApp.App;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Notification;
 import com.appTec.RegistrateApp.presenter.NotificationPresenterImpl;
 import com.appTec.RegistrateApp.view.adapters.NotificationsListAdapter;
+import com.appTec.RegistrateApp.viewmodel.SharedViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NotificationsFragment extends Fragment implements NotificationView {
 
@@ -29,19 +34,38 @@ public class NotificationsFragment extends Fragment implements NotificationView 
 
     //UI elements
     private ListView notificationsListView;
+    private NotificationsListAdapter notificationsListAdapter;
     private TextView notificationTextView;
     ProgressDialog progressDialog;
 
 
-    // ? Presenter instance here. Not sure if this is the best way.
+    // Presenter instance here. Not sure if this is the best way.
     NotificationPresenterImpl notificationPresenter;
+
+    // Instance of ViewModel
+    private SharedViewModel model;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View fragmentDeviceView = inflater.inflate(R.layout.notifications_fragment_notification, container, false);
-
+        notificationsListView = fragmentDeviceView.findViewById(R.id.notification_list_view);
+        notificationsListAdapter = new NotificationsListAdapter(App.getContext(), model.getNotifications());
         Bundle bundle = this.getArguments();
+
+        // Observing the view model mNotification
+        model.getNotifications().observe(getActivity(), new Observer<List<Notification>>() {
+            @Override
+            public void onChanged(List<Notification> notifications) {
+                notificationsListView.setAdapter(notificationsListAdapter);
+            }
+        });
 
 
         return fragmentDeviceView;
@@ -55,14 +79,18 @@ public class NotificationsFragment extends Fragment implements NotificationView 
         notificationPresenter = new NotificationPresenterImpl(this);
 
         // Calling the presenter
-        notificationPresenter.getNotifications();
+        // notificationPresenter.getNotifications();
+
+        // Testing the live data
+        notificationPresenter.loadNotifications();
+
 
         // Linking UI elements
         progressDialog = new ProgressDialog(getContext());
         notificationsListView = view.findViewById(R.id.notification_list_view);
-        notificationTextView = view.findViewById(R.id.notification_text_view);
+        //notificationTextView = view.findViewById(R.id.notification_text_view);
 
-        showNotNewNotificationsMessage();
+        // showNotNewNotificationsMessage();
     }
 
     @Override
@@ -79,7 +107,7 @@ public class NotificationsFragment extends Fragment implements NotificationView 
          * */
 
 
-        notificationsListView.setAdapter(new NotificationsListAdapter(getContext(), notifications));
+        // notificationsListView.setAdapter(new NotificationsListAdapter(getContext(), notifications));
     }
 
     //Dialogs

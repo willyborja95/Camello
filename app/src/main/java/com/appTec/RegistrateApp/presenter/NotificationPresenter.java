@@ -17,4 +17,6 @@ public interface NotificationPresenter {
     void detachView();
     void detachJob();
 
+
+    void loadNotifications();
 }

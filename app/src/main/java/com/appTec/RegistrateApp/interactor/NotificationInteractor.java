@@ -14,4 +14,6 @@ public interface NotificationInteractor {
 
 
     void detachJob();
+
+    void loadNotifications();
 }

@@ -34,4 +34,7 @@ public class Constants {
     public static final String ENDPOINT_FIREBASE = "firebase_token/";
 
 
+    // Local Database constants
+    public static final String DATABASE_NAME = "local_database";
+
 }
