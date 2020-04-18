@@ -1,14 +1,33 @@
 package com.appTec.RegistrateApp.models;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@Entity
 public class User implements Serializable {
+
+    @PrimaryKey
     private int id;
+
+    @ColumnInfo(name = "name")
     private String name;
+
+    @ColumnInfo(name = "lastName")
     private String lastName;
+
+    @ColumnInfo(name = "email")
     private String email;
-    private Company company;
+
+    @Embedded public Company company;
+
+
+    @Ignore
     private ArrayList<WorkingPeriod> workingPeriodList;
 
     public int getId() {

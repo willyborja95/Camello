@@ -1,11 +1,19 @@
 package com.appTec.RegistrateApp.models;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
+@Entity
 public class PermissionType implements Serializable {
+
+    @PrimaryKey
     private int id;
+
+    @ColumnInfo(name = "nombre")
     private String nombe;
 
     public PermissionType(int id, String permissionType) {

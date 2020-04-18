@@ -2,8 +2,15 @@ package com.appTec.RegistrateApp.models;
 
 
 
-import java.sql.Date;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
+
+import java.util.Date;
+
+@Entity
 public class Notification {
     /*
      * Model of a notification.
@@ -12,21 +19,39 @@ public class Notification {
      * */
 
     // Attributes
+    @PrimaryKey
+    private int id;
+
+    @ColumnInfo(name = "title")
     private String title;
+
+    @ColumnInfo(name = "text")
     private String text;
+
+    @ColumnInfo(name = "expirationDate")
     private Date expirationDate;
+
+    @ColumnInfo(name = "sentDate")
     private Date sentDate;
 
     // Constructor
-    public Notification(String title, String text, Date expirationDate, Date sentDate) {
+    public Notification(int id, String title, String text, Date expirationDate, Date sentDate) {
+        this.id = id;
         this.title = title;
         this.text = text;
         this.expirationDate = expirationDate;
         this.sentDate = sentDate;
     }
 
-
     // Setter and getters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -63,7 +88,8 @@ public class Notification {
     @Override
     public String toString() {
         return "Notification{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
                 ", expirationDate=" + expirationDate +
                 ", sentDate=" + sentDate +

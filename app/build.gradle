@@ -25,6 +25,7 @@ android {
 }
 
 dependencies {
+    def room_version = "2.2.3"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -52,4 +53,13 @@ dependencies {
 
     // Firebase (https://firebase.google.com/docs/cloud-messaging/android/client?authuser=0)
     implementation 'com.google.firebase:firebase-messaging:20.1.5'                                  // Firebase Cloud Messaging
+
+
+    // ROOM
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    // optional - RxJava support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+
 }

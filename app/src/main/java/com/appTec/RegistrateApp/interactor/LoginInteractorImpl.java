@@ -93,7 +93,7 @@ public class LoginInteractorImpl implements LoginInteractor {
                     user.setName(response.body().getAsJsonObject("data").get("nombres").getAsString());
                     user.setLastName(response.body().getAsJsonObject("data").get("apellidos").getAsString());
                     user.setEmail(response.body().getAsJsonObject("data").get("email").getAsString());
-                    company.setName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").getAsString());
+                    company.setCompanyName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").getAsString());
                     company.setLatitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("latitud").getAsDouble());
                     company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
                     company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
