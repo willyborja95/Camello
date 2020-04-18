@@ -5,23 +5,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Notification;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NotificationsListAdapter extends BaseAdapter {
 
     // Attributes
     Context context;
-    ArrayList<Notification> notifications;
+    LiveData<List<Notification>> notifications;
 
 
-    public NotificationsListAdapter(Context context, ArrayList<Notification> notifications ){
+    public NotificationsListAdapter(Context context, LiveData<List<Notification>> notifications){
         /*
         * Constructor
         * */
@@ -52,17 +55,17 @@ public class NotificationsListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return notifications.size();
+        return notifications.getValue().size();
     }
 
     @Override
     public Notification getItem(int position) {
-        return notifications.get(position);
+        return notifications.getValue().get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return notifications.indexOf(position);
+        return notifications.getValue().indexOf(position);
     }
 
 

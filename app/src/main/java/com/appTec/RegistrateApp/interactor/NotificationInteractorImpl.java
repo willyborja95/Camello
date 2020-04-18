@@ -2,6 +2,7 @@ package com.appTec.RegistrateApp.interactor;
 
 import com.appTec.RegistrateApp.models.Notification;
 import com.appTec.RegistrateApp.presenter.NotificationPresenterImpl;
+import com.appTec.RegistrateApp.repository.localDatabase.RoomHelper;
 import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.NotificationsRetrofitInterface;
 import com.google.gson.JsonArray;
@@ -104,6 +105,14 @@ public class NotificationInteractorImpl implements NotificationInteractor {
     public void detachJob() {
         canceled = true;
         notificationPresenter = null;
+    }
+
+    @Override
+    public void loadNotifications() {
+        /**
+         * Method to test the Live Data
+         */
+
     }
 
 

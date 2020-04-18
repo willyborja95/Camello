@@ -1,5 +1,6 @@
 package com.appTec.RegistrateApp.repository.localDatabase.DAOs;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -18,7 +19,10 @@ public interface NotificationDao {
 
 
     @Query("SELECT * FROM notification")
-    List<Notification> getAll();
+    LiveData<List<Notification>> loadAllLiveData();
+
+    @Query("SELECT * FROM notification where id = :id")
+    List<Notification> loadNotificationSync(int id);
 
     @Insert
     void insert(Notification notification);

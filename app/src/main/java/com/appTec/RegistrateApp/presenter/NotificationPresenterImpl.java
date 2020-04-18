@@ -1,10 +1,5 @@
 package com.appTec.RegistrateApp.presenter;
 
-import android.app.Activity;
-import android.content.Context;
-import android.view.View;
-
-import com.appTec.RegistrateApp.interactor.NotificationInteractor;
 import com.appTec.RegistrateApp.interactor.NotificationInteractorImpl;
 import com.appTec.RegistrateApp.models.Notification;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications.NotificationView;
@@ -66,5 +61,10 @@ public class NotificationPresenterImpl implements NotificationPresenter{
     public void detachJob() {
         notificationInteractor.detachJob();
         notificationInteractor = null;
+    }
+
+    @Override
+    public void loadNotifications() {
+        notificationInteractor.loadNotifications();
     }
 }
