@@ -16,7 +16,6 @@ import java.io.File;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class DatabaseAdapter {
 
@@ -113,7 +112,7 @@ public class DatabaseAdapter {
     //Company database functions
     public boolean insertCompany(Company company){
         ContentValues contentValues = new ContentValues();
-        contentValues.put("name", company.getName());
+        contentValues.put("name", company.getCompanyName());
         contentValues.put("latitude", company.getLatitude());
         contentValues.put("longitude", company.getLongitude());
         contentValues.put("radius", company.getRadius());
@@ -129,7 +128,7 @@ public class DatabaseAdapter {
                 Double latitude = Double.valueOf(cursor.getString(2));
                 Double longitude = Double.valueOf(cursor.getString(3));
                 Double radius = cursor.getDouble(4);
-                company.setName(name);
+                company.setCompanyName(name);
                 company.setLatitude(latitude);
                 company.setLongitude(longitude);
                 company.setRadius(radius);
@@ -195,9 +194,9 @@ public class DatabaseAdapter {
                 Date expirationDate = Date.valueOf(cursor.getString(2));
                 Date sentDate = Date.valueOf(cursor.getString(3));
 
-                Notification notification = new Notification(title, text, expirationDate, sentDate);
+                //Notification notification = new Notification(title, text, expirationDate, sentDate);
 
-                notifications.add(notification);
+                //notifications.add(notification);
             }
 
         }

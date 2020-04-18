@@ -23,7 +23,6 @@ import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
-import com.appTec.RegistrateApp.presenter.HomePresenterImpl;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceBroadcastReceiver;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceConstants;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceErrorMessages;
@@ -146,7 +145,7 @@ public class BottomNavigation extends AppCompatActivity implements
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
         companyName = (TextView) viewNavHeader.findViewById(R.id.company_name);
         userFullName = (TextView) viewNavHeader.findViewById(R.id.user_fullname);
-        companyName.setText(user.getCompany().getName());
+        companyName.setText(user.getCompany().getCompanyName());
         userFullName.setText(user.getName()+" "+user.getLastName());
 
 

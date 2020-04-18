@@ -1,7 +1,6 @@
 package com.appTec.RegistrateApp.models;
 
-import android.location.Location;
-
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -12,7 +11,8 @@ import java.io.Serializable;
 public class Company implements Serializable {
 
     @PrimaryKey
-    private String name;
+    @NonNull
+    private String companyName;
 
     @ColumnInfo(name = "latitude")
     private double latitude;
@@ -23,12 +23,12 @@ public class Company implements Serializable {
     @ColumnInfo(name = "radius")
     private double radius;
 
-    public String getName() {
-        return name;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public double getLatitude() {

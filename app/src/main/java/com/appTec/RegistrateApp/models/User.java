@@ -1,7 +1,9 @@
 package com.appTec.RegistrateApp.models;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -22,9 +24,10 @@ public class User implements Serializable {
     @ColumnInfo(name = "email")
     private String email;
 
-    @ColumnInfo(name = "company")
-    private Company company;
+    @Embedded public Company company;
 
+
+    @Ignore
     private ArrayList<WorkingPeriod> workingPeriodList;
 
     public int getId() {
