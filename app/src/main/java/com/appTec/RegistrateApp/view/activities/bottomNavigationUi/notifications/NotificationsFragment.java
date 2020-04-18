@@ -88,9 +88,9 @@ public class NotificationsFragment extends Fragment implements NotificationView 
         // Linking UI elements
         progressDialog = new ProgressDialog(getContext());
         notificationsListView = view.findViewById(R.id.notification_list_view);
-        notificationTextView = view.findViewById(R.id.notification_text_view);
+        //notificationTextView = view.findViewById(R.id.notification_text_view);
 
-        showNotNewNotificationsMessage();
+        // showNotNewNotificationsMessage();
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Notification {
      * */
 
     // Attributes
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
 
     @ColumnInfo(name = "title")
@@ -35,8 +35,8 @@ public class Notification {
     private Date sentDate;
 
     // Constructor
-    public Notification(int id, String title, String text, Date expirationDate, Date sentDate) {
-        this.id = id;
+    public Notification(String title, String text, Date expirationDate, Date sentDate) {
+
         this.title = title;
         this.text = text;
         this.expirationDate = expirationDate;
