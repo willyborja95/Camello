@@ -12,7 +12,7 @@ import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.models.UserCredential;
-import com.appTec.RegistrateApp.models.WorkingPeriod;
+import com.appTec.RegistrateApp.models.WorkzonesItem;
 import com.appTec.RegistrateApp.presenter.LoginPresenterImpl;
 import com.appTec.RegistrateApp.repository.StaticData;
 import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
@@ -22,7 +22,7 @@ import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.DeviceRetrofitInterface;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.LoginRetrofitInterface;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.PermissionTypeRetrofitInterface;
-import com.appTec.RegistrateApp.repository.webServices.pojoresponse.LoginResponse;
+import com.appTec.RegistrateApp.repository.webServices.pojoresponse.loginresponse.LoginResponse;
 import com.appTec.RegistrateApp.util.Constants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -95,31 +95,40 @@ public class LoginInteractorImpl implements LoginInteractor {
                     String email = userCredential.getEmail();
 
 
-
                     User user = new User();
                     user.setId(id);
                     user.setName(name);
                     user.setLastName(lastname);
                     user.setEmail(email);
 
+                    // Getting the work zones
+                    ArrayList<WorkzonesItem> workZoneArrayList = new ArrayList<>();
+                    for(int i = 0; i < response.body().getData().getWorkzones().size(); i++){
+                        workZoneArrayList.add(response.body().getData().getWorkzones().get(i));
+
+                    }
+
+
+                    Company company = new Company();
+                    company.setCompanyName(response.body().getData().getEnterprise());
 
 
                     SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().getData().getTokens().getAccessToken().replace("\"", ""));
 
 
-
                     // DatabaseAdapter.getDatabaseAdapterInstance().insertUser(user);
                     // DatabaseAdapter.getDatabaseAdapterInstance().insertCompany(company);
-//                    StaticData.setCurrentUser(user);
+                    StaticData.setCurrentUser(user);
 //                    StaticData.getCurrentUser().setCompany(company);
-//
-                        RoomHelper.getAppDatabaseInstance().userDao().insert(user);
-//
-//
-//                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
-//                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
 
-                 //   findUserDevice();
+                    RoomHelper.getAppDatabaseInstance().userDao().insert(user);
+
+                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
+                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
+
+                    loginPresenter.hideLoginProgressDialog();
+                    loginPresenter.navigateToNextView();
+                    //   findUserDevice();
                 } else if (response.code() == 404 || response.code() == 401) {
                     loginPresenter.hideLoginProgressDialog();
                     loginPresenter.showMessage("Autenticación fallida", "El usuario y contraseña proporcionados no son correctos.");

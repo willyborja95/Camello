@@ -77,4 +77,8 @@ public class User implements Serializable {
     public void setWorkingPeriodList(ArrayList<WorkingPeriod> workingPeriodList) {
         this.workingPeriodList = workingPeriodList;
     }
+
+    public Object getFullName() {
+        return this.name + " " + this.lastName;
+    }
 }

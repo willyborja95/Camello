@@ -1,9 +1,8 @@
 package com.appTec.RegistrateApp.repository.webServices.interfaces;
 
 import com.appTec.RegistrateApp.models.UserCredential;
-import com.appTec.RegistrateApp.repository.webServices.pojoresponse.LoginResponse;
+import com.appTec.RegistrateApp.repository.webServices.pojoresponse.loginresponse.LoginResponse;
 import com.appTec.RegistrateApp.util.Constants;
-import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
