@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.util.Constants;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +21,7 @@ public class ApiClient {
 
     public static Retrofit getClient() {
         if (retrofit == null) {
-
+            Gson gson = new GsonBuilder().create();
             final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
@@ -29,7 +31,7 @@ public class ApiClient {
             retrofit = new Retrofit.Builder()
                     .baseUrl(Constants.BASE_URL)
                     .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
         return retrofit;

@@ -75,16 +75,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-//
-//    @Override
-//    public void onNewToken(@NonNull String token) {
-//        Log.d(TAG, "Refreshed token: " + token);
-//
-//        // If you want to send messages to this application instance or
-//        // manage this apps subscriptions on the server side, send the
-//        // Instance ID token to your app server.
-//        // sendRegistrationToServer(token);
-//    }
+
+    @Override
+    public void onNewToken(@NonNull String token) {
+        Log.d(TAG, "Refreshed token: " + token);
+
+        // We want to send messages to this application instance
+        // Instance ID token to your app server.
+        // sendRegistrationToServer(token);
+    }
 
 
     private void sendRegistrationToServer(String firebase_token){
@@ -93,7 +92,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
          *
          * Save the token on shared preferences. Just in case something weird happen.
          */
-
+        Log.d(TAG, "Trying to send the token to the server.");
         SharedPreferencesHelper.putStringValue(Constants.FIREBASE_TOKEN, firebase_token);
 
         TokenFirebaseInterface tokenFirebaseInterface = ApiClient.getClient().create(TokenFirebaseInterface.class);
@@ -112,6 +111,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 /**
                  * Save it on shared preferences to sent it later
                  */
+                Log.d(TAG, "Call to service failed. The token cant be uploaded.");
 
             }
         });

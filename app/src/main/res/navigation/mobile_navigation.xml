@@ -10,19 +10,31 @@
         android:id="@+id/navigation_home"
         android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home.HomeFragment"
         android:label="@string/home_fragment_title"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_notifications"
+            app:destination="@id/navigation_notifications" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment"
         android:label="@string/notifications_fragment_title"
-        tools:layout="@layout/notifications_fragment_notification" />
+        tools:layout="@layout/notifications_fragment_notification" >
+        <action
+            android:id="@+id/action_navigation_notifications_to_navigation_permission"
+            app:destination="@id/navigation_permission" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_permission"
         android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment"
         android:label="Permisos"
-        tools:layout="@layout/fragment_permission" />
+        tools:layout="@layout/fragment_permission" >
+        <action
+            android:id="@+id/action_navigation_permission_to_navigation_device"
+            app:destination="@id/navigation_device" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_device"
