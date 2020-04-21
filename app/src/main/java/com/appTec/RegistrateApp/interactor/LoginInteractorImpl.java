@@ -22,6 +22,7 @@ import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.DeviceRetrofitInterface;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.LoginRetrofitInterface;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.PermissionTypeRetrofitInterface;
+import com.appTec.RegistrateApp.repository.webServices.pojoresponse.LoginResponse;
 import com.appTec.RegistrateApp.util.Constants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -44,7 +45,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 
     // Attributes
     LoginPresenterImpl loginPresenter; // Got as an attribute
-
+    private static final String TAG = "LoginInteractor";
 
     // Constructor
     public LoginInteractorImpl(LoginPresenterImpl loginPresenter) {
@@ -55,13 +56,11 @@ public class LoginInteractorImpl implements LoginInteractor {
     }
 
 
-
     @Override
     public void verifyPreviousLogin() {
         /**
          * Verifying if credentials are saved
          */
-
 
 
         if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_LOGGED, false)) { // If is a previous user logged
@@ -81,43 +80,46 @@ public class LoginInteractorImpl implements LoginInteractor {
     @Override
     public void handleLogin(UserCredential userCredential) {
         LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
-        Call<JsonObject> call = loginRetrofitInterface.login(userCredential);
-        call.enqueue(new Callback<JsonObject>() {
+        Call<LoginResponse> call = loginRetrofitInterface.login(userCredential);
+        call.enqueue(new Callback<LoginResponse>() {
+
+
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.code() == 200) {
+                    Log.d(TAG, response.body().toString());
+
+                    int id = response.body().getData().getId();
+                    String name = response.body().getData().getName();
+                    String lastname = response.body().getData().getName();
+                    String email = userCredential.getEmail();
+
+
 
                     User user = new User();
-                    Company company = new Company();
-                    ArrayList<WorkingPeriod> workingPeriodList = new ArrayList<WorkingPeriod>();
-                    user.setId(response.body().getAsJsonObject("data").get("id").getAsInt());
-                    user.setName(response.body().getAsJsonObject("data").get("nombres").getAsString());
-                    user.setLastName(response.body().getAsJsonObject("data").get("apellidos").getAsString());
-                    user.setEmail(response.body().getAsJsonObject("data").get("email").getAsString());
-                    company.setCompanyName(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("nombre").getAsString());
-                    company.setLatitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("latitud").getAsDouble());
-                    company.setLongitude(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("longitud").getAsDouble());
-                    company.setRadius(response.body().getAsJsonObject("data").getAsJsonObject("empresa").get("radio").getAsFloat());
-                    user.setCompany(company);
+                    user.setId(id);
+                    user.setName(name);
+                    user.setLastName(lastname);
+                    user.setEmail(email);
 
 
-                    SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().get("token").toString().replace("\"", ""));
-                    // SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, refresh_token);
+
+                    SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().getData().getTokens().getAccessToken().replace("\"", ""));
+
 
 
                     // DatabaseAdapter.getDatabaseAdapterInstance().insertUser(user);
                     // DatabaseAdapter.getDatabaseAdapterInstance().insertCompany(company);
-                    StaticData.setCurrentUser(user);
-                    StaticData.getCurrentUser().setCompany(company);
+//                    StaticData.setCurrentUser(user);
+//                    StaticData.getCurrentUser().setCompany(company);
+//
+                        RoomHelper.getAppDatabaseInstance().userDao().insert(user);
+//
+//
+//                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
+//                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
 
-                    RoomHelper.getAppDatabaseInstance().userDao().insert(StaticData.getCurrentUser());
-
-
-
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
-
-                    findUserDevice();
+                 //   findUserDevice();
                 } else if (response.code() == 404 || response.code() == 401) {
                     loginPresenter.hideLoginProgressDialog();
                     loginPresenter.showMessage("Autenticación fallida", "El usuario y contraseña proporcionados no son correctos.");
@@ -137,11 +139,12 @@ public class LoginInteractorImpl implements LoginInteractor {
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 loginPresenter.hideLoginProgressDialog();
                 loginPresenter.showMessage("Error de conexión", "Al parecer no hay conexión a Internet.");
 
             }
+
 
         });
     }
@@ -204,13 +207,12 @@ public class LoginInteractorImpl implements LoginInteractor {
     }
 
 
-
-
-
-    /** Searching if the device is registered*/
+    /**
+     * Searching if the device is registered
+     */
     public void findUserDevice() {
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Log.d("User ", StaticData.getCurrentUser().getId()+"");
+        Log.d("User ", StaticData.getCurrentUser().getId() + "");
         Call<JsonObject> deviceCall = deviceRetrofitInterface.get(ApiClient.getAccessToken(), StaticData.getCurrentUser().getId());
         Log.d("Tokeen", ApiClient.getAccessToken());
         deviceCall.enqueue(new Callback<JsonObject>() {
@@ -280,9 +282,6 @@ public class LoginInteractorImpl implements LoginInteractor {
             }
         });
     }
-
-
-
 
 
 }

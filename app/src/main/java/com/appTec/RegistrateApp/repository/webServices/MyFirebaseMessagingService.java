@@ -92,7 +92,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
          *
          * Save the token on shared preferences. Just in case something weird happen.
          */
-
+        Log.d(TAG, "Trying to send the token to the server.");
         SharedPreferencesHelper.putStringValue(Constants.FIREBASE_TOKEN, firebase_token);
 
         TokenFirebaseInterface tokenFirebaseInterface = ApiClient.getClient().create(TokenFirebaseInterface.class);
@@ -111,6 +111,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 /**
                  * Save it on shared preferences to sent it later
                  */
+                Log.d(TAG, "Call to service failed. The token cant be uploaded.");
 
             }
         });

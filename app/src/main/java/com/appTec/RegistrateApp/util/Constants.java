@@ -9,6 +9,7 @@ public class Constants {
     // Urls
     public static final String BASE_URL = "https://registrate-staging.herokuapp.com";
     public static final String NOTIFICATIONS_URL = "notifications";
+    public static final String LOGIN_URL = "/api/auth/login";
 
 
     // String messages (Logs)
