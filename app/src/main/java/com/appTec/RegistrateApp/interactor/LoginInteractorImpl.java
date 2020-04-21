@@ -16,6 +16,7 @@ import com.appTec.RegistrateApp.models.WorkingPeriod;
 import com.appTec.RegistrateApp.presenter.LoginPresenterImpl;
 import com.appTec.RegistrateApp.repository.StaticData;
 import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
+import com.appTec.RegistrateApp.repository.localDatabase.RoomHelper;
 import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.DeviceRetrofitInterface;
@@ -104,10 +105,14 @@ public class LoginInteractorImpl implements LoginInteractor {
                     // SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, refresh_token);
 
 
-                    DatabaseAdapter.getDatabaseAdapterInstance().insertUser(user);
-                    DatabaseAdapter.getDatabaseAdapterInstance().insertCompany(company);
+                    // DatabaseAdapter.getDatabaseAdapterInstance().insertUser(user);
+                    // DatabaseAdapter.getDatabaseAdapterInstance().insertCompany(company);
                     StaticData.setCurrentUser(user);
                     StaticData.getCurrentUser().setCompany(company);
+
+                    RoomHelper.getAppDatabaseInstance().userDao().insert(StaticData.getCurrentUser());
+
+
 
                     SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
                     SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
