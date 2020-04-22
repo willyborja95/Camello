@@ -1,5 +1,6 @@
-package com.appTec.RegistrateApp.repository.webServices.pojoresponse;
+package com.appTec.RegistrateApp.repository.webServices.pojoresponse.loginresponse;
 
+import com.appTec.RegistrateApp.repository.webServices.pojoresponse.loginresponse.Data;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse{

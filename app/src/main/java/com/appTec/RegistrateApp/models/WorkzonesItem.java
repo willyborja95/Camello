@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.repository.webServices.pojoresponse;
+package com.appTec.RegistrateApp.models;
 
 import com.google.gson.annotations.SerializedName;
 

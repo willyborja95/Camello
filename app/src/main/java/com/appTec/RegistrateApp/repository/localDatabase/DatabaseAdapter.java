@@ -110,14 +110,6 @@ public class DatabaseAdapter {
     }
 
     //Company database functions
-    public boolean insertCompany(Company company){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name", company.getCompanyName());
-        contentValues.put("latitude", company.getLatitude());
-        contentValues.put("longitude", company.getLongitude());
-        contentValues.put("radius", company.getRadius());
-        return sqLiteDatabase.insert("Company", null, contentValues) > 0;
-    }
 
     public Company getCompany(){
         Company company = new Company();
@@ -129,9 +121,7 @@ public class DatabaseAdapter {
                 Double longitude = Double.valueOf(cursor.getString(3));
                 Double radius = cursor.getDouble(4);
                 company.setCompanyName(name);
-                company.setLatitude(latitude);
-                company.setLongitude(longitude);
-                company.setRadius(radius);
+
             }
         }
         return company;

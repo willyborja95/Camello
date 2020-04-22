@@ -10,7 +10,9 @@ public class RoomHelper {
      * This class provide a singleton of RoomDatabase
      */
 
-    private static final AppDatabase sAppDatabase = Room.databaseBuilder(App.getContext(), AppDatabase.class, Constants.DATABASE_NAME).build();
+    private static final AppDatabase sAppDatabase = Room.databaseBuilder(App.getContext(), AppDatabase.class, Constants.DATABASE_NAME)
+            .allowMainThreadQueries()
+            .build();
 
     public static AppDatabase getAppDatabaseInstance(){
         return sAppDatabase;

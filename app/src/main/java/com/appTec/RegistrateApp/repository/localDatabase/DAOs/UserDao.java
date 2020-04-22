@@ -1,5 +1,6 @@
 package com.appTec.RegistrateApp.repository.localDatabase.DAOs;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -21,6 +22,9 @@ public interface UserDao {
 
     @Query("SELECT * FROM user WHERE 1=1 LIMIT 1")
     User getUser();
+
+    @Query("SELECT * FROM user WHERE 1=1 LIMIT 1")
+    LiveData<User> getLiveDataUser();
 
     @Insert
     void insert(User user);

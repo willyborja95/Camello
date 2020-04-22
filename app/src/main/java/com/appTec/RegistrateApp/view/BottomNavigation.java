@@ -23,6 +23,7 @@ import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.models.PermissionType;
 import com.appTec.RegistrateApp.models.User;
+import com.appTec.RegistrateApp.repository.StaticData;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceBroadcastReceiver;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceConstants;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceErrorMessages;
@@ -59,6 +60,8 @@ import androidx.fragment.app.FragmentTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.appTec.RegistrateApp.R.id.user_fullname;
+
 public class BottomNavigation extends AppCompatActivity implements
         DialogDevice.NoticeDialogListener,
         DialogPermission.PermissionDialogListener,
@@ -67,7 +70,7 @@ public class BottomNavigation extends AppCompatActivity implements
 
     private static final String TAG = BottomNavigation.class.getSimpleName();
 
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+
     private String lastExitTime;
 
 
@@ -84,13 +87,13 @@ public class BottomNavigation extends AppCompatActivity implements
     final HomeFragment homeFragment = HomeFragment.newInstance();
     final PermissionFragment permissionFragment = PermissionFragment.newInstance();
     final DeviceFragment deviceFragment = new DeviceFragment();
-    final AssistanceFragment assistanceFragment = new AssistanceFragment();
+ //   final AssistanceFragment assistanceFragment = new AssistanceFragment(); TODO: Remove
     final NotificationsFragment notificationsFragment = new NotificationsFragment();
 
 
     TelephonyManager telephonyManager;
-    SharedPreferences pref;
-    DatabaseAdapter databaseAdapter;
+//    SharedPreferences pref; TODO: Remove
+//    DatabaseAdapter databaseAdapter;TODO: Remove
 
     //UI components
     ActionBar mainActionBar;
@@ -100,11 +103,9 @@ public class BottomNavigation extends AppCompatActivity implements
     private TextView userFullName;
 
 
-    //User data
-    Device device;
-    User user;
-    ArrayList<PermissionType> lstPermissionType;
-    ArrayList<Permission> lstPermission = new ArrayList<Permission>();
+
+//    ArrayList<PermissionType> lstPermissionType; TODO: Remove
+//    ArrayList<Permission> lstPermission = new ArrayList<Permission>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,22 +116,18 @@ public class BottomNavigation extends AppCompatActivity implements
         //Load data
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
-        user = (User) bundle.getSerializable("user");
+//        user = (User) bundle.getSerializable("user");  TODO: Remove
 
 
 
-        //Hay casos en los quedevice puede venir en null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! bug
-        device = (Device) bundle.getSerializable("device");
-        lstPermissionType = (ArrayList<PermissionType>) bundle.get("lstPermissionType");
+
+       // device = (Device) bundle.getSerializable("device");
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
-        pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0);
+//        lstPermissionType = (ArrayList<PermissionType>) bundle.get("lstPermissionType"); TODO: Remove
+//        pref = getApplicationContext().getSharedPreferences("RegistrateApp", 0);
+//        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
 
 
-
-
-
-
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
 
 
@@ -144,23 +141,13 @@ public class BottomNavigation extends AppCompatActivity implements
 
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
         companyName = (TextView) viewNavHeader.findViewById(R.id.company_name);
-        userFullName = (TextView) viewNavHeader.findViewById(R.id.user_fullname);
-        companyName.setText(user.getCompany().getCompanyName());
-        userFullName.setText(user.getName()+" "+user.getLastName());
+        userFullName = (TextView) viewNavHeader.findViewById(user_fullname);
+        companyName.setText(StaticData.getCurrentUser().getCompany().getCompanyName());
+        userFullName.setText(StaticData.getCurrentUser().getName()+" "+StaticData.getCurrentUser().getLastName());
 
 
 
         drawerNavigationView.setNavigationItemSelectedListener(this);
-
-
-
-
-
-
-
-
-
-
 
 
         ImageButton menuRight = findViewById(R.id.leftRight);
@@ -190,69 +177,71 @@ public class BottomNavigation extends AppCompatActivity implements
         // Setup geofencing
         geofenceList = new ArrayList<>();
         geofencePendingIntent = null;
-        populateGeofenceList();
+       // populateGeofenceList();
         geofencingClient = LocationServices.getGeofencingClient(this);
 
 
-        homeFragment.setCompany(user.getCompany());
+        homeFragment.setCompany(StaticData.getCurrentUser().getCompany());
         homeFragment.setArguments(getIntent().getExtras());
-        homeFragment.setCompany(user.getCompany());
-        homeFragment.setDevice(device);
+        homeFragment.setCompany(StaticData.getCurrentUser().getCompany());
+        homeFragment.setDevice(StaticData.getCurrentDevice());
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.nav_host_fragment, homeFragment);
         ft.commit();
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//
+//                switch (menuItem.getItemId()) {
+//                    case R.id.navigation_home:
+//                        ft.replace(R.id.nav_host_fragment, homeFragment);
+//                        lblToolbarName.setText("Panel Principal");
+//                        toolbar.getMenu().clear();
+//                        homeFragment.setCompany(StaticData.getCurrentUser().getCompany());
+//                        homeFragment.setDevice(StaticData.getCurrentDevice());
+//                        break;
+//                    case R.id.navigation_notifications:
+//                        lblToolbarName.setText("Notificaciones");
+//                        toolbar.getMenu().clear();
+//                        getSupportActionBar().show();
+//
+//                        ft.replace(R.id.nav_host_fragment, notificationsFragment);
+//                        break;
+//
+//                    case R.id.navigation_permission:
+//                        lblToolbarName.setText("Permisos");
+//                        Bundle permissionBundle = new Bundle();
+//                        permissionBundle.putSerializable("user", StaticData.getCurrentUser());
+//                        permissionBundle.putSerializable("lstPermissionType", lstPermissionType);
+//                        permissionFragment.setArguments(permissionBundle);
+//                        ft.replace(R.id.nav_host_fragment, permissionFragment);
+//                        if (toolbar.getMenu().size() == 0) {
+//                            toolbar.inflateMenu(R.menu.toolbar_menu);
+//                        }
+//                        getSupportActionBar().show();
+//                        break;
+//                    case R.id.navigation_device:
+//                        Bundle deviceBundle = new Bundle();
+//                        deviceBundle.putSerializable("device", StaticData.getCurrentDevice());
+//                        deviceFragment.setArguments(deviceBundle);
+//                        ft.replace(R.id.nav_host_fragment, deviceFragment);
+//
+//                        lblToolbarName.setText("Equipos");
+//                        toolbar.getMenu().clear();
+//                        getSupportActionBar().show();
+//                        break;
+//                }
+//                Log.d("isAttached", "Preparando commit !");
+//                ft.commit();
+//                Log.d("isAttached", "Commit done !");
+//                return true;
+//            }
+//        });
 
-                switch (menuItem.getItemId()) {
-                    case R.id.navigation_home:
-                        ft.replace(R.id.nav_host_fragment, homeFragment);
-                        lblToolbarName.setText("Panel Principal");
-                        toolbar.getMenu().clear();
-                        homeFragment.setCompany(user.getCompany());
-                        homeFragment.setDevice(device);
-                        break;
-                    case R.id.navigation_notifications:
-                        lblToolbarName.setText("Notificaciones");
-                        toolbar.getMenu().clear();
-                        getSupportActionBar().show();
 
-                        ft.replace(R.id.nav_host_fragment, notificationsFragment);
-                        break;
-
-                    case R.id.navigation_permission:
-                        lblToolbarName.setText("Permisos");
-                        Bundle permissionBundle = new Bundle();
-                        permissionBundle.putSerializable("user", user);
-                        permissionBundle.putSerializable("lstPermissionType", lstPermissionType);
-                        permissionFragment.setArguments(permissionBundle);
-                        ft.replace(R.id.nav_host_fragment, permissionFragment);
-                        if (toolbar.getMenu().size() == 0) {
-                            toolbar.inflateMenu(R.menu.toolbar_menu);
-                        }
-                        getSupportActionBar().show();
-                        break;
-                    case R.id.navigation_device:
-                        Bundle deviceBundle = new Bundle();
-                        deviceBundle.putSerializable("device", device);
-                        deviceFragment.setArguments(deviceBundle);
-                        ft.replace(R.id.nav_host_fragment, deviceFragment);
-
-                        lblToolbarName.setText("Equipos");
-                        toolbar.getMenu().clear();
-                        getSupportActionBar().show();
-                        break;
-                }
-                Log.d("isAttached", "Preparando commit !");
-                ft.commit();
-                Log.d("isAttached", "Commit done !");
-                return true;
-            }
-        });
     }
 
     @Override
@@ -357,18 +346,18 @@ public class BottomNavigation extends AppCompatActivity implements
         return geofencePendingIntent;
     }
 
-    private void populateGeofenceList() {
-        geofenceList.add(new Geofence.Builder()
-                .setRequestId(getClass().getSimpleName())
-                .setCircularRegion(
-                        user.getCompany().getLatitude(),
-                        user.getCompany().getLongitude(),
-                        (int) user.getCompany().getRadius()
-                )
-                .setExpirationDuration(GeofenceConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                .build());
-    }
+//    private void populateGeofenceList() {
+//        geofenceList.add(new Geofence.Builder()
+//                .setRequestId(getClass().getSimpleName())
+//                .setCircularRegion(
+//                        StaticData.getCurrentUser().getCompany().getLatitude(),
+//                        StaticData.getCurrentUser().getCompany().getLongitude(),
+//                        (int) StaticData.getCurrentUser().getCompany().getRadius()
+//                )
+//                .setExpirationDuration(GeofenceConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+//                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+//                .build());
+//    }
 
     private void showSnackbar(final String text) {
 
@@ -435,7 +424,7 @@ public class BottomNavigation extends AppCompatActivity implements
                                         Manifest.permission.ACCESS_COARSE_LOCATION,
                                         Manifest.permission.ACCESS_BACKGROUND_LOCATION
                                 },
-                                REQUEST_PERMISSIONS_REQUEST_CODE);
+                                Constants.REQUEST_PERMISSIONS_REQUEST_CODE);
                     });
         } else {
             Log.i(TAG, "Requesting permission");
@@ -446,7 +435,7 @@ public class BottomNavigation extends AppCompatActivity implements
                     new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
+                    Constants.REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
 
@@ -457,7 +446,7 @@ public class BottomNavigation extends AppCompatActivity implements
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionResult");
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+        if (requestCode == Constants.REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
                 // If user interaction was interrupted, the permission request is cancelled and you
                 // receive empty arrays.
@@ -507,7 +496,6 @@ public class BottomNavigation extends AppCompatActivity implements
     @Override
     public void onDeviceSaved(Device device) {
         Log.d("deviceLog", "Hello form bottom navigation");
-        this.device = device;
         deviceFragment.saveDevice(device);
     }
 
@@ -516,18 +504,12 @@ public class BottomNavigation extends AppCompatActivity implements
         permissionFragment.savePermission(permission);
     }
 
-    public void showConectionErrorMessage() {
-        InformationDialog.createDialog(this);
-        InformationDialog.setTitle("Error de conexión");
-        InformationDialog.setMessage("Al parecer no hay conexión a Internet.");
-        InformationDialog.showDialog();
-    }
 
 
 
     public void closeSession(){
         Intent loginIntent = new Intent(BottomNavigation.this, LoginActivity.class);
-        databaseAdapter.removeData();
+        //databaseAdapter.removeData();
         SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
         startActivity(loginIntent);
         finish();

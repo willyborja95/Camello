@@ -98,11 +98,6 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
 
     }
 
-    /*
-    =======================================
-    BUSINESS LOGIC METHODS
-    =======================================
-     */
 
     //Layout GUI methods
     @Override

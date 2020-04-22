@@ -32,9 +32,6 @@
             android:label="@string/title_activity_bottom_navigation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.SplashActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">

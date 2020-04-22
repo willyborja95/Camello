@@ -238,11 +238,7 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onLocationChanged(Location location) {
-        float[] distance = new float[2];
-        Location.distanceBetween(location.getLatitude(), location.getLongitude(),
-                company.getLatitude(), company.getLongitude(), distance);
-        this.location = location;
-        isWithinRadius = distance[0] < company.getRadius();
+
     }
 
     @Override
@@ -506,8 +502,7 @@ public class HomeFragment extends Fragment implements
     @OnClick(R.id.start_timer_btn)
     public void startTimer(View view) {
         Log.d("userLoc", "Comapny values");
-        Log.d("userLoc", String.valueOf(this.company.getLatitude()));
-        Log.d("userLoc", String.valueOf(this.company.getLongitude()));
+
         // Identificar si el usuario se encuentra dentro de la empresa
         if (isWithinRadius) {
             //Change to working status
