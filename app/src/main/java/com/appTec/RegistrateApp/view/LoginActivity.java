@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.appTec.RegistrateApp.MainActivity;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Company;
 import com.appTec.RegistrateApp.models.Device;
@@ -71,7 +72,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(R.style.SplashTheme);                                                  // Showing the splash screen for until the activity is ready
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity);                                        // Binding the layout
+        setContentView(R.layout.activity_login);                                        // Binding the layout
 
         // Binding UI elements
         txtEmail = (EditText) findViewById(R.id.email);
@@ -127,16 +128,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
 
     //Change to BottomNavigation activity
     public void navigateToNextView() {
-        Intent intent = new Intent(this, BottomNavigation.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        Bundle bundle = new Bundle();
-        if (StaticData.getCurrentDevice() != null) {
-            bundle.putSerializable("device", StaticData.getCurrentDevice());
-        }
-        bundle.putSerializable("user", StaticData.getCurrentUser());
-        bundle.putSerializable("lstPermissionType", StaticData.getPermissionTypes());
-        intent.putExtras(bundle);
-        Log.d("DeviceLog", "navigation activated!");
         startActivity(intent);
         finish();
     }
