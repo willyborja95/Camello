@@ -20,8 +20,8 @@ public class MaBinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        drawerLayout = findViewById(R.id.drawer_layout)
-        navView = findViewById(R.id.slide_nav_view)
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navView = findViewById(R.id.slide_nav_view);
 //        navController = findNavController(R.id.nav_host_fragment)
 //        // Passing each menu ID as a set of Ids because each
 //        // menu should be considered as top level destinations.
