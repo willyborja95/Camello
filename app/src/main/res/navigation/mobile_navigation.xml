@@ -20,7 +20,7 @@
         android:id="@+id/navigation_notifications"
         android:name="com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment"
         android:label="@string/notifications_fragment_title"
-        tools:layout="@layout/notifications_fragment_notification" >
+        tools:layout="@layout/fragment_notification" >
         <action
             android:id="@+id/action_navigation_notifications_to_navigation_permission"
             app:destination="@id/navigation_permission" />

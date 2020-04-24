@@ -54,7 +54,7 @@ public class NotificationsFragment extends Fragment implements NotificationView 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View fragmentDeviceView = inflater.inflate(R.layout.notifications_fragment_notification, container, false);
+        View fragmentDeviceView = inflater.inflate(R.layout.fragment_notification, container, false);
         notificationsListView = fragmentDeviceView.findViewById(R.id.notification_list_view);
         notificationsListAdapter = new NotificationsListAdapter(App.getContext(), model.getNotifications());
         Bundle bundle = this.getArguments();
