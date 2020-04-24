@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <group >
+        <item
+            android:id="@+id/navigation_home"
+            android:icon="@drawable/ic_dashboard_black_24dp"
+            android:title="@string/home_fragment_title" />
+
+        <item
+            android:id="@+id/navigation_notifications"
+            android:icon="@drawable/ic_assistance"
+            android:title="@string/notifications_fragment_title" />
+
+        <item
+            android:id="@+id/navigation_permission"
+            android:icon="@drawable/ic_permission"
+            android:title="@string/permissions_fragment_title" />
+
+        <item
+            android:id="@+id/navigation_device"
+            android:icon="@drawable/ic_device"
+            android:title="@string/devices_fragment_title" />
+    </group>
+</menu>
