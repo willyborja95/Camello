@@ -1,9 +1,5 @@
 package com.apptec.registrateapp.view.fragments.notifications;
 
-import com.apptec.registrateapp.models.Notification;
-
-import java.util.ArrayList;
-
 public interface NotificationView {
     /*
     * Notification View interface
@@ -11,7 +7,6 @@ public interface NotificationView {
 
 
 
-    void showNotifications(ArrayList<Notification> notifications);
     void showNotNewNotificationsMessage();
 
     void showAssistanceProgressDialog(String string);

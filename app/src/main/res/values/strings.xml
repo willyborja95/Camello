@@ -46,5 +46,7 @@
     <string name="login_progress_dialog_message">Autenticando usuario</string>
     <string name="home_text_view_start_message">Bienvenido</string>
     <string name="home_button_start_message">Iniciar</string>
+    <string name="title_error_connection">Error de conexión</string>
+    <string name="message_error_connection">Al parecer no hay conexión a Internet.</string>
 
 </resources>

@@ -4,9 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Company;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.models.PermissionType;
@@ -26,9 +30,6 @@ import com.apptec.registrateapp.repository.webServices.pojoresponse.loginrespons
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -150,7 +151,7 @@ public class LoginInteractorImpl implements LoginInteractor {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 loginPresenter.hideLoginProgressDialog();
-                loginPresenter.showMessage("Error de conexión", "Al parecer no hay conexión a Internet.");
+                loginPresenter.showMessage(App.getContext().getString(R.string.title_error_connection), App.getContext().getString(R.string.message_error_connection));
 
             }
 
@@ -220,6 +221,9 @@ public class LoginInteractorImpl implements LoginInteractor {
      * Searching if the device is registered
      */
     public void findUserDevice() {
+        /**
+         * TODO: Refactor this
+         */
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Log.d("User ", StaticData.getCurrentUser().getId() + "");
         Call<JsonObject> deviceCall = deviceRetrofitInterface.get(ApiClient.getAccessToken(), StaticData.getCurrentUser().getId());
@@ -265,6 +269,9 @@ public class LoginInteractorImpl implements LoginInteractor {
 
     //Get PermissionType
     public void findPermissionTypes() {
+        /**
+         * Refactor this
+         */
         PermissionTypeRetrofitInterface permissionTypeRetrofitInterface = ApiClient.getClient().create(PermissionTypeRetrofitInterface.class);
         final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(ApiClient.getAccessToken());
         permissionTypeCall.enqueue(new Callback<JsonObject>() {

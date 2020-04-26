@@ -14,6 +14,9 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.viewmodel.SharedViewModel;
 
 public class PermissionFragment extends Fragment {
+    /**
+     * PermissionFragment
+     */
 
     // Instance of ViewModel
     private SharedViewModel sharedViewModel;
@@ -21,7 +24,7 @@ public class PermissionFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);          // Getting the view model
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -29,6 +32,7 @@ public class PermissionFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_device2, container, false);
 
+        // TODO: Observe the mPermissionList
 
         return view;
     }
