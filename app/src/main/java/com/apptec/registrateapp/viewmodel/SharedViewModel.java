@@ -35,7 +35,7 @@ public class SharedViewModel extends AndroidViewModel {
 
 
     /**
-     * Expose the LiveData so the UI can observe it
+     * Expose the LiveData so the UI can observe it for the fragment Notification
      */
     public LiveData<List<Notification>> getNotifications(){
         /** Exposing the notifications */

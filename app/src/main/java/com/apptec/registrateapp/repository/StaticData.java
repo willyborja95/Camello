@@ -9,9 +9,10 @@ import java.util.ArrayList;
 public class StaticData {
     /**
      * This is a class when we can hold data for the app. In that way it can be access from anywhere of the app.
+     * Maybe it can be replaced by the view models
      */
 
-    //
+
 
     private static User currentUser = new User();
     private static Device currentDevice = new Device();

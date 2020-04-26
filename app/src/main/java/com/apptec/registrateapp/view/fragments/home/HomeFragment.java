@@ -14,6 +14,9 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.viewmodel.SharedViewModel;
 
 public class HomeFragment extends Fragment {
+    /**
+     * Home fragment
+     */
 
     // Instance of ViewModel
     private SharedViewModel sharedViewModel;
@@ -21,13 +24,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class); // Getting the view model
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false); // Inflate the view
 
 
         return view;

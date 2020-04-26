@@ -1,13 +1,8 @@
 package com.apptec.registrateapp.presenter;
 
-import com.apptec.registrateapp.models.Notification;
-
-import java.util.ArrayList;
-
 public interface NotificationPresenter {
 
-    void getNotifications(); // To interactor
-    void showNotifications(ArrayList<Notification> notifications); // To view
+
     void showNotNewNotificationsMessage();
 
 
@@ -16,5 +11,5 @@ public interface NotificationPresenter {
     void detachJob();
 
 
-    void loadNotifications();
+
 }

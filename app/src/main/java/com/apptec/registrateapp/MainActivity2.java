@@ -29,14 +29,14 @@ import com.google.android.material.navigation.NavigationView;
 import static com.apptec.registrateapp.R.id.user_fullname;
 
 public class MainActivity2 extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener
-{
+        NavigationView.OnNavigationItemSelectedListener {
+    /**
+     * This class is the replace fro MainActivity
+     */
 
     private static final String TAG = MainActivity2.class.getSimpleName();
 
-
-
-
+    // TODO: This instance should be remove
     TelephonyManager telephonyManager;
 
     //UI components
@@ -54,29 +54,26 @@ public class MainActivity2 extends AppCompatActivity implements
         setContentView(R.layout.activity_main_2);
 
 
-
-//
+        // TODO: remove this
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
 
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view_2);
-
-
         drawer = findViewById(R.id.drawer_layout_2);
-
-
-
-
         NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer_2);
-
-
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
+
+        // TODO: This elements could be use data binding to a live data
         companyName = (TextView) viewNavHeader.findViewById(R.id.company_name);
         userFullName = (TextView) viewNavHeader.findViewById(user_fullname);
 
-
+        /** For control the side drawer onNavigationItemSelected */
         drawerNavigationView.setNavigationItemSelectedListener(this);
 
 
+        /**
+         * Open or close the side menu
+         */
         ImageButton menuRight = findViewById(R.id.image_button_side_menu2);
         menuRight.setOnClickListener(v -> {
             if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -89,7 +86,7 @@ public class MainActivity2 extends AppCompatActivity implements
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
-        TextView lblToolbarName = (TextView) findViewById(R.id.toolbar_name2);
+        TextView lblToolbarName = (TextView) findViewById(R.id.toolbar_name2); // TODO: Replace this for a observable an variable called active fragment on the view model
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setTitle(null);
@@ -97,7 +94,6 @@ public class MainActivity2 extends AppCompatActivity implements
         getSupportActionBar().show();
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_2);
-
 
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -132,11 +128,7 @@ public class MainActivity2 extends AppCompatActivity implements
     }
 
 
-
-
-
-
-//
+//    TODO: This method should be remove and placed in the home fragment
 //
 //    public boolean checkPermissions() {
 //        int coarseLocation = ActivityCompat.checkSelfPermission(this,
@@ -181,12 +173,14 @@ public class MainActivity2 extends AppCompatActivity implements
 //        }
 //    }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        /**
+         * TODO: Remove this to the respective fragment
+         * Callback received when a permissions request has been completed.
+         */
         Log.i(TAG, "onRequestPermissionResult");
         if (requestCode == Constants.REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
@@ -223,6 +217,7 @@ public class MainActivity2 extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        /** I do not know if this method is used or not*/
         switch (item.getItemId()) {
             case R.id.btnUpdatePermissions:
                 //permissionFragment2.updatePermissions();
@@ -237,13 +232,13 @@ public class MainActivity2 extends AppCompatActivity implements
 
 
 
-
-
-    //Drawer Item selected logic
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        /**
+         * Drawer Item selected logic
+         */
         drawer.closeDrawer(GravityCompat.START);
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.politica_privacidad:
                 Intent policiesIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/POLI%CC%81TICA_DE_PRIVACIDAD_APP_REGISTRATE.pdf"));
                 startActivity(policiesIntent);
@@ -268,4 +263,5 @@ public class MainActivity2 extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
     }
+
 }

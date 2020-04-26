@@ -1,10 +1,7 @@
 package com.apptec.registrateapp.presenter;
 
 import com.apptec.registrateapp.interactor.NotificationInteractorImpl;
-import com.apptec.registrateapp.models.Notification;
 import com.apptec.registrateapp.view.fragments.notifications.NotificationView;
-
-import java.util.ArrayList;
 
 public class NotificationPresenterImpl implements NotificationPresenter{
     /*
@@ -24,23 +21,7 @@ public class NotificationPresenterImpl implements NotificationPresenter{
         this.notificationInteractor = new NotificationInteractorImpl(this);
     }
 
-    @Override
-    public void getNotifications(){
-        /*
-        * Calling the interactor
-        * */
-        notificationInteractor.getNotifications();
-    }
 
-    @Override
-    public void showNotifications(ArrayList<Notification> notifications) {
-        /*
-        * Calling the view
-        * */
-        if(notificationView!=null) {
-            notificationView.showNotifications(notifications);
-        }
-    }
 
     @Override
     public void showNotNewNotificationsMessage() {
@@ -63,8 +44,5 @@ public class NotificationPresenterImpl implements NotificationPresenter{
         notificationInteractor = null;
     }
 
-    @Override
-    public void loadNotifications() {
-        notificationInteractor.loadNotifications();
-    }
+
 }

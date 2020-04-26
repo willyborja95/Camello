@@ -21,14 +21,15 @@ import androidx.lifecycle.ViewModelProviders;
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Notification;
-import com.apptec.registrateapp.presenter.NotificationPresenterImpl;
 import com.apptec.registrateapp.view.adapters.NotificationsListAdapter;
 import com.apptec.registrateapp.viewmodel.SharedViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsFragment extends Fragment implements NotificationView {
+    /**
+     * NotificationsFragment
+     */
 
     private final String TAG = "NotificationsFragment";
 
@@ -39,28 +40,25 @@ public class NotificationsFragment extends Fragment implements NotificationView 
     ProgressDialog progressDialog;
 
 
-    // Presenter instance here. Not sure if this is the best way.
-    NotificationPresenterImpl notificationPresenter;
 
     // Instance of ViewModel
-    private SharedViewModel model;
+    private SharedViewModel sharedViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);                    // Getting the view model
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View fragmentDeviceView = inflater.inflate(R.layout.fragment_notification, container, false);
-        notificationsListView = fragmentDeviceView.findViewById(R.id.notification_list_view);
-        notificationsListAdapter = new NotificationsListAdapter(App.getContext(), model.getNotifications());
-
+        View view = inflater.inflate(R.layout.fragment_notification, container, false);
+        notificationsListView = view.findViewById(R.id.notification_list_view);
 
         // Observing the view model mNotification
-        model.getNotifications().observe(getActivity(), new Observer<List<Notification>>() {
+        notificationsListAdapter = new NotificationsListAdapter(App.getContext(), sharedViewModel.getNotifications());
+        sharedViewModel.getNotifications().observe(getActivity(), new Observer<List<Notification>>() {
             @Override
             public void onChanged(List<Notification> notifications) {
                 notificationsListView.setAdapter(notificationsListAdapter);
@@ -68,21 +66,13 @@ public class NotificationsFragment extends Fragment implements NotificationView 
         });
 
 
-        return fragmentDeviceView;
+        return view;
     }
 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Attached the presenter
-        notificationPresenter = new NotificationPresenterImpl(this);
-
-        // Calling the presenter
-        // notificationPresenter.getNotifications();
-
-        // Testing the live data
-        notificationPresenter.loadNotifications();
 
 
         // Linking UI elements
@@ -100,16 +90,6 @@ public class NotificationsFragment extends Fragment implements NotificationView 
     }
 
 
-    @Override
-    public void showNotifications(ArrayList<Notification> notifications) {
-        /*
-         * Show notifications on screen
-         * */
-
-
-        // notificationsListView.setAdapter(new NotificationsListAdapter(getContext(), notifications));
-    }
-
     //Dialogs
     @Override
     public void showAssistanceProgressDialog(String message) {
@@ -126,7 +106,7 @@ public class NotificationsFragment extends Fragment implements NotificationView 
 
     @Override
     public void showConnectionErrorMessage() {
-        showDialog("Error de conexión", "Al parecer no hay conexión a Internet.");
+        showDialog(getContext().getString(R.string.title_error_connection), getContext().getString(R.string.message_error_connection));
     }
 
     @Override
@@ -155,7 +135,6 @@ public class NotificationsFragment extends Fragment implements NotificationView 
             Log.d(TAG, "notificationTextView it is null");
         }
         if (notificationsListView != null) {
-
             notificationsListView.setVisibility(View.GONE);
         } else {
             Log.d(TAG, "notificationListView it is null");
@@ -166,7 +145,6 @@ public class NotificationsFragment extends Fragment implements NotificationView 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        notificationPresenter.detachView();
-        notificationPresenter.detachJob();
+
     }
 }

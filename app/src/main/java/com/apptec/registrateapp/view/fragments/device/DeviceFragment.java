@@ -14,8 +14,9 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.viewmodel.SharedViewModel;
 
 public class DeviceFragment extends Fragment {
-
-
+    /**
+     * Device fragment
+     */
 
     // Instance of ViewModel
     private SharedViewModel sharedViewModel;
@@ -23,13 +24,15 @@ public class DeviceFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);          // Getting the view model
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_device, container, false);
+
+        // TODO: Observe the mDevicesList
 
 
         return view;

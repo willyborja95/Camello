@@ -30,9 +30,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-// ...
 
-        // ToDo: Handle FCM messages here.
+        // Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
@@ -75,7 +74,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(@NonNull String token) {
-        Log.d(TAG, "Refreshed token: " + token);
+        Log.d(TAG, "Ne token generate by firebase: " + token);
 
         // We want to send messages to this application instance
         // Instance ID token to your app server.
@@ -98,7 +97,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 /**
-                 *
+                 * TODO: Add logs transaction runs well
                  */
 
             }
@@ -108,7 +107,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 /**
                  * Save it on shared preferences to sent it later
                  */
-                Log.d(TAG, "Call to service failed. The token cant be uploaded.");
+                Log.w(TAG, "Call to service failed. The token cant be uploaded.");
 
             }
         });

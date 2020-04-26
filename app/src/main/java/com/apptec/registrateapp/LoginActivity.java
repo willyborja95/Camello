@@ -22,6 +22,9 @@ import com.apptec.registrateapp.models.UserCredential;
 import com.apptec.registrateapp.presenter.LoginPresenterImpl;
 
 public class LoginActivity extends Activity implements View.OnClickListener, LoginActivityView {
+    /**
+     * This is the launcher activity
+     */
 
     // UI elements
     private ImageButton btnLogin;
@@ -50,10 +53,9 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         progressDialog = new ProgressDialog(this);
 
 
-
         btnLogin.setOnClickListener(this);
 
-
+        // This instance help us to get the permissions to hardware
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
 
         // Checking if it is the first running
@@ -72,11 +74,14 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     //Layout GUI methods
     @Override
     public void onClick(View v) {
+        /**
+         * Here handle the click on the login button
+         */
         switch (v.getId()) {
             case R.id.loginButton:
                 String email = txtEmail.getText().toString().replaceAll("\\s", "");
                 String password = txtPassword.getText().toString().replaceAll("\\s", "");
-                if ((TextUtils.isEmpty(email) || (TextUtils.isEmpty(password)))) {
+                if ((TextUtils.isEmpty(email) || (TextUtils.isEmpty(password)))) { // Validation
                     txtEmail.setError(getString(R.string.parameter_missing_error));
                     txtPassword.setError(getString(R.string.parameter_missing_error));
                 } else {
@@ -95,8 +100,11 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
 
 
 
-    //Change to BottomNavigation activity
+
     public void navigateToNextView() {
+        /**
+         * Navigate to the next activity
+         */
         Intent intent = new Intent(this, MainActivity2.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -104,12 +112,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     }
 
 
-
-
-
-
-    //Dialogs
     public void showLoginProgressDialog(String message) {
+        /** Dialog */
         progressDialog.setMessage(message);
         progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         progressDialog.show();
@@ -117,12 +121,14 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     }
 
     public void hideLoginProgressDialog() {
+        /** Hide the dialog from th screen */
         progressDialog.dismiss();
     }
 
 
     @Override
     public void showMessage(String title, String message) {
+        /** Shows a message on the screen */
         showAlertDialog(title, message);
     }
 
@@ -130,6 +136,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
 
     @Override
     public void showAlertDialog(String title, String message) {
+        /** Show an alert dialog */
         new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
