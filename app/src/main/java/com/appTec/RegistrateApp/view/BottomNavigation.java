@@ -21,21 +21,16 @@ import com.appTec.RegistrateApp.BuildConfig;
 import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.Permission;
-import com.appTec.RegistrateApp.models.PermissionType;
-import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.repository.StaticData;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceBroadcastReceiver;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceConstants;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceErrorMessages;
-import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
 import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.util.Constants;
-import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.assistance.AssistanceFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications.NotificationsFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home.HomeFragment;
 import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device.DeviceFragment;
-import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
 import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.activities.modals.DialogPermission;
 import com.google.android.gms.location.Geofence;
@@ -128,15 +123,15 @@ public class BottomNavigation extends AppCompatActivity implements
 //        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
 
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view_2);
 
 
-        drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout_2);
 
 
 
 
-        NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer);
+        NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer_2);
 
 
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
@@ -187,7 +182,7 @@ public class BottomNavigation extends AppCompatActivity implements
         homeFragment.setDevice(StaticData.getCurrentDevice());
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.nav_host_fragment, homeFragment);
+        ft.replace(R.id.nav_host_fragment_2, homeFragment);
         ft.commit();
 
 //        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

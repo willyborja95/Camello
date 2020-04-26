@@ -44,7 +44,7 @@
             android:layout_marginTop="?android:attr/actionBarSize"
             android:layout_marginBottom="?android:attr/actionBarSize"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/slide_nav_view"
+            app:layout_constraintBottom_toTopOf="@id/bottom_view"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
