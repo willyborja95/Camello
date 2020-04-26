@@ -61,4 +61,6 @@
         app:headerLayout="@layout/nav_header_main"
         app:itemTextColor="@color/colorAccent"
         app:menu="@menu/slide_drawer" />
+
+
 </androidx.drawerlayout.widget.DrawerLayout>
