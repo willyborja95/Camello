@@ -73,7 +73,7 @@
 
     </LinearLayout>
 
-    <com.appTec.RegistrateApp.view.generic.CurveBgRelativeLayout
+    <com.apptec.registrateapp.view.generic.CurveBgRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
@@ -98,7 +98,7 @@
             app:cv_scrollMode="paged" />
 
 
-    </com.appTec.RegistrateApp.view.generic.CurveBgRelativeLayout>
+    </com.apptec.registrateapp.view.generic.CurveBgRelativeLayout>
 
     <!--    <RelativeLayout-->
     <!--        android:id="@+id/map_layout"-->

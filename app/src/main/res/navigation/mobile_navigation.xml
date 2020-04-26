@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.appTec.RegistrateApp.view.fragments.home.HomeFragment"
+        android:name="com.apptec.registrateapp.view.fragments.home.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_notificationsFragment"
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.appTec.RegistrateApp.view.fragments.notifications.NotificationsFragment"
+        android:name="com.apptec.registrateapp.view.fragments.notifications.NotificationsFragment"
         android:label="NotificationsFragment" >
         <action
             android:id="@+id/action_notificationsFragment_to_permissionFragment"
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/permissionFragment"
-        android:name="com.appTec.RegistrateApp.view.fragments.permission.PermissionFragment"
+        android:name="com.apptec.registrateapp.view.fragments.permission.PermissionFragment"
         android:label="PermissionFragment" >
         <action
             android:id="@+id/action_permissionFragment_to_dialogDevice"
@@ -33,6 +33,6 @@
     </fragment>
     <fragment
         android:id="@+id/dialogDevice"
-        android:name="com.appTec.RegistrateApp.view.modals.DialogDevice"
+        android:name="com.apptec.registrateapp.view.modals.DialogDevice"
         android:label="DialogDevice" />
 </navigation>
