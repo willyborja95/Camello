@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications;
+package com.appTec.RegistrateApp.view.fragments.notifications;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;

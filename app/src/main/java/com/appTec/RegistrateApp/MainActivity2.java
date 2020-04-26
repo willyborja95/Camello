@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view;
+package com.appTec.RegistrateApp;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -17,8 +17,15 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.appTec.RegistrateApp.BuildConfig;
-import com.appTec.RegistrateApp.R;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.models.Permission;
 import com.appTec.RegistrateApp.repository.StaticData;
@@ -27,43 +34,34 @@ import com.appTec.RegistrateApp.repository.geofence.GeofenceConstants;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceErrorMessages;
 import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.util.Constants;
-import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications.NotificationsFragment;
-import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission.PermissionFragment;
-import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home.HomeFragment;
-import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device.DeviceFragment;
-import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
-import com.appTec.RegistrateApp.view.activities.modals.DialogPermission;
+import com.appTec.RegistrateApp.view.fragments.device.DeviceFragment;
+import com.appTec.RegistrateApp.view.fragments.home2.HomeFragment2;
+import com.appTec.RegistrateApp.view.fragments.notifications.NotificationsFragment;
+import com.appTec.RegistrateApp.view.fragments.permission.PermissionFragment;
+import com.appTec.RegistrateApp.view.modals.DialogDevice;
+import com.appTec.RegistrateApp.view.modals.DialogPermission;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.appTec.RegistrateApp.R.id.user_fullname;
 
-public class BottomNavigation extends AppCompatActivity implements
+public class MainActivity2 extends AppCompatActivity implements
         DialogDevice.NoticeDialogListener,
         DialogPermission.PermissionDialogListener,
         NavigationView.OnNavigationItemSelectedListener,
         OnCompleteListener<Void> {
 
-    private static final String TAG = BottomNavigation.class.getSimpleName();
+    private static final String TAG = MainActivity2.class.getSimpleName();
 
 
     private String lastExitTime;
@@ -79,7 +77,7 @@ public class BottomNavigation extends AppCompatActivity implements
     private PendingIntent geofencePendingIntent;
 
     // Fragments
-    final HomeFragment homeFragment = HomeFragment.newInstance();
+    final HomeFragment2 homeFragment2 = HomeFragment2.newInstance();
     final PermissionFragment permissionFragment = PermissionFragment.newInstance();
     final DeviceFragment deviceFragment = new DeviceFragment();
  //   final AssistanceFragment assistanceFragment = new AssistanceFragment(); TODO: Remove
@@ -176,13 +174,13 @@ public class BottomNavigation extends AppCompatActivity implements
         geofencingClient = LocationServices.getGeofencingClient(this);
 
 
-        homeFragment.setCompany(StaticData.getCurrentUser().getCompany());
-        homeFragment.setArguments(getIntent().getExtras());
-        homeFragment.setCompany(StaticData.getCurrentUser().getCompany());
-        homeFragment.setDevice(StaticData.getCurrentDevice());
+        homeFragment2.setCompany(StaticData.getCurrentUser().getCompany());
+        homeFragment2.setArguments(getIntent().getExtras());
+        homeFragment2.setCompany(StaticData.getCurrentUser().getCompany());
+        homeFragment2.setDevice(StaticData.getCurrentDevice());
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.nav_host_fragment_2, homeFragment);
+        ft.replace(R.id.nav_host_fragment_2, homeFragment2);
         ft.commit();
 
 //        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -287,9 +285,9 @@ public class BottomNavigation extends AppCompatActivity implements
 
         geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnSuccessListener(this, aVoid ->
-                        Log.i(BottomNavigation.class.getSimpleName(), "Successfully registered geofence"))
+                        Log.i(MainActivity2.class.getSimpleName(), "Successfully registered geofence"))
                 .addOnFailureListener(this, e ->
-                        Log.e(BottomNavigation.class.getSimpleName(), "There was a problem registering the geofence"))
+                        Log.e(MainActivity2.class.getSimpleName(), "There was a problem registering the geofence"))
                 .addOnCompleteListener(this);
     }
 
@@ -414,7 +412,7 @@ public class BottomNavigation extends AppCompatActivity implements
             showSnackbar(R.string.permission_rationale, android.R.string.ok,
                     view -> {
                         // Request permission
-                        ActivityCompat.requestPermissions(BottomNavigation.this,
+                        ActivityCompat.requestPermissions(MainActivity2.this,
                                 new String[]{
                                         Manifest.permission.ACCESS_COARSE_LOCATION,
                                         Manifest.permission.ACCESS_BACKGROUND_LOCATION
@@ -426,7 +424,7 @@ public class BottomNavigation extends AppCompatActivity implements
             // Request permission. It's possible this can be auto answered if device policy
             // sets the permission in a given state or the user denied the permission
             // previously and checked "Never ask again".
-            ActivityCompat.requestPermissions(BottomNavigation.this,
+            ActivityCompat.requestPermissions(MainActivity2.this,
                     new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_BACKGROUND_LOCATION},
@@ -503,7 +501,7 @@ public class BottomNavigation extends AppCompatActivity implements
 
 
     public void closeSession(){
-        Intent loginIntent = new Intent(BottomNavigation.this, LoginActivity.class);
+        Intent loginIntent = new Intent(MainActivity2.this, LoginActivity.class);
         //databaseAdapter.removeData();
         SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
         startActivity(loginIntent);

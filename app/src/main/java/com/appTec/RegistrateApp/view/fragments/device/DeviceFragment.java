@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device;
+package com.appTec.RegistrateApp.view.fragments.device;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,7 +17,7 @@ import com.appTec.RegistrateApp.R;
 import com.appTec.RegistrateApp.models.Device;
 import com.appTec.RegistrateApp.presenter.DevicePresenterImpl;
 import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
-import com.appTec.RegistrateApp.view.activities.modals.DialogDevice;
+import com.appTec.RegistrateApp.view.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.adapters.DeviceListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

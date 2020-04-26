@@ -14,7 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.appTec.RegistrateApp.R;
-import com.appTec.RegistrateApp.view.LoginActivity;
+import com.appTec.RegistrateApp.LoginActivity;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 

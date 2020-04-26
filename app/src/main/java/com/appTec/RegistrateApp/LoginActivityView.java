@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view;
+package com.appTec.RegistrateApp;
 
 public interface LoginActivityView {
     /**

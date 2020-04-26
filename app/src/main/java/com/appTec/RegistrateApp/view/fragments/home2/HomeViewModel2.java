@@ -1,14 +1,14 @@
-package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home;
+package com.appTec.RegistrateApp.view.fragments.home2;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+public class HomeViewModel2 extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public HomeViewModel() {
+    public HomeViewModel2() {
         mText = new MutableLiveData<>();
         mText.setValue("This is home fragment");
     }

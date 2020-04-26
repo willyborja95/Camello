@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.permission;
+package com.appTec.RegistrateApp.view.fragments.permission;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -21,7 +21,7 @@ import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.PermissionRetrofitInterface;
 import com.appTec.RegistrateApp.util.Constants;
-import com.appTec.RegistrateApp.view.activities.modals.DialogPermission;
+import com.appTec.RegistrateApp.view.modals.DialogPermission;
 import com.appTec.RegistrateApp.view.adapters.PermissionListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonArray;

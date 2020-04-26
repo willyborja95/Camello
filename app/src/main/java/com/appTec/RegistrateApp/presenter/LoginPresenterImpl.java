@@ -1,11 +1,10 @@
 package com.appTec.RegistrateApp.presenter;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.appTec.RegistrateApp.interactor.LoginInteractorImpl;
 import com.appTec.RegistrateApp.models.UserCredential;
-import com.appTec.RegistrateApp.view.LoginActivityView;
+import com.appTec.RegistrateApp.LoginActivityView;
 
 public class LoginPresenterImpl implements LoginPresenter {
 

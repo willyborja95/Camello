@@ -1,9 +1,8 @@
 package com.appTec.RegistrateApp.presenter;
 
-import com.appTec.RegistrateApp.interactor.DeviceInteractor;
 import com.appTec.RegistrateApp.interactor.DeviceInteractorImpl;
 import com.appTec.RegistrateApp.models.Device;
-import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device.DeviceView;
+import com.appTec.RegistrateApp.view.fragments.device.DeviceView;
 
 import java.util.ArrayList;
 

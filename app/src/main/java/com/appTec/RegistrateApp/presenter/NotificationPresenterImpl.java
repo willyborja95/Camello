@@ -2,7 +2,7 @@ package com.appTec.RegistrateApp.presenter;
 
 import com.appTec.RegistrateApp.interactor.NotificationInteractorImpl;
 import com.appTec.RegistrateApp.models.Notification;
-import com.appTec.RegistrateApp.view.activities.bottomNavigationUi.notifications.NotificationView;
+import com.appTec.RegistrateApp.view.fragments.notifications.NotificationView;
 
 import java.util.ArrayList;
 

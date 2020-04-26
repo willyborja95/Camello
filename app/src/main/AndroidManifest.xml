@@ -31,11 +31,11 @@
             android:value="AIzaSyA1xA6dIzFsB2vS26HFVqLrGhaeEsshW9o" />
 
         <activity
-            android:name=".view.BottomNavigation"
+            android:name=".MainActivity2"
             android:label="@string/title_activity_bottom_navigation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.LoginActivity"
+            android:name=".LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>

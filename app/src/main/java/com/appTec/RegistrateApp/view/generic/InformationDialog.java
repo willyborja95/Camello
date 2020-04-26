@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view.activities.generic;
+package com.appTec.RegistrateApp.view.generic;
 
 import android.app.AlertDialog;
 import android.content.Context;

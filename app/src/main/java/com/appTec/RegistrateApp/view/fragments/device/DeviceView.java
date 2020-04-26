@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.device;
+package com.appTec.RegistrateApp.view.fragments.device;
 
 import com.appTec.RegistrateApp.models.Device;
 

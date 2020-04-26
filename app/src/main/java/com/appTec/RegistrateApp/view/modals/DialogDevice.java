@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view.activities.modals;
+package com.appTec.RegistrateApp.view.modals;
 
 import android.Manifest;
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view.activities.modals;
+package com.appTec.RegistrateApp.view.modals;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;

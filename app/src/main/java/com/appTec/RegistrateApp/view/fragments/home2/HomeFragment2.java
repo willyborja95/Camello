@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.home;
+package com.appTec.RegistrateApp.view.fragments.home2;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -31,10 +31,10 @@ import com.appTec.RegistrateApp.repository.webServices.ApiClient;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.AssistanceRetrofitInterface;
 import com.appTec.RegistrateApp.repository.webServices.interfaces.TimeRetrofit;
 import com.appTec.RegistrateApp.util.Constants;
-import com.appTec.RegistrateApp.view.BottomNavigation;
-import com.appTec.RegistrateApp.view.activities.generic.DayViewContainer;
-import com.appTec.RegistrateApp.view.activities.generic.InformationDialog;
-import com.appTec.RegistrateApp.view.activities.generic.MonthHeaderViewContainer;
+import com.appTec.RegistrateApp.MainActivity2;
+import com.appTec.RegistrateApp.view.generic.DayViewContainer;
+import com.appTec.RegistrateApp.view.generic.InformationDialog;
+import com.appTec.RegistrateApp.view.generic.MonthHeaderViewContainer;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -67,7 +67,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class HomeFragment extends Fragment implements
+public class HomeFragment2 extends Fragment implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,
         OnMapReadyCallback {
 
@@ -89,15 +89,15 @@ public class HomeFragment extends Fragment implements
 
     //private AlarmManager alarmManager;
     //private PendingIntent alarmIntent;
-    private BottomNavigation bottomNavigationActivity;
+    private MainActivity2 mainActivity2Activity;
     private Company company = new Company();
     private SharedPreferences pref;
     private Location location = new Location("");
     ProgressDialog dialog;
     Device device;
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    public static HomeFragment2 newInstance() {
+        return new HomeFragment2();
     }
 
     /*
@@ -127,11 +127,11 @@ public class HomeFragment extends Fragment implements
 
         AndroidThreeTen.init(getActivity());
 
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_home2, container, false);
         ButterKnife.bind(this, root);
 
 
-        bottomNavigationActivity = (BottomNavigation) getActivity();
+        mainActivity2Activity = (MainActivity2) getActivity();
         dialog = new ProgressDialog(getActivity());
 
         // Google maps setup
@@ -374,7 +374,7 @@ public class HomeFragment extends Fragment implements
                     // Cambiar texto de boton
                     startTimerButton.setText(getButtonTextForState());
                     // Register geofencing
-                    bottomNavigationActivity.addGeofencesHandler();
+                    mainActivity2Activity.addGeofencesHandler();
                     updateTimer();
                 } else if (response.code() == 400) {
                     try {
@@ -441,7 +441,7 @@ public class HomeFragment extends Fragment implements
                 // changeWorkingState(Constants.STATE_NOT_WORKING);
                 startTimerButton.setText(getButtonTextForState());
                 // Unregister geofencing
-                bottomNavigationActivity.removeGeofencesHandler();
+                mainActivity2Activity.removeGeofencesHandler();
                 dimissEntranceDialog();
 
                 showExitMessage();
@@ -510,7 +510,7 @@ public class HomeFragment extends Fragment implements
                 String lastTimeExited = getLastTimeExited();
 
                 if (!(SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_WORKING, false)) && !lastTimeExited.equals("")) {
-                    bottomNavigationActivity.removeGeofencesHandler();
+                    mainActivity2Activity.removeGeofencesHandler();
                     showExitMessage();
                     startTimerButton.setText(getButtonTextForState());
 

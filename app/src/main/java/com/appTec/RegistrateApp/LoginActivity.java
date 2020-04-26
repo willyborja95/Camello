@@ -1,56 +1,26 @@
-package com.appTec.RegistrateApp.view;
+package com.appTec.RegistrateApp;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.appTec.RegistrateApp.MainActivity;
-import com.appTec.RegistrateApp.R;
-import com.appTec.RegistrateApp.models.Company;
-import com.appTec.RegistrateApp.models.Device;
-import com.appTec.RegistrateApp.models.PermissionType;
-import com.appTec.RegistrateApp.models.User;
 import com.appTec.RegistrateApp.models.UserCredential;
-import com.appTec.RegistrateApp.models.WorkingPeriod;
 import com.appTec.RegistrateApp.presenter.LoginPresenterImpl;
-import com.appTec.RegistrateApp.repository.StaticData;
-import com.appTec.RegistrateApp.repository.localDatabase.DatabaseAdapter;
-import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
-import com.appTec.RegistrateApp.repository.webServices.ApiClient;
-import com.appTec.RegistrateApp.repository.webServices.interfaces.DeviceRetrofitInterface;
-import com.appTec.RegistrateApp.repository.webServices.interfaces.LoginRetrofitInterface;
-import com.appTec.RegistrateApp.repository.webServices.interfaces.PermissionTypeRetrofitInterface;
-import com.appTec.RegistrateApp.util.Constants;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import android.Manifest.permission;
-
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginActivity extends Activity implements View.OnClickListener, LoginActivityView {
 

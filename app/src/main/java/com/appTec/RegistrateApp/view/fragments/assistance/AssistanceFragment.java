@@ -1,4 +1,4 @@
-package com.appTec.RegistrateApp.view.activities.bottomNavigationUi.assistance;
+package com.appTec.RegistrateApp.view.fragments.assistance;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
