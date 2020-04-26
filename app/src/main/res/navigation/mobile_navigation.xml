@@ -29,10 +29,10 @@
         android:label="PermissionFragment" >
         <action
             android:id="@+id/action_permissionFragment_to_dialogDevice"
-            app:destination="@id/dialogDevice" />
+            app:destination="@id/deviceFragment" />
     </fragment>
     <fragment
-        android:id="@+id/dialogDevice"
-        android:name="com.apptec.registrateapp.view.modals.DialogDevice"
-        android:label="DialogDevice" />
+        android:id="@+id/deviceFragment"
+        android:name="com.apptec.registrateapp.view.fragments.device.DeviceFragment"
+        android:label="DeviceFragment" />
 </navigation>

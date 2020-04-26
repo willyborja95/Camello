@@ -107,17 +107,18 @@ public class MainActivity2 extends AppCompatActivity implements
 
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_home:
-
+                        navController.navigate(R.id.homeFragment);
                         break;
                     case R.id.navigation_notifications:
-                        navController.navigate(R.id.action_homeFragment_to_notificationsFragment);
+                        navController.navigate(R.id.notificationsFragment);
                         break;
 
                     case R.id.navigation_permission:
-                        navController.navigate(R.id.action_notificationsFragment_to_permissionFragment);
+                        navController.navigate(R.id.permissionFragment);
                         break;
-                    case R.id.navigation_device:
 
+                    case R.id.navigation_device:
+                        navController.navigate(R.id.deviceFragment);
                         break;
                 }
 
