@@ -14,14 +14,14 @@ import com.apptec.registrateapp.models.Notification;
 
 import java.util.List;
 
-public class NotificationsListAdapter extends BaseAdapter {
+public class NotificationListAdapter extends BaseAdapter {
 
     // Attributes
     Context context;
     LiveData<List<Notification>> notifications;
 
 
-    public NotificationsListAdapter(Context context, LiveData<List<Notification>> notifications){
+    public NotificationListAdapter(Context context, LiveData<List<Notification>> notifications){
         /*
         * Constructor
         * */
@@ -34,7 +34,7 @@ public class NotificationsListAdapter extends BaseAdapter {
         /*
          * This method will be used to attach the card view of notification to the list view.
          * */
-        convertView = LayoutInflater.from(context).inflate(R.layout.notifications_card_view, null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.notification_card_view, null);
 
         // Getting the object by the position
         Notification notification = getItem(position);

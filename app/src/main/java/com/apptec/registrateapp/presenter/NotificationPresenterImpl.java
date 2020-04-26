@@ -1,7 +1,7 @@
 package com.apptec.registrateapp.presenter;
 
 import com.apptec.registrateapp.interactor.NotificationInteractorImpl;
-import com.apptec.registrateapp.view.fragments.notifications.NotificationView;
+import com.apptec.registrateapp.view.fragments.notification.NotificationView;
 
 public class NotificationPresenterImpl implements NotificationPresenter{
     /*

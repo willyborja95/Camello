@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.view.fragments.notifications;
+package com.apptec.registrateapp.view.fragments.notification;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -21,12 +21,12 @@ import androidx.lifecycle.ViewModelProviders;
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Notification;
-import com.apptec.registrateapp.view.adapters.NotificationsListAdapter;
+import com.apptec.registrateapp.view.adapters.NotificationListAdapter;
 import com.apptec.registrateapp.viewmodel.SharedViewModel;
 
 import java.util.List;
 
-public class NotificationsFragment extends Fragment implements NotificationView {
+public class NotificationFragment extends Fragment implements NotificationView {
     /**
      * NotificationsFragment
      */
@@ -35,7 +35,7 @@ public class NotificationsFragment extends Fragment implements NotificationView 
 
     //UI elements
     private ListView notificationsListView;
-    private NotificationsListAdapter notificationsListAdapter;
+    private NotificationListAdapter notificationListAdapter;
     private TextView notificationTextView;
     ProgressDialog progressDialog;
 
@@ -57,11 +57,11 @@ public class NotificationsFragment extends Fragment implements NotificationView 
         notificationsListView = view.findViewById(R.id.notification_list_view);
 
         // Observing the view model mNotification
-        notificationsListAdapter = new NotificationsListAdapter(App.getContext(), sharedViewModel.getNotifications());
+        notificationListAdapter = new NotificationListAdapter(App.getContext(), sharedViewModel.getNotifications());
         sharedViewModel.getNotifications().observe(getActivity(), new Observer<List<Notification>>() {
             @Override
             public void onChanged(List<Notification> notifications) {
-                notificationsListView.setAdapter(notificationsListAdapter);
+                notificationsListView.setAdapter(notificationListAdapter);
             }
         });
 

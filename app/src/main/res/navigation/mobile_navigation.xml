@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.apptec.registrateapp.view.fragments.notifications.NotificationsFragment"
+        android:name="com.apptec.registrateapp.view.fragments.notification.NotificationFragment"
         android:label="NotificationsFragment">
         <action
             android:id="@+id/action_notificationsFragment_to_permissionFragment"

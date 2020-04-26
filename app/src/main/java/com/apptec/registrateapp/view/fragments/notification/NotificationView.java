@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.view.fragments.notifications;
+package com.apptec.registrateapp.view.fragments.notification;
 
 public interface NotificationView {
     /*
