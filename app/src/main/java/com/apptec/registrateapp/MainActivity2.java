@@ -19,6 +19,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
@@ -54,7 +55,7 @@ public class MainActivity2 extends AppCompatActivity implements
 
 
 
-//        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+//
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view_2);
@@ -95,7 +96,7 @@ public class MainActivity2 extends AppCompatActivity implements
         lblToolbarName.setText("Panel Principal");
         getSupportActionBar().show();
 
-
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_2);
 
 
 
