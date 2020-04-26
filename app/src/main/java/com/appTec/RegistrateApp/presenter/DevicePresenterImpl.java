@@ -2,7 +2,7 @@ package com.appTec.RegistrateApp.presenter;
 
 import com.appTec.RegistrateApp.interactor.DeviceInteractorImpl;
 import com.appTec.RegistrateApp.models.Device;
-import com.appTec.RegistrateApp.view.fragments.device.DeviceView;
+import com.appTec.RegistrateApp.view.fragments.device2.DeviceView2;
 
 import java.util.ArrayList;
 
@@ -14,10 +14,10 @@ public class DevicePresenterImpl implements DevicePresenter {
 
     // Attributes
     DeviceInteractorImpl deviceInteractor;
-    DeviceView deviceView;
+    DeviceView2 deviceView2;
 
-    public DevicePresenterImpl(DeviceView deviceView) {
-        this.deviceView = deviceView;
+    public DevicePresenterImpl(DeviceView2 deviceView2) {
+        this.deviceView2 = deviceView2;
         this.deviceInteractor = new DeviceInteractorImpl(this);
     }
 

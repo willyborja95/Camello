@@ -34,10 +34,10 @@ import com.appTec.RegistrateApp.repository.geofence.GeofenceConstants;
 import com.appTec.RegistrateApp.repository.geofence.GeofenceErrorMessages;
 import com.appTec.RegistrateApp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.appTec.RegistrateApp.util.Constants;
-import com.appTec.RegistrateApp.view.fragments.device.DeviceFragment;
+import com.appTec.RegistrateApp.view.fragments.device2.DeviceFragment22;
 import com.appTec.RegistrateApp.view.fragments.home2.HomeFragment2;
 import com.appTec.RegistrateApp.view.fragments.notifications.NotificationsFragment;
-import com.appTec.RegistrateApp.view.fragments.permission.PermissionFragment;
+import com.appTec.RegistrateApp.view.fragments.permission2.PermissionFragment2;
 import com.appTec.RegistrateApp.view.modals.DialogDevice;
 import com.appTec.RegistrateApp.view.modals.DialogPermission;
 import com.google.android.gms.location.Geofence;
@@ -78,8 +78,8 @@ public class MainActivity2 extends AppCompatActivity implements
 
     // Fragments
     final HomeFragment2 homeFragment2 = HomeFragment2.newInstance();
-    final PermissionFragment permissionFragment = PermissionFragment.newInstance();
-    final DeviceFragment deviceFragment = new DeviceFragment();
+    final PermissionFragment2 permissionFragment2 = PermissionFragment2.newInstance();
+    final DeviceFragment22 deviceFragment2 = new DeviceFragment22();
  //   final AssistanceFragment assistanceFragment = new AssistanceFragment(); TODO: Remove
     final NotificationsFragment notificationsFragment = new NotificationsFragment();
 
@@ -476,7 +476,7 @@ public class MainActivity2 extends AppCompatActivity implements
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.btnUpdatePermissions:
-                permissionFragment.updatePermissions();
+                permissionFragment2.updatePermissions();
                 break;
             case R.id.btnLogout:
                 SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
@@ -489,12 +489,12 @@ public class MainActivity2 extends AppCompatActivity implements
     @Override
     public void onDeviceSaved(Device device) {
         Log.d("deviceLog", "Hello form bottom navigation");
-        deviceFragment.saveDevice(device);
+        deviceFragment2.saveDevice(device);
     }
 
     @Override
     public void onPermissionSaved(final Permission permission) {
-        permissionFragment.savePermission(permission);
+        permissionFragment2.savePermission(permission);
     }
 
 

@@ -3,42 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home"
+    app:startDestination="@id/homeFragment"
     tools:ignore="UnusedNavigation">
 
+
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/homeFragment"
         android:name="com.appTec.RegistrateApp.view.fragments.home.HomeFragment"
-        android:label="@string/home_fragment_title"
-        tools:layout="@layout/fragment_home" >
+        android:label="HomeFragment" >
         <action
-            android:id="@+id/action_navigation_home_to_navigation_notifications"
-            app:destination="@id/navigation_notifications" />
+            android:id="@+id/action_homeFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
     </fragment>
-
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/notificationsFragment"
+        android:name="com.appTec.RegistrateApp.view.fragments.notifications.NotificationsFragment"
+        android:label="NotificationsFragment" >
+        <action
+            android:id="@+id/action_notificationsFragment_to_permissionFragment"
+            app:destination="@id/permissionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/permissionFragment"
         android:name="com.appTec.RegistrateApp.view.fragments.permission.PermissionFragment"
-        android:label="@string/notifications_fragment_title"
-        tools:layout="@layout/fragment_notification" >
+        android:label="PermissionFragment" >
         <action
-            android:id="@+id/action_navigation_notifications_to_navigation_permission"
-            app:destination="@id/navigation_permission" />
+            android:id="@+id/action_permissionFragment_to_dialogDevice"
+            app:destination="@id/dialogDevice" />
     </fragment>
-
     <fragment
-        android:id="@+id/navigation_permission"
-        android:name="com.appTec.RegistrateApp.view.fragments.permission.PermissionFragment"
-        android:label="Permisos"
-        tools:layout="@layout/fragment_permission" >
-        <action
-            android:id="@+id/action_navigation_permission_to_navigation_device"
-            app:destination="@id/navigation_device" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_device"
-        android:name="com.appTec.RegistrateApp.view.fragments.device.DeviceFragment"
-        android:label="Equipos"
-        tools:layout="@layout/fragment_device" />
+        android:id="@+id/dialogDevice"
+        android:name="com.appTec.RegistrateApp.view.modals.DialogDevice"
+        android:label="DialogDevice" />
 </navigation>
