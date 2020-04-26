@@ -48,6 +48,7 @@ public class NotificationFragment extends Fragment implements NotificationView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);                    // Getting the view model
+        sharedViewModel.setActiveFragmentName(getString(R.string.notifications_fragment_title));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

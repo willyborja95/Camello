@@ -24,7 +24,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class); // Getting the view model
+        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);                    // Getting the view model
+        sharedViewModel.setActiveFragmentName(getString(R.string.home_fragment_title));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

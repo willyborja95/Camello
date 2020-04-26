@@ -18,11 +18,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
+import com.apptec.registrateapp.viewmodel.SharedViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -47,12 +50,18 @@ public class MainActivity2 extends AppCompatActivity implements
     private TextView userFullName;
     private NavController navController;
     ActivityMain2Binding binding;
+    TextView toolbar_name;
+
+    SharedViewModel sharedViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main_2);
 
+        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel.class);                    // Getting the view model
 
         // TODO: remove this
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
@@ -86,11 +95,21 @@ public class MainActivity2 extends AppCompatActivity implements
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
-        TextView lblToolbarName = (TextView) findViewById(R.id.toolbar_name2); // TODO: Replace this for a observable an variable called active fragment on the view model
+        toolbar_name = (TextView) findViewById(R.id.toolbar_name2);
+
+
+
         setSupportActionBar(toolbar);
+        sharedViewModel.setActiveFragmentName(getString(R.string.home_fragment_title));
+        sharedViewModel.getActiveFragmentName().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                toolbar_name.setText(s);
+            }
+        });
 
         getSupportActionBar().setTitle(null);
-        lblToolbarName.setText("Panel Principal");
+
         getSupportActionBar().show();
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_2);
