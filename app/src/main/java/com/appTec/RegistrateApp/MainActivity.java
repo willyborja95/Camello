@@ -2,6 +2,7 @@ package com.appTec.RegistrateApp;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -17,18 +18,16 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
-    // UI elements (?: Use data binding)
     private static final String TAG = "MainActivity";
 
-    //public static final String FRAGMENT_KEY = "fragment";
 
+    // UI elements (?: Use data binding)
     private BottomNavigationView bottomNavigationView;
     private NavigationView slideNavigationView;
     private DrawerLayout drawerLayout;
     private NavController navController;
-
     private AppBarConfiguration appBarConfiguration;
 
     @Override
@@ -52,7 +51,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         appBarConfiguration =
-                new AppBarConfiguration.Builder(navController.getGraph()) //Pass the ids of fragments from nav_graph which you dont want to show back button in toolbar
+                new AppBarConfiguration.Builder(
+                        R.id.navigation_home,
+                        R.id.navigation_notifications,
+                        R.id.navigation_permission,
+                        R.id.navigation_device) //Pass the ids of fragments from nav_graph which you dont want to show back button in toolbar
                         .setDrawerLayout(drawerLayout)
                         .build();
 
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          ** This command will override NavigationUI.setupWithNavController(bottomNavigationView, navController)
          ** and the automatic transaction between fragments is lost
          * */
-        //bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
         slideNavigationView.setNavigationItemSelectedListener(this);
 
     }
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         Log.i(TAG, "onNavigationItemSelected: SIDE BAR");
@@ -101,10 +105,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // https://stackoverflow.com/questions/58345696/how-to-use-android-navigation-component-bottomnavigationview-navigationview
         // https://stackoverflow.com/questions/55667686/how-to-coordinate-a-navigation-drawer-with-a-buttom-navigation-view
         // https://ux.stackexchange.com/questions/125627/is-it-okay-to-use-both-nav-drawer-and-bottom-nav-in-home-screen-of-an-android-ap?newreg=da5d1cea03db496982a00b256647728d
+        if (menuItem.getItemId() == R.id.navigation_home) {
+            Log.i(TAG, "Fragment selected: home");
+        }
+        if (menuItem.getItemId() == R.id.navigation_notifications) {
+            Log.i(TAG, "Fragment selected: notifications");
+        }
+        if (menuItem.getItemId() == R.id.navigation_permission) {
+            Log.i(TAG, "Fragment selected: permission");
+        }
+        if(menuItem.getItemId() == R.id.navigation_device){
+            Log.d(TAG, "Fragment selected: device");
 
+        }
 
         return true;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.bottom, menu);
+        return true;
+    }
+
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {

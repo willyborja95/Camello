@@ -143,7 +143,7 @@ public class MainActivity2 extends AppCompatActivity implements
         drawerNavigationView.setNavigationItemSelectedListener(this);
 
 
-        ImageButton menuRight = findViewById(R.id.leftRight);
+        ImageButton menuRight = findViewById(R.id.image_button_side_menu2);
         menuRight.setOnClickListener(v -> {
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -154,8 +154,8 @@ public class MainActivity2 extends AppCompatActivity implements
 
 
         //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tbFragmentToolbar);
-        TextView lblToolbarName = (TextView) findViewById(R.id.lblToolbarName);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        TextView lblToolbarName = (TextView) findViewById(R.id.toolbar_name2);
         setSupportActionBar(toolbar);
         //NavigationUI.setupWithNavController(toolbar, navController);
         //NavigationUI.setupWithNavController(bottomNavigationView, navController);
