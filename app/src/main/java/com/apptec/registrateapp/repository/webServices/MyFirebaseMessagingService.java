@@ -74,7 +74,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(@NonNull String token) {
-        Log.d(TAG, "Ne token generate by firebase: " + token);
+        /**
+         * This method is called in the first run. Even before the user login. So you could save this
+         * token somewhere and send to the server after the login.
+         *
+         * This method is called when the data of the app is deleted by the user from the settings. So
+         * the server could handle a token actualization.
+         */
+        Log.d(TAG, "New token generate by firebase: " + token);
 
         // We want to send messages to this application instance
         // Instance ID token to your app server.

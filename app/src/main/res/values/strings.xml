@@ -48,5 +48,10 @@
     <string name="home_button_start_message">Iniciar</string>
     <string name="title_error_connection">Error de conexión</string>
     <string name="message_error_connection">Al parecer no hay conexión a Internet.</string>
+    <string name="message_example">A través de este medio se comunica que el día viernes de esta semana se suspenden las actividades por motivos de la emeregencia sanitaria.</string>
+    <string name="notification_ok_button">Entendido</string>
+    <string name="title_example">Comunicado</string>
+    <string name="title_label">Título:</string>
+    <string name="message_label">Mensage:</string>
 
 </resources>

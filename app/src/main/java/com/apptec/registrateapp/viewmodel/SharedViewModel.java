@@ -2,10 +2,10 @@ package com.apptec.registrateapp.viewmodel;
 
 import android.app.Application;
 
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.models.Notification;
 import com.apptec.registrateapp.models.User;
@@ -19,6 +19,8 @@ public class SharedViewModel extends AndroidViewModel {
     // To show the notifications
     private final LiveData<List<Notification>> mNotifications; // List of notifications
 
+    // Toolbar name according the active fragment
+    private MutableLiveData<String> mActiveFragmentName;
 
     // This info will be on the drawer
     private final LiveData<User> mUser;
@@ -30,7 +32,7 @@ public class SharedViewModel extends AndroidViewModel {
         // Load here the live data needed
         mNotifications = RoomHelper.getAppDatabaseInstance().notificationDao().loadAllLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
-
+        mActiveFragmentName = new MutableLiveData<>();
     }
 
 
@@ -48,5 +50,11 @@ public class SharedViewModel extends AndroidViewModel {
     }
 
 
+    public MutableLiveData<String> getActiveFragmentName() {
+        return mActiveFragmentName;
+    }
 
+    public void setActiveFragmentName(String value) {
+        this.mActiveFragmentName.setValue(value);
+    }
 }
