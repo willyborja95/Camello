@@ -115,7 +115,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 
 
                     SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().getData().getTokens().getAccessToken().replace("\"", ""));
-
+                    SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, user.getId());
 
 
                     StaticData.setCurrentUser(user);
@@ -203,7 +203,7 @@ public class LoginInteractorImpl implements LoginInteractor {
         SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
 
         /** Change to false the flag of "is first running" */
-        SharedPreferencesHelper.putBooleanValue(Constants.APP_IS_RUNNING_BY_FIRST_TIME, false);
+        SharedPreferencesHelper.putBooleanValue(Constants.IS_RUNNING_BY_FIRST_TIME, false);
 
     }
 
@@ -212,7 +212,7 @@ public class LoginInteractorImpl implements LoginInteractor {
         /**
          * Method that returns true when the app is running by first time on the device.
          */
-        return SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.APP_IS_RUNNING_BY_FIRST_TIME, true);
+        return SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_RUNNING_BY_FIRST_TIME, true);
     }
 
 

@@ -38,6 +38,14 @@ public class SharedPreferencesHelper {
         editor.commit();
     }
 
+    public static void putIntValue(String key, int value){
+        /** Method to save an int value */
+        SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
+        editor.putInt(key , value);
+        editor.commit();
+    }
+
+
     public static void putBooleanValue(String key, boolean value){
         /** Method to save a boolean value */
         SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
@@ -68,6 +76,9 @@ public class SharedPreferencesHelper {
         editor.apply();
         sharedPreferenceLiveData = new SharedPreferenceBooleanLiveData(getSharedPreferencesInstance(),key,value);
     }
+
+
+
 
 
 }
