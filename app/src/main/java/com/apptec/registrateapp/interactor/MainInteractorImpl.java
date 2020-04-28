@@ -65,6 +65,21 @@ public class MainInteractorImpl {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 // TODO:
 
+                // Case1: This device is not registered.
+                // Case1.1: The user has another device.
+                // Case1.2: The user has no other devices
+
+
+                // Case2: This device belong to this person.
+                // Case2.1: The firebase tokens are equals
+                // Case2.2: The firebase tokens are not equals
+
+
+                // Case3: The device is already used by another person
+
+
+
+
             }
 
             @Override
