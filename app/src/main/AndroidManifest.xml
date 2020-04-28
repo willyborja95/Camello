@@ -29,7 +29,7 @@
             android:value="AIzaSyA1xA6dIzFsB2vS26HFVqLrGhaeEsshW9o" />
 
         <activity
-            android:name="com.apptec.registrateapp.MainActivity2"
+            android:name="com.apptec.registrateapp.MainActivity"
             android:label="@string/title_activity_bottom_navigation"
             android:screenOrientation="portrait" />
         <activity

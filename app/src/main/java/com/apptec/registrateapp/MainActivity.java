@@ -31,13 +31,13 @@ import com.google.android.material.navigation.NavigationView;
 
 import static com.apptec.registrateapp.R.id.user_fullname;
 
-public class MainActivity2 extends AppCompatActivity implements
+public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
     /**
      * This class is the replace fro MainActivity
      */
 
-    private static final String TAG = MainActivity2.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     // TODO: This instance should be remove
     TelephonyManager telephonyManager;
@@ -59,7 +59,7 @@ public class MainActivity2 extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main_2);
+        setContentView(R.layout.activity_main);
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel.class);                    // Getting the view model
 
