@@ -11,8 +11,9 @@ public class SharedPreferencesHelper {
      * Class for provide a unique SharedPreferences instance for all the app
      */
 
-    // Singleton
-    private static SharedPreferences sharedPreferences;
+
+    private static SharedPreferences sharedPreferences;                      // Singleton
+    private SharedPreferenceBooleanLiveData sharedPreferenceLiveData;        // Singleton of live data class
 
 
     public static SharedPreferences getSharedPreferencesInstance(){
@@ -45,18 +46,29 @@ public class SharedPreferencesHelper {
     }
 
 
-    private SharedPreferenceBooleanLiveData sharedPreferenceLiveData;
 
-    public SharedPreferenceBooleanLiveData getSharedPrefs(){
+    public SharedPreferenceBooleanLiveData getSharedPreferenceForLiveData(){
+        /**
+         * Use this as follows:
+         *
+         * SharedPreferenceBooleanLiveData sharedPreferenceLiveData = SharedPreferencesHelper.getSharedPreferenceForLiveData();
+         * sharedPreferenceLiveData.getBooleanLiveData(PreferenceKey.KEY_LOCATION_PERMISSION,false).observe(this,check->{
+         *         if(check){
+         *             setPermissionGranted(check);
+         *         }
+         *     });
+         */
+
         return sharedPreferenceLiveData;
     }
 
     public void setSharedPreferences(String key, boolean value) {
-
         SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
         editor.putBoolean(key, value);
         editor.apply();
         sharedPreferenceLiveData = new SharedPreferenceBooleanLiveData(getSharedPreferencesInstance(),key,value);
     }
+
+
 }
 

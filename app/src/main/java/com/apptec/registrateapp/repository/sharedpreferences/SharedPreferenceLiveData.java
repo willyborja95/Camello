@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.LiveData;
 
 public abstract class SharedPreferenceLiveData<T> extends LiveData {
+    /**
+     * This abstract class could return a LiveData from a value
+     */
 
     SharedPreferences sharedPrefs;
     String key;
-    public T defValue;
+    public T defValue;              // This value could be anyone that SharedPreferences could manage
 
     public SharedPreferenceLiveData(SharedPreferences prefs, String key, T defValue) {
         this.sharedPrefs = prefs;
@@ -38,7 +41,11 @@ public abstract class SharedPreferenceLiveData<T> extends LiveData {
         sharedPrefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
         super.onInactive();
     }
+
     public SharedPreferenceLiveData<Boolean> getBooleanLiveData(String key, Boolean defaultValue) {
+        /**
+         * Call this method from a instance that extends from this abstract class to get Live Data
+         */
         return new SharedPreferenceBooleanLiveData(sharedPrefs,key, defaultValue);
     }
 }
