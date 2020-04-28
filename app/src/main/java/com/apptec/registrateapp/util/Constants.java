@@ -26,10 +26,11 @@ public class Constants {
     public static final String APP_IS_RUNNING_BY_FIRST_TIME = "IS_FIRST_TIME";                      // Storage a boolean
     public static final String USER_ACCESS_TOKEN = "ACCESS_TOKEN";                                  // Storage a string
     public static final String USER_REFRESH_TOKEN = "REFRESH_TOKEN";                                // Storage a string
+    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";                                   // Storage a string
     public static final String CURRENT_IMEI = "CURRENT_IMEI";                                       // Storage a string
     public static final String IS_USER_WORKING = "IS_WORKING";                                      // Storage a boolean
     public static final String IS_USER_LOGGED = "IS_LOGGED";                                        // Storage a boolean
-    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";                                   // Storage a string
+
 
     // API constants
     public static final String AUTHORIZATION_HEADER = "authorization";

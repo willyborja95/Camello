@@ -83,9 +83,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
          */
         Log.d(TAG, "New token generate by firebase: " + token);
 
-        // We want to send messages to this application instance
-        // Instance ID token to your app server.
-        // sendRegistrationToServer(token);
+        SharedPreferencesHelper.putStringValue(Constants.FIREBASE_TOKEN, token); // Saving on share preferences to use later
+
+
     }
 
 
@@ -93,10 +93,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         /**
          * Send the token to the server
          *
-         * Save the token on shared preferences. Just in case something weird happen.
          */
         Log.d(TAG, "Trying to send the token to the server.");
-        SharedPreferencesHelper.putStringValue(Constants.FIREBASE_TOKEN, firebase_token);
 
         TokenFirebaseInterface tokenFirebaseInterface = ApiClient.getClient().create(TokenFirebaseInterface.class);
         Call<JsonObject> call = tokenFirebaseInterface.post(ApiClient.getAccessToken(), firebase_token);
