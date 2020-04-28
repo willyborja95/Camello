@@ -30,7 +30,5 @@ public class MainPresenterImpl {
          */
 
         mainInteractor.handleFirstLogin();
-
-
     }
 }

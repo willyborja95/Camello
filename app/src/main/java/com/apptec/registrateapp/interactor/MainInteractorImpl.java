@@ -1,7 +1,14 @@
 package com.apptec.registrateapp.interactor;
 
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
+import com.apptec.registrateapp.repository.webServices.ApiClient;
+import com.apptec.registrateapp.repository.webServices.interfaces.DeviceRetrofitInterface;
 import com.apptec.registrateapp.util.Constants;
+import com.google.gson.JsonObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainInteractorImpl {
     /**
@@ -48,10 +55,45 @@ public class MainInteractorImpl {
          */
 
         // TODO: Request information about this device
+        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
+        Call<JsonObject> call = deviceRetrofitInterface.getDeviceInfo(
+                ApiClient.getAccessToken(),
+                SharedPreferencesHelper.getSharedPreferencesInstance().getString(Constants.CURRENT_IMEI, ""));
 
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                // TODO:
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                // TODO:
+
+            }
+        });
 
 
     }
+
+
+
+    private boolean isTheSameFirebaseToken(){
+        /**
+         * Return true when the firebase token
+         */
+        // TODO
+        return true;
+    }
+
+    private void updateTheFirebaseToken(String firebaseToken){
+        /**
+         * Upload to the server the new firebase token of this device
+         */
+        // TODO:
+    }
+
 
 
 
