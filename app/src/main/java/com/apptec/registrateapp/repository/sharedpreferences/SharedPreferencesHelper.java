@@ -44,4 +44,19 @@ public class SharedPreferencesHelper {
         editor.commit();
     }
 
+
+    private SharedPreferenceBooleanLiveData sharedPreferenceLiveData;
+
+    public SharedPreferenceBooleanLiveData getSharedPrefs(){
+        return sharedPreferenceLiveData;
+    }
+
+    public void setSharedPreferences(String key, boolean value) {
+
+        SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+        sharedPreferenceLiveData = new SharedPreferenceBooleanLiveData(getSharedPreferencesInstance(),key,value);
+    }
 }
+
