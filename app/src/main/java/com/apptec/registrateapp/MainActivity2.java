@@ -145,9 +145,7 @@ public class MainActivity2 extends AppCompatActivity implements
 
 
         // Handling here the if the first login of this user
-        if(sharedViewModel.isTheFirstLogin){
 
-        }
 
     }
 

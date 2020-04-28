@@ -26,6 +26,9 @@ public class SharedViewModel extends AndroidViewModel {
     // This info will be on the drawer
     private final LiveData<User> mUser;
 
+    // If an error occurs
+
+
 
     // Instancing the presenter her
     MainPresenterImpl mainPresenter = new MainPresenterImpl();
@@ -37,6 +40,8 @@ public class SharedViewModel extends AndroidViewModel {
         mNotifications = RoomHelper.getAppDatabaseInstance().notificationDao().loadAllLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();
+
+
     }
 
 
@@ -62,6 +67,16 @@ public class SharedViewModel extends AndroidViewModel {
 
     public void setActiveFragmentName(String value) {
         this.mActiveFragmentName.setValue(value);
+    }
+
+
+
+    public MutableLiveData<Boolean> registerDevice(){
+        /**
+         *      The activity will be observing this to request new device information or not
+         */
+        // TODO:
+        return new MutableLiveData<>(false);
     }
 
 
