@@ -1,5 +1,7 @@
 package com.apptec.registrateapp.interactor;
 
+import android.util.Log;
+
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webServices.ApiClient;
 import com.apptec.registrateapp.repository.webServices.interfaces.DeviceRetrofitInterface;
@@ -14,7 +16,7 @@ public class MainInteractorImpl {
     /**
      * Interactor for Main Activity
      */
-
+    private final String TAG = "MainInteractor";
 
     public boolean isTheFirstLogin() {
         /**
@@ -54,7 +56,7 @@ public class MainInteractorImpl {
          *
          */
 
-        // TODO: Request information about this device
+
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<JsonObject> call = deviceRetrofitInterface.getDeviceInfo(
                 ApiClient.getAccessToken(),
@@ -64,6 +66,8 @@ public class MainInteractorImpl {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 // TODO:
+                Log.d(TAG, "Response boy: "+response.body());
+
 
                 // Case1: This device is not registered.
                 // Case1.1: The user has another device.

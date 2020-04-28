@@ -144,10 +144,16 @@ public class MainActivity2 extends AppCompatActivity implements
         });
 
 
+        // Handling here the if the first login of this user
+        if(sharedViewModel.isTheFirstLogin){
+
+        }
+
     }
 
 
-//    TODO: This method should be remove and placed in the home fragment
+
+    //    TODO: This method should be remove and placed in the home fragment
 //
 //    public boolean checkPermissions() {
 //        int coarseLocation = ActivityCompat.checkSelfPermission(this,
