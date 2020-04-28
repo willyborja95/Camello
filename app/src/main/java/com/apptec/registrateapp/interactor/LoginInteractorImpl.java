@@ -117,10 +117,9 @@ public class LoginInteractorImpl implements LoginInteractor {
                     SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().getData().getTokens().getAccessToken().replace("\"", ""));
 
 
-                    // DatabaseAdapter.getDatabaseAdapterInstance().insertUser(user);
-                    // DatabaseAdapter.getDatabaseAdapterInstance().insertCompany(company);
+
                     StaticData.setCurrentUser(user);
-//                    StaticData.getCurrentUser().setCompany(company);
+
 
                     RoomHelper.getAppDatabaseInstance().userDao().insert(user);
 
