@@ -33,7 +33,7 @@ public interface DeviceRetrofitInterface {
      * identifier IMEI
      */
     @GET("/api/employee/device?identifier={indentifier}")
-    Call<JsonObject> get(
+    Call<JsonObject> getDeviceInfo(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
             @Path("identifier") String IMEI);
 }
