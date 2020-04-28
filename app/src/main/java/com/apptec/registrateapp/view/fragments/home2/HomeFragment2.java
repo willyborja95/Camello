@@ -31,7 +31,7 @@ import com.apptec.registrateapp.repository.webServices.ApiClient;
 import com.apptec.registrateapp.repository.webServices.interfaces.AssistanceRetrofitInterface;
 import com.apptec.registrateapp.repository.webServices.interfaces.TimeRetrofit;
 import com.apptec.registrateapp.util.Constants;
-import com.apptec.registrateapp.MainActivity2;
+import com.apptec.registrateapp.MainActivity;
 import com.apptec.registrateapp.view.generic.DayViewContainer;
 import com.apptec.registrateapp.view.generic.InformationDialog;
 import com.apptec.registrateapp.view.generic.MonthHeaderViewContainer;
@@ -89,7 +89,7 @@ public class HomeFragment2 extends Fragment implements
 
     //private AlarmManager alarmManager;
     //private PendingIntent alarmIntent;
-    private MainActivity2 mainActivity2Activity;
+    private MainActivity mainActivity2Activity;
     private Company company = new Company();
     private SharedPreferences pref;
     private Location location = new Location("");
@@ -131,7 +131,7 @@ public class HomeFragment2 extends Fragment implements
         ButterKnife.bind(this, root);
 
 
-        mainActivity2Activity = (MainActivity2) getActivity();
+        mainActivity2Activity = (MainActivity) getActivity();
         dialog = new ProgressDialog(getActivity());
 
         // Google maps setup

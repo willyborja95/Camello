@@ -105,7 +105,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         /**
          * Navigate to the next activity
          */
-        Intent intent = new Intent(this, MainActivity2.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
