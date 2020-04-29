@@ -95,6 +95,8 @@ public class MainInteractorImpl {
                         }
 
                         // TODO: Register new device
+                        Log.d(TAG, "The user needs to register this device");
+
 
                     }else {
                         // Case2: This device belong to this person.
