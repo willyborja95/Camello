@@ -116,6 +116,9 @@ public class LoginInteractorImpl implements LoginInteractor {
 
                     SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().getData().getTokens().getAccessToken().replace("\"", ""));
                     SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, user.getId());
+                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
+                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
+
 
 
                     StaticData.setCurrentUser(user);
@@ -123,8 +126,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 
                     RoomHelper.getAppDatabaseInstance().userDao().insert(user);
 
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
+
 
                     loginPresenter.hideLoginProgressDialog();
                     loginPresenter.navigateToNextView();
