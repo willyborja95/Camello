@@ -10,6 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface DeviceRetrofitInterface {
 
@@ -32,8 +33,8 @@ public interface DeviceRetrofitInterface {
      * PARAMS
      * identifier IMEI
      */
-    @GET("/api/employee/device?identifier={indentifier}")
+    @GET("/api/employee/device")
     Call<JsonObject> getDeviceInfo(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
-            @Path("identifier") String IMEI);
+            @Query("identifier") String IMEI);
 }
