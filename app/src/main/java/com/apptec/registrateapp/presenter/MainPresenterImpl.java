@@ -9,6 +9,9 @@ public class MainPresenterImpl {
 
     MainInteractorImpl mainInteractor;
 
+    public MainPresenterImpl() {
+        mainInteractor = new MainInteractorImpl();
+    }
 
     public boolean isTheFirstLogin(){
         /**
