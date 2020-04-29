@@ -32,6 +32,7 @@ public class ApiClient {
                     .baseUrl(Constants.BASE_URL)
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                     .build();
         }
         return retrofit;
