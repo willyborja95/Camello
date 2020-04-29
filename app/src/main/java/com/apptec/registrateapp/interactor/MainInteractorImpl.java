@@ -70,6 +70,7 @@ public class MainInteractorImpl {
 
 
                 // Case1: This device is not registered.
+
                 // Case1.1: The user has another device.
                 // Case1.2: The user has no other devices
 

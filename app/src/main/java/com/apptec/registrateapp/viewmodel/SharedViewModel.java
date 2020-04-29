@@ -31,7 +31,7 @@ public class SharedViewModel extends AndroidViewModel {
 
 
     // Instancing the presenter her
-    MainPresenterImpl mainPresenter = new MainPresenterImpl();
+    MainPresenterImpl mainPresenter;
 
     public SharedViewModel(@NonNull Application application) {
         super(application);
@@ -41,7 +41,7 @@ public class SharedViewModel extends AndroidViewModel {
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();
 
-
+        mainPresenter  = new MainPresenterImpl();
     }
 
 
@@ -80,7 +80,12 @@ public class SharedViewModel extends AndroidViewModel {
     }
 
 
-    //
+    public void test(){
+
+        // TODO: Remove this (reason: testing)
+        mainPresenter.handleFirstLogin();
+    }
+
     public boolean isNeededRequestDeviceInformation() {
         /**
          * Calling the presenter
@@ -99,5 +104,7 @@ public class SharedViewModel extends AndroidViewModel {
         return false;
 
     }
+
+
 
 }

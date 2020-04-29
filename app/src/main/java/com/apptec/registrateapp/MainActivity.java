@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -149,8 +150,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-
-
     //    TODO: This method should be remove and placed in the home fragment
 //
 //    public boolean checkPermissions() {
@@ -253,7 +252,11 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        sharedViewModel.test();
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
