@@ -26,7 +26,8 @@ public class SharedViewModel extends AndroidViewModel {
     // This info will be on the drawer
     private final LiveData<User> mUser;
 
-    // If an error occurs
+    // To handle if needed the first login
+    private MutableLiveData<Boolean> isNeededRegisterDevice;
 
 
 
@@ -36,12 +37,22 @@ public class SharedViewModel extends AndroidViewModel {
     public SharedViewModel(@NonNull Application application) {
         super(application);
 
+        // Initialize the presenter
+        mainPresenter  = new MainPresenterImpl();
+
         // Load here the live data needed
         mNotifications = RoomHelper.getAppDatabaseInstance().notificationDao().loadAllLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();
 
-        mainPresenter  = new MainPresenterImpl();
+        // Handle the first login if is needed
+        isNeededRegisterDevice = new MutableLiveData<>(false);
+        initializeDeviceVerification();
+
+    }
+
+    private void initializeDeviceVerification() {
+        mainPresenter.initializeDeviceVerification(isNeededRegisterDevice);
     }
 
 
@@ -60,50 +71,34 @@ public class SharedViewModel extends AndroidViewModel {
         return mUser;
     }
 
-
+    // Control th ui toolbar name
     public MutableLiveData<String> getActiveFragmentName() {
         return mActiveFragmentName;
     }
-
     public void setActiveFragmentName(String value) {
         this.mActiveFragmentName.setValue(value);
     }
 
 
+    public MainPresenterImpl getMainPresenter(){
+        return this.mainPresenter;
+    }
 
-    public MutableLiveData<Boolean> registerDevice(){
+    public void setIsNeededRegisterDevice(MutableLiveData<Boolean> value){
+        this.isNeededRegisterDevice = value;
+    }
+
+
+    public MutableLiveData<Boolean> getIsNeededRegisterDevice(){
         /**
          *      The activity will be observing this to request new device information or not
          */
         // TODO:
-        return new MutableLiveData<>(false);
+        return this.isNeededRegisterDevice;
     }
 
 
-    public void test(){
 
-        // TODO: Remove this (reason: testing)
-        mainPresenter.handleFirstLogin();
-    }
-
-    public boolean isNeededRequestDeviceInformation() {
-        /**
-         * Calling the presenter
-         * This logic is explained in the flowchart:
-         * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
-         *
-         * if you don't have access, contact Renato by email: renatojobal@gmail.com
-         */
-        if (mainPresenter.isTheFirstLogin()) {
-            return true;
-        }
-        if(! mainPresenter.isTheLoginFromTheSameUser()){
-            return true;
-        }
-
-        return false;
-
-    }
 
 
 

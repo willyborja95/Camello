@@ -1,5 +1,7 @@
 package com.apptec.registrateapp.presenter;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.apptec.registrateapp.interactor.MainInteractorImpl;
 
 public class MainPresenterImpl {
@@ -10,8 +12,13 @@ public class MainPresenterImpl {
     MainInteractorImpl mainInteractor;
 
     public MainPresenterImpl() {
+        /**
+         * Empty constructor
+         */
         mainInteractor = new MainInteractorImpl();
     }
+
+
 
     public boolean isTheFirstLogin(){
         /**
@@ -27,11 +34,12 @@ public class MainPresenterImpl {
         return mainInteractor.isTheLoginFromTheSameUser();
     }
 
-    public void handleFirstLogin(){
+
+
+    public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice) {
         /**
          * Calling the interactor
          */
-
-        mainInteractor.handleFirstLogin();
+        mainInteractor.initializeDeviceVerification(isNeedRegisterDevice);
     }
 }

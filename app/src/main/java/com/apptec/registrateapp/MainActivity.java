@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -146,6 +145,17 @@ public class MainActivity extends AppCompatActivity implements
 
 
         // Handling here the if the first login of this user
+        sharedViewModel.getIsNeededRegisterDevice().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    // That mean the user needs to register this device
+                    // TODO: Register device
+                    navController.navigate(R.id.deviceFragment);
+
+                }
+            }
+        });
 
 
     }
@@ -252,11 +262,7 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        sharedViewModel.test();
-    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

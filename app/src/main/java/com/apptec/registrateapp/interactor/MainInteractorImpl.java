@@ -2,6 +2,8 @@ package com.apptec.registrateapp.interactor;
 
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webServices.ApiClient;
 import com.apptec.registrateapp.repository.webServices.interfaces.DeviceRetrofitInterface;
@@ -41,7 +43,7 @@ public class MainInteractorImpl {
     }
 
 
-    public void handleFirstLogin(){
+    public void handleFirstLogin(MutableLiveData<Boolean> isNeedRegisterDevice){
         /**
          * This method is called from the MainActivity because at this point we will already have
          * the user data.
@@ -96,7 +98,7 @@ public class MainInteractorImpl {
 
                         // TODO: Register new device
                         Log.d(TAG, "The user needs to register this device");
-
+                        isNeedRegisterDevice.postValue(true);
 
                     }else {
                         // Case2: This device belong to this person.
@@ -154,10 +156,22 @@ public class MainInteractorImpl {
     }
 
 
+    public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice){
+            /**
+             * Calling the presenter
+             * This logic is explained in the flowchart:
+             * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
+             *
+             * if you don't have access, contact Renato by email: renatojobal@gmail.com
+             */
+            if (isTheFirstLogin()) {
+                // return true;
+                handleFirstLogin(isNeedRegisterDevice);
+            }else if(!isTheLoginFromTheSameUser()){
+                // return true;
+                handleFirstLogin(isNeedRegisterDevice);
+            }
+            // return false;
 
-
-
-
-
-
+    }
 }
