@@ -66,8 +66,8 @@ public class DeviceFragment22 extends Fragment implements DeviceView2 {
 
 
         fabAddDevice = (FloatingActionButton) fragmentDeviceView.findViewById(R.id.fabAgregarDispositivo);
-        txtDeviceName = fragmentDeviceView.findViewById(R.id.txtDeviceName);
-        txtDeviceModel = fragmentDeviceView.findViewById(R.id.txtDeviceModel);
+        txtDeviceName = fragmentDeviceView.findViewById(R.id.edit_text_device_name);
+        txtDeviceModel = fragmentDeviceView.findViewById(R.id.edit_text_device_model);
         lvDevices = (ListView) fragmentDeviceView.findViewById(R.id.lvEquipos);
         lvDevices.setAdapter(new DeviceListAdapter(getContext(), lstDevice));
         if(device!=null){

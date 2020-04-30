@@ -24,6 +24,12 @@ public class Device implements Serializable {
     @ColumnInfo(name = "status")
     private boolean status;
 
+    @ColumnInfo(name = "pushToken")
+    private String pushToken;
+
+    @ColumnInfo(name = "platform")
+    private int platform = 0;        // 0 if it is Android and 1 if it is Iphone
+
     public int getId() {
         return id;
     }
@@ -62,5 +68,21 @@ public class Device implements Serializable {
 
     public boolean isStatus() {
         return status;
+    }
+
+    public String getPushToken() {
+        return pushToken;
+    }
+
+    public void setPushToken(String pushToken) {
+        this.pushToken = pushToken;
+    }
+
+    public int getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(int platform) {
+        this.platform = platform;
     }
 }

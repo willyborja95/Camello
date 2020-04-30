@@ -30,8 +30,8 @@ public class DeviceListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.device_element, null);
-        TextView txtDeviceName = (TextView) convertView.findViewById(R.id.txtDeviceName);
-        TextView txtDeviceModel = (TextView) convertView.findViewById(R.id.txtDeviceModel);
+        TextView txtDeviceName = (TextView) convertView.findViewById(R.id.edit_text_device_name);
+        TextView txtDeviceModel = (TextView) convertView.findViewById(R.id.edit_text_device_model);
         TextView txtDeviceImei = (TextView) convertView.findViewById(R.id.txtDeviceImei);
         TextView txtDeviceStatus = (TextView) convertView.findViewById(R.id.txtDeviceStatus);
 

@@ -53,8 +53,8 @@ public class DialogDevice extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View viewDialog = inflater.inflate(R.layout.dialog_device, null);
 
-        txtDeviceName = (EditText) viewDialog.findViewById(R.id.txtDeviceName);
-        txtDeviceModel = (EditText) viewDialog.findViewById(R.id.txtDeviceModel);
+        txtDeviceName = (EditText) viewDialog.findViewById(R.id.edit_text_device_name);
+        txtDeviceModel = (EditText) viewDialog.findViewById(R.id.edit_text_device_model);
 
         databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
         telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
