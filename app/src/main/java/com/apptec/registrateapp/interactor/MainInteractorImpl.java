@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webServices.ApiClient;
 import com.apptec.registrateapp.repository.webServices.interfaces.DeviceRetrofitInterface;
@@ -34,7 +35,7 @@ public class MainInteractorImpl {
          */
         int previous_user_id = SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.PREVIOUS_LOGGED_USER_ID, 0);
         int current_user_id = SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, -1);
-        if(previous_user_id == current_user_id){
+        if (previous_user_id == current_user_id) {
             // That means that is the same user
             return true;
         }
@@ -43,7 +44,7 @@ public class MainInteractorImpl {
     }
 
 
-    public void handleFirstLogin(MutableLiveData<Boolean> isNeedRegisterDevice){
+    public void handleFirstLogin(MutableLiveData<Boolean> isNeedRegisterDevice) {
         /**
          * This method is called from the MainActivity because at this point we will already have
          * the user data.
@@ -72,59 +73,68 @@ public class MainInteractorImpl {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 // TODO:
-                Log.d(TAG, "Response body: "+response.body());
-                Log.d(TAG, "Code: "+response.code());
+                Log.d(TAG, "Response body: " + response.body());
+                Log.d(TAG, "Code: " + response.code());
 
-                // On response is ok = True?
-                if(response.body().get("ok").getAsBoolean() == true){
-                    Log.d(TAG, "Ok = false");
+                // On response is ok = True
+                try{
+                    if (response.body().get("ok").getAsBoolean() == true) {
+                        Log.d(TAG, "Ok = false");
 
-                    // Is the data null?
-                    if(response.body().get("data") == null){
-                        Log.d(TAG, "Data = null");
-                        // Case1: This device is not registered.
+                        // Is the data null?
+                        if (response.body().get("data") == null) {
+                            Log.d(TAG, "Data = null");
+                            // Case1: This device is not registered.
 
-                        // TODO: Request information about the user devices
+                            // TODO: Request information about the user devices
 
-                        // The user has previous devices
-                        if(true==false){
-                            // Case1.1: The user has another device.
-                            // Advice thee user the previous devices will be replaced
-                            // TODO: Advice
-                        } else {
-                            // Case1.2: The user has no other devices
-                            // Continue
-                        }
+                            // The user has previous devices
+                            if (true == false) {
+                                // Case1.1: The user has another device.
+                                // Advice thee user the previous devices will be replaced
+                                // TODO: Advice
+                            } else {
+                                // Case1.2: The user has no other devices
+                                // Continue
+                            }
 
-                        // TODO: Register new device
-                        Log.d(TAG, "The user needs to register this device");
-                        isNeedRegisterDevice.postValue(true);
-
-                    }else {
-                        // Case2: This device belong to this person.
-                        // The firebase tokens equals?
-                        if(isTheSameFirebaseToken(response.body().get("data").getAsJsonObject().get("pushToken").toString())){
-                            // Case2.1: The firebase tokens are equals
-                            // Continue with normal interaction
+                            // TODO: Register new device
+                            Log.d(TAG, "The user needs to register this device");
+                            isNeedRegisterDevice.postValue(true);
 
                         } else {
-                            // Case2.2: The firebase tokens are not equals
-                            // TODO: Update the firebase token
+                            // Case2: This device belong to this person.
+                            // The firebase tokens equals?
+                            if (isTheSameFirebaseToken(response.body().get("data").getAsJsonObject().get("pushToken").toString())) {
+                                // Case2.1: The firebase tokens are equals
+                                // Continue with normal interaction
+
+                            } else {
+                                // Case2.2: The firebase tokens are not equals
+                                // TODO: Update the firebase token
+                            }
                         }
+
+
+                    } else {
+                        // Case3: The device is already used by another person
+                        // TODO: Do not let the user interact
+
                     }
 
 
-                }else {
-                    // Case3: The device is already used by another person
-                    // TODO: Do not let the user interact
-
+                    /** Change to false the flag of "is the first login" */
+                    // This line is commented while we are testing (Do not delete)
+                    SharedPreferencesHelper.putBooleanValue(Constants.IS_THE_FIRST_LOGIN, false);
+                }catch (NullPointerException npe){
+                    Log.w(TAG, npe.getMessage());
+                    /** Change to false the flag of "is the first login" */
+                    // This line is commented while we are testing (Do not delete)
+                    SharedPreferencesHelper.putBooleanValue(Constants.IS_THE_FIRST_LOGIN, false);
                 }
 
 
 
-                /** Change to false the flag of "is the first login" */
-                // This line is commented while we are testing (Do not delete)
-                //SharedPreferencesHelper.putBooleanValue(Constants.IS_THE_FIRST_LOGIN, false);
 
             }
 
@@ -139,8 +149,7 @@ public class MainInteractorImpl {
     }
 
 
-
-    private boolean isTheSameFirebaseToken(String serverToken){
+    private boolean isTheSameFirebaseToken(String serverToken) {
         /**
          * Return true when the firebase token
          */
@@ -148,7 +157,7 @@ public class MainInteractorImpl {
         return true;
     }
 
-    private void updateTheFirebaseToken(String firebaseToken){
+    private void updateTheFirebaseToken(String firebaseToken) {
         /**
          * Upload to the server the new firebase token of this device
          */
@@ -156,22 +165,64 @@ public class MainInteractorImpl {
     }
 
 
-    public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice){
-            /**
-             * Calling the presenter
-             * This logic is explained in the flowchart:
-             * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
-             *
-             * if you don't have access, contact Renato by email: renatojobal@gmail.com
-             */
-            if (isTheFirstLogin()) {
-                // return true;
-                handleFirstLogin(isNeedRegisterDevice);
-            }else if(!isTheLoginFromTheSameUser()){
-                // return true;
-                handleFirstLogin(isNeedRegisterDevice);
+    public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice) {
+        /**
+         * Calling the presenter
+         * This logic is explained in the flowchart:
+         * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
+         *
+         * if you don't have access, contact Renato by email: renatojobal@gmail.com
+         */
+        if (isTheFirstLogin()) {
+            // return true;
+            handleFirstLogin(isNeedRegisterDevice);
+        } else if (!isTheLoginFromTheSameUser()) {
+            // return true;
+            handleFirstLogin(isNeedRegisterDevice);
+        }
+        // return false;
+
+    }
+
+    public void saveThisDevice(String name, String model, MutableLiveData<Boolean> isNeedRegisterDevice) {
+        /**
+         * Method to save this device to the server
+         */
+        // TODO:
+
+        // Build the device object
+        Device device = new Device();
+        device.setImei(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
+        device.setModel(model);
+        device.setName(name);
+        device.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
+
+        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
+        Call<JsonObject> call = deviceRetrofitInterface.post(
+                // Token:
+                ApiClient.getAccessToken(),
+                // This device
+                device
+        );
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                // TODO
+                Log.d(TAG, "Response "+response.body());
+
+
+                // Change the flag
+                isNeedRegisterDevice.postValue(false);
             }
-            // return false;
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                // TODO
+
+            }
+        });
+
 
     }
 }

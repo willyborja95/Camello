@@ -18,7 +18,7 @@ import retrofit2.http.Query;
 public interface DeviceRetrofitInterface {
 
 
-    @POST("dispositivo/")
+    @POST("/api/device")
     Call<JsonObject> post(@Header("authorization") String token, @Body Device device);
 
     @GET("dispositivo/empleado/{userId}")

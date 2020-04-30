@@ -42,4 +42,11 @@ public class MainPresenterImpl {
          */
         mainInteractor.initializeDeviceVerification(isNeedRegisterDevice);
     }
+
+    public void saveThisDevice(String name, String model, MutableLiveData<Boolean> isNeedRegisterDevice) {
+        /**
+         * Calling the interactor
+         */
+        mainInteractor.saveThisDevice(name, model, isNeedRegisterDevice);
+    }
 }

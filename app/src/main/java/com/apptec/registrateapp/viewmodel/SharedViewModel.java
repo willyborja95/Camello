@@ -98,8 +98,11 @@ public class SharedViewModel extends AndroidViewModel {
     }
 
 
+    public void saveThisDevice(String name, String model) {
+        /**
+         * Method to save this device to the server
+         */
+        mainPresenter.saveThisDevice(name, model, this.isNeededRegisterDevice);
 
-
-
-
+    }
 }
