@@ -1,5 +1,7 @@
 package com.apptec.registrateapp.util;
 
+import java.util.concurrent.TimeUnit;
+
 public class Constants {
     /**
      * Here goes the constants for no hardcoding
@@ -10,7 +12,8 @@ public class Constants {
     public static final String BASE_URL = "https://registrate-staging.herokuapp.com";
     public static final String NOTIFICATIONS_URL = "notifications";
     public static final String LOGIN_URL = "/api/auth/login";
-    public static final String DEVICE_URL = "/api/employee";  // api/emplyee/{{userid}}/devices/
+    public static final String DEVICE_URL = "/api/employee";  // api/employee/{{userid}}/devices/
+    public static final String REFRESH_TOKEN_URL = "/api/auth/token";
 
 
     // Logs messages
@@ -37,8 +40,10 @@ public class Constants {
     // API constants
     public static final String AUTHORIZATION_HEADER = "authorization";
     public static final String ENDPOINT_FIREBASE = "firebase_token/";
-    public static final int ACCESS_TOKEN_EXPIRATION = 30;    // Is the time of expiration of this token in minutes
-    public static final int REFRESH_TOKEN_EXPIRATION = 100;   // Is the time of expiration of this token in minutes
+    public static final int ACCESS_TOKEN_EXPIRATION = 7;    // Is the time of expiration of this token in minutes
+    public static final TimeUnit ACCESS_TOKEN_EXPIRATION_UNIT = TimeUnit.HOURS;         // Unit of time expiration of the access token
+    public static final int REFRESH_TOKEN_EXPIRATION = 7;   // Is the time of expiration of this token in minutes
+    public static final TimeUnit REFRESH_TOKEN_EXPIRATION_UNIT = TimeUnit.DAYS; // Unit of time expiration of the refresh token
 
     //
     public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
