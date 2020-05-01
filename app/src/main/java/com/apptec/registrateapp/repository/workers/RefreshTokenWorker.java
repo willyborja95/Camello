@@ -1,6 +1,7 @@
 package com.apptec.registrateapp.repository.workers;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -19,6 +20,8 @@ import retrofit2.Response;
 
 public class RefreshTokenWorker extends Worker {
 
+    private final String TAG = "RefreshTokenWorker";
+
     public RefreshTokenWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams) {
@@ -31,20 +34,23 @@ public class RefreshTokenWorker extends Worker {
         /**
          * Initializing credentials manager code goes here
          * */
-
+        Log.d(TAG, "Init doWork");
         AuthInterface authInterface = ApiClient.getClient().create(AuthInterface.class);
-        Call<JsonObject> refreshCall = authInterface.refreshToken(ApiClient.getAccessToken(), ApiClient.getRefreshToken());
+        Call<JsonObject> refreshCall = authInterface.refreshToken(
+                new RefreshTokenBody(ApiClient.getAccessToken(), ApiClient.getRefreshToken())
+        );
 
         try {
             // With do not enqueue the call because it is no necessary an immediate response from this worker
             Response<JsonObject> response = refreshCall.execute();
             // Get the new access token
-            String newAccessToken = response.body().get("accessToken").getAsString();
+            String newAccessToken = response.body().get("data").getAsJsonObject().get("accessToken").getAsString();
             SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, newAccessToken); // Storage in shared preferences
 
-
+            Log.i(TAG, "Token refreshed");
         } catch (IOException e) {
             e.printStackTrace();
+            Log.w(TAG, "Refresh token failure: " + e.getMessage());
             return Result.failure();
         }
 

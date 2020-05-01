@@ -21,7 +21,6 @@ import com.apptec.registrateapp.repository.workers.RefreshTokenWorker;
 import com.apptec.registrateapp.util.Constants;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class SharedViewModel extends AndroidViewModel {
@@ -60,7 +59,11 @@ public class SharedViewModel extends AndroidViewModel {
         isNeededRegisterDevice = new MutableLiveData<>(false);
         initializeDeviceVerification();
 
+        // Start the auto refresh token
+        this.initRefreshToken();
+
     }
+
 
     private void initializeDeviceVerification() {
         mainPresenter.initializeDeviceVerification(isNeededRegisterDevice);
@@ -75,7 +78,6 @@ public class SharedViewModel extends AndroidViewModel {
         return mNotifications;
     }
 
-    ;
 
     public LiveData<User> getCurrentUser() {
         /** Exposing the user */
@@ -132,7 +134,7 @@ public class SharedViewModel extends AndroidViewModel {
         PeriodicWorkRequest refreshTokenRequest = new PeriodicWorkRequest.Builder(
                 RefreshTokenWorker.class,
                 Constants.ACCESS_TOKEN_EXPIRATION,
-                TimeUnit.MINUTES)
+                Constants.ACCESS_TOKEN_EXPIRATION_UNIT)
                 .setConstraints(constraints)
                 .build();
 
