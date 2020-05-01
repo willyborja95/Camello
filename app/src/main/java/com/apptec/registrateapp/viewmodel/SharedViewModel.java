@@ -6,13 +6,22 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
+import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.models.Notification;
 import com.apptec.registrateapp.models.User;
 import com.apptec.registrateapp.presenter.MainPresenterImpl;
 import com.apptec.registrateapp.repository.localDatabase.RoomHelper;
+import com.apptec.registrateapp.repository.workers.RefreshTokenWorker;
+import com.apptec.registrateapp.util.Constants;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class SharedViewModel extends AndroidViewModel {
@@ -29,6 +38,8 @@ public class SharedViewModel extends AndroidViewModel {
     // To handle if needed the first login
     private MutableLiveData<Boolean> isNeededRegisterDevice;
 
+    // Work manager
+    private WorkManager workManager = WorkManager.getInstance(App.getContext());
 
 
     // Instancing the presenter her
@@ -105,4 +116,35 @@ public class SharedViewModel extends AndroidViewModel {
         mainPresenter.saveThisDevice(name, model, this.isNeededRegisterDevice);
 
     }
+
+
+    private void initRefreshToken() {
+        /**
+         * This method we got a worker for refresh the token periodically
+         */
+
+        // Constraints: Do the work if the the network is connected
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        // Create a work request
+        PeriodicWorkRequest refreshTokenRequest = new PeriodicWorkRequest.Builder(
+                RefreshTokenWorker.class,
+                Constants.ACCESS_TOKEN_EXPIRATION,
+                TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+
+        workManager.enqueueUniquePeriodicWork(
+                "refresher",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                refreshTokenRequest);
+
+    }
+
+
+
+
+
 }

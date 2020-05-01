@@ -37,7 +37,8 @@ public class Constants {
     // API constants
     public static final String AUTHORIZATION_HEADER = "authorization";
     public static final String ENDPOINT_FIREBASE = "firebase_token/";
-
+    public static final int ACCESS_TOKEN_EXPIRATION = 30;    // Is the time of expiration of this token in minutes
+    public static final int REFRESH_TOKEN_EXPIRATION = 100;   // Is the time of expiration of this token in minutes
 
     //
     public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
