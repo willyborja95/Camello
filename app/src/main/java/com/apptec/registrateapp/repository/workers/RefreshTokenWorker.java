@@ -12,8 +12,9 @@ import com.apptec.registrateapp.repository.webServices.interfaces.AuthInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
+
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RefreshTokenWorker extends Worker {
@@ -27,37 +28,25 @@ public class RefreshTokenWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        /** Initializing credentials manager code goes here **/
-
-
-        String refreshToken = ApiClient.getRefreshToken();
-        String accessToken = ApiClient.getAccessToken();
-
-        // I do not know if is the best way to put this inside
-
+        /**
+         * Initializing credentials manager code goes here
+         * */
 
         AuthInterface authInterface = ApiClient.getClient().create(AuthInterface.class);
         Call<JsonObject> refreshCall = authInterface.refreshToken(ApiClient.getAccessToken(), ApiClient.getRefreshToken());
-        refreshCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                try {
-                    // Get the new access token
-                    String newAccessToken = response.body().get("accessToken").getAsString();
-                    SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, newAccessToken); // Storage in shared preferences
 
-                    // TODO: Return success
-                } catch (NullPointerException npe) {
-                    // TODO: Handle this
+        try {
+            // With do not enqueue the call because it is no necessary an immediate response from this worker
+            Response<JsonObject> response = refreshCall.execute();
+            // Get the new access token
+            String newAccessToken = response.body().get("accessToken").getAsString();
+            SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, newAccessToken); // Storage in shared preferences
 
-                }
-            }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                // TODO: Return failure
-            }
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.failure();
+        }
 
 
 
