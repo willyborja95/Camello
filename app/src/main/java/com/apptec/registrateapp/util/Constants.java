@@ -14,6 +14,8 @@ public class Constants {
     public static final String LOGIN_URL = "/api/auth/login";
     public static final String DEVICE_URL = "/api/employee";  // api/employee/{{userid}}/devices/
     public static final String REFRESH_TOKEN_URL = "/api/auth/token";
+    public static final String REGISTER_DEVICE_URL = "/api/device";
+    public static final String REQUEST_DEVICE_INFO_URL = "/api/employee/device";
 
 
     // Logs messages
