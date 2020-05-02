@@ -121,6 +121,28 @@ public class MainInteractorImpl {
 
                         } else {
                             // Case2: This device belong to this person.
+//                                     The response is like this:
+//                            "data": {
+//                                "active": true,
+//                                        "id": 6,
+//                                        "name": "asds",
+//                                        "model": "asddasd",
+//                                        "identifier": "asasdasdsasdasdasdasdasdasdasdasd",
+//                                        "pushToken": "asdaasdasdsadxxxxxxxxxxxxxxxxxxxxxxxxxxxassad",
+//                                        "platform": 0,
+//                                        "employeeId": 7
+//                            }
+                            Device device = new Device();
+
+                            // TODO: This messy code cna be improved by creating a Gson Response
+                            device.setId(Integer.parseInt(response.body().get("data").getAsJsonObject().get("id").toString()));
+                            device.setName(response.body().get("data").getAsJsonObject().get("name").toString());
+                            device.setModel(response.body().get("data").getAsJsonObject().get("model").toString());
+                            device.setIdentifier(response.body().get("data").getAsJsonObject().get("identifier").toString());
+                            device.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
+                            device.setPlatform(Integer.parseInt(response.body().get("data").getAsJsonObject().get("platform").toString()));
+
+
                             // The firebase tokens equals?
                             if (isTheSameFirebaseToken(response.body().get("data").getAsJsonObject().get("pushToken").toString())) {
                                 // Case2.1: The firebase tokens are equals
@@ -128,8 +150,12 @@ public class MainInteractorImpl {
 
                             } else {
                                 // Case2.2: The firebase tokens are not equals
-                                // TODO: Update the firebase token
+                                // TODO: Update the firebase token into the server
+
                             }
+
+                            // Save the device here in local database
+                            RoomHelper.getAppDatabaseInstance().deviceDao().insert(device);
                         }
 
 
