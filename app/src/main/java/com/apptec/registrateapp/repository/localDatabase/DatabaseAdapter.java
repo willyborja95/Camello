@@ -79,7 +79,7 @@ public class DatabaseAdapter {
         contentValues.put("id", device.getId());
         contentValues.put("name", device.getName());
         contentValues.put("model", device.getModel());
-        contentValues.put("imei", device.getImei());
+        contentValues.put("imei", device.getIdentifier());
         contentValues.put("status", deviceStatus);
         return sqLiteDatabase.insert("Device", null, contentValues) > 0;
     }
@@ -94,7 +94,7 @@ public class DatabaseAdapter {
                 device.setId(cursor.getInt(0));
                 device.setName(cursor.getString(1));
                 device.setModel(cursor.getString(2));
-                device.setImei(cursor.getString(3));
+                device.setIdentifier(cursor.getString(3));
                 if (deviceStatus == 0) {
                     device.setStatus(false);
                 } else {

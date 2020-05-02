@@ -43,6 +43,24 @@ public class MainInteractorImpl {
         return false;
     }
 
+    public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice) {
+        /**
+         * Calling the presenter
+         * This logic is explained in the flowchart:
+         * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
+         *
+         * if you don't have access, contact Renato by email: renatojobal@gmail.com
+         */
+        if (isTheFirstLogin()) {
+            // return true;
+            handleFirstLogin(isNeedRegisterDevice);
+        } else if (!isTheLoginFromTheSameUser()) {
+            // return true;
+            handleFirstLogin(isNeedRegisterDevice);
+        }
+        // return false;
+
+    }
 
     public void handleFirstLogin(MutableLiveData<Boolean> isNeedRegisterDevice) {
         /**
@@ -72,21 +90,19 @@ public class MainInteractorImpl {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                // TODO:
-                Log.d(TAG, "Response body: " + response.body());
-                Log.d(TAG, "Code: " + response.code());
+
 
                 // On response is ok = True
                 try{
                     if (response.body().get("ok").getAsBoolean() == true) {
-                        Log.d(TAG, "Ok = false");
+
 
                         // Is the data null?
                         if (response.body().get("data") == null) {
-                            Log.d(TAG, "Data = null");
+
                             // Case1: This device is not registered.
 
-                            // TODO: Request information about the user devices
+                            // Request information about this user devices
 
                             // The user has previous devices
                             if (true == false) {
@@ -98,7 +114,7 @@ public class MainInteractorImpl {
                                 // Continue
                             }
 
-                            // TODO: Register new device
+                            // Register new device
                             Log.d(TAG, "The user needs to register this device");
                             isNeedRegisterDevice.postValue(true);
 
@@ -124,12 +140,12 @@ public class MainInteractorImpl {
 
 
                     /** Change to false the flag of "is the first login" */
-                    // This line is commented while we are testing (Do not delete)
+
                     SharedPreferencesHelper.putBooleanValue(Constants.IS_THE_FIRST_LOGIN, false);
                 }catch (NullPointerException npe){
                     Log.w(TAG, npe.getMessage());
                     /** Change to false the flag of "is the first login" */
-                    // This line is commented while we are testing (Do not delete)
+
                     SharedPreferencesHelper.putBooleanValue(Constants.IS_THE_FIRST_LOGIN, false);
                 }
 
@@ -165,40 +181,23 @@ public class MainInteractorImpl {
     }
 
 
-    public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice) {
-        /**
-         * Calling the presenter
-         * This logic is explained in the flowchart:
-         * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
-         *
-         * if you don't have access, contact Renato by email: renatojobal@gmail.com
-         */
-        if (isTheFirstLogin()) {
-            // return true;
-            handleFirstLogin(isNeedRegisterDevice);
-        } else if (!isTheLoginFromTheSameUser()) {
-            // return true;
-            handleFirstLogin(isNeedRegisterDevice);
-        }
-        // return false;
 
-    }
 
     public void saveThisDevice(String name, String model, MutableLiveData<Boolean> isNeedRegisterDevice) {
         /**
          * Method to save this device to the server
          */
-        // TODO:
+
 
         // Build the device object
         Device device = new Device();
-        device.setImei(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
-        device.setModel(model);
         device.setName(name);
+        device.setModel(model);
+        device.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
         device.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> call = deviceRetrofitInterface.post(
+        Call<JsonObject> call = deviceRetrofitInterface.registerDevice(
                 // Token:
                 ApiClient.getAccessToken(),
                 // This device
@@ -208,12 +207,14 @@ public class MainInteractorImpl {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                // TODO
-                Log.d(TAG, "Response "+response.body());
 
 
                 // Change the flag
-                isNeedRegisterDevice.postValue(false);
+                if (response.isSuccessful()) {
+                    isNeedRegisterDevice.postValue(false);
+                    Log.d(TAG, "saveThisDevice() changed the value of isNeedRegisterDevice " + isNeedRegisterDevice.getValue().toString());
+                }
+
             }
 
             @Override
@@ -225,4 +226,6 @@ public class MainInteractorImpl {
 
 
     }
+
+
 }

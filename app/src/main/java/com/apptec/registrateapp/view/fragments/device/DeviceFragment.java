@@ -37,8 +37,9 @@ public class DeviceFragment extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 // Request register device
-                registerNewDeviceDialog();
-
+                if (aBoolean) {
+                    registerNewDeviceDialog();
+                }
             }
         });
     }

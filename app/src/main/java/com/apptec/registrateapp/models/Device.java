@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 @Entity
@@ -19,7 +21,8 @@ public class Device implements Serializable {
     private String model;
 
     @ColumnInfo(name = "imei")
-    private String imei;
+    @SerializedName("identifier")
+    private String identifier;   // This is the imei
 
     @ColumnInfo(name = "status")
     private boolean status;
@@ -54,12 +57,12 @@ public class Device implements Serializable {
         this.model = model;
     }
 
-    public String getImei() {
-        return imei;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setImei(String imei) {
-        this.imei = imei;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public void setStatus(boolean status) {

@@ -18,31 +18,26 @@ import retrofit2.http.Query;
 public interface DeviceRetrofitInterface {
 
 
-    @POST("/api/device")
-    Call<JsonObject> post(@Header("authorization") String token, @Body Device device);
+    @POST(Constants.REGISTER_DEVICE_URL)
+    Call<JsonObject> registerDevice(@Header(Constants.AUTHORIZATION_HEADER) String token, @Body Device device);
 
     @GET("dispositivo/empleado/{userId}")
-    Call<JsonObject> get(@Header("authorization") String token, @Path("userId") int userId);
+    Call<JsonObject> get(@Header(Constants.AUTHORIZATION_HEADER) String token, @Path("userId") int userId);
 
 
     /**
-     * Permite consultar si el dispositivo actual del empleado.
-     *
-     * Se debe especificar el identificador del dispositivo.
-     *
-     * https://registrateapp-staging/api/employees/device?identifier=IMEI
      * HEADERS
      * Authorization
      * PARAMS
      * identifier IMEI
      */
-    @GET("/api/employee/device")
+    @GET(Constants.REQUEST_DEVICE_INFO_URL)
     Call<JsonObject> getDeviceInfo(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
             @Query("identifier") String IMEI);
 
 
-    @GET("/api/employee/device")
+    @GET(Constants.REQUEST_DEVICE_INFO_URL)
     LiveData<ApiResponse<JsonObject>> getDeviceInfoLiveData(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
             @Query("identifier") String IMEI

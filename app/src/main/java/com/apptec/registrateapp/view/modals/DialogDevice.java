@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-
 import androidx.fragment.app.DialogFragment;
 
 import com.apptec.registrateapp.R;
@@ -91,10 +90,10 @@ public class DialogDevice extends DialogFragment {
                 }
             }
         }
-        deviceDialog.setImei(deviceImei);
+        deviceDialog.setIdentifier(deviceImei);
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> call = deviceRetrofitInterface.post(ApiClient.getAccessToken(), deviceDialog);
+        Call<JsonObject> call = deviceRetrofitInterface.registerDevice(ApiClient.getAccessToken(), deviceDialog);
         showDeviceProgressDialog(Constants.UPDATING_CHANGES);
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -113,10 +112,10 @@ public class DialogDevice extends DialogFragment {
                     device.setId(id);
                     device.setName(deviceName);
                     device.setModel(deviceModel);
-                    device.setImei(deviceImei);
+                    device.setIdentifier(deviceImei);
                     device.setStatus(deviceStatus);
                     Log.d("deviceStatus", String.valueOf(device.getId()));
-                    Log.d("deviceStatus", device.getImei());
+                    Log.d("deviceStatus", device.getIdentifier());
                     Log.d("deviceStatus", device.getName());
                     Log.d("deviceStatus", device.getModel());
                     Log.d("deviceStatus", String.valueOf(device.isStatus()));
