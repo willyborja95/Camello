@@ -83,11 +83,17 @@ public class SharedViewModel extends AndroidViewModel {
         return mNotifications;
     }
 
-
     public LiveData<User> getCurrentUser() {
         /** Exposing the user */
         return mUser;
     }
+
+    public LiveData<List<Device>> getDevices() {
+        /** Exposing the list of devices */
+        return mDevices;
+    }
+
+
 
     // Control th ui toolbar name
     public MutableLiveData<String> getActiveFragmentName() {

@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.repository.localDatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webServices.ApiClient;
 import com.apptec.registrateapp.repository.webServices.interfaces.DeviceRetrofitInterface;
@@ -190,18 +191,18 @@ public class MainInteractorImpl {
 
 
         // Build the device object
-        Device device = new Device();
-        device.setName(name);
-        device.setModel(model);
-        device.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
-        device.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
+        Device thisDevice = new Device();
+        thisDevice.setName(name);
+        thisDevice.setModel(model);
+        thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
+        thisDevice.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<JsonObject> call = deviceRetrofitInterface.registerDevice(
                 // Token:
                 ApiClient.getAccessToken(),
                 // This device
-                device
+                thisDevice
         );
 
         call.enqueue(new Callback<JsonObject>() {
@@ -211,8 +212,10 @@ public class MainInteractorImpl {
 
                 // Change the flag
                 if (response.isSuccessful()) {
-                    isNeedRegisterDevice.postValue(false);
-                    Log.d(TAG, "saveThisDevice() changed the value of isNeedRegisterDevice " + isNeedRegisterDevice.getValue().toString());
+
+                    isNeedRegisterDevice.postValue(false);      // Change the flag to the view model
+                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
+
                 }
 
             }
