@@ -13,6 +13,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.models.Notification;
 import com.apptec.registrateapp.models.User;
 import com.apptec.registrateapp.presenter.MainPresenterImpl;
@@ -27,6 +28,9 @@ public class SharedViewModel extends AndroidViewModel {
 
     // To show the notifications
     private final LiveData<List<Notification>> mNotifications; // List of notifications
+
+    // To show devices
+    private final LiveData<List<Device>> mDevices;          // List of user devices
 
     // Toolbar name according the active fragment
     private MutableLiveData<String> mActiveFragmentName;
@@ -52,6 +56,7 @@ public class SharedViewModel extends AndroidViewModel {
 
         // Load here the live data needed
         mNotifications = RoomHelper.getAppDatabaseInstance().notificationDao().loadAllLiveData();
+        mDevices = RoomHelper.getAppDatabaseInstance().deviceDao().loadAllDevicesLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();
 
