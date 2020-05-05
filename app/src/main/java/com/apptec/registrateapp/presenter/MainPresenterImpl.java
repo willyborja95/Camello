@@ -20,20 +20,6 @@ public class MainPresenterImpl {
 
 
 
-    public boolean isTheFirstLogin(){
-        /**
-         * Calling the interactor
-         */
-        return mainInteractor.isTheFirstLogin();
-    }
-
-    public boolean isTheLoginFromTheSameUser(){
-        /**
-         * Calling the interactor
-         */
-        return mainInteractor.isTheLoginFromTheSameUser();
-    }
-
 
 
     public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice) {

@@ -37,7 +37,7 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Modelo: "
+                android:text="@string/label_device_model"
                 android:fontFamily="@font/opensans_light"
                 android:textColor="@color/black100"
                 android:textSize="15dp" />
@@ -63,14 +63,14 @@
                 android:id="@+id/label_imei"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="IMEI: "
+                android:text="@string/label_imei"
                 android:fontFamily="@font/opensans_light"
                 android:textColor="@color/black100"
                 android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/text_view_device_imei"
-                tools:text="109919ICSDKJNASSDS09I1"
+                tools:text="1099193543645091"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/opensans_light"
@@ -90,7 +90,7 @@
                 android:id="@+id/label_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Estado: "
+                android:text="@string/label_device_status"
                 android:fontFamily="@font/opensans_light"
                 android:textColor="@color/black100"
                 android:textSize="15dp" />
@@ -99,7 +99,8 @@
                 android:id="@+id/text_view_device_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Activo"
+                tools:text="@string/text_status_active"
+                android:text="@string/text_status_active"
                 android:fontFamily="@font/opensans_light"
                 android:textColor="@color/black100"
                 android:textSize="15dp" />
