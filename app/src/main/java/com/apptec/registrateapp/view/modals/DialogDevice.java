@@ -1,50 +1,39 @@
 package com.apptec.registrateapp.view.modals;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.models.Device;
-import com.apptec.registrateapp.repository.localDatabase.DatabaseAdapter;
-import com.apptec.registrateapp.repository.webServices.ApiClient;
-import com.apptec.registrateapp.repository.webServices.interfaces.DeviceRetrofitInterface;
-import com.apptec.registrateapp.util.Constants;
-import com.google.gson.JsonObject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.apptec.registrateapp.viewmodel.MainViewModel;
 
 public class DialogDevice extends DialogFragment {
-    NoticeDialogListener listener;
-    EditText txtDeviceName;
-    EditText txtDeviceModel;
+    /**
+     * DialogDevice
+     */
+
+    private final String TAG = DialogDevice.class.getSimpleName();
+
+    // UI elements
+    EditText et_name;
+    EditText et_model;
     ProgressDialog progressDialog;
 
-    DatabaseAdapter databaseAdapter;
-    TelephonyManager telephonyManager;
-
-    public interface NoticeDialogListener {
-        public void onDeviceSaved(Device device);
-    }
-
+    // View model
+    private MainViewModel mainViewModel;
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
 
         progressDialog = new ProgressDialog(getContext());
 
@@ -52,22 +41,19 @@ public class DialogDevice extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View viewDialog = inflater.inflate(R.layout.dialog_device, null);
 
-        txtDeviceName = (EditText) viewDialog.findViewById(R.id.edit_text_device_name);
-        txtDeviceModel = (EditText) viewDialog.findViewById(R.id.edit_text_device_model);
-
-        databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
-        telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        et_name = (EditText) viewDialog.findViewById(R.id.edit_text_device_name);
+        et_model = (EditText) viewDialog.findViewById(R.id.edit_text_device_model);
 
         builder.setView(viewDialog)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Log.d("deviceLog", "click en ok");
+                        Log.d(TAG, "Ok button clicked");
 
-                        Device deviceDialog = new Device();
-                        deviceDialog.setName(txtDeviceName.getText().toString());
-                        deviceDialog.setModel(txtDeviceModel.getText().toString());
-                        saveDevice(deviceDialog);
+                        String name = et_name.getText().toString();
+                        String model = et_model.getText().toString();
+
+                        mainViewModel.saveThisDevice(name, model);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -76,106 +62,5 @@ public class DialogDevice extends DialogFragment {
                     }
                 });
         return builder.create();
-    }
-
-    public void saveDevice(Device deviceDialog) {
-        String deviceImei = null;
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (getContext().checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                    deviceImei = telephonyManager.getDeviceId();
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    deviceImei = telephonyManager.getImei();
-                }
-            }
-        }
-        deviceDialog.setIdentifier(deviceImei);
-
-        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> call = deviceRetrofitInterface.registerDevice(ApiClient.getAccessToken(), deviceDialog);
-        showDeviceProgressDialog(Constants.UPDATING_CHANGES);
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("deviceLog", "hello from dialog device");
-                Log.d("deviceLog", response.toString());
-                hideDeviceProgressDialog();
-                if(response.code()==200){
-                    int id = response.body().getAsJsonObject("data").get("id").getAsInt();
-                    String deviceName = response.body().getAsJsonObject("data").get("nombre").getAsString();
-                    String deviceModel = response.body().getAsJsonObject("data").get("modelo").getAsString();
-                    String deviceImei = response.body().getAsJsonObject("data").get("imei").getAsString();
-                    boolean deviceStatus = response.body().getAsJsonObject("data").get("estado").getAsBoolean();
-
-                    Device device = new Device();
-                    device.setId(id);
-                    device.setName(deviceName);
-                    device.setModel(deviceModel);
-                    device.setIdentifier(deviceImei);
-                    device.setStatus(deviceStatus);
-                    Log.d("deviceStatus", String.valueOf(device.getId()));
-                    Log.d("deviceStatus", device.getIdentifier());
-                    Log.d("deviceStatus", device.getName());
-                    Log.d("deviceStatus", device.getModel());
-                    Log.d("deviceStatus", String.valueOf(device.isStatus()));
-                    databaseAdapter.insertDevice(device);
-                    listener.onDeviceSaved(device);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                hideDeviceProgressDialog();
-                showConectionErrorMessage();
-            }
-        });
-
-
-    }
-
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            listener = (NoticeDialogListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString()
-                    + " must implement NoticeDialogListener");
-        }
-    }
-
-
-
-
-    //Dialogs
-    public void showDeviceProgressDialog(String message) {
-        progressDialog.setMessage(message);
-        progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        progressDialog.show();
-        progressDialog.setCanceledOnTouchOutside(false);
-    }
-
-    public void hideDeviceProgressDialog() {
-        progressDialog.dismiss();
-    }
-
-    public void showConectionErrorMessage() {
-        showDialog("Error de conexión", "Al parecer no hay conexión a Internet.");
-    }
-
-    public void showDialog(String title, String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
-        alertDialog.show();
     }
 }

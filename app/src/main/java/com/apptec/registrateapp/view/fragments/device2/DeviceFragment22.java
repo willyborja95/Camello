@@ -17,8 +17,7 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.presenter.DevicePresenterImpl;
 import com.apptec.registrateapp.repository.localDatabase.DatabaseAdapter;
-import com.apptec.registrateapp.view.modals.DialogDevice;
-import com.apptec.registrateapp.view.adapters.DeviceListAdapter;
+import com.apptec.registrateapp.view.modals.DialogDevice2;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class DeviceFragment22 extends Fragment implements DeviceView2 {
     }
 
     private void updateListView() {
-        lvDevices.setAdapter(new DeviceListAdapter(getContext(), lstDevice));
+        // lvDevices.setAdapter(new DeviceListAdapter(getContext(), lstDevice));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -69,7 +68,7 @@ public class DeviceFragment22 extends Fragment implements DeviceView2 {
         txtDeviceName = fragmentDeviceView.findViewById(R.id.edit_text_device_name);
         txtDeviceModel = fragmentDeviceView.findViewById(R.id.edit_text_device_model);
         lvDevices = (ListView) fragmentDeviceView.findViewById(R.id.lvEquipos);
-        lvDevices.setAdapter(new DeviceListAdapter(getContext(), lstDevice));
+        // lvDevices.setAdapter(new DeviceListAdapter(getContext(), lstDevice));
         if(device!=null){
             lstDevice.clear();
             lstDevice.add(device);
@@ -81,7 +80,7 @@ public class DeviceFragment22 extends Fragment implements DeviceView2 {
         fabAddDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogDevice df = new DialogDevice();
+                DialogDevice2 df = new DialogDevice2();
                 df.show(getFragmentManager(),"DialogDevice");
             }
         });

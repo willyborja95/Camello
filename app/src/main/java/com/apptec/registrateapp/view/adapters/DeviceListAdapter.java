@@ -7,54 +7,58 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.lifecycle.LiveData;
+
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Device;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DeviceListAdapter extends BaseAdapter {
     Context context;
-    ArrayList<Device> lstDevices;
+    LiveData<List<Device>> devices;
 
-    public DeviceListAdapter(Context context, ArrayList<Device> lstDevices ){
+    public DeviceListAdapter(Context context, LiveData<List<Device>> devices) {
         this.context = context;
-        this.lstDevices = lstDevices;
+        this.devices = devices;
     }
 
-    /*
-   =======================================
-   ACTIVITY LIFECYCLE METHODS
-   =======================================
-    */
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(context).inflate(R.layout.device_element, null);
-        TextView txtDeviceName = (TextView) convertView.findViewById(R.id.edit_text_device_name);
-        TextView txtDeviceModel = (TextView) convertView.findViewById(R.id.edit_text_device_model);
-        TextView txtDeviceImei = (TextView) convertView.findViewById(R.id.txtDeviceImei);
-        TextView txtDeviceStatus = (TextView) convertView.findViewById(R.id.txtDeviceStatus);
+        /**
+         * This method will be used to attach the card view of device to the list view.
+         * */
+        convertView = LayoutInflater.from(context).inflate(R.layout.card_view_device, null);
 
-        txtDeviceName.setText(lstDevices.get(position).getName());
-        txtDeviceModel.setText(lstDevices.get(position).getModel());
-        txtDeviceImei.setText(lstDevices.get(position).getIdentifier());
-        if(lstDevices.get(position).isStatus()){
-            txtDeviceStatus.setText("Habilitado");
-        }else{
-            txtDeviceStatus.setText("Deshabilitado");
-        }
+        // Getting the object by the position
+        Device device = getItem(position);
+
+        // Binding UI elements (Maybe with could use data binding in the future)
+        TextView txtDeviceName = convertView.findViewById(R.id.text_view_device_name);
+        TextView txtDeviceModel = convertView.findViewById(R.id.text_view_device_model);
+        TextView txtDeviceImei = convertView.findViewById(R.id.text_view_device_imei);
+        TextView txtDeviceStatus = convertView.findViewById(R.id.text_view_device_status);
+
+
+        txtDeviceName.setText(device.getName());
+        txtDeviceModel.setText(device.getModel());
+        txtDeviceImei.setText(device.getIdentifier());
+
+
 
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return lstDevices.size();
+        return devices.getValue().size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return lstDevices.get(position);
+    public Device getItem(int position) {
+        return devices.getValue().get(position);
     }
 
     @Override

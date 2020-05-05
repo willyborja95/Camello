@@ -1,10 +1,15 @@
 package com.apptec.registrateapp.interactor;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.repository.localDatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webServices.ApiClient;
 import com.apptec.registrateapp.repository.webServices.interfaces.DeviceRetrofitInterface;
@@ -77,6 +82,9 @@ public class MainInteractorImpl {
          *
          */
 
+        // First we save the IMEI into shared preferences
+        storageIMEI();
+
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<JsonObject> call = deviceRetrofitInterface.getDeviceInfo(
@@ -95,6 +103,7 @@ public class MainInteractorImpl {
                 // On response is ok = True
                 try{
                     if (response.body().get("ok").getAsBoolean() == true) {
+                        Log.d(TAG, "Ok = true");
 
 
                         // Is the data null?
@@ -120,6 +129,28 @@ public class MainInteractorImpl {
 
                         } else {
                             // Case2: This device belong to this person.
+//                                     The response is like this:
+//                            "data": {
+//                                "active": true,
+//                                        "id": 6,
+//                                        "name": "asds",
+//                                        "model": "asddasd",
+//                                        "identifier": "asasdasdsasdasdasdasdasdasdasdasd",
+//                                        "pushToken": "asdaasdasdsadxxxxxxxxxxxxxxxxxxxxxxxxxxxassad",
+//                                        "platform": 0,
+//                                        "employeeId": 7
+//                            }
+                            Device device = new Device();
+
+                            // TODO: This messy code cna be improved by creating a Gson Response
+                            device.setId(Integer.parseInt(response.body().get("data").getAsJsonObject().get("id").toString()));
+                            device.setName(response.body().get("data").getAsJsonObject().get("name").toString());
+                            device.setModel(response.body().get("data").getAsJsonObject().get("model").toString());
+                            device.setIdentifier(response.body().get("data").getAsJsonObject().get("identifier").toString());
+                            device.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
+                            device.setPlatform(Integer.parseInt(response.body().get("data").getAsJsonObject().get("platform").toString()));
+
+
                             // The firebase tokens equals?
                             if (isTheSameFirebaseToken(response.body().get("data").getAsJsonObject().get("pushToken").toString())) {
                                 // Case2.1: The firebase tokens are equals
@@ -127,13 +158,19 @@ public class MainInteractorImpl {
 
                             } else {
                                 // Case2.2: The firebase tokens are not equals
-                                // TODO: Update the firebase token
+                                // TODO: Update the firebase token into the server
+
                             }
+
+                            // Save the device here in local database
+                            Log.d(TAG, "Saving device into database");
+                            RoomHelper.getAppDatabaseInstance().deviceDao().insert(device);
                         }
 
 
                     } else {
                         // Case3: The device is already used by another person
+                        Log.d(TAG, "Ok = false");
                         // TODO: Do not let the user interact
 
                     }
@@ -164,6 +201,40 @@ public class MainInteractorImpl {
 
     }
 
+    public void storageIMEI() {
+        /**
+         *
+         * Read the IMEI and storage it on an shared preferences's variable.
+         * Change to false the flag of "is first running"
+         */
+
+
+        /** Read the IMEI and storage it on an shared preferences's variable. */
+        TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(App.getContext().TELEPHONY_SERVICE);
+        String imei = "";
+
+        // Getting the imei
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // The permission eed to be granted first
+            } else {
+                if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
+                    imei = telephonyManager.getDeviceId();
+                }
+                if (android.os.Build.VERSION.SDK_INT >= 26) {
+                    imei = telephonyManager.getImei();
+                }
+                Log.d(TAG, "Got IMEI");
+            }
+        }
+        // Saving it on shared preferences
+        SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
+
+        /** Change to false the flag of "is first running" */
+        SharedPreferencesHelper.putBooleanValue(Constants.IS_RUNNING_BY_FIRST_TIME, false);
+        Log.d(TAG, "IMEI: " + imei);
+
+    }
 
     private boolean isTheSameFirebaseToken(String serverToken) {
         /**
@@ -187,21 +258,21 @@ public class MainInteractorImpl {
         /**
          * Method to save this device to the server
          */
-
+        Log.d(TAG, "Save this device into the server.");
 
         // Build the device object
-        Device device = new Device();
-        device.setName(name);
-        device.setModel(model);
-        device.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
-        device.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
+        Device thisDevice = new Device();
+        thisDevice.setName(name);
+        thisDevice.setModel(model);
+        thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
+        thisDevice.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<JsonObject> call = deviceRetrofitInterface.registerDevice(
                 // Token:
                 ApiClient.getAccessToken(),
                 // This device
-                device
+                thisDevice
         );
 
         call.enqueue(new Callback<JsonObject>() {
@@ -211,8 +282,12 @@ public class MainInteractorImpl {
 
                 // Change the flag
                 if (response.isSuccessful()) {
-                    isNeedRegisterDevice.postValue(false);
-                    Log.d(TAG, "saveThisDevice() changed the value of isNeedRegisterDevice " + isNeedRegisterDevice.getValue().toString());
+
+                    isNeedRegisterDevice.postValue(false);      // Change the flag to the view model
+
+                    Log.d(TAG, "Save this device information in the local database");
+                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
+
                 }
 
             }

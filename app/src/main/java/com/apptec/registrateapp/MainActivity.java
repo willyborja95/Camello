@@ -25,7 +25,7 @@ import androidx.navigation.Navigation;
 
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
-import com.apptec.registrateapp.viewmodel.SharedViewModel;
+import com.apptec.registrateapp.viewmodel.MainViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements
     ActivityMain2Binding binding;
     TextView toolbar_name;
 
-    SharedViewModel sharedViewModel;
+    MainViewModel mainViewModel;
 
 
     @Override
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_main);
 
-        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel.class);                    // Getting the view model
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);                    // Getting the view model
 
         // TODO: remove this
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
         setSupportActionBar(toolbar);
-        sharedViewModel.setActiveFragmentName(getString(R.string.home_fragment_title));
-        sharedViewModel.getActiveFragmentName().observe(this, new Observer<String>() {
+        mainViewModel.setActiveFragmentName(getString(R.string.home_fragment_title));
+        mainViewModel.getActiveFragmentName().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 toolbar_name.setText(s);
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         // Handling here the if the first login of this user
-        sharedViewModel.getIsNeededRegisterDevice().observe(this, new Observer<Boolean>() {
+        mainViewModel.getIsNeededRegisterDevice().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){

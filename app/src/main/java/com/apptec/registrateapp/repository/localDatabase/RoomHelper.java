@@ -12,6 +12,7 @@ public class RoomHelper {
 
     private static final AppDatabase sAppDatabase = Room.databaseBuilder(App.getContext(), AppDatabase.class, Constants.DATABASE_NAME)
             .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
             .build();
 
     public static AppDatabase getAppDatabaseInstance(){

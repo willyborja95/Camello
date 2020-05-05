@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
@@ -184,28 +183,7 @@ public class LoginInteractorImpl implements LoginInteractor {
             }
         }
 
-        /** Read the IMEI and storage it on an shared preferences's variable. */
-        TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(activity.TELEPHONY_SERVICE);
-        String imei = "";
 
-        // Getting the imei
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            if (activity.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
-            } else {
-                if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
-                    imei = telephonyManager.getDeviceId();
-                }
-                if (android.os.Build.VERSION.SDK_INT >= 26) {
-                    imei = telephonyManager.getImei();
-                }
-            }
-        }
-        // Saving it on shared preferences
-        SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
-
-        /** Change to false the flag of "is first running" */
-        SharedPreferencesHelper.putBooleanValue(Constants.IS_RUNNING_BY_FIRST_TIME, false);
 
     }
 
