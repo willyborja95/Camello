@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.view.generic.DayViewContainer;
 import com.apptec.registrateapp.view.generic.MonthHeaderViewContainer;
-import com.apptec.registrateapp.viewmodel.SharedViewModel;
+import com.apptec.registrateapp.viewmodel.MainViewModel;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.kizitonwose.calendarview.CalendarView;
 import com.kizitonwose.calendarview.model.CalendarDay;
@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment {
      */
 
     // Instance of ViewModel
-    private SharedViewModel sharedViewModel;
+    private MainViewModel mainViewModel;
 
     private static final Locale LOCALE_ES = Locale.forLanguageTag("es-419");
 
@@ -49,8 +49,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);                    // Getting the view model
-        sharedViewModel.setActiveFragmentName(getString(R.string.home_fragment_title));
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
+        mainViewModel.setActiveFragmentName(getString(R.string.home_fragment_title));
 
 
     }

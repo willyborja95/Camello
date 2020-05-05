@@ -17,8 +17,8 @@ import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.view.adapters.DeviceListAdapter;
-import com.apptec.registrateapp.view.modals.DialogDevice2;
-import com.apptec.registrateapp.viewmodel.SharedViewModel;
+import com.apptec.registrateapp.view.modals.DialogDevice;
+import com.apptec.registrateapp.viewmodel.MainViewModel;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class DeviceFragment extends Fragment {
     private final String TAG = DeviceFragment.class.getSimpleName();
 
     // Instance of ViewModel
-    private SharedViewModel sharedViewModel;
+    private MainViewModel mainViewModel;
 
     // UI elements
     private ListView devicesListView;
@@ -39,8 +39,8 @@ public class DeviceFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);                    // Getting the view model
-        sharedViewModel.setActiveFragmentName(getString(R.string.devices_fragment_title));
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
+        mainViewModel.setActiveFragmentName(getString(R.string.devices_fragment_title));
 
 
     }
@@ -51,7 +51,7 @@ public class DeviceFragment extends Fragment {
          * Open the modal/ dialog device dialog
          */
         Log.d(TAG, "Opening dialog device.");
-        DialogDevice2 dialogDevice = new DialogDevice2();
+        DialogDevice dialogDevice = new DialogDevice();
         dialogDevice.show(getFragmentManager(), "DialogDevice");
     }
 
@@ -61,7 +61,7 @@ public class DeviceFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_device, container, false);
 
         // Observing if is needed to register this device
-        sharedViewModel.getIsNeededRegisterDevice().observe(this, new Observer<Boolean>() {
+        mainViewModel.getIsNeededRegisterDevice().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 // Request register device
@@ -75,8 +75,8 @@ public class DeviceFragment extends Fragment {
 
 
         // Observe the mDevicesList
-        deviceListAdapter = new DeviceListAdapter(App.getContext(), sharedViewModel.getDevices());
-        sharedViewModel.getDevices().observe(getActivity(), new Observer<List<Device>>() {
+        deviceListAdapter = new DeviceListAdapter(App.getContext(), mainViewModel.getDevices());
+        mainViewModel.getDevices().observe(getActivity(), new Observer<List<Device>>() {
             @Override
             public void onChanged(List<Device> devices) {
                 devicesListView.setAdapter(deviceListAdapter);

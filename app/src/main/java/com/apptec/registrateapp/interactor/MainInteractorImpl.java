@@ -1,9 +1,13 @@
 package com.apptec.registrateapp.interactor;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.repository.localDatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
@@ -78,6 +82,9 @@ public class MainInteractorImpl {
          *
          */
 
+        // First we save the IMEI into shared preferences
+        storageIMEI();
+
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<JsonObject> call = deviceRetrofitInterface.getDeviceInfo(
@@ -96,6 +103,7 @@ public class MainInteractorImpl {
                 // On response is ok = True
                 try{
                     if (response.body().get("ok").getAsBoolean() == true) {
+                        Log.d(TAG, "Ok = true");
 
 
                         // Is the data null?
@@ -155,12 +163,14 @@ public class MainInteractorImpl {
                             }
 
                             // Save the device here in local database
+                            Log.d(TAG, "Saving device into database");
                             RoomHelper.getAppDatabaseInstance().deviceDao().insert(device);
                         }
 
 
                     } else {
                         // Case3: The device is already used by another person
+                        Log.d(TAG, "Ok = false");
                         // TODO: Do not let the user interact
 
                     }
@@ -191,6 +201,40 @@ public class MainInteractorImpl {
 
     }
 
+    public void storageIMEI() {
+        /**
+         *
+         * Read the IMEI and storage it on an shared preferences's variable.
+         * Change to false the flag of "is first running"
+         */
+
+
+        /** Read the IMEI and storage it on an shared preferences's variable. */
+        TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(App.getContext().TELEPHONY_SERVICE);
+        String imei = "";
+
+        // Getting the imei
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // The permission eed to be granted first
+            } else {
+                if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
+                    imei = telephonyManager.getDeviceId();
+                }
+                if (android.os.Build.VERSION.SDK_INT >= 26) {
+                    imei = telephonyManager.getImei();
+                }
+                Log.d(TAG, "Got IMEI");
+            }
+        }
+        // Saving it on shared preferences
+        SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
+
+        /** Change to false the flag of "is first running" */
+        SharedPreferencesHelper.putBooleanValue(Constants.IS_RUNNING_BY_FIRST_TIME, false);
+        Log.d(TAG, "IMEI: " + imei);
+
+    }
 
     private boolean isTheSameFirebaseToken(String serverToken) {
         /**
@@ -214,7 +258,7 @@ public class MainInteractorImpl {
         /**
          * Method to save this device to the server
          */
-
+        Log.d(TAG, "Save this device into the server.");
 
         // Build the device object
         Device thisDevice = new Device();
@@ -240,6 +284,8 @@ public class MainInteractorImpl {
                 if (response.isSuccessful()) {
 
                     isNeedRegisterDevice.postValue(false);      // Change the flag to the view model
+
+                    Log.d(TAG, "Save this device information in the local database");
                     RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
 
                 }

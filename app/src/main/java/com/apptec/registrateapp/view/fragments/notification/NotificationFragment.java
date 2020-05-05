@@ -24,7 +24,7 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Notification;
 import com.apptec.registrateapp.view.adapters.NotificationListAdapter;
 import com.apptec.registrateapp.view.modals.DialogNotification;
-import com.apptec.registrateapp.viewmodel.SharedViewModel;
+import com.apptec.registrateapp.viewmodel.MainViewModel;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class NotificationFragment extends Fragment implements NotificationView {
     ProgressDialog progressDialog;
 
     // Instance of ViewModel
-    private SharedViewModel sharedViewModel;
+    private MainViewModel mainViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,8 +50,8 @@ public class NotificationFragment extends Fragment implements NotificationView {
          * Link the view model
          */
         super.onCreate(savedInstanceState);
-        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);                    // Getting the view model
-        sharedViewModel.setActiveFragmentName(getString(R.string.notifications_fragment_title));
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
+        mainViewModel.setActiveFragmentName(getString(R.string.notifications_fragment_title));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -66,8 +66,8 @@ public class NotificationFragment extends Fragment implements NotificationView {
         notificationsListView = view.findViewById(R.id.notification_list_view);
 
         // Observing the view model mNotification
-        notificationListAdapter = new NotificationListAdapter(App.getContext(), sharedViewModel.getNotifications());
-        sharedViewModel.getNotifications().observe(getActivity(), new Observer<List<Notification>>() {
+        notificationListAdapter = new NotificationListAdapter(App.getContext(), mainViewModel.getNotifications());
+        mainViewModel.getNotifications().observe(getActivity(), new Observer<List<Notification>>() {
             @Override
             public void onChanged(List<Notification> notifications) {
                 notificationsListView.setAdapter(notificationListAdapter);

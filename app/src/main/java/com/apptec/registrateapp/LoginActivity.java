@@ -59,9 +59,9 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
 
         // Checking if it is the first running
-        if (loginPresenter.isTheFirstRun()){
-            loginPresenter.handleFirstRun(this);
-        }
+//        if (loginPresenter.isTheFirstRun()){
+//            loginPresenter.handleFirstRun(this);
+//        }
 
 
         // Verified if a user is still saved

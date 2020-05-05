@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.viewmodel.SharedViewModel;
+import com.apptec.registrateapp.viewmodel.MainViewModel;
 
 public class PermissionFragment extends Fragment {
     /**
@@ -19,13 +19,13 @@ public class PermissionFragment extends Fragment {
      */
 
     // Instance of ViewModel
-    private SharedViewModel sharedViewModel;
+    private MainViewModel mainViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);                    // Getting the view model
-        sharedViewModel.setActiveFragmentName(getString(R.string.permissions_fragment_title));
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
+        mainViewModel.setActiveFragmentName(getString(R.string.permissions_fragment_title));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

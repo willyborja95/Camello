@@ -10,6 +10,7 @@ import com.apptec.registrateapp.models.Device;
 
 import java.util.List;
 
+
 @Dao
 public interface DeviceDao {
     /**

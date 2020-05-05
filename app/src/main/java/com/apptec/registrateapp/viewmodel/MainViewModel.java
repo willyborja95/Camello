@@ -24,7 +24,7 @@ import com.apptec.registrateapp.util.Constants;
 import java.util.List;
 
 
-public class SharedViewModel extends AndroidViewModel {
+public class MainViewModel extends AndroidViewModel {
 
     // To show the notifications
     private final LiveData<List<Notification>> mNotifications; // List of notifications
@@ -48,7 +48,7 @@ public class SharedViewModel extends AndroidViewModel {
     // Instancing the presenter her
     MainPresenterImpl mainPresenter;
 
-    public SharedViewModel(@NonNull Application application) {
+    public MainViewModel(@NonNull Application application) {
         super(application);
 
         // Initialize the presenter
