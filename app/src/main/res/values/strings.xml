@@ -46,6 +46,8 @@
     <string name="login_progress_dialog_message">Autenticando usuario</string>
     <string name="home_text_view_start_message">Bienvenido</string>
     <string name="home_button_start_message">Iniciar</string>
+    <string name="home_text_view_finish_message">Trabjando</string>
+    <string name="home_button_finish_message">Finalizar</string>
     <string name="title_error_connection">Error de conexión</string>
     <string name="message_error_connection">Al parecer no hay conexión a Internet.</string>
     <string name="message_example">A través de este medio se comunica que el día viernes de esta semana se suspenden las actividades por motivos de la emeregencia sanitaria.</string>

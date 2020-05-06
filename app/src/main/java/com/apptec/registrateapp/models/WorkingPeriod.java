@@ -9,7 +9,7 @@ import java.util.Date;
 @Entity
 public class WorkingPeriod {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
 
     @ColumnInfo(name = "work_zone")
@@ -21,13 +21,17 @@ public class WorkingPeriod {
 
     private int status;                 // 1 = Started   2 = Finished  <0 = Canceled
 
-    // Constructor
+    // Constructors
     public WorkingPeriod(int id, int workzoneId, Date start_date, Date end_date, int status) {
         this.id = id;
         this.workzoneId = workzoneId;
         this.start_date = start_date;
         this.end_date = end_date;
         this.status = status;
+    }
+
+    public WorkingPeriod() {
+
     }
 
     // Setters and getters

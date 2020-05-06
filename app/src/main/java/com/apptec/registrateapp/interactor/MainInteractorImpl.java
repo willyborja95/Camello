@@ -5,11 +5,13 @@ import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.models.UpdatePushTokenBody;
+import com.apptec.registrateapp.models.WorkingPeriod;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
@@ -240,8 +242,6 @@ public class MainInteractorImpl {
     }
 
 
-
-
     public void saveThisDevice(String name, String model, MutableLiveData<Boolean> isNeedRegisterDevice) {
         /**
          * Method to save this device to the server
@@ -291,4 +291,26 @@ public class MainInteractorImpl {
     }
 
 
+    public void changeLastWorkingState(int intWorkingStatus) {
+        /**
+         * Change thw working state
+         */
+        if (intWorkingStatus == Constants.INT_WORKING_STATUS) {
+            // The user is working, change to resting
+            // TODO
+
+        } else {
+            // THe user is not working, change to not working
+            // TODO
+
+        }
+    }
+
+    public LiveData<WorkingPeriod> getLastWorkingPeriod() {
+        /**
+         * Return the last working period. If it is null it means that is the first time when the app
+         * is installed. So create a 'not init' working period.
+         */
+        return RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLiveDataLastWorkingPeriod();
+    }
 }

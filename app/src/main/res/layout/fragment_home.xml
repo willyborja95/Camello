@@ -38,6 +38,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/fragment_home_button_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
@@ -51,12 +52,13 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/start_timer_btn"
+                android:id="@+id/fragment_home_start_button"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/bottom_half_circle"
                 android:paddingBottom="20sp"
+                tools:text="@string/home_button_start_message"
                 android:text="@string/home_button_start_message"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"

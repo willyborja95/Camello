@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.workers;
+package com.apptec.registrateapp.repository.workers.retreshtoken;
 
 public class RefreshTokenBody {
     /**
