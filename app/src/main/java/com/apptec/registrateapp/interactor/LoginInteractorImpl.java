@@ -183,7 +183,8 @@ public class LoginInteractorImpl implements LoginInteractor {
             }
         }
 
-
+        /** Change to false the flag of "is first running" */
+        SharedPreferencesHelper.putBooleanValue(Constants.IS_RUNNING_BY_FIRST_TIME, false);
 
     }
 

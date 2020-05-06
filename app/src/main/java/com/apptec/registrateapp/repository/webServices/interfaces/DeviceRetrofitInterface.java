@@ -3,6 +3,7 @@ package com.apptec.registrateapp.repository.webServices.interfaces;
 import androidx.lifecycle.LiveData;
 
 import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.UpdatePushTokenBody;
 import com.apptec.registrateapp.repository.webServices.ApiResponse;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
@@ -11,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -42,4 +44,15 @@ public interface DeviceRetrofitInterface {
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
             @Query("identifier") String IMEI
     );
+
+
+    @PATCH(Constants.UPDATE_FIREBASE_TOKEN_URL)
+    Call<JsonObject> updateFirebaseToken(
+            @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
+            @Path("id") int id,
+            @Body UpdatePushTokenBody updatePushTokenBody
+    );
+
+
+
 }

@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.UpdatePushTokenBody;
 import com.apptec.registrateapp.repository.localDatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webServices.ApiClient;
@@ -26,27 +27,7 @@ public class MainInteractorImpl {
      */
     private final String TAG = "MainInteractor";
 
-    public boolean isTheFirstLogin() {
-        /**
-         * This method return true when is te first run from the user.
-         */
-        return SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_THE_FIRST_LOGIN, false);
-    }
 
-    public boolean isTheLoginFromTheSameUser() {
-        /**
-         * Return true when the user logged previous logged in this device.
-         * Compare the previous user id
-         */
-        int previous_user_id = SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.PREVIOUS_LOGGED_USER_ID, 0);
-        int current_user_id = SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, -1);
-        if (previous_user_id == current_user_id) {
-            // That means that is the same user
-            return true;
-        }
-        // Other wise return false
-        return false;
-    }
 
     public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice) {
         /**
@@ -56,14 +37,12 @@ public class MainInteractorImpl {
          *
          * if you don't have access, contact Renato by email: renatojobal@gmail.com
          */
-        if (isTheFirstLogin()) {
-            // return true;
-            handleFirstLogin(isNeedRegisterDevice);
-        } else if (!isTheLoginFromTheSameUser()) {
-            // return true;
+
+        // This flag will be changed to false when we have storage the device info
+        boolean needed_device_info = SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.NEEDED_DEVICE_INFO, true);
+        if (needed_device_info) {
             handleFirstLogin(isNeedRegisterDevice);
         }
-        // return false;
 
     }
 
@@ -85,14 +64,12 @@ public class MainInteractorImpl {
         // First we save the IMEI into shared preferences
         storageIMEI();
 
-
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<JsonObject> call = deviceRetrofitInterface.getDeviceInfo(
                 // Token:
                 ApiClient.getAccessToken(),
                 // IMEI:
                 SharedPreferencesHelper.getSharedPreferencesInstance().getString(Constants.CURRENT_IMEI, "")
-
         );
 
         call.enqueue(new Callback<JsonObject>() {
@@ -104,16 +81,12 @@ public class MainInteractorImpl {
                 try{
                     if (response.body().get("ok").getAsBoolean() == true) {
                         Log.d(TAG, "Ok = true");
-
-
                         // Is the data null?
                         if (response.body().get("data") == null) {
-
                             // Case1: This device is not registered.
-
                             // Request information about this user devices
-
                             // The user has previous devices
+                            // TODO
                             if (true == false) {
                                 // Case1.1: The user has another device.
                                 // Advice thee user the previous devices will be replaced
@@ -122,11 +95,9 @@ public class MainInteractorImpl {
                                 // Case1.2: The user has no other devices
                                 // Continue
                             }
-
                             // Register new device
                             Log.d(TAG, "The user needs to register this device");
                             isNeedRegisterDevice.postValue(true);
-
                         } else {
                             // Case2: This device belong to this person.
 //                                     The response is like this:
@@ -142,7 +113,7 @@ public class MainInteractorImpl {
 //                            }
                             Device device = new Device();
 
-                            // TODO: This messy code cna be improved by creating a Gson Response
+                            // TODO: This messy code can be improved by creating a Gson Response
                             device.setId(Integer.parseInt(response.body().get("data").getAsJsonObject().get("id").toString()));
                             device.setName(response.body().get("data").getAsJsonObject().get("name").toString());
                             device.setModel(response.body().get("data").getAsJsonObject().get("model").toString());
@@ -150,16 +121,14 @@ public class MainInteractorImpl {
                             device.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
                             device.setPlatform(Integer.parseInt(response.body().get("data").getAsJsonObject().get("platform").toString()));
 
-
+                            String serverFirebaseToken = response.body().get("data").getAsJsonObject().get("pushToken").toString();
                             // The firebase tokens equals?
-                            if (isTheSameFirebaseToken(response.body().get("data").getAsJsonObject().get("pushToken").toString())) {
+                            if (isTheSameFirebaseToken(serverFirebaseToken)) {
                                 // Case2.1: The firebase tokens are equals
                                 // Continue with normal interaction
-
                             } else {
                                 // Case2.2: The firebase tokens are not equals
-                                // TODO: Update the firebase token into the server
-
+                                updateTheFirebaseToken(serverFirebaseToken, device.getId());
                             }
 
                             // Save the device here in local database
@@ -172,28 +141,24 @@ public class MainInteractorImpl {
                         // Case3: The device is already used by another person
                         Log.d(TAG, "Ok = false");
                         // TODO: Do not let the user interact
-
                     }
 
 
-                    /** Change to false the flag of "is the first login" */
+                    /** Change to false the flag of "needed device info" */
+                    SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
 
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_THE_FIRST_LOGIN, false);
+
+
                 }catch (NullPointerException npe){
                     Log.w(TAG, npe.getMessage());
-                    /** Change to false the flag of "is the first login" */
-
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_THE_FIRST_LOGIN, false);
+                    /** Change to false the flag of "needed device info" */
+                    SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
                 }
-
-
-
-
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                // TODO:
+                // TODO: Handle this
 
             }
         });
@@ -229,26 +194,49 @@ public class MainInteractorImpl {
         }
         // Saving it on shared preferences
         SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
-
-        /** Change to false the flag of "is first running" */
-        SharedPreferencesHelper.putBooleanValue(Constants.IS_RUNNING_BY_FIRST_TIME, false);
         Log.d(TAG, "IMEI: " + imei);
 
     }
 
     private boolean isTheSameFirebaseToken(String serverToken) {
         /**
-         * Return true when the firebase token
+         * Return true when the firebase token is the same in the server database
          */
-        // TODO
+        if (serverToken.equals(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""))) {
+            return false;
+        }
         return true;
     }
 
-    private void updateTheFirebaseToken(String firebaseToken) {
+    private void updateTheFirebaseToken(String firebaseToken, int deviceId) {
         /**
          * Upload to the server the new firebase token of this device
          */
+
+        UpdatePushTokenBody updatePushTokenBody = new UpdatePushTokenBody();
+        updatePushTokenBody.setPushToken(firebaseToken);
+
         // TODO:
+        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
+        Call<JsonObject> call = deviceRetrofitInterface.updateFirebaseToken(
+                // Token
+                ApiClient.getAccessToken(),
+                // Device id
+                deviceId,
+                // Body
+                updatePushTokenBody
+        );
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                // All ok
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                // TODO: Handle this
+            }
+        });
     }
 
 

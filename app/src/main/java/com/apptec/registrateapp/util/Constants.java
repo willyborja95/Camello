@@ -16,6 +16,7 @@ public class Constants {
     public static final String REFRESH_TOKEN_URL = "/api/auth/token";
     public static final String REGISTER_DEVICE_URL = "/api/device";
     public static final String REQUEST_DEVICE_INFO_URL = "/api/employee/device";
+    public static final String UPDATE_FIREBASE_TOKEN_URL = "/api/device/{id}/pushtoken";
 
 
     // Logs messages
@@ -35,9 +36,8 @@ public class Constants {
     public static final String CURRENT_IMEI = "CURRENT_IMEI";                                       // Storage a string
     public static final String IS_USER_WORKING = "IS_WORKING";                                      // Storage a boolean
     public static final String IS_USER_LOGGED = "IS_LOGGED";                                        // Storage a boolean
-    public static final String PREVIOUS_LOGGED_USER_ID = "PREVIOUS_LOGGED_USER_ID";                 // Storage an integer
-    public static final String IS_THE_FIRST_LOGIN = "IS_FIRST_LOGIN";                               // Storage a boolean
     public static final String CURRENT_USER_ID = "CURRENT_USER_ID";                                 // Storage an integer
+    public static final String NEEDED_DEVICE_INFO = "NEEDED_DEVICE_INFO";                           // Storage a boolean
 
     // API constants
     public static final String AUTHORIZATION_HEADER = "authorization";
