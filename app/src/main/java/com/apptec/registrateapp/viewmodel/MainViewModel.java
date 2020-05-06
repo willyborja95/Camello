@@ -65,9 +65,8 @@ public class MainViewModel extends AndroidViewModel {
         mDevices = RoomHelper.getAppDatabaseInstance().deviceDao().loadAllDevicesLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();
-        //mLastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod();
         mLastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLiveDataLastWorkingPeriod();
-        ;
+
 
         // Handle the first login if is needed
         isNeededRegisterDevice = new MutableLiveData<>(false);
