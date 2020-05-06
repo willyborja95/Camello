@@ -40,12 +40,20 @@ public class ChangeWorkingStatus extends Worker {
         } else if (isWorking()) {
             Log.i(TAG, "Finishing job and creating anew one");
             RoomHelper.getAppDatabaseInstance().workingPeriodDao().changeLastWorkingPeriod(Constants.INT_FINISHED_STATUS);
+            notifyTheServer();
             createAndSaveWorkingPeriod(Constants.INT_NOT_INIT_STATUS);
         } else if (isNotInitWorking()) {
             Log.i(TAG, "A new working period created");
+            notifyTheServer();
             createAndSaveWorkingPeriod(Constants.INT_WORKING_STATUS);
+
         }
         return Result.success();
+
+    }
+
+    private void notifyTheServer() {
+        // TODO: Notify that the working status has change. Send the work zone id.
 
     }
 
