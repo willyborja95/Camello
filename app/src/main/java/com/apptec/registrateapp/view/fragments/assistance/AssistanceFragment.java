@@ -19,8 +19,8 @@ import androidx.fragment.app.Fragment;
 
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Assistance;
-import com.apptec.registrateapp.repository.webServices.ApiClient;
-import com.apptec.registrateapp.repository.webServices.interfaces.AssistanceRetrofitInterface;
+import com.apptec.registrateapp.repository.webservices.ApiClient;
+import com.apptec.registrateapp.repository.webservices.interfaces.AssistanceRetrofitInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.apptec.registrateapp.view.adapters.AssistanceListAdapter;
 import com.google.gson.JsonArray;

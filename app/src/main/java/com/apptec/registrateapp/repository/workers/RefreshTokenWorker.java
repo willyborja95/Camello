@@ -8,8 +8,8 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
-import com.apptec.registrateapp.repository.webServices.ApiClient;
-import com.apptec.registrateapp.repository.webServices.interfaces.AuthInterface;
+import com.apptec.registrateapp.repository.webservices.ApiClient;
+import com.apptec.registrateapp.repository.webservices.interfaces.AuthInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 

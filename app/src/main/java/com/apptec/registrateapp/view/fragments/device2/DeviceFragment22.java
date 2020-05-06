@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.presenter.DevicePresenterImpl;
-import com.apptec.registrateapp.repository.localDatabase.DatabaseAdapter;
+import com.apptec.registrateapp.repository.localdatabase.DatabaseAdapter;
 import com.apptec.registrateapp.view.modals.DialogDevice2;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

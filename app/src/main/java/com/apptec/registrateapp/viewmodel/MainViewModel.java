@@ -17,7 +17,7 @@ import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.models.Notification;
 import com.apptec.registrateapp.models.User;
 import com.apptec.registrateapp.presenter.MainPresenterImpl;
-import com.apptec.registrateapp.repository.localDatabase.RoomHelper;
+import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.workers.RefreshTokenWorker;
 import com.apptec.registrateapp.util.Constants;
 
@@ -37,6 +37,9 @@ public class MainViewModel extends AndroidViewModel {
 
     // This info will be on the drawer
     private final LiveData<User> mUser;
+
+    // This boolean variable show if the user is working or not
+    private LiveData<Boolean> mIsUserWorking;
 
     // To handle if needed the first login
     private MutableLiveData<Boolean> isNeededRegisterDevice;
@@ -59,6 +62,7 @@ public class MainViewModel extends AndroidViewModel {
         mDevices = RoomHelper.getAppDatabaseInstance().deviceDao().loadAllDevicesLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();
+        //misUserWorking = RoomHelper.getAppDatabaseInstance().
 
         // Handle the first login if is needed
         isNeededRegisterDevice = new MutableLiveData<>(false);
