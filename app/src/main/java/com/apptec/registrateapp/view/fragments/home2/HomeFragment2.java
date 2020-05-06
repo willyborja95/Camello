@@ -8,30 +8,27 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-
+import com.apptec.registrateapp.MainActivity;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Assistance;
 import com.apptec.registrateapp.models.Company;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
-import com.apptec.registrateapp.repository.webServices.ApiClient;
-import com.apptec.registrateapp.repository.webServices.interfaces.AssistanceRetrofitInterface;
-import com.apptec.registrateapp.repository.webServices.interfaces.TimeRetrofit;
+import com.apptec.registrateapp.repository.webservices.ApiClient;
+import com.apptec.registrateapp.repository.webservices.interfaces.AssistanceRetrofitInterface;
+import com.apptec.registrateapp.repository.webservices.interfaces.TimeRetrofit;
 import com.apptec.registrateapp.util.Constants;
-import com.apptec.registrateapp.MainActivity;
 import com.apptec.registrateapp.view.generic.DayViewContainer;
 import com.apptec.registrateapp.view.generic.InformationDialog;
 import com.apptec.registrateapp.view.generic.MonthHeaderViewContainer;

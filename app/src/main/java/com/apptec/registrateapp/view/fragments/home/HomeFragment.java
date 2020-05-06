@@ -1,17 +1,23 @@
 package com.apptec.registrateapp.view.fragments.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.models.WorkingPeriod;
+import com.apptec.registrateapp.util.Constants;
 import com.apptec.registrateapp.view.generic.DayViewContainer;
 import com.apptec.registrateapp.view.generic.MonthHeaderViewContainer;
 import com.apptec.registrateapp.viewmodel.MainViewModel;
@@ -37,6 +43,8 @@ public class HomeFragment extends Fragment {
      * Home fragment
      */
 
+    private final String TAG = HomeFragment.class.getSimpleName();
+
     // Instance of ViewModel
     private MainViewModel mainViewModel;
 
@@ -45,6 +53,8 @@ public class HomeFragment extends Fragment {
 
     @BindView(R.id.calendarView)
     CalendarView calendarView;
+    Button centralButton;
+    TextView centralMessage;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,8 +65,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -64,9 +72,59 @@ public class HomeFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        setupCalendar();                        // Setting up the calendar view
+        // Binding UI elements (THis can be replaced with data binding)
+        centralButton = view.findViewById(R.id.fragment_home_start_button);
+        centralMessage = view.findViewById(R.id.fragment_home_button_message);
+
+        this.setupCalendar();                        // Setting up the calendar view
+
+        this.setupCentralButtonManager();                       // Setting up the button
+
+
+        // Creating a lister for the button
+        centralButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainViewModel.changeLastWorkingState();
+            }
+        });
+
 
         return view;
+    }
+
+
+    private void setupCentralButtonManager() {
+        /**
+         * Setting up an observer to the mLastWorkingPeriod
+         */
+
+        mainViewModel.getLastWorkingPeriod().observe(this, new Observer<WorkingPeriod>() {
+            @Override
+            public void onChanged(WorkingPeriod workingPeriod) {
+                try {
+                    if (workingPeriod.getStatus() == Constants.INT_NOT_INIT_STATUS) {
+                        // The user is working
+                        centralButton.setText(getString(R.string.home_button_start_message));
+                        centralMessage.setText(getString(R.string.home_text_view_start_message));
+
+                    } else {
+                        // It is not
+                        Log.w(TAG, "No working period create yet");
+                        centralButton.setText(getString(R.string.home_button_finish_message));
+                        centralMessage.setText(getString(R.string.home_text_view_finish_message));
+
+                    }
+                } catch (NullPointerException npe) {
+                    // It is not
+                    centralButton.setText(getString(R.string.home_button_start_message));
+                    centralMessage.setText(getString(R.string.home_text_view_start_message));
+
+                }
+
+            }
+        });
+
     }
 
 

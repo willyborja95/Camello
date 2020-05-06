@@ -20,9 +20,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Device;
-import com.apptec.registrateapp.repository.localDatabase.DatabaseAdapter;
-import com.apptec.registrateapp.repository.webServices.ApiClient;
-import com.apptec.registrateapp.repository.webServices.interfaces.DeviceRetrofitInterface;
+import com.apptec.registrateapp.repository.localdatabase.DatabaseAdapter;
+import com.apptec.registrateapp.repository.webservices.ApiClient;
+import com.apptec.registrateapp.repository.webservices.interfaces.DeviceRetrofitInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 

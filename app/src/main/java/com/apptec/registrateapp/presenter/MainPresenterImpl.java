@@ -19,9 +19,6 @@ public class MainPresenterImpl {
     }
 
 
-
-
-
     public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice) {
         /**
          * Calling the interactor
@@ -35,4 +32,5 @@ public class MainPresenterImpl {
          */
         mainInteractor.saveThisDevice(name, model, isNeedRegisterDevice);
     }
+
 }

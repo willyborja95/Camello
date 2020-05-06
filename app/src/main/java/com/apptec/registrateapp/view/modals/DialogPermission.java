@@ -21,7 +21,7 @@ import androidx.fragment.app.DialogFragment;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Permission;
 import com.apptec.registrateapp.models.PermissionType;
-import com.apptec.registrateapp.repository.localDatabase.DatabaseAdapter;
+import com.apptec.registrateapp.repository.localdatabase.DatabaseAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
