@@ -28,9 +28,8 @@ public class ChangeWorkingStatus extends Worker {
          * Change the working status
          */
         Log.d(TAG, "Init change working status");
-        // TODO:
-        Log.d(TAG, "Working period status: " + RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod().getStatus());
-        Log.d(TAG, "Working period id: " + RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod().getId());
+
+
         if (RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod() == null) {
             Log.d(TAG, "Not worker initialized");
             Log.i(TAG, "New worker created");
@@ -38,7 +37,7 @@ public class ChangeWorkingStatus extends Worker {
             createAndSaveWorkingPeriod(Constants.INT_NOT_INIT_STATUS);
 
         } else if (isWorking()) {
-            Log.i(TAG, "Finishing job and creating anew one");
+            Log.i(TAG, "Finishing job and creating a new one");
             RoomHelper.getAppDatabaseInstance().workingPeriodDao().changeLastWorkingPeriod(Constants.INT_FINISHED_STATUS);
             notifyTheServer();
             createAndSaveWorkingPeriod(Constants.INT_NOT_INIT_STATUS);
