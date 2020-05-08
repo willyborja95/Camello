@@ -114,12 +114,12 @@ public class DialogDevice2 extends DialogFragment {
                     device.setName(deviceName);
                     device.setModel(deviceModel);
                     device.setIdentifier(deviceImei);
-                    device.setStatus(deviceStatus);
+                    device.setActive(deviceStatus);
                     Log.d("deviceStatus", String.valueOf(device.getId()));
                     Log.d("deviceStatus", device.getIdentifier());
                     Log.d("deviceStatus", device.getName());
                     Log.d("deviceStatus", device.getModel());
-                    Log.d("deviceStatus", String.valueOf(device.isStatus()));
+                    Log.d("deviceStatus", String.valueOf(device.isActive()));
                     databaseAdapter.insertDevice(device);
                     listener.onDeviceSaved(device);
                 }

@@ -70,7 +70,7 @@ public class DatabaseAdapter {
     public boolean insertDevice(Device device) {
         deleteDevice();
         int deviceStatus = 0;
-        if (device.isStatus() == false) {
+        if (device.isActive() == false) {
             deviceStatus = 0;
         } else {
             deviceStatus = 1;
@@ -96,9 +96,9 @@ public class DatabaseAdapter {
                 device.setModel(cursor.getString(2));
                 device.setIdentifier(cursor.getString(3));
                 if (deviceStatus == 0) {
-                    device.setStatus(false);
+                    device.setActive(false);
                 } else {
-                    device.setStatus(true);
+                    device.setActive(true);
                 }
             }
         }
