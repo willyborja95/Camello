@@ -22,7 +22,7 @@ import com.apptec.registrateapp.repository.localdatabase.daos.WorkingPeriodDao;
         Notification.class,
         Device.class,
         Company.class,
-        WorkingPeriod.class}, version = 4)
+        WorkingPeriod.class}, version = 5)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     /**

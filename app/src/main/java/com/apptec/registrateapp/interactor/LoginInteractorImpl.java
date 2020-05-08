@@ -231,7 +231,7 @@ public class LoginInteractorImpl implements LoginInteractor {
                         device.setName(deviceName);
                         device.setModel(deviceModel);
                         device.setIdentifier(deviceImei);
-                        device.setStatus(deviceStatus);
+                        device.setActive(deviceStatus);
                         DatabaseAdapter.getDatabaseAdapterInstance().insertDevice(device);
                         deviceFound = true;
                     }

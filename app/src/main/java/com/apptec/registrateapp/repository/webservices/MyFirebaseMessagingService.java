@@ -8,18 +8,12 @@ import androidx.annotation.NonNull;
 import com.apptec.registrateapp.models.Notification;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
-import com.apptec.registrateapp.repository.webservices.interfaces.TokenFirebaseInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.JsonObject;
 
 import java.util.Date;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     /**
@@ -33,7 +27,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "New message from: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -89,33 +83,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
 
-    private void sendRegistrationToServer(String firebase_token){
-        /**
-         * Send the token to the server
-         *
-         */
-        Log.d(TAG, "Trying to send the token to the server.");
 
-        TokenFirebaseInterface tokenFirebaseInterface = ApiClient.getClient().create(TokenFirebaseInterface.class);
-        Call<JsonObject> call = tokenFirebaseInterface.post(ApiClient.getAccessToken(), firebase_token);
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                /**
-                 * TODO: Add logs transaction runs well
-                 */
-
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                /**
-                 * Save it on shared preferences to sent it later
-                 */
-                Log.w(TAG, "Call to service failed. The token cant be uploaded.");
-
-            }
-        });
-    }
 
 }

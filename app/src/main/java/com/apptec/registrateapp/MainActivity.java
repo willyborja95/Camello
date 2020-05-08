@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements
     private TextView companyName;
     private TextView userFullName;
     private NavController navController;
-    ActivityMain2Binding binding;
+
     TextView toolbar_name;
 
     MainViewModel mainViewModel;

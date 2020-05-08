@@ -5,12 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <data class="com.apptec.registrateapp.ActivityMain2Binding">
 
-        <variable
-            name="userDisplayName"
-            type="String" />
-    </data>
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout_2"
         android:layout_width="match_parent"

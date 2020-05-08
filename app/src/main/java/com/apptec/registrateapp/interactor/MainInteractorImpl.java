@@ -31,7 +31,6 @@ public class MainInteractorImpl {
 
     public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice) {
         /**
-         * Calling the presenter
          * This logic is explained in the flowchart:
          * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
          *
@@ -265,11 +264,15 @@ public class MainInteractorImpl {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
-
+                Log.d(TAG, "Shot the API");
+                Log.d(TAG, "Device: " + thisDevice.toString());
                 // Change the flag
                 if (response.isSuccessful()) {
 
                     isNeedRegisterDevice.postValue(false);      // Change the flag to the view model
+
+                    // Delete other devices if the database is populated
+
 
                     Log.d(TAG, "Save this device information in the local database");
                     RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
