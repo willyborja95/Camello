@@ -24,8 +24,8 @@ public class Device implements Serializable {
     @SerializedName("identifier")
     private String identifier;   // This is the imei
 
-    @ColumnInfo(name = "status")
-    private boolean status;
+    @ColumnInfo(name = "active")
+    private boolean active;
 
     @ColumnInfo(name = "pushToken")
     private String pushToken;
@@ -65,12 +65,12 @@ public class Device implements Serializable {
         this.identifier = identifier;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
-    public boolean isStatus() {
-        return status;
+    public boolean isActive() {
+        return active;
     }
 
     public String getPushToken() {
@@ -87,5 +87,18 @@ public class Device implements Serializable {
 
     public void setPlatform(int platform) {
         this.platform = platform;
+    }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", model='" + model + '\'' +
+                ", identifier='" + identifier + '\'' +
+                ", status=" + active +
+                ", pushToken='" + pushToken + '\'' +
+                ", platform=" + platform +
+                '}';
     }
 }
