@@ -29,11 +29,11 @@
             android:value="AIzaSyA1xA6dIzFsB2vS26HFVqLrGhaeEsshW9o" />
 
         <activity
-            android:name="com.apptec.registrateapp.MainActivity"
+            android:name="com.apptec.registrateapp.mainactivity.MainActivity"
             android:label="@string/title_activity_bottom_navigation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.apptec.registrateapp.LoginActivity"
+            android:name="com.apptec.registrateapp.loginactivity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>

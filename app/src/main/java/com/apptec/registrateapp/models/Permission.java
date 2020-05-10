@@ -27,6 +27,11 @@ public class Permission implements Serializable {
     @ColumnInfo(name = "endDate")
     private Calendar endDate;
 
+    public Permission(PermissionType permissionType, Calendar startDate, Calendar endDate) {
+        this.permissionType = permissionType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 
     public Permission(int id, String comment, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
         this.id = id;
@@ -38,6 +43,14 @@ public class Permission implements Serializable {
     }
 
     public Permission() {
+    }
+
+    public Permission(int id, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
+        this.id = id;
+        this.permissionType = permissionType;
+        this.permissionStatus = permissionStatus;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getId() {
