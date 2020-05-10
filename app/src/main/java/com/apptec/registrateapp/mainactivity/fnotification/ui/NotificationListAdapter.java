@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.mainactivity.fnotification;
+package com.apptec.registrateapp.mainactivity.fnotification.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -23,10 +23,10 @@ public class NotificationListAdapter extends BaseAdapter {
     LiveData<List<Notification>> notifications;
 
 
-    public NotificationListAdapter(Context context, LiveData<List<Notification>> notifications){
+    public NotificationListAdapter(Context context, LiveData<List<Notification>> notifications) {
         /**
-        * Constructor
-        * */
+         * Constructor
+         * */
         this.context = context;
         this.notifications = notifications;
     }
@@ -67,7 +67,6 @@ public class NotificationListAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return notifications.getValue().indexOf(position);
     }
-
 
 
 }

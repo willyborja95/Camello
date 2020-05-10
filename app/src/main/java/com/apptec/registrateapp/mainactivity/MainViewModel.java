@@ -14,6 +14,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.mainactivity.fdevice.DevicePresenterImpl;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.models.Notification;
 import com.apptec.registrateapp.models.User;
@@ -50,18 +51,20 @@ public class MainViewModel extends AndroidViewModel {
     private WorkManager workManager = WorkManager.getInstance(App.getContext());
 
 
-    // Instancing the presenter her
+    // Presenter for each feature
     MainPresenterImpl mainPresenter;
+    DevicePresenterImpl devicePresenter;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
 
-        // Initialize the presenter
+        // Initialize the presenters
         mainPresenter = new MainPresenterImpl();
+        devicePresenter = new DevicePresenterImpl();
 
         // Load here the live data needed
         mNotifications = RoomHelper.getAppDatabaseInstance().notificationDao().loadAllLiveData();
-        mDevices = RoomHelper.getAppDatabaseInstance().deviceDao().loadAllDevicesLiveData();
+        mDevices = devicePresenter.loadAllDevicesLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();
         mLastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLiveDataLastWorkingPeriod();
@@ -164,7 +167,7 @@ public class MainViewModel extends AndroidViewModel {
         /**
          * Method to save this device to the server
          */
-        mainPresenter.saveThisDevice(name, model, this.isNeededRegisterDevice);
+        devicePresenter.saveThisDevice(name, model, this.isNeededRegisterDevice);
 
     }
 

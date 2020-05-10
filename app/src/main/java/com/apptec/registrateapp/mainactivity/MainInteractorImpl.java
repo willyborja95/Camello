@@ -239,57 +239,6 @@ public class MainInteractorImpl {
     }
 
 
-    public void saveThisDevice(String name, String model, MutableLiveData<Boolean> isNeedRegisterDevice) {
-        /**
-         * Method to save this device to the server
-         */
-        Log.d(TAG, "Save this device into the server.");
-
-        // Build the device object
-        Device thisDevice = new Device();
-        thisDevice.setName(name);
-        thisDevice.setModel(model);
-        thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
-        thisDevice.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
-
-        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<JsonObject> call = deviceRetrofitInterface.registerDevice(
-                // Token:
-                ApiClient.getAccessToken(),
-                // This device
-                thisDevice
-        );
-
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                Log.d(TAG, "Shot the API");
-                Log.d(TAG, "Device: " + thisDevice.toString());
-                // Change the flag
-                if (response.isSuccessful()) {
-
-                    isNeedRegisterDevice.postValue(false);      // Change the flag to the view model
-
-                    // Delete other devices if the database is populated
-
-
-                    Log.d(TAG, "Save this device information in the local database");
-                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                // TODO
-
-            }
-        });
-
-
-    }
 
 
 

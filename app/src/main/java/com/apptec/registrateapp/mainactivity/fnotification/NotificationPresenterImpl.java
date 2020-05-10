@@ -1,5 +1,7 @@
 package com.apptec.registrateapp.mainactivity.fnotification;
 
+import com.apptec.registrateapp.mainactivity.fnotification.ui.NotificationView;
+
 public class NotificationPresenterImpl implements NotificationPresenter {
     /*
     * This class is in the middle of the MVP pattern.

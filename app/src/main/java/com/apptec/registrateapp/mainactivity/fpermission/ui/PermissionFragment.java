@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.mainactivity.fpermission;
+package com.apptec.registrateapp.mainactivity.fpermission.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

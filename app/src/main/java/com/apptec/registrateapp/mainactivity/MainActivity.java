@@ -34,7 +34,7 @@ import static com.apptec.registrateapp.R.id.user_fullname;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
     /**
-     * This class is the replace fro MainActivity
+     * This class is the MainActivity
      */
 
     private static final String TAG = MainActivity.class.getSimpleName();

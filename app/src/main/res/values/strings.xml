@@ -53,12 +53,13 @@
     <string name="message_example">A través de este medio se comunica que el día viernes de esta semana se suspenden las actividades por motivos de la emeregencia sanitaria.</string>
     <string name="notification_ok_button">Entendido</string>
     <string name="title_example">Comunicado</string>
-    <string name="title_label">Título:</string>
-    <string name="message_label">Mensage:</string>
+    <string name="title_label">Título: </string>
+    <string name="message_label">Mensage: </string>
     <string name="title_add_device_fragment">Agregar Dispositivo</string>
     <string name="text_status_active">Activo</string>
-    <string name="label_device_status">Estado:</string>
-    <string name="label_imei">IMEI:</string>
-    <string name="label_device_model">Modelo:</string>
+    <string name="label_device_status">Estado: </string>
+    <string name="label_imei">IMEI: </string>
+    <string name="label_device_model">Modelo: </string>
+    <string name="text_status_inactive">Inactivo</string>
 
 </resources>

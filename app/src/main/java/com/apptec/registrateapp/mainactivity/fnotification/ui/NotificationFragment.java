@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.mainactivity.fnotification;
+package com.apptec.registrateapp.mainactivity.fnotification.ui;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
