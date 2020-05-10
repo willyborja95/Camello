@@ -11,7 +11,7 @@ public class RoomHelper {
      */
 
     private static final AppDatabase sAppDatabase = Room.databaseBuilder(App.getContext(), AppDatabase.class, Constants.DATABASE_NAME)
-            .allowMainThreadQueries()
+            //      .allowMainThreadQueries()   This was removed because is dangerous to the UX using Room in the main thread. It is very time expensive
             .fallbackToDestructiveMigration()
             .build();
 
