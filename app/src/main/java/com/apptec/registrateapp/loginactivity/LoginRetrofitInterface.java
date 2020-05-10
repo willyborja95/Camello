@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.webservices.interfaces;
+package com.apptec.registrateapp.loginactivity;
 
 import com.apptec.registrateapp.models.UserCredential;
 import com.apptec.registrateapp.repository.webservices.pojoresponse.loginresponse.LoginResponse;

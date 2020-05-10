@@ -22,7 +22,6 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.repository.localdatabase.DatabaseAdapter;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
-import com.apptec.registrateapp.repository.webservices.interfaces.DeviceRetrofitInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 

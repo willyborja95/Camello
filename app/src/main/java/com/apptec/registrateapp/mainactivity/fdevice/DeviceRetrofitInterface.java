@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.webservices.interfaces;
+package com.apptec.registrateapp.mainactivity.fdevice;
 
 import androidx.lifecycle.LiveData;
 

@@ -8,12 +8,12 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.models.UpdatePushTokenBody;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
-import com.apptec.registrateapp.repository.webservices.interfaces.DeviceRetrofitInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 

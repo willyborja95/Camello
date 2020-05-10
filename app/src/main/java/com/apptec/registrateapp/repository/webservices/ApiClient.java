@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     /**
-     * ApiClient provides a retrofit instance for make the call to the servere
+     * ApiClient provides a retrofit instance for make the call to the server
      */
 
     private static Retrofit retrofit = null;

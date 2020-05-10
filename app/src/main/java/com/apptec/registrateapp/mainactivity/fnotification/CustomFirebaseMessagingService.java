@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.webservices;
+package com.apptec.registrateapp.mainactivity.fnotification;
 
 
 import android.util.Log;
@@ -15,7 +15,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Date;
 import java.util.Map;
 
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
+public class CustomFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Class for manage the FCM
      */

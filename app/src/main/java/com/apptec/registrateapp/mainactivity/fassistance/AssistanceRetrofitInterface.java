@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.webservices.interfaces;
+package com.apptec.registrateapp.mainactivity.fassistance;
 
 import com.apptec.registrateapp.models.Assistance;
 import com.google.gson.JsonObject;

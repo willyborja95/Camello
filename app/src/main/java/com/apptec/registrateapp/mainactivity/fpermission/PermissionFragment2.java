@@ -19,7 +19,6 @@ import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.models.User;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
-import com.apptec.registrateapp.repository.webservices.interfaces.PermissionRetrofitInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonArray;

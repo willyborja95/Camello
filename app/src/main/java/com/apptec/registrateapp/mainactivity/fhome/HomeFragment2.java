@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.MainActivity;
+import com.apptec.registrateapp.mainactivity.fassistance.AssistanceRetrofitInterface;
 import com.apptec.registrateapp.mainactivity.fhome.generic.DayViewContainer;
 import com.apptec.registrateapp.mainactivity.fhome.generic.InformationDialog;
 import com.apptec.registrateapp.mainactivity.fhome.generic.MonthHeaderViewContainer;
@@ -29,7 +30,6 @@ import com.apptec.registrateapp.models.Company;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
-import com.apptec.registrateapp.repository.webservices.interfaces.AssistanceRetrofitInterface;
 import com.apptec.registrateapp.repository.webservices.interfaces.TimeRetrofit;
 import com.apptec.registrateapp.util.Constants;
 import com.google.android.gms.common.ConnectionResult;

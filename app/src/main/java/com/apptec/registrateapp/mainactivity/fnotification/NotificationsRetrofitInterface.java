@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.webservices.interfaces;
+package com.apptec.registrateapp.mainactivity.fnotification;
 
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;

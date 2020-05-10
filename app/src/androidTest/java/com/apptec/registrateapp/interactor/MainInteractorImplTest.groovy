@@ -1,10 +1,10 @@
 package com.apptec.registrateapp.interactor
 
 import android.util.Log
+import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface
 import com.apptec.registrateapp.models.Device
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper
 import com.apptec.registrateapp.repository.webservices.ApiClient
-import com.apptec.registrateapp.repository.webservices.interfaces.DeviceRetrofitInterface
 import com.apptec.registrateapp.util.Constants
 import com.google.gson.JsonObject
 import org.junit.Test

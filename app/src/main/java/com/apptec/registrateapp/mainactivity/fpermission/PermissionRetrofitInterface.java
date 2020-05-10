@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.webservices.interfaces;
+package com.apptec.registrateapp.mainactivity.fpermission;
 
 import com.google.gson.JsonObject;
 

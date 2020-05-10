@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.Assistance;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
-import com.apptec.registrateapp.repository.webservices.interfaces.AssistanceRetrofitInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
