@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.mainactivity.fpermission;
+package com.apptec.registrateapp.mainactivity.fpermission.ui;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.mainactivity.fpermission.PermissionRetrofitInterface;
 import com.apptec.registrateapp.models.Permission;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.util.Constants;

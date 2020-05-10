@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.mainactivity.fpermission.ui.DialogPermission;
+import com.apptec.registrateapp.mainactivity.fpermission.ui.PermissionListAdapter;
 import com.apptec.registrateapp.models.Permission;
 import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
