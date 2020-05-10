@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/homeFragment">
 
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.apptec.registrateapp.view.fragments.home.HomeFragment"
+        android:name="com.apptec.registrateapp.mainactivity.fhome.HomeFragment"
         android:label="HomeFragment">
         <action
             android:id="@+id/action_homeFragment_to_notificationsFragment"
@@ -16,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.apptec.registrateapp.view.fragments.notification.NotificationFragment"
+        android:name="com.apptec.registrateapp.mainactivity.fnotification.NotificationFragment"
         android:label="NotificationsFragment">
         <action
             android:id="@+id/action_notificationsFragment_to_permissionFragment"
@@ -24,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/permissionFragment"
-        android:name="com.apptec.registrateapp.view.fragments.permission.PermissionFragment"
+        android:name="com.apptec.registrateapp.mainactivity.fpermission.PermissionFragment"
         android:label="PermissionFragment">
         <action
             android:id="@+id/action_permissionFragment_to_dialogDevice"
@@ -32,6 +31,6 @@
     </fragment>
     <fragment
         android:id="@+id/deviceFragment"
-        android:name="com.apptec.registrateapp.view.fragments.device.DeviceFragment"
+        android:name="com.apptec.registrateapp.mainactivity.fdevice.DeviceFragment"
         android:label="DeviceFragment" />
 </navigation>

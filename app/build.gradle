@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -89,6 +91,9 @@ dependencies {
 
     // optional - RxJava2 support
     implementation "androidx.work:work-rxjava2:$work_version"
+    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // optional - GCMNetworkManager support
     // implementation "androidx.work:work-gcm:$work_version"
@@ -96,4 +101,7 @@ dependencies {
     // optional - Test helpers
     // androidTestImplementation "androidx.work:work-testing:$work_version"
 
+}
+repositories {
+    mavenCentral()
 }
