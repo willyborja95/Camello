@@ -1,33 +1,95 @@
 package com.apptec.registrateapp.mainactivity.fdevice;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
+import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
+import com.apptec.registrateapp.repository.webservices.ApiClient;
+import com.apptec.registrateapp.util.Constants;
+import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class DevicePresenterImpl implements DevicePresenter {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+public class DevicePresenterImpl {
     /**
-     * Implementation of the interface.
+     * Device presenter
+     *
+     * This class will interact between viewmodel and repository
      */
 
-    // Attributes
-    DeviceInteractorImpl deviceInteractor;
-    DeviceView2 deviceView2;
+    private final String TAG = "DevicePresenter";
 
-    public DevicePresenterImpl(DeviceView2 deviceView2) {
-        this.deviceView2 = deviceView2;
-        this.deviceInteractor = new DeviceInteractorImpl(this);
-    }
-
-    @Override
-    public void getDevices() {
-        /** Call the interactor */
+    public DevicePresenterImpl() {
 
     }
 
-    @Override
-    public void showDevices(ArrayList<Device> devices) {
-        /** Call the view */
+    public LiveData<List<Device>> loadAllDevicesLiveData() {
+        /**  Getting the device*/
+        return RoomHelper.getAppDatabaseInstance().deviceDao().loadAllDevicesLiveData();
+    }
+
+
+    public void saveThisDevice(String name, String model, MutableLiveData<Boolean> isNeedRegisterDevice) {
+        /**
+         * Method to save this device to the server
+         */
+        Log.d(TAG, "Save this device into the server.");
+
+        // Build the device object
+        Device thisDevice = new Device();
+        thisDevice.setName(name);
+        thisDevice.setModel(model);
+        thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
+        thisDevice.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
+
+        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
+        Call<JsonObject> call = deviceRetrofitInterface.registerDevice(
+                // Token:
+                ApiClient.getAccessToken(),
+                // This device
+                thisDevice
+        );
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                Log.d(TAG, "Shot the API");
+                Log.d(TAG, "Device: " + thisDevice.toString());
+                // Change the flag
+                if (response.isSuccessful()) {
+
+                    isNeedRegisterDevice.postValue(false);      // Change the flag of the view model
+
+                    // The room queries do not should be executed in the main thread, so we create a thread
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG, "Save this device information in the local database");
+                            RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
+                        }
+                    }).start();
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                // TODO
+
+            }
+        });
+
 
     }
 }

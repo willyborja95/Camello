@@ -120,8 +120,13 @@ public class LoginInteractorImpl implements LoginInteractor {
 
                     StaticData.setCurrentUser(user);
 
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RoomHelper.getAppDatabaseInstance().userDao().insert(user);
+                        }
+                    }).start();
 
-                    RoomHelper.getAppDatabaseInstance().userDao().insert(user);
 
 
 
