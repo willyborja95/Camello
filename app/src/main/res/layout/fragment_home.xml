@@ -6,14 +6,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <!--    <Button-->
-    <!--        android:id="@+id/open_map"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="40dp"-->
-    <!--        android:visibility="invisible"-->
-    <!--        android:text="Mapa"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent" />-->
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -46,6 +38,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/fragment_home_button_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
@@ -59,12 +52,13 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/start_timer_btn"
+                android:id="@+id/fragment_home_start_button"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/bottom_half_circle"
                 android:paddingBottom="20sp"
+                tools:text="@string/home_button_start_message"
                 android:text="@string/home_button_start_message"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
@@ -73,7 +67,7 @@
 
     </LinearLayout>
 
-    <com.appTec.RegistrateApp.view.activities.generic.CurveBgRelativeLayout
+    <com.apptec.registrateapp.mainactivity.fhome.generic.CurveBgRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
@@ -98,25 +92,8 @@
             app:cv_scrollMode="paged" />
 
 
-    </com.appTec.RegistrateApp.view.activities.generic.CurveBgRelativeLayout>
+    </com.apptec.registrateapp.mainactivity.fhome.generic.CurveBgRelativeLayout>
 
-    <!--    <RelativeLayout-->
-    <!--        android:id="@+id/map_layout"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:visibility="invisible">-->
-    <!--        <fragment-->
-    <!--            class="com.google.android.gms.maps.MapFragment"-->
-    <!--            android:id="@+id/map"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"/>-->
 
-    <!--        <Button-->
-    <!--            android:id="@+id/close_map"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="40dp"-->
-    <!--            android:text="Cerrar"/>-->
-
-    <!--    </RelativeLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
