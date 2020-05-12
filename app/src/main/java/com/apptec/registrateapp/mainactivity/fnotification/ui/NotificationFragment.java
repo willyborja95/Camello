@@ -26,7 +26,7 @@ import com.apptec.registrateapp.models.Notification;
 
 import java.util.List;
 
-public class NotificationFragment extends Fragment implements NotificationView {
+public class NotificationFragment extends Fragment {
     /**
      * NotificationsFragment
      */
@@ -114,8 +114,7 @@ public class NotificationFragment extends Fragment implements NotificationView {
 
 
     // Dialogs
-    // These methods are not used. Probably in the future.
-    @Override
+    // These methods are not used. Probably in the future we will remove it
     public void showAssistanceProgressDialog(String message) {
         /**
          * This is not called now.
@@ -126,17 +125,17 @@ public class NotificationFragment extends Fragment implements NotificationView {
         progressDialog.setCanceledOnTouchOutside(false);
     }
 
-    @Override
+
     public void hideAssistanceProgressDialog() {
         progressDialog.dismiss();
     }
 
-    @Override
+
     public void showConnectionErrorMessage() {
         showDialog(getContext().getString(R.string.title_error_connection), getContext().getString(R.string.message_error_connection));
     }
 
-    @Override
+
     public void showDialog(String title, String message) {
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setTitle(title)
@@ -153,7 +152,7 @@ public class NotificationFragment extends Fragment implements NotificationView {
         alertDialog.show();
     }
 
-    @Override
+
     public void showNotNewNotificationsMessage() {
         if (notificationTextView != null) {
             notificationTextView.setVisibility(View.VISIBLE);
@@ -168,9 +167,5 @@ public class NotificationFragment extends Fragment implements NotificationView {
 
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
 
-    }
 }
