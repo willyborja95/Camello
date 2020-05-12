@@ -15,6 +15,7 @@ import androidx.work.WorkManager;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.mainactivity.fdevice.DevicePresenterImpl;
+import com.apptec.registrateapp.mainactivity.fnotification.NotificationPresenterImpl;
 import com.apptec.registrateapp.models.Device;
 import com.apptec.registrateapp.models.Notification;
 import com.apptec.registrateapp.models.User;
@@ -53,6 +54,7 @@ public class MainViewModel extends AndroidViewModel {
 
     // Presenter for each feature
     MainPresenterImpl mainPresenter;
+    NotificationPresenterImpl notificationPresenter;
     DevicePresenterImpl devicePresenter;
 
     public MainViewModel(@NonNull Application application) {
@@ -61,9 +63,10 @@ public class MainViewModel extends AndroidViewModel {
         // Initialize the presenters
         mainPresenter = new MainPresenterImpl();
         devicePresenter = new DevicePresenterImpl();
+        notificationPresenter = new NotificationPresenterImpl();
 
         // Load here the live data needed
-        mNotifications = RoomHelper.getAppDatabaseInstance().notificationDao().loadAllLiveData();
+        mNotifications = notificationPresenter.loadNotificationsLiveData();
         mDevices = devicePresenter.loadAllDevicesLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();
