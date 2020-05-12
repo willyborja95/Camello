@@ -27,6 +27,8 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
      * This is the launcher activity
      */
 
+    private final String TAG = LoginActivity.class.getSimpleName();
+
     // UI elements
     private ImageButton btnLogin;
     private EditText txtEmail;

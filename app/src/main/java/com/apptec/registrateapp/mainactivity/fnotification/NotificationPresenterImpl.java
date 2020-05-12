@@ -1,47 +1,31 @@
 package com.apptec.registrateapp.mainactivity.fnotification;
 
-import com.apptec.registrateapp.mainactivity.fnotification.ui.NotificationView;
+import androidx.lifecycle.LiveData;
 
-public class NotificationPresenterImpl implements NotificationPresenter {
-    /*
-    * This class is in the middle of the MVP pattern.
+import com.apptec.registrateapp.models.Notification;
+import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
+
+import java.util.List;
+
+public class NotificationPresenterImpl {
+    /**
+     * This class is in the middle of the MVVM pattern.
     * It interacts as an intermediary between the Model and the View.
     * */
 
-    // Instance of Interactor and View
-    private NotificationView notificationView;
-    private NotificationInteractorImpl notificationInteractor;
 
-    public NotificationPresenterImpl(NotificationView notificationView) {
-        /*
-        * Constructor
-        * */
-        this.notificationView = notificationView;
-        this.notificationInteractor = new NotificationInteractorImpl(this);
-    }
-
-
-
-    @Override
-    public void showNotNewNotificationsMessage() {
+    public NotificationPresenterImpl() {
         /**
-         * Calling the view
+         * Empty constructor
+        * */
+
+    }
+
+
+    public LiveData<List<Notification>> loadNotificationsLiveData() {
+        /**
+         * Return the notifications into the live data
          */
-        if(notificationView!=null) {
-        notificationView.showNotNewNotificationsMessage();}
+        return RoomHelper.getAppDatabaseInstance().notificationDao().loadAllLiveData();
     }
-
-    @Override
-    public void detachView() {
-        if(notificationView!=null) {
-        notificationView = null;}
-    }
-
-    @Override
-    public void detachJob() {
-        notificationInteractor.detachJob();
-        notificationInteractor = null;
-    }
-
-
 }
