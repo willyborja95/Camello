@@ -26,8 +26,8 @@ import com.apptec.registrateapp.mainactivity.fhome.generic.DayViewContainer;
 import com.apptec.registrateapp.mainactivity.fhome.generic.InformationDialog;
 import com.apptec.registrateapp.mainactivity.fhome.generic.MonthHeaderViewContainer;
 import com.apptec.registrateapp.models.Assistance;
-import com.apptec.registrateapp.models.Company;
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.CompanyModel;
+import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.repository.webservices.interfaces.TimeRetrofit;
@@ -92,11 +92,11 @@ public class HomeFragment2 extends Fragment implements
     //private AlarmManager alarmManager;
     //private PendingIntent alarmIntent;
     private MainActivity mainActivity2Activity;
-    private Company company = new Company();
+    private CompanyModel company = new CompanyModel();
     private SharedPreferences pref;
     private Location location = new Location("");
     ProgressDialog dialog;
-    Device device;
+    DeviceModel device;
 
     public static HomeFragment2 newInstance() {
         return new HomeFragment2();
@@ -284,11 +284,11 @@ public class HomeFragment2 extends Fragment implements
      */
 
     //Business logic methods
-    public void setDevice(Device device) {
+    public void setDevice(DeviceModel device) {
         this.device = device;
     }
 
-    public void setCompany(Company company) {
+    public void setCompany(CompanyModel company) {
         this.company = company;
     }
 

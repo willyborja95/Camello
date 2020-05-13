@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
-import com.apptec.registrateapp.models.Notification;
+import com.apptec.registrateapp.models.NotificationModel;
 
 import java.util.List;
 
@@ -65,9 +65,9 @@ public class NotificationFragment extends Fragment {
 
         // Observing the view model mNotification
         notificationListAdapter = new NotificationListAdapter(App.getContext(), mainViewModel.getNotifications());
-        mainViewModel.getNotifications().observe(getActivity(), new Observer<List<Notification>>() {
+        mainViewModel.getNotifications().observe(getActivity(), new Observer<List<NotificationModel>>() {
             @Override
-            public void onChanged(List<Notification> notifications) {
+            public void onChanged(List<NotificationModel> notifications) {
                 notificationsListView.setAdapter(notificationListAdapter);
             }
         });
@@ -80,7 +80,7 @@ public class NotificationFragment extends Fragment {
                  * Show a dialog with extended information about the dialog
                  */
                 Log.d(TAG, "Item clicked");
-                Notification notification = notificationListAdapter.getItem(position);
+                NotificationModel notification = notificationListAdapter.getItem(position);
                 DialogNotification dialogNotification = new DialogNotification().setNotification(notification);
                 dialogNotification.show(getFragmentManager(), DialogNotification.class.getSimpleName());
             }

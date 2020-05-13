@@ -5,24 +5,28 @@ import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.apptec.registrateapp.models.Company;
-import com.apptec.registrateapp.models.Device;
-import com.apptec.registrateapp.models.Notification;
-import com.apptec.registrateapp.models.User;
-import com.apptec.registrateapp.models.WorkingPeriod;
+import com.apptec.registrateapp.models.CompanyModel;
+import com.apptec.registrateapp.models.DeviceModel;
+import com.apptec.registrateapp.models.NotificationModel;
+import com.apptec.registrateapp.models.UserModel;
+import com.apptec.registrateapp.models.WorkZoneModel;
+import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
+import com.apptec.registrateapp.repository.localdatabase.daos.CompanyDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.DeviceDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.NotificationDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.UserDao;
+import com.apptec.registrateapp.repository.localdatabase.daos.WorkZoneDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.WorkingPeriodDao;
 
 
 @Database(entities = {
-        User.class,
-        Notification.class,
-        Device.class,
-        Company.class,
-        WorkingPeriod.class}, version = 5)
+        UserModel.class,
+        NotificationModel.class,
+        DeviceModel.class,
+        CompanyModel.class,
+        WorkZoneModel.class,
+        WorkingPeriodModel.class}, version = 6)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     /**
@@ -34,6 +38,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract NotificationDao notificationDao();
     public abstract DeviceDao deviceDao();
 
+    public abstract CompanyDao companyDao();
+
+    public abstract WorkZoneDao workZoneDao();
     public abstract WorkingPeriodDao workingPeriodDao();
 
 }

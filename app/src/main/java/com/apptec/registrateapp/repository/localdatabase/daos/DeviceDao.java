@@ -6,7 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.DeviceModel;
 
 import java.util.List;
 
@@ -19,16 +19,16 @@ public interface DeviceDao {
      */
 
 
-    @Query("SELECT * FROM device")
-    LiveData<List<Device>> loadAllDevicesLiveData();
+    @Query("SELECT * FROM DeviceModel")
+    LiveData<List<DeviceModel>> loadAllDevicesLiveData();
 
-    @Query("SELECT * FROM device where id = :id")
-    List<Device> loadNotificationSync(int id);
+    @Query("SELECT * FROM DeviceModel where id = :id")
+    List<DeviceModel> loadNotificationSync(int id);
 
     @Insert
-    void insert(Device device);
+    void insert(DeviceModel device);
 
     @Delete
-    void delete(Device device);
+    void delete(DeviceModel device);
 
 }

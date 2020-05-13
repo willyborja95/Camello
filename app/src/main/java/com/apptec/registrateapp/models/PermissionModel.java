@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 @Entity
-public class Permission implements Serializable {
+public class PermissionModel implements Serializable {
 
     @PrimaryKey
     private int id;
@@ -27,13 +27,13 @@ public class Permission implements Serializable {
     @ColumnInfo(name = "endDate")
     private Calendar endDate;
 
-    public Permission(PermissionType permissionType, Calendar startDate, Calendar endDate) {
+    public PermissionModel(PermissionType permissionType, Calendar startDate, Calendar endDate) {
         this.permissionType = permissionType;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public Permission(int id, String comment, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
+    public PermissionModel(int id, String comment, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
         this.id = id;
         this.comment = comment;
         this.permissionType = permissionType;
@@ -42,10 +42,10 @@ public class Permission implements Serializable {
         this.endDate = endDate;
     }
 
-    public Permission() {
+    public PermissionModel() {
     }
 
-    public Permission(int id, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
+    public PermissionModel(int id, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
         this.id = id;
         this.permissionType = permissionType;
         this.permissionStatus = permissionStatus;

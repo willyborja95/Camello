@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 @Entity
-public class Company implements Serializable {
+public class CompanyModel implements Serializable {
 
     @PrimaryKey()
     @NonNull
@@ -17,7 +17,7 @@ public class Company implements Serializable {
 
 
     @Ignore
-    private ArrayList<WorkzonesItem> workZones;
+    private ArrayList<WorkZoneModel> workZones;
 
 
 
@@ -30,11 +30,11 @@ public class Company implements Serializable {
         this.companyName = companyName;
     }
 
-    public ArrayList<WorkzonesItem> getWorkZones() {
+    public ArrayList<WorkZoneModel> getWorkZones() {
         return workZones;
     }
 
-    public void setWorkZones(ArrayList<WorkzonesItem> workZones) {
+    public void setWorkZones(ArrayList<WorkZoneModel> workZones) {
         this.workZones = workZones;
     }
 }

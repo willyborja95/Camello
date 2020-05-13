@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
@@ -31,7 +31,7 @@ public class DevicePresenterImpl {
 
     }
 
-    public LiveData<List<Device>> loadAllDevicesLiveData() {
+    public LiveData<List<DeviceModel>> loadAllDevicesLiveData() {
         /**  Getting the device*/
         return RoomHelper.getAppDatabaseInstance().deviceDao().loadAllDevicesLiveData();
     }
@@ -44,7 +44,7 @@ public class DevicePresenterImpl {
         Log.d(TAG, "Save this device into the server.");
 
         // Build the device object
-        Device thisDevice = new Device();
+        DeviceModel thisDevice = new DeviceModel();
         thisDevice.setName(name);
         thisDevice.setModel(model);
         thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));

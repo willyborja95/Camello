@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.DeviceModel;
 
 import java.util.List;
 
@@ -74,9 +74,9 @@ public class DeviceFragment extends Fragment {
 
         // Observe the mDevicesList
         deviceListAdapter = new DeviceListAdapter(App.getContext(), mainViewModel.getDevices());
-        mainViewModel.getDevices().observe(getActivity(), new Observer<List<Device>>() {
+        mainViewModel.getDevices().observe(getActivity(), new Observer<List<DeviceModel>>() {
             @Override
-            public void onChanged(List<Device> devices) {
+            public void onChanged(List<DeviceModel> devices) {
                 devicesListView.setAdapter(deviceListAdapter);
             }
         });

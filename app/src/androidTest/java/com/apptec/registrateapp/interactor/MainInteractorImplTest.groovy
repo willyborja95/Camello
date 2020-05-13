@@ -2,7 +2,7 @@ package com.apptec.registrateapp.interactor
 
 import android.util.Log
 import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface
-import com.apptec.registrateapp.models.Device
+import com.apptec.registrateapp.models.DeviceModel
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper
 import com.apptec.registrateapp.repository.webservices.ApiClient
 import com.apptec.registrateapp.util.Constants
@@ -32,7 +32,7 @@ class MainInteractorImplTest extends GroovyTestCase {
         Log.d(TAG, "Save this device into the server.");
 
         // Build the device object
-        Device thisDevice = new Device();
+        DeviceModel thisDevice = new DeviceModel();
         thisDevice.setName(name);
         thisDevice.setModel(model);
         thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));

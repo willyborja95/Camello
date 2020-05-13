@@ -2,7 +2,7 @@ package com.apptec.registrateapp.mainactivity.fdevice;
 
 import androidx.lifecycle.LiveData;
 
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UpdatePushTokenBody;
 import com.apptec.registrateapp.repository.webservices.ApiResponse;
 import com.apptec.registrateapp.util.Constants;
@@ -21,7 +21,7 @@ public interface DeviceRetrofitInterface {
 
 
     @POST(Constants.REGISTER_DEVICE_URL)
-    Call<JsonObject> registerDevice(@Header(Constants.AUTHORIZATION_HEADER) String token, @Body Device device);
+    Call<JsonObject> registerDevice(@Header(Constants.AUTHORIZATION_HEADER) String token, @Body DeviceModel device);
 
     @GET("dispositivo/empleado/{userId}")
     Call<JsonObject> get(@Header(Constants.AUTHORIZATION_HEADER) String token, @Path("userId") int userId);

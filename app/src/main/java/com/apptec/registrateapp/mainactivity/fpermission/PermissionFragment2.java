@@ -16,10 +16,10 @@ import androidx.fragment.app.Fragment;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.fpermission.ui.DialogPermission;
 import com.apptec.registrateapp.mainactivity.fpermission.ui.PermissionListAdapter;
-import com.apptec.registrateapp.models.Permission;
+import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
-import com.apptec.registrateapp.models.User;
+import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.util.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,8 +49,9 @@ public class PermissionFragment2 extends Fragment {
 
     //Bussiness logic elements
     private ArrayList<PermissionType> lstPermissionType;
-    private ArrayList<Permission> lstPermission = new ArrayList<Permission>();;
-    private User user;
+    private ArrayList<PermissionModel> lstPermission = new ArrayList<PermissionModel>();
+    ;
+    private UserModel user;
 
     public static PermissionFragment2 newInstance() {
         return new PermissionFragment2();
@@ -66,7 +67,7 @@ public class PermissionFragment2 extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Bundle bundle = this.getArguments();
-        user = (User) bundle.getSerializable("user");
+        user = (UserModel) bundle.getSerializable("user");
         lstPermissionType = (ArrayList<PermissionType>) bundle.getSerializable("lstPermissionType");
         progressDialog = new ProgressDialog(context);
         updatePermissions();
@@ -96,7 +97,7 @@ public class PermissionFragment2 extends Fragment {
      */
 
     //Save new permission
-    public void savePermission(Permission permission){
+    public void savePermission(PermissionModel permission) {
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         permission.getStartDate().getTime().setMonth(permission.getStartDate().getTime().getMonth()-1);
         permission.getEndDate().getTime().setMonth(permission.getEndDate().getTime().getMonth()-1);
@@ -144,7 +145,7 @@ public class PermissionFragment2 extends Fragment {
                 } else if (strPermissionStatus.equals("rechazado")) {
                     permissionStatus = PermissionStatus.Rechazado;
                 }
-                Permission permission1 = new Permission(id, permission, permissionStatus, calendarStartDate, calendarEndDate);
+                PermissionModel permission1 = new PermissionModel(id, permission, permissionStatus, calendarStartDate, calendarEndDate);
                 addPermissionList(permission1);
             }
 
@@ -156,7 +157,7 @@ public class PermissionFragment2 extends Fragment {
         });
     }
 
-    public void addPermissionList(Permission permission){
+    public void addPermissionList(PermissionModel permission) {
         lstPermission.add(permission);
         updateListView();
     }
@@ -209,7 +210,7 @@ public class PermissionFragment2 extends Fragment {
                     } else if (strPermissionStatus.equals("rechazado")) {
                         permissionStatus = PermissionStatus.Rechazado;
                     }
-                    Permission permission = new Permission(id, permissionType, permissionStatus, calendarStartDate, calendarEndDate);
+                    PermissionModel permission = new PermissionModel(id, permissionType, permissionStatus, calendarStartDate, calendarEndDate);
                     lstPermission.add(permission);
                 }
                 updateListView();

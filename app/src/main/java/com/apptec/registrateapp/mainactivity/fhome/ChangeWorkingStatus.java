@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.workers.WorkingPeriod;
+package com.apptec.registrateapp.mainactivity.fhome;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.apptec.registrateapp.models.WorkingPeriod;
+import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.util.Constants;
 
@@ -65,7 +65,7 @@ public class ChangeWorkingStatus extends Worker {
     }
 
     private void createAndSaveWorkingPeriod(int status) {
-        WorkingPeriod startedWorkingPeriod = new WorkingPeriod();
+        WorkingPeriodModel startedWorkingPeriod = new WorkingPeriodModel();
         startedWorkingPeriod.setStatus(status);
         RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(startedWorkingPeriod);
     }

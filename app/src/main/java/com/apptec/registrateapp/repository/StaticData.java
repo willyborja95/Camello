@@ -1,8 +1,8 @@
 package com.apptec.registrateapp.repository;
 
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.PermissionType;
-import com.apptec.registrateapp.models.User;
+import com.apptec.registrateapp.models.UserModel;
 
 import java.util.ArrayList;
 
@@ -13,24 +13,23 @@ public class StaticData {
      */
 
 
-
-    private static User currentUser = new User();
-    private static Device currentDevice = new Device();
+    private static UserModel currentUser = new UserModel();
+    private static DeviceModel currentDevice = new DeviceModel();
     private static ArrayList<PermissionType> permissionTypes= new ArrayList<>();
 
-    public static User getCurrentUser() {
+    public static UserModel getCurrentUser() {
         return currentUser;
     }
 
-    public static void setCurrentUser(User currentUser) {
+    public static void setCurrentUser(UserModel currentUser) {
         StaticData.currentUser = currentUser;
     }
 
-    public static Device getCurrentDevice() {
+    public static DeviceModel getCurrentDevice() {
         return currentDevice;
     }
 
-    public static void setCurrentDevice(Device currentDevice) {
+    public static void setCurrentDevice(DeviceModel currentDevice) {
         StaticData.currentDevice = currentDevice;
     }
 

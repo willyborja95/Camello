@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface;
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UpdatePushTokenBody;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
@@ -110,7 +110,7 @@ public class MainInteractorImpl {
 //                                        "platform": 0,
 //                                        "employeeId": 7
 //                            }
-                            Device device = new Device();
+                            DeviceModel device = new DeviceModel();
 
                             // TODO: This messy code can be improved by creating a Gson Response
                             device.setId(Integer.parseInt(response.body().get("data").getAsJsonObject().get("id").toString()));
@@ -131,8 +131,14 @@ public class MainInteractorImpl {
                             }
 
                             // Save the device here in local database
-                            Log.d(TAG, "Saving device into database");
-                            RoomHelper.getAppDatabaseInstance().deviceDao().insert(device);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.d(TAG, "Saving device into database");
+                                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(device);
+                                }
+                            }).start();
+
                         }
 
 

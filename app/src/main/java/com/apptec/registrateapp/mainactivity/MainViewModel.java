@@ -15,13 +15,14 @@ import androidx.work.WorkManager;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.mainactivity.fdevice.DevicePresenterImpl;
+import com.apptec.registrateapp.mainactivity.fhome.ChangeWorkingStatus;
+import com.apptec.registrateapp.mainactivity.fhome.HomePresenterImpl;
 import com.apptec.registrateapp.mainactivity.fnotification.NotificationPresenterImpl;
-import com.apptec.registrateapp.models.Device;
-import com.apptec.registrateapp.models.Notification;
-import com.apptec.registrateapp.models.User;
-import com.apptec.registrateapp.models.WorkingPeriod;
+import com.apptec.registrateapp.models.DeviceModel;
+import com.apptec.registrateapp.models.NotificationModel;
+import com.apptec.registrateapp.models.UserModel;
+import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
-import com.apptec.registrateapp.repository.workers.WorkingPeriod.ChangeWorkingStatus;
 import com.apptec.registrateapp.repository.workers.retreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.util.Constants;
 
@@ -31,19 +32,19 @@ import java.util.List;
 public class MainViewModel extends AndroidViewModel {
 
     // To show the notifications
-    private final LiveData<List<Notification>> mNotifications; // List of notifications
+    private final LiveData<List<NotificationModel>> mNotifications; // List of notifications
 
     // To show devices
-    private final LiveData<List<Device>> mDevices;          // List of user devices
+    private final LiveData<List<DeviceModel>> mDevices;          // List of user devices
 
     // Toolbar name according the active fragment
     private MutableLiveData<String> mActiveFragmentName;
 
     // This info will be on the drawer
-    private final LiveData<User> mUser;
+    private final LiveData<UserModel> mUser;
 
     // This boolean variable show if the user is working or not
-    private LiveData<WorkingPeriod> mLastWorkingPeriod;
+    private LiveData<WorkingPeriodModel> mLastWorkingPeriod;
 
     // To handle if needed the first login
     private MutableLiveData<Boolean> isNeededRegisterDevice;
@@ -56,6 +57,7 @@ public class MainViewModel extends AndroidViewModel {
     MainPresenterImpl mainPresenter;
     NotificationPresenterImpl notificationPresenter;
     DevicePresenterImpl devicePresenter;
+    HomePresenterImpl homePresenter;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -64,13 +66,14 @@ public class MainViewModel extends AndroidViewModel {
         mainPresenter = new MainPresenterImpl();
         devicePresenter = new DevicePresenterImpl();
         notificationPresenter = new NotificationPresenterImpl();
+        homePresenter = new HomePresenterImpl();
 
         // Load here the live data needed
         mNotifications = notificationPresenter.loadNotificationsLiveData();
         mDevices = devicePresenter.loadAllDevicesLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
-        mActiveFragmentName = new MutableLiveData<>();
-        mLastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLiveDataLastWorkingPeriod();
+        mActiveFragmentName = new MutableLiveData<>();      // It is used to set the toolbar title
+        mLastWorkingPeriod = homePresenter.getLiveDataLastWorkingPeriod();
 
 
         // Handle the first login if is needed
@@ -91,22 +94,22 @@ public class MainViewModel extends AndroidViewModel {
     /**
      * Expose the LiveData so the UI can observe it for the fragment Notification
      */
-    public LiveData<List<Notification>> getNotifications() {
+    public LiveData<List<NotificationModel>> getNotifications() {
         /** Exposing the notifications */
         return mNotifications;
     }
 
-    public LiveData<User> getCurrentUser() {
+    public LiveData<UserModel> getCurrentUser() {
         /** Exposing the user */
         return mUser;
     }
 
-    public LiveData<List<Device>> getDevices() {
+    public LiveData<List<DeviceModel>> getDevices() {
         /** Exposing the list of devices */
         return mDevices;
     }
 
-    public LiveData<WorkingPeriod> getLastWorkingPeriod() {
+    public LiveData<WorkingPeriodModel> getLastWorkingPeriod() {
         /** Exposing the last working period */
         return mLastWorkingPeriod;
     }

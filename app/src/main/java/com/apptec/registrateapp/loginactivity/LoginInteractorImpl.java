@@ -10,14 +10,10 @@ import androidx.core.app.ActivityCompat;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface;
-import com.apptec.registrateapp.mainactivity.fpermission.PermissionTypeRetrofitInterface;
-import com.apptec.registrateapp.models.Company;
-import com.apptec.registrateapp.models.Device;
-import com.apptec.registrateapp.models.PermissionType;
-import com.apptec.registrateapp.models.User;
+import com.apptec.registrateapp.models.CompanyModel;
 import com.apptec.registrateapp.models.UserCredential;
-import com.apptec.registrateapp.models.WorkzonesItem;
+import com.apptec.registrateapp.models.UserModel;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.repository.StaticData;
 import com.apptec.registrateapp.repository.localdatabase.DatabaseAdapter;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
@@ -25,8 +21,6 @@ import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHe
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.repository.webservices.pojoresponse.loginresponse.LoginResponse;
 import com.apptec.registrateapp.util.Constants;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
@@ -92,22 +86,21 @@ public class LoginInteractorImpl implements LoginInteractor {
                     String lastname = response.body().getData().getName();
                     String email = userCredential.getEmail();
 
-
-                    User user = new User();
+                    // Getting the user
+                    UserModel user = new UserModel();
                     user.setId(id);
                     user.setName(name);
                     user.setLastName(lastname);
                     user.setEmail(email);
 
                     // Getting the work zones
-                    ArrayList<WorkzonesItem> workZoneArrayList = new ArrayList<>();
-                    for(int i = 0; i < response.body().getData().getWorkzones().size(); i++){
+                    ArrayList<WorkZoneModel> workZoneArrayList = new ArrayList<>();
+                    for (int i = 0; i < response.body().getData().getWorkzones().size(); i++) {
                         workZoneArrayList.add(response.body().getData().getWorkzones().get(i));
-
                     }
 
-
-                    Company company = new Company();
+                    // Getting the company
+                    CompanyModel company = new CompanyModel();
                     company.setCompanyName(response.body().getData().getEnterprise());
 
 
@@ -116,18 +109,39 @@ public class LoginInteractorImpl implements LoginInteractor {
                     SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
                     SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
 
+                    if (response.body().getData().getDevice() != null) {
+                        SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
+                    } else {
+                        SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, true);
+                    }
 
 
                     StaticData.setCurrentUser(user);
 
+                    // Storage thing into the database in a background thread
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
+
+                            // Storage the user
                             RoomHelper.getAppDatabaseInstance().userDao().insert(user);
+
+                            // Storage the device (if it exist)
+                            if (response.body().getData().getDevice() != null) {
+                                RoomHelper.getAppDatabaseInstance().deviceDao().insert(response.body().getData().getDevice());
+                            }
+
+                            // Storage the company
+                            RoomHelper.getAppDatabaseInstance().companyDao().insert(company);
+
+                            // Storage the work zones
+                            for (int i = 0; i < workZoneArrayList.size(); i++) {
+                                RoomHelper.getAppDatabaseInstance().workZoneDao().insert(workZoneArrayList.get(i));
+                            }
+
+
                         }
                     }).start();
-
-
 
 
                     loginPresenter.hideLoginProgressDialog();
@@ -197,89 +211,6 @@ public class LoginInteractorImpl implements LoginInteractor {
          * Method that returns true when the app is running by first time on the device.
          */
         return SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_RUNNING_BY_FIRST_TIME, true);
-    }
-
-
-    /**
-     * Searching if the device is registered
-     */
-    public void findUserDevice() {
-        /**
-         * TODO: Refactor this
-         */
-        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Log.d("User ", StaticData.getCurrentUser().getId() + "");
-        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(ApiClient.getAccessToken(), StaticData.getCurrentUser().getId());
-        Log.d("Tokeen", ApiClient.getAccessToken());
-        deviceCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("deviceImei", "DEVICE ON RESPONSE OK");
-
-
-                JsonArray deviceList = response.body().getAsJsonArray("data");
-
-                boolean deviceFound = false;
-                for (int i = 0; i < deviceList.size() && deviceFound == false; i++) {
-                    JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
-
-                    if (SharedPreferencesHelper.getSharedPreferencesInstance().getString(Constants.CURRENT_IMEI, "").equals(jsonDevice.get("imei").getAsString())) {
-                        Device device = new Device();
-                        int deviceId = jsonDevice.get("id").getAsInt();
-                        String deviceName = jsonDevice.get("nombre").getAsString();
-                        String deviceModel = jsonDevice.get("modelo").getAsString();
-                        String deviceImei = jsonDevice.get("imei").getAsString();
-                        boolean deviceStatus = jsonDevice.get("estado").getAsBoolean();
-                        device.setId(deviceId);
-                        device.setName(deviceName);
-                        device.setModel(deviceModel);
-                        device.setIdentifier(deviceImei);
-                        device.setActive(deviceStatus);
-                        DatabaseAdapter.getDatabaseAdapterInstance().insertDevice(device);
-                        deviceFound = true;
-                    }
-                }
-                findPermissionTypes();
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
-
-    }
-
-    //Get PermissionType
-    public void findPermissionTypes() {
-        /**
-         * Refactor this
-         */
-        PermissionTypeRetrofitInterface permissionTypeRetrofitInterface = ApiClient.getClient().create(PermissionTypeRetrofitInterface.class);
-        final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(ApiClient.getAccessToken());
-        permissionTypeCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonArray jsonLstPermissionType = response.body().getAsJsonArray("data");
-                if (jsonLstPermissionType.size() > 0) {
-                    for (int i = 0; i < jsonLstPermissionType.size(); i++) {
-                        JsonObject jsonPermissionType = jsonLstPermissionType.get(i).getAsJsonObject();
-                        int permissionTypeId = jsonPermissionType.get("id").getAsInt();
-                        String permissionTypeName = jsonPermissionType.get("nombre").getAsString();
-                        PermissionType permissionType = new PermissionType(permissionTypeId, permissionTypeName);
-                        DatabaseAdapter.getDatabaseAdapterInstance().insertPermissionType(permissionType);
-                        StaticData.getPermissionTypes().add(permissionType);
-                    }
-                }
-                loginPresenter.hideLoginProgressDialog();
-                loginPresenter.navigateToNextView();
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
     }
 
 

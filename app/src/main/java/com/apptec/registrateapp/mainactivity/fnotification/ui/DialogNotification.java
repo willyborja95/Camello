@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.models.Notification;
+import com.apptec.registrateapp.models.NotificationModel;
 
 public class DialogNotification extends DialogFragment {
     /**
@@ -26,10 +26,10 @@ public class DialogNotification extends DialogFragment {
     private TextView sent_date, title_content, message_content;
 
     // Data
-    private Notification notification;
+    private NotificationModel notification;
 
 
-    public DialogNotification setNotification(Notification notification) {
+    public DialogNotification setNotification(NotificationModel notification) {
         /**
          * This method should be called before the dialog is show.
          * Otherwise would appear a NPE.
