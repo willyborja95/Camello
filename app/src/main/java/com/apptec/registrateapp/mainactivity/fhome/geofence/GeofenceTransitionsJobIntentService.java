@@ -16,11 +16,16 @@ import androidx.core.app.TaskStackBuilder;
 
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.loginactivity.LoginActivity;
+import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
+import com.apptec.registrateapp.util.Constants;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
@@ -49,17 +54,19 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         // Get the transition type.
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
-        // Registrar la salida
+        // Register exit
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             // Get the geofences that were triggered. A single event can trigger multiple geofences.
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
             String geofenceTransitionDetails = getGeofenceTransitionDetails(geofenceTransition,
                     triggeringGeofences);
-            // Send notification and log the transition details.
+            // Send notification and log about the transition details.
             sendNotification(geofenceTransitionDetails);
             // Register current time as exit time
             Log.i(TAG, geofenceTransitionDetails);
-
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT, Locale.getDefault());
+            String currentDate = dateFormat.format(new Date());
+            SharedPreferencesHelper.putStringValue(Constants.LAST_EXIT_TIME, currentDate);
 
         } else {
             // Log the error.
@@ -111,7 +118,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
                 // to decode the Bitmap.
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
                         R.drawable.icon))
-                .setContentTitle("Se ha registrado su salida")
+                .setContentTitle(getString(R.string.notification_exit_title))
                 .setContentIntent(notificationPendingIntent);
 
         // Set the Channel ID for Android O.
