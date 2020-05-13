@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.apptec.registrateapp.mainactivity.fhome.HandlerChangeWorkingStatus;
+import com.apptec.registrateapp.mainactivity.fhome.geofence.GeofenceHelper;
 
 public class App extends Application {
 
@@ -14,12 +15,14 @@ public class App extends Application {
      */
 
     private static Context context;
+    private static GeofenceHelper sGeofenceHelper;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         App.context = getApplicationContext();
+        sGeofenceHelper = new GeofenceHelper();
     }
 
 
@@ -39,6 +42,13 @@ public class App extends Application {
          */
         new Thread(new HandlerChangeWorkingStatus()).start();
 
+    }
+
+    public static GeofenceHelper getGeofenceHelper() {
+        /**
+         * Return the singleton of geofence helper
+         */
+        return sGeofenceHelper;
     }
 
 

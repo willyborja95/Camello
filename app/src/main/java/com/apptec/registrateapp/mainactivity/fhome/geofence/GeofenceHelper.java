@@ -2,6 +2,7 @@ package com.apptec.registrateapp.mainactivity.fhome.geofence;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -27,6 +28,8 @@ public class GeofenceHelper {
      * @param sGeofencingList is a singleton
      */
 
+    private final String TAG = GeofenceHelper.class.getSimpleName();
+
     private static GeofencingClient sGeofencingClient;
 
     private enum PendingGeofenceTask {
@@ -34,10 +37,8 @@ public class GeofenceHelper {
     }
 
     private PendingGeofenceTask pendingGeofenceTask = PendingGeofenceTask.NONE;
-    private GeofencingClient geofencingClient;
     private List<Geofence> geofenceList;
     private PendingIntent geofencePendingIntent;
-
 
 
     // Constructor
@@ -46,7 +47,7 @@ public class GeofenceHelper {
     }
 
 
-    public static GeofencingClient getGeofencingClient() {
+    public GeofencingClient getGeofencingClient() {
         /**
          * This method will return the global geofence client for the app.
          */
@@ -59,10 +60,15 @@ public class GeofenceHelper {
     }
 
     public void setUpGeofencing() {
+        /**
+         * Set up the geofencing
+         */
+        Log.d(TAG, "Setting up the geofencing");
         geofenceList = new ArrayList<>();
         geofencePendingIntent = null;
         populateGeofenceList();
-        geofencingClient = LocationServices.getGeofencingClient(App.getContext());
+        sGeofencingClient = getGeofencingClient();
+        addGeofences();
 
     }
 
@@ -132,37 +138,34 @@ public class GeofenceHelper {
          * Provide the GeofencingRequest object, and the PendingIntent.
          */
 
-        geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+        sGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Geofences added
-
+                        Log.d(TAG, "Geofences added");
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Failed to add geofences
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Failed to add geofences
+                        Log.d(TAG, "Failed to add geofences");
+                    }
+                });
     }
 
 
     private void removeGeofences() {
 
 
-        geofencingClient.removeGeofences(getGeofencePendingIntent()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        sGeofencingClient.removeGeofences(getGeofencePendingIntent()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 // TODO:
             }
         });
     }
-
-
-
-
-
 
 
 }

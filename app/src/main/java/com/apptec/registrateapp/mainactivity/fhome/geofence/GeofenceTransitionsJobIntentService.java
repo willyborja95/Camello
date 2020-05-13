@@ -52,8 +52,13 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
         // Register exit
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+            Log.d(TAG, "Transition exit");
             // Get the geofences that were triggered. A single event can trigger multiple geofences.
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+
+            for (int i = 0; i < triggeringGeofences.size(); i++) {
+                triggeringGeofences.get(i).getRequestId();
+            }
             String geofenceTransitionDetails = getGeofenceTransitionDetails(geofenceTransition,
                     triggeringGeofences);
             // Send notification and log about the transition details.
