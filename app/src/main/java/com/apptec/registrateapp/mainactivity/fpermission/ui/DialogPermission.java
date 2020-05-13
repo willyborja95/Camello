@@ -19,7 +19,7 @@ import android.widget.TimePicker;
 import androidx.fragment.app.DialogFragment;
 
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.models.Permission;
+import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.repository.localdatabase.DatabaseAdapter;
 
@@ -48,7 +48,7 @@ public class DialogPermission extends DialogFragment {
     String strEndDate;
 
     public interface PermissionDialogListener {
-        public void onPermissionSaved(Permission permission);
+        public void onPermissionSaved(PermissionModel permission);
     }
 
 
@@ -180,7 +180,7 @@ public class DialogPermission extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         PermissionType permissionType = (PermissionType)spnPermissionType.getSelectedItem();
-                        Permission permission = new Permission(permissionType, startDate, endDate);
+                        PermissionModel permission = new PermissionModel(permissionType, startDate, endDate);
                         listener.onPermissionSaved(permission);
                     }
                 })

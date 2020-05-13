@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 @Entity
-public class WorkingPeriod {
+public class WorkingPeriodModel {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -22,7 +22,7 @@ public class WorkingPeriod {
     private int status;                 // 1 = Started   2 = Finished  <0 = Canceled
 
     // Constructors
-    public WorkingPeriod(int id, int workzoneId, Date start_date, Date end_date, int status) {
+    public WorkingPeriodModel(int id, int workzoneId, Date start_date, Date end_date, int status) {
         this.id = id;
         this.workzoneId = workzoneId;
         this.start_date = start_date;
@@ -30,7 +30,7 @@ public class WorkingPeriod {
         this.status = status;
     }
 
-    public WorkingPeriod() {
+    public WorkingPeriodModel() {
 
     }
 

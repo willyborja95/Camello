@@ -2,7 +2,7 @@ package com.apptec.registrateapp.mainactivity.fnotification;
 
 import androidx.lifecycle.LiveData;
 
-import com.apptec.registrateapp.models.Notification;
+import com.apptec.registrateapp.models.NotificationModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class NotificationPresenterImpl {
     }
 
 
-    public LiveData<List<Notification>> loadNotificationsLiveData() {
+    public LiveData<List<NotificationModel>> loadNotificationsLiveData() {
         /**
          * Return the notifications into the live data
          */

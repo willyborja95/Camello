@@ -19,7 +19,7 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
 import com.apptec.registrateapp.mainactivity.fhome.generic.DayViewContainer;
 import com.apptec.registrateapp.mainactivity.fhome.generic.MonthHeaderViewContainer;
-import com.apptec.registrateapp.models.WorkingPeriod;
+import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.util.Constants;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.kizitonwose.calendarview.CalendarView;
@@ -99,9 +99,9 @@ public class HomeFragment extends Fragment {
          * Setting up an observer to the mLastWorkingPeriod
          */
 
-        mainViewModel.getLastWorkingPeriod().observe(this, new Observer<WorkingPeriod>() {
+        mainViewModel.getLastWorkingPeriod().observe(this, new Observer<WorkingPeriodModel>() {
             @Override
-            public void onChanged(WorkingPeriod workingPeriod) {
+            public void onChanged(WorkingPeriodModel workingPeriod) {
                 try {
                     if (workingPeriod.getStatus() == Constants.INT_NOT_INIT_STATUS) {
                         // The user is working

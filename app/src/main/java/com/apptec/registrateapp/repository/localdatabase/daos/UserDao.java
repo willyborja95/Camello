@@ -6,7 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.apptec.registrateapp.models.User;
+import com.apptec.registrateapp.models.UserModel;
 
 import java.util.List;
 
@@ -17,18 +17,18 @@ public interface UserDao {
      * @return
      */
 
-    @Query("SELECT * FROM user")
-    List<User> getAll();
+    @Query("SELECT * FROM UserModel")
+    List<UserModel> getAll();
 
-    @Query("SELECT * FROM user WHERE 1=1 LIMIT 1")
-    User getUser();
+    @Query("SELECT * FROM UserModel WHERE 1=1 LIMIT 1")
+    UserModel getUser();
 
-    @Query("SELECT * FROM user WHERE 1=1 LIMIT 1")
-    LiveData<User> getLiveDataUser();
+    @Query("SELECT * FROM UserModel WHERE 1=1 LIMIT 1")
+    LiveData<UserModel> getLiveDataUser();
 
     @Insert
-    void insert(User user);
+    void insert(UserModel user);
 
     @Delete
-    void delete(User user);
+    void delete(UserModel user);
 }

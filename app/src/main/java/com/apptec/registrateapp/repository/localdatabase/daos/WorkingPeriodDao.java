@@ -6,7 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.apptec.registrateapp.models.WorkingPeriod;
+import com.apptec.registrateapp.models.WorkingPeriodModel;
 
 @Dao
 public interface WorkingPeriodDao {
@@ -14,18 +14,18 @@ public interface WorkingPeriodDao {
      * Dao for working period
      */
 
-    @Query("SELECT * FROM workingperiod WHERE id=(Select MAX(id) FROM workingperiod)")
-    LiveData<WorkingPeriod> getLiveDataLastWorkingPeriod();
+    @Query("SELECT * FROM WorkingPeriodModel WHERE id=(Select MAX(id) FROM WorkingPeriodModel)")
+    LiveData<WorkingPeriodModel> getLiveDataLastWorkingPeriod();
 
-    @Query("SELECT * FROM workingperiod ORDER BY id DESC LIMIT 1")
-    WorkingPeriod getLastWorkingPeriod();
+    @Query("SELECT * FROM WorkingPeriodModel ORDER BY id DESC LIMIT 1")
+    WorkingPeriodModel getLastWorkingPeriod();
 
     @Insert
-    void insert(WorkingPeriod workingPeriod);
+    void insert(WorkingPeriodModel workingPeriod);
 
     @Delete
-    void delete(WorkingPeriod workingPeriod);
+    void delete(WorkingPeriodModel workingPeriod);
 
-    @Query("UPDATE workingperiod SET status=:status WHERE id=(Select MAX(id) FROM workingperiod)")
+    @Query("UPDATE WorkingPeriodModel SET status=:status WHERE id=(Select MAX(id) FROM WorkingPeriodModel)")
     void changeLastWorkingPeriod(int status);
 }

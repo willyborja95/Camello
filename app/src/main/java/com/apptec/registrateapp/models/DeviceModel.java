@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 @Entity
-public class Device implements Serializable {
+public class DeviceModel implements Serializable {
 
     @PrimaryKey
     private int id;

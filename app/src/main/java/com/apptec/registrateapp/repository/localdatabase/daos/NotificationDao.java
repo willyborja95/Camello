@@ -6,7 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.apptec.registrateapp.models.Notification;
+import com.apptec.registrateapp.models.NotificationModel;
 
 import java.util.List;
 
@@ -18,17 +18,17 @@ public interface NotificationDao {
      */
 
 
-    @Query("SELECT * FROM notification")
-    LiveData<List<Notification>> loadAllLiveData();
+    @Query("SELECT * FROM NotificationModel")
+    LiveData<List<NotificationModel>> loadAllLiveData();
 
-    @Query("SELECT * FROM notification where id = :id")
-    List<Notification> loadNotificationSync(int id);
+    @Query("SELECT * FROM NotificationModel where id = :id")
+    List<NotificationModel> loadNotificationSync(int id);
 
     @Insert
-    void insert(Notification notification);
+    void insert(NotificationModel notification);
 
     @Delete
-    void delete(Notification notification);
+    void delete(NotificationModel notification);
 
 
 }

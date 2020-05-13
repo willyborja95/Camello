@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 @Entity
-public class User implements Serializable {
+public class UserModel implements Serializable {
 
     @PrimaryKey
     private int id;
@@ -24,11 +24,12 @@ public class User implements Serializable {
     @ColumnInfo(name = "email")
     private String email;
 
-    @Embedded public Company company;
+    @Embedded
+    public CompanyModel company;
 
 
     @Ignore
-    private ArrayList<WorkingPeriod> workingPeriodList;
+    private ArrayList<WorkingPeriodModel> workingPeriodList;
 
     public int getId() {
         return id;
@@ -62,19 +63,19 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public Company getCompany() {
+    public CompanyModel getCompany() {
         return company;
     }
 
-    public void setCompany(Company company) {
+    public void setCompany(CompanyModel company) {
         this.company = company;
     }
 
-    public ArrayList<WorkingPeriod> getWorkingPeriodList() {
+    public ArrayList<WorkingPeriodModel> getWorkingPeriodList() {
         return workingPeriodList;
     }
 
-    public void setWorkingPeriodList(ArrayList<WorkingPeriod> workingPeriodList) {
+    public void setWorkingPeriodList(ArrayList<WorkingPeriodModel> workingPeriodList) {
         this.workingPeriodList = workingPeriodList;
     }
 

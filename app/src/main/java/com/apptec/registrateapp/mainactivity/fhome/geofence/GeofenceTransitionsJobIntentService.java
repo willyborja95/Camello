@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.geofence;
+package com.apptec.registrateapp.mainactivity.fhome.geofence;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

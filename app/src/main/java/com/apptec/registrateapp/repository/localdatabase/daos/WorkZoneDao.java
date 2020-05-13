@@ -4,20 +4,19 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 
-import com.apptec.registrateapp.models.CompanyModel;
+import com.apptec.registrateapp.models.WorkZoneModel;
 
 @Dao
-public interface CompanyDao {
+public interface WorkZoneDao {
     /**
-     * Dao fro company
-     * @return
+     * Dao for work zone model
      */
 
-
     @Insert
-    void insert(CompanyModel company);
+    void insert(WorkZoneModel workZone);
 
     @Delete
-    void delete(CompanyModel company);
+    void delete(WorkZoneModel workZone);
+
 
 }

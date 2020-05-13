@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.fpermission.PermissionRetrofitInterface;
-import com.apptec.registrateapp.models.Permission;
+import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
@@ -31,10 +31,10 @@ public class PermissionListAdapter extends BaseAdapter {
 
     //Business logic elements
     Context context;
-    ArrayList<Permission> lstPermission;
+    ArrayList<PermissionModel> lstPermission;
     SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
-    public PermissionListAdapter(Context context, ArrayList<Permission> lstPermission) {
+    public PermissionListAdapter(Context context, ArrayList<PermissionModel> lstPermission) {
         this.context = context;
         this.lstPermission = lstPermission;
         progressDialog = new ProgressDialog(context);

@@ -1,23 +1,29 @@
 package com.apptec.registrateapp.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
-public class WorkzonesItem{
+@Entity
+public class WorkZoneModel {
 
-	@SerializedName("lng")
-	private String lng;
+    @PrimaryKey
+    private int id;
 
 	@SerializedName("name")
 	private String name;
 
-	@SerializedName("id")
-	private int id;
-
-	@SerializedName("radius")
-	private String radius;
-
 	@SerializedName("lat")
 	private String lat;
+
+    @SerializedName("lng")
+    private String lng;
+
+    @SerializedName("radius")
+    private String radius;
+
+
 
 	public void setLng(String lng){
 		this.lng = lng;

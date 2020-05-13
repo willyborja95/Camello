@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.geofence;
+package com.apptec.registrateapp.mainactivity.fhome.geofence;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

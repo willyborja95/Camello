@@ -1,16 +1,14 @@
 package com.apptec.registrateapp.models;
 
 
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-
 import java.util.Date;
 
 @Entity
-public class Notification {
+public class NotificationModel {
     /*
      * Model of a notification.
      *
@@ -34,7 +32,7 @@ public class Notification {
     private Date sentDate;
 
     // Constructor
-    public Notification(String title, String text, Date expirationDate, Date sentDate) {
+    public NotificationModel(String title, String text, Date expirationDate, Date sentDate) {
 
         this.title = title;
         this.text = text;
