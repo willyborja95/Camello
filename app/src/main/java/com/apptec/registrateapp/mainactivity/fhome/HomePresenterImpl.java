@@ -19,4 +19,11 @@ public class HomePresenterImpl {
         return RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLiveDataLastWorkingPeriod();
     }
 
+    public void changeLastWorkingStatus() {
+        /**
+         * Create a new thread and then run the process there
+         */
+
+        new Thread(new HandlerChangeWorkingStatus()).start();
+    }
 }

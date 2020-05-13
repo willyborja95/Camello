@@ -9,13 +9,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.mainactivity.fdevice.DevicePresenterImpl;
-import com.apptec.registrateapp.mainactivity.fhome.ChangeWorkingStatus;
 import com.apptec.registrateapp.mainactivity.fhome.HomePresenterImpl;
 import com.apptec.registrateapp.mainactivity.fnotification.NotificationPresenterImpl;
 import com.apptec.registrateapp.models.DeviceModel;
@@ -120,23 +118,7 @@ public class MainViewModel extends AndroidViewModel {
          * If the user is working change to no working and vice versa
          */
 
-//        // The user is working, change to resting
-//        mainPresenter.changeLastWorkingState(Constants.INT_WORKING_STATUS);
-
-
-        // Constraints: Do the work if the the network is connected
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-        // Create a work request
-        OneTimeWorkRequest changeWorkingStateRequest = new OneTimeWorkRequest.Builder(
-                ChangeWorkingStatus.class)
-                .setConstraints(constraints)
-                .build();
-
-        workManager.enqueue(changeWorkingStateRequest);
-
+        homePresenter.changeLastWorkingStatus();
 
     }
 
