@@ -64,10 +64,11 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             sendNotification(geofenceTransitionDetails);
             // Register current time as exit time
             Log.i(TAG, geofenceTransitionDetails);
-            SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT, Locale.getDefault());
-            String currentDate = dateFormat.format(new Date());
-            SharedPreferencesHelper.putStringValue(Constants.LAST_EXIT_TIME, currentDate);
-
+            if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_WORKING, false)) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT, Locale.getDefault());
+                String currentDate = dateFormat.format(new Date());
+                SharedPreferencesHelper.putStringValue(Constants.LAST_EXIT_TIME, currentDate);
+            }
         } else {
             // Log the error.
             Log.e(TAG, "Invalid transition");
