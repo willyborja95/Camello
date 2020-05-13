@@ -27,9 +27,10 @@ public class Constants {
     public static final String SHARED_PREFERENCES_GLOBAL = "com.appTec.RegistrateApp.PREFERENCES_FILE_KEY"; // Storage
 
 
-    public static final String LAST_EXIT_TIME = "LAST_EXIT_TIME";                                   //
 
-    public static final String IS_RUNNING_BY_FIRST_TIME = "APP_RUN_FIRST_TIME";                 // Storage a boolean
+    public static final String LAST_EXIT_TIME = "LAST_EXIT_TIME";                                   //
+    public static final String PATTERN_DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";                  // ?
+    public static final String IS_RUNNING_BY_FIRST_TIME = "APP_RUN_FIRST_TIME";                     // Storage a boolean
     public static final String USER_ACCESS_TOKEN = "ACCESS_TOKEN";                                  // Storage a string
     public static final String USER_REFRESH_TOKEN = "REFRESH_TOKEN";                                // Storage a string
     public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";                                   // Storage a string

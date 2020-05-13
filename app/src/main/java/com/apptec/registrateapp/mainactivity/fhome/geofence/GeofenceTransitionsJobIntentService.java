@@ -14,6 +14,7 @@ import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.loginactivity.LoginActivity;
 import com.google.android.gms.location.Geofence;
@@ -49,18 +50,22 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         // Get the transition type.
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
-        // Registrar la salida
+        // Register exit
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+            Log.d(TAG, "Transition exit");
             // Get the geofences that were triggered. A single event can trigger multiple geofences.
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+
+            for (int i = 0; i < triggeringGeofences.size(); i++) {
+                triggeringGeofences.get(i).getRequestId();
+            }
             String geofenceTransitionDetails = getGeofenceTransitionDetails(geofenceTransition,
                     triggeringGeofences);
-            // Send notification and log the transition details.
+            // Send notification and log about the transition details.
             sendNotification(geofenceTransitionDetails);
             // Register current time as exit time
             Log.i(TAG, geofenceTransitionDetails);
-
-
+            App.changeWorkStatus(); // Global app method to change the work status
         } else {
             // Log the error.
             Log.e(TAG, "Invalid transition");
@@ -111,7 +116,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
                 // to decode the Bitmap.
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
                         R.drawable.icon))
-                .setContentTitle("Se ha registrado su salida")
+                .setContentTitle(getString(R.string.notification_exit_title))
                 .setContentIntent(notificationPendingIntent);
 
         // Set the Channel ID for Android O.

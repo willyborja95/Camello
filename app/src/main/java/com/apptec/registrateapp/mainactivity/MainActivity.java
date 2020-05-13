@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
@@ -141,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements
 
                 return true;
             }
+
+
         });
 
 
@@ -150,10 +153,18 @@ public class MainActivity extends AppCompatActivity implements
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
                     // That mean the user needs to register this device
-                    // TODO: Register device
+                    // Register device
                     navController.navigate(R.id.deviceFragment);
 
                 }
+            }
+        });
+
+        // Setting up the geofence ?
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                App.getGeofenceHelper().setUpGeofencing();
             }
         });
 
