@@ -14,18 +14,14 @@ import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.loginactivity.LoginActivity;
-import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
-import com.apptec.registrateapp.util.Constants;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
@@ -64,11 +60,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             sendNotification(geofenceTransitionDetails);
             // Register current time as exit time
             Log.i(TAG, geofenceTransitionDetails);
-            if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_WORKING, false)) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT, Locale.getDefault());
-                String currentDate = dateFormat.format(new Date());
-                SharedPreferencesHelper.putStringValue(Constants.LAST_EXIT_TIME, currentDate);
-            }
+            App.changeWorkStatus(); // Global app method to change the work status
         } else {
             // Log the error.
             Log.e(TAG, "Invalid transition");

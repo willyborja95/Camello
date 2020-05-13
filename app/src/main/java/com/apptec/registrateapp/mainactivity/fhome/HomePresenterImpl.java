@@ -2,6 +2,7 @@ package com.apptec.registrateapp.mainactivity.fhome;
 
 import androidx.lifecycle.LiveData;
 
+import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 
@@ -24,6 +25,6 @@ public class HomePresenterImpl {
          * Create a new thread and then run the process there
          */
 
-        new Thread(new HandlerChangeWorkingStatus()).start();
+        App.changeWorkStatus();
     }
 }

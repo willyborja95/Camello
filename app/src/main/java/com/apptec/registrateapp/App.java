@@ -3,13 +3,18 @@ package com.apptec.registrateapp;
 import android.app.Application;
 import android.content.Context;
 
+import com.apptec.registrateapp.mainactivity.fhome.HandlerChangeWorkingStatus;
+
 public class App extends Application {
 
     /**
-     * This class is used oly for return an access to the application context from every part of the app.
+     * This class is used:
+     * - For return an access to the application context from every part of the app.
+     * - For provide the global methods to change work status
      */
 
     private static Context context;
+
 
     @Override
     public void onCreate() {
@@ -25,6 +30,19 @@ public class App extends Application {
          */
         return App.context;
     }
+
+    public static void changeWorkStatus() {
+        /**
+         * This method will be called when:
+         * - The user press the 'finish work' button
+         * - The user hang out from the work zone
+         */
+        new Thread(new HandlerChangeWorkingStatus()).start();
+
+    }
+
+
+
 
 
 }
