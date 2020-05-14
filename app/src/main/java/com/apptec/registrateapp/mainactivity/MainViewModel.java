@@ -1,6 +1,7 @@
 package com.apptec.registrateapp.mainactivity;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -28,6 +29,13 @@ import java.util.List;
 
 
 public class MainViewModel extends AndroidViewModel {
+    /**
+     * View model shared by the fragments
+     */
+
+    private final String TAG = MainViewModel.class.getSimpleName();
+
+
 
     // To show the notifications
     private final LiveData<List<NotificationModel>> mNotifications; // List of notifications
@@ -46,6 +54,9 @@ public class MainViewModel extends AndroidViewModel {
 
     // To handle if needed the first login
     private MutableLiveData<Boolean> isNeededRegisterDevice;
+
+    // This boolean variable is needed to the activity could know if we should logout
+    private MutableLiveData<Boolean> isUserLogged;
 
     // Work manager
     private WorkManager workManager = WorkManager.getInstance(App.getContext());
@@ -80,6 +91,8 @@ public class MainViewModel extends AndroidViewModel {
 
         // Start the auto refresh token
         this.initRefreshToken();
+        isUserLogged = new MutableLiveData<>(true);
+
 
     }
 
@@ -184,6 +197,37 @@ public class MainViewModel extends AndroidViewModel {
                 refreshTokenRequest);
 
     }
+
+
+    public void logout() {
+        /**
+         * Delete credentials and tokens
+         *
+         * if the user is working, advice him that the work will be finalized
+         */
+        Log.d(TAG, "Login out");
+        if (this.getLastWorkingPeriod().getValue() != null) {
+            if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
+                // TODO: Advice the user
+                homePresenter.changeLastWorkingStatus();
+
+            }
+        }
+
+        mainPresenter.deleteSession();
+        this.isUserLogged.setValue(false);
+
+
+    }
+
+
+    public MutableLiveData<Boolean> getIsUserLogged() {
+        /**
+         * Expose the flag to know if the user is logged or not
+         */
+        return this.isUserLogged;
+    }
+
 
 
 }

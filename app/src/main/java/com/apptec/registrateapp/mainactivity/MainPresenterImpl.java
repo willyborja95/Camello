@@ -2,6 +2,9 @@ package com.apptec.registrateapp.mainactivity;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
+import com.apptec.registrateapp.util.Constants;
+
 public class MainPresenterImpl {
     /**
      * This class will help the main activity
@@ -25,4 +28,13 @@ public class MainPresenterImpl {
     }
 
 
+    public void deleteSession() {
+        /**
+         * Delete the session from the user
+         */
+        SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, "");
+        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
+
+
+    }
 }

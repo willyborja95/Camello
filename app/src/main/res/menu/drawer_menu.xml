@@ -10,7 +10,7 @@
             android:layout_gravity="center"
             android:title="Manual de Usuario" />
         <item
-            android:id="@+id/cerrar_sesion"
+            android:id="@+id/logout_button"
             android:layout_gravity="center"
             android:title="Cerrar Sesión" />
     </group>
