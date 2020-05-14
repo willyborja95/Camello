@@ -23,7 +23,6 @@ public class Data{
     private List<WorkZoneModel> workzones;
 
     @SerializedName("device")
-    @Nullable
     private DeviceModel device;
 
 	@SerializedName("tokens")
@@ -93,14 +92,15 @@ public class Data{
     }
 
 	@Override
- 	public String toString(){
-		return 
-			"Data{" + 
-			"name = '" + name + '\'' + 
-			",tokens = '" + tokens + '\'' + 
-			",id = '" + id + '\'' + 
-			",workzones = '" + workzones + '\'' + 
-			",lastname = '" + lastname + '\'' + 
-			"}";
-		}
+	public String toString() {
+		return "Data{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", lastname='" + lastname + '\'' +
+				", workzones=" + workzones +
+				", device=" + device +
+				", tokens=" + tokens +
+				", enterprise='" + enterprise + '\'' +
+				'}';
+	}
 }
