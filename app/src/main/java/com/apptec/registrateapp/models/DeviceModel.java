@@ -20,7 +20,7 @@ public class DeviceModel implements Serializable {
     @ColumnInfo(name = "model")
     private String model;
 
-    @ColumnInfo(name = "imei")
+
     @SerializedName("identifier")
     private String identifier;   // This is the imei
 

@@ -10,7 +10,7 @@ import com.google.gson.JsonObject
 import org.junit.Test
 import retrofit2.Call
 
-class MainInteractorImplTest extends GroovyTestCase {
+class MainInteractorImplTest {
 
     private final TAG = MainInteractorImplTest.getClass().name;
     public static final long TEST_LONG = 12345678L;
@@ -45,36 +45,6 @@ class MainInteractorImplTest extends GroovyTestCase {
                 // This device
                 thisDevice
         );
-
-        Log.t(TAG, "Testiando");
-
-//
-//        call.enqueue(new Callback<JsonObject>() {
-//            @Override
-//            public void onResponse(Call<JsonObject> _call, Response<JsonObject> response) {
-//
-//
-//                // Change the flag
-//                if (response.isSuccessful()) {
-//
-//                    isNeedRegisterDevice.postValue(false);      // Change the flag to the view model
-//
-//                    // Delete other devices if the database is populated
-//
-//
-//                    Log.d(TAG, "Save this device information in the local database");
-//                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JsonObject> _call, Throwable t) {
-//                // TODO
-//
-//            }
-//        });
 
 
     }

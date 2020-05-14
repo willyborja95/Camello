@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
@@ -72,6 +73,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 
     @Override
     public void handleLogin(UserCredential userCredential) {
+        this.storageIMEI();
         LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
         Call<LoginResponse> call = loginRetrofitInterface.login(userCredential);
         call.enqueue(new Callback<LoginResponse>() {
@@ -236,10 +238,43 @@ public class LoginInteractorImpl implements LoginInteractor {
                 /**
                  * Case: Do not let the user login
                  */
+                Log.d(TAG, "Return false");
                 return false;
             }
         }
         return true;
+
+    }
+
+    public void storageIMEI() {
+        /**
+         *
+         * Read the IMEI and storage it on an shared preferences's variable.
+         * Change to false the flag of "is first running"
+         */
+
+
+        /** Read the IMEI and storage it on an shared preferences's variable. */
+        TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(App.getContext().TELEPHONY_SERVICE);
+        String imei = "";
+
+        // Getting the imei
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // The permission eed to be granted first
+            } else {
+                if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
+                    imei = telephonyManager.getDeviceId();
+                }
+                if (android.os.Build.VERSION.SDK_INT >= 26) {
+                    imei = telephonyManager.getImei();
+                }
+                Log.d(TAG, "Got IMEI");
+            }
+        }
+        // Saving it on shared preferences
+        SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
+        Log.d(TAG, "IMEI: " + imei);
 
     }
 

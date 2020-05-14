@@ -26,7 +26,7 @@ import com.apptec.registrateapp.repository.localdatabase.daos.WorkingPeriodDao;
         DeviceModel.class,
         CompanyModel.class,
         WorkZoneModel.class,
-        WorkingPeriodModel.class}, version = 6)
+        WorkingPeriodModel.class}, version = 7)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     /**
