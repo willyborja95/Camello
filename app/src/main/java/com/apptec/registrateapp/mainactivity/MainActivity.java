@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements
                 finish();
                 break;
 
-            case R.id.cerrar_sesion:
+            case R.id.logout_button:
                 // TODO
                 break;
         }
