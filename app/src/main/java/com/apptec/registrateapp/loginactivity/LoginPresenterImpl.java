@@ -62,6 +62,14 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
+    public void doNotLetTheUserLogin() {
+        /**
+         * Calling the view
+         */
+        loginActivityView.doNotLetTheUserLogin();
+    }
+
+    @Override
     public void showLoginProgressDialog(String message) {
         loginActivityView.showLoginProgressDialog(message);
     }

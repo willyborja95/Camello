@@ -17,6 +17,7 @@ public interface LoginPresenter {
     void handleFirstRun(Activity activity); // When is the first time tha the app run on the device.
     boolean isTheFirstRun();
 
+    void doNotLetTheUserLogin(); // To the view
     void showLoginProgressDialog(String message);
     void hideLoginProgressDialog();
 

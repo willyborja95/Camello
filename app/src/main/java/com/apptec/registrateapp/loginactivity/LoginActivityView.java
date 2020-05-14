@@ -14,4 +14,5 @@ public interface LoginActivityView {
     void showLoginProgressDialog(String message);
     void hideLoginProgressDialog();
 
+    void doNotLetTheUserLogin();
 }

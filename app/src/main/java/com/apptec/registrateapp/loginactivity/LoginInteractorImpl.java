@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.CompanyModel;
+import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UserCredential;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.models.WorkZoneModel;
@@ -81,72 +82,81 @@ public class LoginInteractorImpl implements LoginInteractor {
                 if (response.code() == 200) {
                     Log.d(TAG, response.body().toString());
 
-                    int id = response.body().getData().getId();
-                    String name = response.body().getData().getName();
-                    String lastname = response.body().getData().getName();
-                    String email = userCredential.getEmail();
-
-                    // Getting the user
-                    UserModel user = new UserModel();
-                    user.setId(id);
-                    user.setName(name);
-                    user.setLastName(lastname);
-                    user.setEmail(email);
-
-                    // Getting the work zones
-                    ArrayList<WorkZoneModel> workZoneArrayList = new ArrayList<>();
-                    for (int i = 0; i < response.body().getData().getWorkzones().size(); i++) {
-                        workZoneArrayList.add(response.body().getData().getWorkzones().get(i));
-                    }
-
-                    // Getting the company
-                    CompanyModel company = new CompanyModel();
-                    company.setCompanyName(response.body().getData().getEnterprise());
-
-
-                    SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().getData().getTokens().getAccessToken().replace("\"", ""));
-                    SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, user.getId());
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
-
-                    if (response.body().getData().getDevice() != null) {
-                        SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
+                    DeviceModel userDevice = response.body().getData().getDevice();
+                    if (!isCorrectDevice(userDevice)) {
+                        loginPresenter.doNotLetTheUserLogin();
                     } else {
-                        SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, true);
+
+
+                        int id = response.body().getData().getId();
+                        String name = response.body().getData().getName();
+                        String lastname = response.body().getData().getName();
+                        String email = userCredential.getEmail();
+
+                        // Getting the user
+                        UserModel user = new UserModel();
+                        user.setId(id);
+                        user.setName(name);
+                        user.setLastName(lastname);
+                        user.setEmail(email);
+
+                        // Getting the work zones
+                        ArrayList<WorkZoneModel> workZoneArrayList = new ArrayList<>();
+                        for (int i = 0; i < response.body().getData().getWorkzones().size(); i++) {
+                            workZoneArrayList.add(response.body().getData().getWorkzones().get(i));
+                        }
+
+                        // Getting the company
+                        CompanyModel company = new CompanyModel();
+                        company.setCompanyName(response.body().getData().getEnterprise());
+
+
+                        SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().getData().getTokens().getAccessToken().replace("\"", ""));
+                        SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, user.getId());
+                        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
+                        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
+
+                        if (response.body().getData().getDevice() != null) {
+                            SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
+                        } else {
+                            SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, true);
+                        }
+
+
+                        StaticData.setCurrentUser(user);
+
+                        // Storage thing into the database in a background thread
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                // Storage the user
+                                RoomHelper.getAppDatabaseInstance().userDao().insert(user);
+
+                                // Storage the device (if it exist)
+                                if (response.body().getData().getDevice() != null) {
+                                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(response.body().getData().getDevice());
+                                }
+
+                                // Storage the company
+                                RoomHelper.getAppDatabaseInstance().companyDao().insert(company);
+
+                                // Storage the work zones
+                                for (int i = 0; i < workZoneArrayList.size(); i++) {
+                                    RoomHelper.getAppDatabaseInstance().workZoneDao().insert(workZoneArrayList.get(i));
+                                }
+
+
+                            }
+                        }).start();
+
+
+                        loginPresenter.hideLoginProgressDialog();
+                        loginPresenter.navigateToNextView();
+
                     }
 
 
-                    StaticData.setCurrentUser(user);
-
-                    // Storage thing into the database in a background thread
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            // Storage the user
-                            RoomHelper.getAppDatabaseInstance().userDao().insert(user);
-
-                            // Storage the device (if it exist)
-                            if (response.body().getData().getDevice() != null) {
-                                RoomHelper.getAppDatabaseInstance().deviceDao().insert(response.body().getData().getDevice());
-                            }
-
-                            // Storage the company
-                            RoomHelper.getAppDatabaseInstance().companyDao().insert(company);
-
-                            // Storage the work zones
-                            for (int i = 0; i < workZoneArrayList.size(); i++) {
-                                RoomHelper.getAppDatabaseInstance().workZoneDao().insert(workZoneArrayList.get(i));
-                            }
-
-
-                        }
-                    }).start();
-
-
-                    loginPresenter.hideLoginProgressDialog();
-                    loginPresenter.navigateToNextView();
-                    //   findUserDevice();
                 } else if (response.code() == 404 || response.code() == 401) {
                     loginPresenter.hideLoginProgressDialog();
                     loginPresenter.showMessage("Autenticación fallida", "El usuario y contraseña proporcionados no son correctos.");
@@ -212,6 +222,27 @@ public class LoginInteractorImpl implements LoginInteractor {
          */
         return SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_RUNNING_BY_FIRST_TIME, true);
     }
+
+
+    private boolean isCorrectDevice(DeviceModel userDevice) {
+        /**
+         * Check is the device's imei is the same with the user's device passes as param
+         */
+        if (userDevice != null) {
+            String thisDeviceIMEI = SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "");
+            String userDeviceIMEI = userDevice.getIdentifier();
+
+            if (!thisDeviceIMEI.equals(userDeviceIMEI)) {
+                /**
+                 * Case: Do not let the user login
+                 */
+                return false;
+            }
+        }
+        return true;
+
+    }
+
 
 
 }
