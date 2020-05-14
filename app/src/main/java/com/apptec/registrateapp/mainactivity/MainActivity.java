@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements
     private TextView userFullName;
     private NavController navController;
 
+
     TextView toolbar_name;
 
     MainViewModel mainViewModel;
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements
                 App.getGeofenceHelper().setUpGeofencing();
             }
         });
+
 
         // Know if logout or not
         mainViewModel.getIsUserLogged().observe(this, new Observer<Boolean>() {
@@ -305,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
             case R.id.logout_button:
-                // TODO
+                mainViewModel.logout();
                 break;
         }
         return true;

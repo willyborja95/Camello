@@ -91,6 +91,8 @@ public class MainViewModel extends AndroidViewModel {
 
         // Start the auto refresh token
         this.initRefreshToken();
+        isUserLogged = new MutableLiveData<>(true);
+
 
     }
 
@@ -204,11 +206,14 @@ public class MainViewModel extends AndroidViewModel {
          * if the user is working, advice him that the work will be finalized
          */
         Log.d(TAG, "Login out");
-        if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
-            // TODO: Advice the user
-            homePresenter.changeLastWorkingStatus();
+        if (this.getLastWorkingPeriod().getValue() != null) {
+            if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
+                // TODO: Advice the user
+                homePresenter.changeLastWorkingStatus();
 
+            }
         }
+
         mainPresenter.deleteSession();
         this.isUserLogged.setValue(false);
 
