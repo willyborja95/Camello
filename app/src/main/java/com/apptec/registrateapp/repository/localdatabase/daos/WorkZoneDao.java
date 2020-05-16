@@ -25,4 +25,6 @@ public interface WorkZoneDao {
     @Query("SELECT * FROM WorkZoneModel")
     List<WorkZoneModel> getListWorkZones();
 
+    @Query("Delete FROM workzonemodel")
+    void deleteAll();
 }

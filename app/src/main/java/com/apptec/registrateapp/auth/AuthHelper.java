@@ -23,11 +23,11 @@ public class AuthHelper {
      * This class will contain auth stuff
      * <p>
      * - This class will login and logout the user
-     * - Ask for permissions
+     * - Manage for device permissions stuff
      */
 
     // Work manager
-    private WorkManager workManager = WorkManager.getInstance(App.getContext());
+    private WorkManager workManager = WorkManager.getInstance(App.getContext()); // Don't used now. It is the main activity meanwhile
 
 
     public void login(UserModel user, CompanyModel company, String accessToken, String refreshToken) {
@@ -56,7 +56,7 @@ public class AuthHelper {
         SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
 
 
-        deleteUserAndCompany();
+        deleteDatabaseEntries();
 
 
     }
@@ -74,6 +74,9 @@ public class AuthHelper {
 
 
     public boolean allPermissionsGranted() {
+        /**
+         * TODO: Find the better way to handle the device permissions stuff
+         */
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
                     App.getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
@@ -91,6 +94,7 @@ public class AuthHelper {
     private void initRefreshToken() {
         /**
          * This method we got a worker for refresh the token periodically
+         * Dont used actually
          */
 
         // Constraints: Do the work if the the network is connected
@@ -127,7 +131,7 @@ public class AuthHelper {
     }
 
 
-    private void deleteUserAndCompany() {
+    private void deleteDatabaseEntries() {
         /**
          * Delete the logged user and company
          */
@@ -136,6 +140,8 @@ public class AuthHelper {
             public void run() {
                 RoomHelper.getAppDatabaseInstance().userDao().deleteAll();
                 RoomHelper.getAppDatabaseInstance().companyDao().deleteAll();
+                RoomHelper.getAppDatabaseInstance().workZoneDao().deleteAll();
+                RoomHelper.getAppDatabaseInstance().deviceDao().deleteAll();
             }
         }).start();
     }

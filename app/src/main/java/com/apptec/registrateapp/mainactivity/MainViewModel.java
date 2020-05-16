@@ -214,9 +214,9 @@ public class MainViewModel extends AndroidViewModel {
             }
         }
 
-        mainPresenter.deleteSession();
+        App.getAuthHelper().logout();
+        workManager.cancelAllWork();
         this.isUserLogged.setValue(false);
-
 
     }
 
