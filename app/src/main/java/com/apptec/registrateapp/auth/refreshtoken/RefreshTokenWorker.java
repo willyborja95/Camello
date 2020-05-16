@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.repository.workers.retreshtoken;
+package com.apptec.registrateapp.auth.refreshtoken;
 
 import android.content.Context;
 import android.util.Log;
@@ -53,7 +53,6 @@ public class RefreshTokenWorker extends Worker {
             Log.w(TAG, "Refresh token failure: " + e.getMessage());
             return Result.failure();
         }
-
 
 
         // Indicate whether the task finished successfully with the Result

@@ -14,6 +14,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.auth.refreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.mainactivity.fdevice.DevicePresenterImpl;
 import com.apptec.registrateapp.mainactivity.fhome.HomePresenterImpl;
 import com.apptec.registrateapp.mainactivity.fnotification.NotificationPresenterImpl;
@@ -22,7 +23,6 @@ import com.apptec.registrateapp.models.NotificationModel;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
-import com.apptec.registrateapp.repository.workers.retreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.util.Constants;
 
 import java.util.List;
