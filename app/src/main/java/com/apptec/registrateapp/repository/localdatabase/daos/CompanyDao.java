@@ -3,6 +3,7 @@ package com.apptec.registrateapp.repository.localdatabase.daos;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.Query;
 
 import com.apptec.registrateapp.models.CompanyModel;
 
@@ -19,5 +20,9 @@ public interface CompanyDao {
 
     @Delete
     void delete(CompanyModel company);
+
+    @Query("DELETE FROM companymodel")
+    void deleteAll();
+
 
 }

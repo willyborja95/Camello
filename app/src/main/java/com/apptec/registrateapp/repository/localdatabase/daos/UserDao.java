@@ -31,4 +31,9 @@ public interface UserDao {
 
     @Delete
     void delete(UserModel user);
+
+    @Query("DELETE FROM usermodel")
+    void deleteAll();
+
+
 }
