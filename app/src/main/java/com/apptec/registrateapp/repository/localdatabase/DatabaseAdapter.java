@@ -17,6 +17,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+@Deprecated
 public class DatabaseAdapter {
 
     private static String DB_NAME = "registrateapp"; // Database name

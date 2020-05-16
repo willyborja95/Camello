@@ -5,7 +5,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 @Entity
 public class PermissionModel implements Serializable {
@@ -22,18 +21,15 @@ public class PermissionModel implements Serializable {
     private PermissionStatus permissionStatus;
 
     @ColumnInfo(name = "startDate")
-    private Calendar startDate;
+    private Long startDate;
 
     @ColumnInfo(name = "endDate")
-    private Calendar endDate;
+    private Long endDate;
 
-    public PermissionModel(PermissionType permissionType, Calendar startDate, Calendar endDate) {
-        this.permissionType = permissionType;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-    public PermissionModel(int id, String comment, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
+    public PermissionModel(int id, String comment, PermissionType permissionType, PermissionStatus permissionStatus, Long startDate, Long endDate) {
+        /**
+         * Full constructor
+         */
         this.id = id;
         this.comment = comment;
         this.permissionType = permissionType;
@@ -42,17 +38,7 @@ public class PermissionModel implements Serializable {
         this.endDate = endDate;
     }
 
-    public PermissionModel() {
-    }
-
-    public PermissionModel(int id, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
-        this.id = id;
-        this.permissionType = permissionType;
-        this.permissionStatus = permissionStatus;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
+    // Getter and setters
     public int getId() {
         return id;
     }
@@ -85,19 +71,19 @@ public class PermissionModel implements Serializable {
         this.permissionStatus = permissionStatus;
     }
 
-    public Calendar getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Calendar startDate) {
+    public void setStartDate(Long startDate) {
         this.startDate = startDate;
     }
 
-    public Calendar getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Calendar endDate) {
+    public void setEndDate(Long endDate) {
         this.endDate = endDate;
     }
 }
