@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.mainactivity.fpermission;
+package com.apptec.registrateapp.mainactivity.fpermission.ui;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -14,8 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.mainactivity.fpermission.ui.DialogPermission;
-import com.apptec.registrateapp.mainactivity.fpermission.ui.PermissionListAdapter;
 import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.models.UserModel;
@@ -71,7 +69,7 @@ public class PermissionFragment2 extends Fragment {
             @Override
             public void onClick(View v) {
                 //Intent i = new Intent(getContext(), DialogPermission.class);
-                DialogPermission df = new DialogPermission();
+                DialogPermission2 df = new DialogPermission2();
                 df.addArrayListPerissionType(lstPermissionType);
                 df.show(getFragmentManager(), "");
             }
@@ -152,7 +150,7 @@ public class PermissionFragment2 extends Fragment {
     }
 
     private void updateListView(){
-        lvPermission.setAdapter(new PermissionListAdapter(getContext(), lstPermission));
+        lvPermission.setAdapter(new PermissionListAdapter2(getContext(), lstPermission));
     }
 
     public void updatePermissions(){
