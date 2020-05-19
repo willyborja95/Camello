@@ -69,5 +69,7 @@
     <string name="dialog_permission_title">Solicitar Permiso</string>
     <string name="start_date_label">Fecha inicio</string>
     <string name="end_date_label">Fecha fin</string>
+    <string name="permission_positive_button">Ok</string>
+    <string name="permission_negative_button">Cancelar</string>
 
 </resources>

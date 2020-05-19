@@ -44,15 +44,15 @@ public class DialogPermission extends DialogFragment {
 
         // Binding the UI elements
         builder.setView(viewDialog)              // Add action buttons
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.permission_positive_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
 //                        PermissionType permissionType = (PermissionType) spnPermissionType.getSelectedItem();
-////                        PermissionModel permission = new PermissionModel(permissionType, startDate, endDate);
-////                        listener.onPermissionSaved(permission);
+//                        PermissionModel permission = new PermissionModel(permissionType, startDate, endDate);
+//                        listener.onPermissionSaved(permission);
                     }
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.permission_negative_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 //
 //                        DialogPermission2.this.getDialog().cancel();
