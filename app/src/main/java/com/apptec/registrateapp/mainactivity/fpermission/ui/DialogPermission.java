@@ -2,6 +2,7 @@ package com.apptec.registrateapp.mainactivity.fpermission.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,10 +40,25 @@ public class DialogPermission extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
-        View viewDialog = inflater.inflate(R.layout.permission_element, null);
+        View viewDialog = inflater.inflate(R.layout.dialog_permission, null);
 
         // Binding the UI elements
-
+        builder.setView(viewDialog)              // Add action buttons
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+//                        PermissionType permissionType = (PermissionType) spnPermissionType.getSelectedItem();
+////                        PermissionModel permission = new PermissionModel(permissionType, startDate, endDate);
+////                        listener.onPermissionSaved(permission);
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+//
+//                        DialogPermission2.this.getDialog().cancel();
+//                        //LoginDialogFragment.this.getDialog().cancel();
+                    }
+                });
 
         return builder.create();
     }
