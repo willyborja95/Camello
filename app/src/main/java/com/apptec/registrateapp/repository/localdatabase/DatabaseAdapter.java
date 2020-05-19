@@ -132,7 +132,7 @@ public class DatabaseAdapter {
     public boolean insertPermissionType(PermissionType permissionType) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", permissionType.getId());
-        contentValues.put("name", permissionType.getNombe());
+//        contentValues.put("name", permissionType.getNombe());
         return sqLiteDatabase.insert("PermissionType", null, contentValues) > 0;
     }
 

@@ -17,22 +17,11 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.fpermission.ui.DialogPermission;
 import com.apptec.registrateapp.mainactivity.fpermission.ui.PermissionListAdapter;
 import com.apptec.registrateapp.models.PermissionModel;
-import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.models.UserModel;
-import com.apptec.registrateapp.repository.webservices.ApiClient;
-import com.apptec.registrateapp.util.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 @Deprecated
 public class PermissionFragment2 extends Fragment {
@@ -75,9 +64,9 @@ public class PermissionFragment2 extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_permission2, container, false);
-        lvPermission = (ListView) root.findViewById(R.id.lvPermission);
-        fabAddPermission = (FloatingActionButton) root.findViewById(R.id.fabAddPermission);
+        View root = inflater.inflate(R.layout.fragment_permission, container, false);
+//        lvPermission = (ListView) root.findViewById(R.id.lvPermission);
+//        fabAddPermission = (FloatingActionButton) root.findViewById(R.id.fabAddPermission);
         fabAddPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,63 +87,63 @@ public class PermissionFragment2 extends Fragment {
 
     //Save new permission
     public void savePermission(PermissionModel permission) {
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        permission.getStartDate().getTime().setMonth(permission.getStartDate().getTime().getMonth()-1);
-        permission.getEndDate().getTime().setMonth(permission.getEndDate().getTime().getMonth()-1);
-        String strStartDate = dateformat.format(permission.getStartDate().getTime());
-        final String strEndDate = dateformat.format(permission.getEndDate().getTime());
-        JsonObject jsonPermission = new JsonObject();
-        jsonPermission.addProperty("fechainicio", strStartDate);
-        jsonPermission.addProperty("fechafin", strEndDate);
-        jsonPermission.addProperty("permisoid", permission.getPermissionType().getId());
-        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-        Call<JsonObject> permissionCall = permissionRetrofitInterface.post(ApiClient.getAccessToken(), jsonPermission);
-        showPermissionProgressDialog(Constants.UPDATING_CHANGES);
-        permissionCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                hidePermissionProgressDialog();
-                int id = response.body().getAsJsonObject("data").get("id").getAsInt();
-                String strStartDate = response.body().getAsJsonObject("data").get("fechainicio").getAsString();
-                String strEndDate = response.body().getAsJsonObject("data").get("fechafin").getAsString();
-                int idPermission = Integer.parseInt(response.body().getAsJsonObject("data").get("permisoid").getAsString());
-                String strPermissionStatus = response.body().getAsJsonObject("data").get("estado").getAsString();
-                String[] arrayStartDateTime = strStartDate.split(" ");
-                String[] arrayStartTime = arrayStartDateTime[1].split(":");
-                String[] arrayStartDate = arrayStartDateTime[0].split("/");
-                String[] arrayEndDateTime = strEndDate.split(" ");
-                String[] arrayEndTime = arrayEndDateTime[1].split(":");
-                String[] arrayEndDate = arrayEndDateTime[0].split("/");
-                Calendar calendarStartDate = Calendar.getInstance();
-                calendarStartDate.set(Integer.parseInt(arrayStartDate[2]), Integer.parseInt(arrayStartDate[1]), Integer.parseInt(arrayStartDate[0]), Integer.parseInt(arrayStartTime[0]), Integer.parseInt(arrayStartTime[1]));
-                Calendar calendarEndDate = Calendar.getInstance();
-                calendarEndDate.set(Integer.parseInt(arrayEndDate[2]), Integer.parseInt(arrayEndDate[1]), Integer.parseInt(arrayEndDate[0]), Integer.parseInt(arrayEndTime[0]), Integer.parseInt(arrayEndTime[1]));
-                PermissionType permission = null;
-                PermissionStatus permissionStatus = null;
-
-                for (int i = 0; i < lstPermissionType.size(); i++) {
-                    if (idPermission == lstPermissionType.get(i).getId()) {
-                        permission = lstPermissionType.get(i);
-                    }
-                }
-
-                if (strPermissionStatus.equals("enrevision")) {
-                    permissionStatus = PermissionStatus.Revisando;
-                } else if (strPermissionStatus.equals("aprobado")) {
-                    permissionStatus = PermissionStatus.Aprobado;
-                } else if (strPermissionStatus.equals("rechazado")) {
-                    permissionStatus = PermissionStatus.Rechazado;
-                }
-                PermissionModel permission1 = new PermissionModel(id, permission, permissionStatus, calendarStartDate, calendarEndDate);
-                addPermissionList(permission1);
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                hidePermissionProgressDialog();
-                showConectionErrorMessage();
-            }
-        });
+//        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//        permission.getStartDate().getTime().setMonth(permission.getStartDate().getTime().getMonth()-1);
+//        permission.getEndDate().getTime().setMonth(permission.getEndDate().getTime().getMonth()-1);
+//        String strStartDate = dateformat.format(permission.getStartDate().getTime());
+//        final String strEndDate = dateformat.format(permission.getEndDate().getTime());
+//        JsonObject jsonPermission = new JsonObject();
+//        jsonPermission.addProperty("fechainicio", strStartDate);
+//        jsonPermission.addProperty("fechafin", strEndDate);
+//        jsonPermission.addProperty("permisoid", permission.getPermissionType().getId());
+//        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
+//        Call<JsonObject> permissionCall = permissionRetrofitInterface.post(ApiClient.getAccessToken(), jsonPermission);
+//        showPermissionProgressDialog(Constants.UPDATING_CHANGES);
+//        permissionCall.enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                hidePermissionProgressDialog();
+//                int id = response.body().getAsJsonObject("data").get("id").getAsInt();
+//                String strStartDate = response.body().getAsJsonObject("data").get("fechainicio").getAsString();
+//                String strEndDate = response.body().getAsJsonObject("data").get("fechafin").getAsString();
+//                int idPermission = Integer.parseInt(response.body().getAsJsonObject("data").get("permisoid").getAsString());
+//                String strPermissionStatus = response.body().getAsJsonObject("data").get("estado").getAsString();
+//                String[] arrayStartDateTime = strStartDate.split(" ");
+//                String[] arrayStartTime = arrayStartDateTime[1].split(":");
+//                String[] arrayStartDate = arrayStartDateTime[0].split("/");
+//                String[] arrayEndDateTime = strEndDate.split(" ");
+//                String[] arrayEndTime = arrayEndDateTime[1].split(":");
+//                String[] arrayEndDate = arrayEndDateTime[0].split("/");
+//                Calendar calendarStartDate = Calendar.getInstance();
+//                calendarStartDate.set(Integer.parseInt(arrayStartDate[2]), Integer.parseInt(arrayStartDate[1]), Integer.parseInt(arrayStartDate[0]), Integer.parseInt(arrayStartTime[0]), Integer.parseInt(arrayStartTime[1]));
+//                Calendar calendarEndDate = Calendar.getInstance();
+//                calendarEndDate.set(Integer.parseInt(arrayEndDate[2]), Integer.parseInt(arrayEndDate[1]), Integer.parseInt(arrayEndDate[0]), Integer.parseInt(arrayEndTime[0]), Integer.parseInt(arrayEndTime[1]));
+//                PermissionType permission = null;
+//                PermissionStatus permissionStatus = null;
+//
+//                for (int i = 0; i < lstPermissionType.size(); i++) {
+//                    if (idPermission == lstPermissionType.get(i).getId()) {
+//                        permission = lstPermissionType.get(i);
+//                    }
+//                }
+//
+//                if (strPermissionStatus.equals("enrevision")) {
+//                    permissionStatus = PermissionStatus.Revisando;
+//                } else if (strPermissionStatus.equals("aprobado")) {
+//                    permissionStatus = PermissionStatus.Aprobado;
+//                } else if (strPermissionStatus.equals("rechazado")) {
+//                    permissionStatus = PermissionStatus.Rechazado;
+//                }
+//                PermissionModel permission1 = new PermissionModel(id, permission, permissionStatus, calendarStartDate, calendarEndDate);
+//                addPermissionList(permission1);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//                hidePermissionProgressDialog();
+//                showConectionErrorMessage();
+//            }
+//        });
     }
 
     public void addPermissionList(PermissionModel permission) {
@@ -167,61 +156,61 @@ public class PermissionFragment2 extends Fragment {
     }
 
     public void updatePermissions(){
-        lstPermission.clear();
-        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-        Call<JsonObject> permissionCall = permissionRetrofitInterface.get(ApiClient.getAccessToken(), user.getId());
-        showPermissionProgressDialog(Constants.UPDATING_CHANGES);
-        permissionCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                hidePermissionProgressDialog();
-                JsonArray permissionListJson = response.body().getAsJsonArray("data");
-                lstPermission.clear();
-                for (int i = 0; i < permissionListJson.size(); i++) {
-                    JsonObject permissionJson = permissionListJson.get(i).getAsJsonObject();
-                    int id = permissionJson.get("id").getAsInt();
-                    String strStartDate = permissionJson.get("fechainicio").getAsString();
-                    String strEndDate = permissionJson.get("fechafin").getAsString();
-                    String strPermissionType = permissionJson.getAsJsonObject("permiso").get("nombre").getAsString();
-                    String strPermissionStatus = permissionJson.get("estado").getAsString();
-                    String[] arrayStartDateTime = strStartDate.split(" ");
-                    String[] arrayStartTime = arrayStartDateTime[1].split(":");
-                    String[] arrayStartDate = arrayStartDateTime[0].split("/");
-                    String[] arrayEndDateTime = strEndDate.split(" ");
-                    String[] arrayEndTime = arrayEndDateTime[1].split(":");
-                    String[] arrayEndDate = arrayEndDateTime[0].split("/");
-                    Calendar calendarStartDate = Calendar.getInstance();
-                    calendarStartDate.set(Integer.parseInt(arrayStartDate[2]), Integer.parseInt(arrayStartDate[1]), Integer.parseInt(arrayStartDate[0]), Integer.parseInt(arrayStartTime[0]), Integer.parseInt(arrayStartTime[1]));
-                    Calendar calendarEndDate = Calendar.getInstance();
-                    calendarEndDate.set(Integer.parseInt(arrayEndDate[2]), Integer.parseInt(arrayEndDate[1]), Integer.parseInt(arrayEndDate[0]), Integer.parseInt(arrayEndTime[0]), Integer.parseInt(arrayEndTime[1]));
-                    PermissionType permissionType = null;
-                    PermissionStatus permissionStatus = null;
-
-                    for (int j = 0; j < lstPermissionType.size(); j++) {
-                        if (strPermissionType.equals(lstPermissionType.get(j).getNombe())) {
-                            permissionType = lstPermissionType.get(j);
-                        }
-                    }
-
-                    if (strPermissionStatus.equals("enrevision")) {
-                        permissionStatus = PermissionStatus.Revisando;
-                    } else if (strPermissionStatus.equals("aprobado")) {
-                        permissionStatus = PermissionStatus.Aprobado;
-                    } else if (strPermissionStatus.equals("rechazado")) {
-                        permissionStatus = PermissionStatus.Rechazado;
-                    }
-                    PermissionModel permission = new PermissionModel(id, permissionType, permissionStatus, calendarStartDate, calendarEndDate);
-                    lstPermission.add(permission);
-                }
-                updateListView();
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                hidePermissionProgressDialog();
-                showConectionErrorMessage();
-            }
-        });
+//        lstPermission.clear();
+//        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
+//        Call<JsonObject> permissionCall = permissionRetrofitInterface.get(ApiClient.getAccessToken(), user.getId());
+//        showPermissionProgressDialog(Constants.UPDATING_CHANGES);
+//        permissionCall.enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                hidePermissionProgressDialog();
+//                JsonArray permissionListJson = response.body().getAsJsonArray("data");
+//                lstPermission.clear();
+//                for (int i = 0; i < permissionListJson.size(); i++) {
+//                    JsonObject permissionJson = permissionListJson.get(i).getAsJsonObject();
+//                    int id = permissionJson.get("id").getAsInt();
+//                    String strStartDate = permissionJson.get("fechainicio").getAsString();
+//                    String strEndDate = permissionJson.get("fechafin").getAsString();
+//                    String strPermissionType = permissionJson.getAsJsonObject("permiso").get("nombre").getAsString();
+//                    String strPermissionStatus = permissionJson.get("estado").getAsString();
+//                    String[] arrayStartDateTime = strStartDate.split(" ");
+//                    String[] arrayStartTime = arrayStartDateTime[1].split(":");
+//                    String[] arrayStartDate = arrayStartDateTime[0].split("/");
+//                    String[] arrayEndDateTime = strEndDate.split(" ");
+//                    String[] arrayEndTime = arrayEndDateTime[1].split(":");
+//                    String[] arrayEndDate = arrayEndDateTime[0].split("/");
+//                    Calendar calendarStartDate = Calendar.getInstance();
+//                    calendarStartDate.set(Integer.parseInt(arrayStartDate[2]), Integer.parseInt(arrayStartDate[1]), Integer.parseInt(arrayStartDate[0]), Integer.parseInt(arrayStartTime[0]), Integer.parseInt(arrayStartTime[1]));
+//                    Calendar calendarEndDate = Calendar.getInstance();
+//                    calendarEndDate.set(Integer.parseInt(arrayEndDate[2]), Integer.parseInt(arrayEndDate[1]), Integer.parseInt(arrayEndDate[0]), Integer.parseInt(arrayEndTime[0]), Integer.parseInt(arrayEndTime[1]));
+//                    PermissionType permissionType = null;
+//                    PermissionStatus permissionStatus = null;
+//
+//                    for (int j = 0; j < lstPermissionType.size(); j++) {
+//                        if (strPermissionType.equals(lstPermissionType.get(j).getNombe())) {
+//                            permissionType = lstPermissionType.get(j);
+//                        }
+//                    }
+//
+//                    if (strPermissionStatus.equals("enrevision")) {
+//                        permissionStatus = PermissionStatus.Revisando;
+//                    } else if (strPermissionStatus.equals("aprobado")) {
+//                        permissionStatus = PermissionStatus.Aprobado;
+//                    } else if (strPermissionStatus.equals("rechazado")) {
+//                        permissionStatus = PermissionStatus.Rechazado;
+//                    }
+//                    PermissionModel permission = new PermissionModel(id, permissionType, permissionStatus, calendarStartDate, calendarEndDate);
+//                    lstPermission.add(permission);
+//                }
+//                updateListView();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//                hidePermissionProgressDialog();
+//                showConectionErrorMessage();
+//            }
+//        });
     }
 
 

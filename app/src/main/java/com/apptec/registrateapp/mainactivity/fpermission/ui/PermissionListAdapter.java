@@ -84,14 +84,14 @@ public class PermissionListAdapter extends BaseAdapter {
         TextView txtPermissionStartTime = (TextView) convertView.findViewById(R.id.txtStartTime);
         TextView txtPermissionEndDate = (TextView) convertView.findViewById(R.id.txtEndDate);
         TextView txtPermissionEndTime = (TextView) convertView.findViewById(R.id.txtEndTime);
-        String[] strStartDateTime = dateformat.format(lstPermission.get(position).getStartDate().getTime()).split(" ");
-        String[] strEndDateTime = dateformat.format(lstPermission.get(position).getEndDate().getTime()).split(" ");
-        txtPermissionType.setText(lstPermission.get(position).getPermissionType().toString());
-        txtPermissionStatus.setText(lstPermission.get(position).getPermissionStatus().toString());
-        txtPermissionStartDate.setText(strStartDateTime[0]);
-        txtPermissionStartTime.setText(strStartDateTime[1]);
-        txtPermissionEndDate.setText(strEndDateTime[0]);
-        txtPermissionEndTime.setText(strEndDateTime[1]);
+//        String[] strStartDateTime = dateformat.format(lstPermission.get(position).getStartDate().getTime()).split(" ");
+//        String[] strEndDateTime = dateformat.format(lstPermission.get(position).getEndDate().getTime()).split(" ");
+//        txtPermissionType.setText(lstPermission.get(position).getPermissionType().toString());
+//        txtPermissionStatus.setText(lstPermission.get(position).getPermissionStatus().toString());
+//        txtPermissionStartDate.setText(strStartDateTime[0]);
+//        txtPermissionStartTime.setText(strStartDateTime[1]);
+//        txtPermissionEndDate.setText(strEndDateTime[0]);
+//        txtPermissionEndTime.setText(strEndDateTime[1]);
         return convertView;
     }
 

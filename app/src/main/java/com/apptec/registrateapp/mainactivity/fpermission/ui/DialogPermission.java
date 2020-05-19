@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+@Deprecated
 public class DialogPermission extends DialogFragment {
 
     //UI elements
@@ -180,8 +181,8 @@ public class DialogPermission extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         PermissionType permissionType = (PermissionType)spnPermissionType.getSelectedItem();
-                        PermissionModel permission = new PermissionModel(permissionType, startDate, endDate);
-                        listener.onPermissionSaved(permission);
+//                        PermissionModel permission = new PermissionModel(permissionType, startDate, endDate);
+//                        listener.onPermissionSaved(permission);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {

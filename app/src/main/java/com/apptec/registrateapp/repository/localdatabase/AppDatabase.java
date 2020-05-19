@@ -9,6 +9,8 @@ import com.apptec.registrateapp.models.CompanyModel;
 import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.NotificationModel;
 import com.apptec.registrateapp.models.PermissionModel;
+import com.apptec.registrateapp.models.PermissionStatus;
+import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
@@ -29,19 +31,29 @@ import com.apptec.registrateapp.repository.localdatabase.daos.WorkingPeriodDao;
         CompanyModel.class,
         WorkZoneModel.class,
         WorkingPeriodModel.class,
-        PermissionModel.class}, version = 8)
+        PermissionType.class,
+        PermissionStatus.class,
+        PermissionModel.class}, version = 10)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
-    /**s
+    /**
+     * Database
+     *
+     * Register here the entities and the DAOs
      *
      * @return
      */
 
     public abstract UserDao userDao();
+
     public abstract NotificationDao notificationDao();
+
     public abstract DeviceDao deviceDao();
+
     public abstract CompanyDao companyDao();
+
     public abstract WorkZoneDao workZoneDao();
+
     public abstract WorkingPeriodDao workingPeriodDao();
 
     public abstract PermissionDao permissionDao();
