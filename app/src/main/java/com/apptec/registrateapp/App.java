@@ -16,6 +16,7 @@ public class App extends Application {
      * - For provide the global methods to change work status
      * - Provide an AuthHelper for all the app
      */
+    private static final String TAG = "App";
 
     private static Context context;
     private static GeofenceHelper sGeofenceHelper;
@@ -29,6 +30,8 @@ public class App extends Application {
         App.context = getApplicationContext();
         sGeofenceHelper = new GeofenceHelper();
         sAuthHelper = new AuthHelper();
+        String currentDBPath = getDatabasePath("local_database").getAbsolutePath();
+        Log.d("Database", "Database path" + currentDBPath);
     }
 
 
