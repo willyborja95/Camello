@@ -1,5 +1,6 @@
 package com.apptec.registrateapp.mainactivity.fpermission;
 
+import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
 import retrofit2.Call;
@@ -11,12 +12,34 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface PermissionRetrofitInterface {
+
+    @Deprecated
     @POST("permiso/")
     Call<JsonObject> post(@Header("authorization") String token, @Body JsonObject permission);
 
+    @Deprecated
     @GET("permiso/empleado/{userId}")
     Call<JsonObject> get(@Header("authorization") String token, @Path("userId") int userId);
 
+    @Deprecated
     @DELETE("permiso/{permisoId}")
     Call<JsonObject> delete(@Header("authorization") String token, @Path("permisoId") int permisoId);
+
+    @POST(Constants.PERMISSION_CREATE_URL)
+    Call<JsonObject> createPermission(
+            @Header(Constants.AUTHORIZATION_HEADER) String token,
+            @Body JsonObject permission);
+
+    @GET(Constants.PERMISSION_TYPES_URL)
+    Call<JsonObject> getPermissionTypes(
+            @Header(Constants.AUTHORIZATION_HEADER) String token
+    );
+
+    @GET(Constants.PERMISSIONS_STATUS_URL)
+    Call<JsonObject> getAllPermissions(
+            @Header(Constants.AUTHORIZATION_HEADER) String token,
+            @Path("userId") int userId
+    );
+
+
 }

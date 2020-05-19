@@ -14,15 +14,17 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.auth.refreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.mainactivity.fdevice.DevicePresenterImpl;
 import com.apptec.registrateapp.mainactivity.fhome.HomePresenterImpl;
 import com.apptec.registrateapp.mainactivity.fnotification.NotificationPresenterImpl;
+import com.apptec.registrateapp.mainactivity.fpermission.PermissionPresenterImpl;
 import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.NotificationModel;
+import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
-import com.apptec.registrateapp.repository.workers.retreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.util.Constants;
 
 import java.util.List;
@@ -42,6 +44,9 @@ public class MainViewModel extends AndroidViewModel {
 
     // To show devices
     private final LiveData<List<DeviceModel>> mDevices;          // List of user devices
+
+    // TO show the permissions
+    private final LiveData<List<PermissionModel>> mPermissions;    // Lst of permissions
 
     // Toolbar name according the active fragment
     private MutableLiveData<String> mActiveFragmentName;
@@ -67,15 +72,17 @@ public class MainViewModel extends AndroidViewModel {
     NotificationPresenterImpl notificationPresenter;
     DevicePresenterImpl devicePresenter;
     HomePresenterImpl homePresenter;
+    PermissionPresenterImpl permissionPresenter;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
 
-        // Initialize the presenters
+        // Initialize the presenters (In the future we could use dagger2)
         mainPresenter = new MainPresenterImpl();
         devicePresenter = new DevicePresenterImpl();
         notificationPresenter = new NotificationPresenterImpl();
         homePresenter = new HomePresenterImpl();
+        permissionPresenter = new PermissionPresenterImpl();
 
         // Load here the live data needed
         mNotifications = notificationPresenter.loadNotificationsLiveData();
@@ -83,6 +90,7 @@ public class MainViewModel extends AndroidViewModel {
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();      // It is used to set the toolbar title
         mLastWorkingPeriod = homePresenter.getLiveDataLastWorkingPeriod();
+        mPermissions = permissionPresenter.getLiveDataListPermission();
 
 
         // Handle the first login if is needed
@@ -92,6 +100,7 @@ public class MainViewModel extends AndroidViewModel {
         // Start the auto refresh token
         this.initRefreshToken();
         isUserLogged = new MutableLiveData<>(true);
+
 
 
     }
@@ -133,6 +142,13 @@ public class MainViewModel extends AndroidViewModel {
 
         homePresenter.changeLastWorkingStatus();
 
+    }
+
+    public LiveData<List<PermissionModel>> getPermissionsList() {
+        /**
+         * Expose the list of permission from the database
+         */
+        return this.mPermissions;
     }
 
 
@@ -227,7 +243,6 @@ public class MainViewModel extends AndroidViewModel {
          */
         return this.isUserLogged;
     }
-
 
 
 }

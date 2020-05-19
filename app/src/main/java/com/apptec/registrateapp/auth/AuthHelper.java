@@ -11,11 +11,11 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.auth.refreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.models.CompanyModel;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
-import com.apptec.registrateapp.repository.workers.retreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.util.Constants;
 
 public class AuthHelper {

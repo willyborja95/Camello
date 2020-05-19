@@ -1,13 +1,22 @@
 package com.apptec.registrateapp.models;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
-@Entity
+@Entity(foreignKeys = {
+        @ForeignKey(entity = PermissionType.class,
+                parentColumns = "id",
+                childColumns = "fkPermissionType",
+                onDelete = ForeignKey.CASCADE),
+
+        @ForeignKey(entity = PermissionStatus.class,
+                parentColumns = "id",
+                childColumns = "fkPermissionStatus",
+                onDelete = ForeignKey.CASCADE)
+})
 public class PermissionModel implements Serializable {
 
     @PrimaryKey
@@ -15,44 +24,25 @@ public class PermissionModel implements Serializable {
 
     private String comment;
 
-    @ColumnInfo(name = "permissionType")
-    private PermissionType permissionType;
+    private int fkPermissionType;
 
-    @ColumnInfo(name = "permissionStatus")
-    private PermissionStatus permissionStatus;
+    private int fkPermissionStatus;
 
-    @ColumnInfo(name = "startDate")
-    private Calendar startDate;
+    private Long startDate;
 
-    @ColumnInfo(name = "endDate")
-    private Calendar endDate;
+    private Long endDate;
 
-    public PermissionModel(PermissionType permissionType, Calendar startDate, Calendar endDate) {
-        this.permissionType = permissionType;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
 
-    public PermissionModel(int id, String comment, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
+    public PermissionModel(int id, String comment, int fkPermissionType, int fkPermissionStatus, Long startDate, Long endDate) {
         this.id = id;
         this.comment = comment;
-        this.permissionType = permissionType;
-        this.permissionStatus = permissionStatus;
+        this.fkPermissionType = fkPermissionType;
+        this.fkPermissionStatus = fkPermissionStatus;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public PermissionModel() {
-    }
-
-    public PermissionModel(int id, PermissionType permissionType, PermissionStatus permissionStatus, Calendar startDate, Calendar endDate) {
-        this.id = id;
-        this.permissionType = permissionType;
-        this.permissionStatus = permissionStatus;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
+    // Getter and setters
     public int getId() {
         return id;
     }
@@ -69,35 +59,35 @@ public class PermissionModel implements Serializable {
         this.comment = comment;
     }
 
-    public PermissionType getPermissionType() {
-        return permissionType;
+    public int getFkPermissionType() {
+        return fkPermissionType;
     }
 
-    public void setPermissionType(PermissionType permissionType) {
-        this.permissionType = permissionType;
+    public void setFkPermissionType(int fkPermissionType) {
+        this.fkPermissionType = fkPermissionType;
     }
 
-    public PermissionStatus getPermissionStatus() {
-        return permissionStatus;
+    public int getFkPermissionStatus() {
+        return fkPermissionStatus;
     }
 
-    public void setPermissionStatus(PermissionStatus permissionStatus) {
-        this.permissionStatus = permissionStatus;
+    public void setFkPermissionStatus(int fkPermissionStatus) {
+        this.fkPermissionStatus = fkPermissionStatus;
     }
 
-    public Calendar getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Calendar startDate) {
+    public void setStartDate(Long startDate) {
         this.startDate = startDate;
     }
 
-    public Calendar getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Calendar endDate) {
+    public void setEndDate(Long endDate) {
         this.endDate = endDate;
     }
 }

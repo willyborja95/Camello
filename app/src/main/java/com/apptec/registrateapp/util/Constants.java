@@ -17,6 +17,9 @@ public class Constants {
     public static final String REGISTER_DEVICE_URL = "/api/device";
     public static final String REQUEST_DEVICE_INFO_URL = "/api/employee/device";
     public static final String UPDATE_FIREBASE_TOKEN_URL = "/api/device/{id}/pushtoken";
+    public static final String PERMISSION_TYPES_URL = "/api/catalog/permissiontypes";
+    public static final String PERMISSION_CREATE_URL = "/api/employee/{userId}/permissions";
+    public static final String PERMISSIONS_STATUS_URL = "/api/permission";
 
 
     // Logs messages

@@ -17,6 +17,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+@Deprecated
 public class DatabaseAdapter {
 
     private static String DB_NAME = "registrateapp"; // Database name
@@ -131,7 +132,7 @@ public class DatabaseAdapter {
     public boolean insertPermissionType(PermissionType permissionType) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", permissionType.getId());
-        contentValues.put("name", permissionType.getNombe());
+//        contentValues.put("name", permissionType.getNombe());
         return sqLiteDatabase.insert("PermissionType", null, contentValues) > 0;
     }
 

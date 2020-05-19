@@ -1,7 +1,5 @@
 package com.apptec.registrateapp.models;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -13,12 +11,11 @@ public class PermissionType implements Serializable {
     @PrimaryKey
     private int id;
 
-    @ColumnInfo(name = "nombre")
-    private String nombe;
+    private String typeName;
 
-    public PermissionType(int id, String permissionType) {
+    public PermissionType(int id, String typeName) {
         this.id = id;
-        this.nombe = permissionType;
+        this.typeName = typeName;
     }
 
     public int getId() {
@@ -29,17 +26,11 @@ public class PermissionType implements Serializable {
         this.id = id;
     }
 
-    public String getNombe() {
-        return nombe;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setNombe(String nombe) {
-        this.nombe = nombe;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return this.nombe;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }
