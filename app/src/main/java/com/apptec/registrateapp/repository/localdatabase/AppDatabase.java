@@ -19,6 +19,8 @@ import com.apptec.registrateapp.repository.localdatabase.daos.CompanyDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.DeviceDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.NotificationDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.PermissionDao;
+import com.apptec.registrateapp.repository.localdatabase.daos.PermissionStatusDao;
+import com.apptec.registrateapp.repository.localdatabase.daos.PermissionTypeDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.UserDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.WorkZoneDao;
 import com.apptec.registrateapp.repository.localdatabase.daos.WorkingPeriodDao;
@@ -59,5 +61,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract WorkingPeriodDao workingPeriodDao();
 
     public abstract PermissionDao permissionDao();
+
+    public abstract PermissionStatusDao permissionStatusDao();
+
+    public abstract PermissionTypeDao permissionTypeDao();
 
 }
