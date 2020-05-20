@@ -7,6 +7,7 @@ import android.util.Log;
 import com.apptec.registrateapp.auth.AuthHelper;
 import com.apptec.registrateapp.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.registrateapp.mainactivity.fhome.geofence.GeofenceHelper;
+import com.apptec.registrateapp.repository.localdatabase.DataGenerator;
 
 public class App extends Application {
 
@@ -30,8 +31,9 @@ public class App extends Application {
         App.context = getApplicationContext();
         sGeofenceHelper = new GeofenceHelper();
         sAuthHelper = new AuthHelper();
-        String currentDBPath = getDatabasePath("local_database").getAbsolutePath();
-        Log.d("Database", "Database path" + currentDBPath);
+
+        // Populating database
+        DataGenerator.prepopulateDatabase();
     }
 
 

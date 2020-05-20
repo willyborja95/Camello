@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -13,8 +14,13 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
 
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.models.PermissionType;
+import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
+
+import java.util.List;
 
 public class DialogPermission extends DialogFragment {
     /**
@@ -27,6 +33,8 @@ public class DialogPermission extends DialogFragment {
     private EditText txtEndDate;
     private DatePicker dpStartDate;
     private Spinner spnPermissionType;
+    private ArrayAdapter<PermissionType> adapterPermissionType;
+
 
 
     @NonNull
@@ -40,7 +48,20 @@ public class DialogPermission extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
+
         View viewDialog = inflater.inflate(R.layout.dialog_permission, null);
+
+        spnPermissionType = (Spinner) viewDialog.findViewById(R.id.spnPermissionType);
+
+        RoomHelper.getAppDatabaseInstance().permissionTypeDao().getPermissionTypes().observe(this, new Observer<List<PermissionType>>() {
+            @Override
+            public void onChanged(List<PermissionType> permissionTypeList) {
+
+                adapterPermissionType = new ArrayAdapter<PermissionType>(viewDialog.getContext(), R.layout.permission_type_element, R.id.textView3, permissionTypeList);
+
+                spnPermissionType.setAdapter(adapterPermissionType);
+            }
+        });
 
         // Binding the UI elements
         builder.setView(viewDialog)              // Add action buttons

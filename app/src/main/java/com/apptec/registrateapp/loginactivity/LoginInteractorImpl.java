@@ -37,9 +37,11 @@ public class LoginInteractorImpl implements LoginInteractor {
      * Implementation of the interface
      */
 
+    private static final String TAG = "LoginInteractor";
+
     // Attributes
     LoginPresenterImpl loginPresenter; // Got as an attribute
-    private static final String TAG = "LoginInteractor";
+
 
     // Constructor
     public LoginInteractorImpl(LoginPresenterImpl loginPresenter) {
@@ -194,10 +196,9 @@ public class LoginInteractorImpl implements LoginInteractor {
          * When the app is running by first time or is reinstalled. But not when is updated.
          *
          * Ask for device permissions.
-         * Read the IMEI and storage it on an shared preferences's variable.
          * Change to false the flag of "is first running"
          */
-
+        Log.w(TAG, "handleFirstRun: First run configurations");
         /** Asking for device permissions*/
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
@@ -214,6 +215,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 
         /** Change to false the flag of "is first running" */
         SharedPreferencesHelper.putBooleanValue(Constants.IS_RUNNING_BY_FIRST_TIME, false);
+
 
     }
 

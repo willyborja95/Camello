@@ -42,7 +42,7 @@ public class Constants {
     public static final String IS_USER_LOGGED = "IS_LOGGED";                                        // Storage a boolean
     public static final String CURRENT_USER_ID = "CURRENT_USER_ID";                                 // Storage an integer
     public static final String NEEDED_DEVICE_INFO = "NEEDED_DEVICE_INFO";                           // Storage a boolean
-
+    public static final String NEED_TO_POPULATE_DATABASE = "POPULATE_DATABASE";                     // Storage a boolean
     // API constants
     public static final String AUTHORIZATION_HEADER = "authorization";
     public static final String ENDPOINT_FIREBASE = "firebase_token/";

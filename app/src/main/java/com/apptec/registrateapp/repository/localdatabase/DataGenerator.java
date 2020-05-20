@@ -1,7 +1,11 @@
 package com.apptec.registrateapp.repository.localdatabase;
 
+import android.util.Log;
+
 import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
+import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
+import com.apptec.registrateapp.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +18,7 @@ public class DataGenerator {
      * we need to manually go to the file.db in rewrite it. So in this way have mor control
      * on the insert queries when the schema change.
      */
+    private static final String TAG = "DataGenerator";
 
     public static void prepopulateDatabase() {
         /**
@@ -22,11 +27,19 @@ public class DataGenerator {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // Prepopulate the permissions types
-                RoomHelper.getAppDatabaseInstance().permissionTypeDao().insertAll(getPermissionTypesToPrepopulate());
+                Boolean populated_database = SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.NEED_TO_POPULATE_DATABASE, true);
+                if (populated_database) {
+                    Log.w(TAG, "Populating database");
+                    // Prepopulate the permissions types
+                    RoomHelper.getAppDatabaseInstance().permissionTypeDao().insertAll(getPermissionTypesToPrepopulate());
 
-                // Prepopulate the permissions status
-                RoomHelper.getAppDatabaseInstance().permissionStatusDao().insertAll(getPermissionStatusToPrepopulate());
+                    // Prepopulate the permissions status
+                    RoomHelper.getAppDatabaseInstance().permissionStatusDao().insertAll(getPermissionStatusToPrepopulate());
+
+                    SharedPreferencesHelper.putBooleanValue(Constants.NEED_TO_POPULATE_DATABASE, false);
+                }
+
+
             }
 
 

@@ -1,5 +1,6 @@
 package com.apptec.registrateapp.repository.localdatabase.daos;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -22,4 +23,6 @@ public interface PermissionTypeDao {
     @Query("SELECT * FROM permissiontype WHERE id = :id")
     PermissionType getPermissionType(int id);
 
+    @Query("SELECT * FROM permissiontype")
+    LiveData<List<PermissionType>> getPermissionTypes();
 }
