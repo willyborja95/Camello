@@ -59,7 +59,7 @@ public class Constants {
     public static final int INT_WORKING_STATUS = 1;     // Init an working
     public static final int INT_FINISHED_STATUS = 2;     // Finalized
     // Canceled ?
-    public static final String DATABASE_NAME = "local_database";
+    public static final String DATABASE_NAME = "local_database.db";
 
 
 }
