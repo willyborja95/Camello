@@ -3,6 +3,7 @@ package com.apptec.registrateapp.repository.localdatabase;
 import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataGenerator {
@@ -14,7 +15,7 @@ public class DataGenerator {
      * on the insert queries when the schema change.
      */
 
-    public void prepopulateDatabase() {
+    public static void prepopulateDatabase() {
         /**
          * Main method of this class
          */
@@ -34,19 +35,36 @@ public class DataGenerator {
     }
 
 
-    private List<PermissionType> getPermissionTypesToPrepopulate() {
+    private static List<PermissionType> getPermissionTypesToPrepopulate() {
         /**
          * We can obtain this data from any source. For now we are 'hardcoding' it
          */
-        // TODO:
-        return null;
+        List<PermissionType> permissionTypesList = new ArrayList<>();
+
+        PermissionType permissionType1 = new PermissionType(1, "Permiso");
+        PermissionType permissionType2 = new PermissionType(2, "Vacaciones");
+
+        permissionTypesList.add(permissionType1);
+        permissionTypesList.add(permissionType2);
+
+        return permissionTypesList;
     }
 
-    private List<PermissionStatus> getPermissionStatusToPrepopulate() {
+    private static List<PermissionStatus> getPermissionStatusToPrepopulate() {
         /**
          * We can obtain this data from any source. For now we are 'hardcoding' it
          */
-        // TODO
-        return null;
+        List<PermissionStatus> permissionStatusList = new ArrayList<>();
+
+        PermissionStatus permissionStatus1 = new PermissionStatus(1, "En reevisión");
+        PermissionStatus permissionStatus2 = new PermissionStatus(2, "Aceptado");
+        PermissionStatus permissionStatus3 = new PermissionStatus(3, "Rechazado");
+
+        permissionStatusList.add(permissionStatus1);
+        permissionStatusList.add(permissionStatus2);
+        permissionStatusList.add(permissionStatus3);
+
+
+        return permissionStatusList;
     }
 }
