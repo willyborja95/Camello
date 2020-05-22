@@ -2,6 +2,9 @@ package com.apptec.registrateapp.repository.localdatabase.converter;
 
 import androidx.room.TypeConverter;
 
+import com.apptec.registrateapp.util.Constants;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateConverter {
@@ -17,4 +20,17 @@ public class DateConverter {
     public static Long toTimestamp(Date date) {
         return date == null ? null : date.getTime();
     }
+
+    @TypeConverter
+    public static String toStringDateFormat(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT);
+        return dateFormat.format(date);
+    }
+
+    @TypeConverter
+    public static String toStringDateFormat(Long timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT);
+        return dateFormat.format(new Date(timestamp));
+    }
+
 }

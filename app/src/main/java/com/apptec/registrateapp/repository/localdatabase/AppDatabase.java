@@ -36,7 +36,7 @@ import com.apptec.registrateapp.repository.localdatabase.daos.WorkingPeriodDao;
         PermissionType.class,
         PermissionStatus.class,
         PermissionModel.class},
-        version = 10,
+        version = 12,
         exportSchema = true)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {

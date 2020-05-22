@@ -18,7 +18,7 @@ public class Constants {
     public static final String REQUEST_DEVICE_INFO_URL = "/api/employee/device";
     public static final String UPDATE_FIREBASE_TOKEN_URL = "/api/device/{id}/pushtoken";
     public static final String PERMISSION_TYPES_URL = "/api/catalog/permissiontypes";
-    public static final String PERMISSION_CREATE_URL = "/api/employee/{userId}/permissions";
+    public static final String PERMISSION_CREATE_URL = "/api/permission/";
     public static final String PERMISSIONS_STATUS_URL = "/api/permission";
 
 
@@ -32,7 +32,7 @@ public class Constants {
 
 
     public static final String LAST_EXIT_TIME = "LAST_EXIT_TIME";                                   //
-    public static final String PATTERN_DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";                  // ?
+    public static final String PATTERN_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";                  // ?
 
     public static final String IS_RUNNING_BY_FIRST_TIME = "APP_RUN_FIRST_TIME";                     // Storage a boolean
     public static final String USER_ACCESS_TOKEN = "ACCESS_TOKEN";                                  // Storage a string
