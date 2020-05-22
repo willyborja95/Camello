@@ -2,7 +2,6 @@ package com.apptec.registrateapp.mainactivity.fpermission;
 
 import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
-import com.google.gson.annotations.SerializedName;
 
 public class PermissionDto {
     /**
@@ -10,50 +9,45 @@ public class PermissionDto {
      * <p>
      * This class will help us to transfer Permissions to the server and receive from them
      */
-    private static final String TAG = "PermissionDto";
-
-    @SerializedName("id")
-    public int id;
-
-    @SerializedName("employeeId")
-    public int employeeId;
-
-    @SerializedName("startDate")
-    public String formattedStartDate;
-
-    @SerializedName("endDate")
-    public String formattedEndDate;
-
-    @SerializedName("type")
-    public int fkPermissionType;
-
-    @SerializedName("comment")
-    public String comment;
-
-    @SerializedName("status")
-    public int fkPermissionStatus;
 
 
-    public PermissionDto(int id, int employeeId, String formattedStartDate, String formattedEndDate, int fkPermissionType, String comment, int fkPermissionStatus) {
+    private int id;
+
+
+    private String startDate;
+
+
+    private String endDate;
+
+
+    private int type;
+
+
+    private String comment;
+
+
+    private int fkPermissionStatus;
+
+
+    public PermissionDto(int id, String startDate, String endDate, int type, String comment, int fkPermissionStatus) {
         /**
          * THis construct is used when the data come from the server
          */
         this.id = id;
-        this.employeeId = employeeId;
-        this.formattedStartDate = formattedStartDate;
-        this.formattedEndDate = formattedEndDate;
-        this.fkPermissionType = fkPermissionType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.type = type;
         this.comment = comment;
         this.fkPermissionStatus = fkPermissionStatus;
     }
 
-    public PermissionDto(String formattedStartDate, String formattedEndDate, int fkPermissionType) {
+    public PermissionDto(String startDate, String endDate, int type) {
         /**
          * THis construct is user locally
          */
-        this.formattedStartDate = formattedStartDate;
-        this.formattedEndDate = formattedEndDate;
-        this.fkPermissionType = fkPermissionType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.type = type;
     }
 
     public PermissionDto(PermissionModel permissionModel) {
@@ -61,9 +55,9 @@ public class PermissionDto {
          * This construct automatic will transform a Permission model to a PermissionDto
          */
         this.id = permissionModel.getId();
-        this.formattedStartDate = DateConverter.toStringDateFormat(permissionModel.getStartDate());
-        this.formattedEndDate = DateConverter.toStringDateFormat(permissionModel.getEndDate());
-        this.fkPermissionType = permissionModel.getFkPermissionType();
+        this.startDate = DateConverter.toStringDateFormat(permissionModel.getStartDate());
+        this.endDate = DateConverter.toStringDateFormat(permissionModel.getEndDate());
+        this.type = permissionModel.getFkPermissionType();
         this.comment = permissionModel.getComment();
 
     }
@@ -78,36 +72,28 @@ public class PermissionDto {
         this.id = id;
     }
 
-    public int getEmployeeId() {
-        return employeeId;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
-    public String getFormattedStartDate() {
-        return formattedStartDate;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setFormattedStartDate(String formattedStartDate) {
-        this.formattedStartDate = formattedStartDate;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
-    public String getFormattedEndDate() {
-        return formattedEndDate;
+    public int getType() {
+        return type;
     }
 
-    public void setFormattedEndDate(String formattedEndDate) {
-        this.formattedEndDate = formattedEndDate;
-    }
-
-    public int getFkPermissionType() {
-        return fkPermissionType;
-    }
-
-    public void setFkPermissionType(int fkPermissionType) {
-        this.fkPermissionType = fkPermissionType;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getComment() {
@@ -126,14 +112,14 @@ public class PermissionDto {
         this.fkPermissionStatus = fkPermissionStatus;
     }
 
+
     @Override
     public String toString() {
         return "PermissionDto{" +
                 "id=" + id +
-                ", employeeId=" + employeeId +
-                ", formattedStartDate='" + formattedStartDate + '\'' +
-                ", formattedEndDate='" + formattedEndDate + '\'' +
-                ", fkPermissionType=" + fkPermissionType +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", type=" + type +
                 ", comment='" + comment + '\'' +
                 ", fkPermissionStatus=" + fkPermissionStatus +
                 '}';

@@ -1,7 +1,5 @@
 package com.apptec.registrateapp.mainactivity.fpermission;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 
 import com.apptec.registrateapp.models.PermissionModel;
@@ -18,6 +16,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class PermissionPresenterImpl {
 
@@ -49,7 +48,7 @@ public class PermissionPresenterImpl {
 //                Call<LoginResponse> call = loginRetrofitInterface.login(userCredential);
 //                call.enqueue(new Callback<LoginResponse>() {
 //                }}
-                Log.w(TAG, "savePermission: " + "starting");
+
                 Date startDateDate = startDate.getTime();
                 Date endDateDate = endDate.getTime();
 
@@ -65,12 +64,15 @@ public class PermissionPresenterImpl {
                         ApiClient.getAccessToken(),
                         permissionDto
                 );
+                Timber.d(permissionDto.toString(), permissionDto);
                 call.enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
                         // Save the permission also into the database
-
+                        Timber.d(response.message());
+                        Timber.d("Response successful: " + response.isSuccessful());
+                        Timber.i("Response body: " + response.body());
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -84,7 +86,7 @@ public class PermissionPresenterImpl {
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
                         // TODO: Handle this
-                        Log.e(TAG, "onFailure: " + t.getMessage());
+                        Timber.e(t, "onFailure: %s", t.getMessage());
 
                     }
                 });
