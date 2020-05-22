@@ -9,6 +9,8 @@ import com.apptec.registrateapp.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.registrateapp.mainactivity.fhome.geofence.GeofenceHelper;
 import com.apptec.registrateapp.repository.localdatabase.DataGenerator;
 
+import timber.log.Timber;
+
 public class App extends Application {
 
     /**
@@ -34,6 +36,10 @@ public class App extends Application {
 
         // Populating database
         DataGenerator.prepopulateDatabase();
+
+        // Setting up timber
+        Timber.plant(new Timber.DebugTree());
+
     }
 
 
