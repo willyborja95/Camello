@@ -106,6 +106,8 @@ dependencies {
 
     // optional - Test helpers
     // androidTestImplementation "androidx.work:work-testing:$work_version"
+    /** Timber for log better */
+    implementation "com.jakewharton.timber:timber:4.7.1"
 
 }
 repositories {
