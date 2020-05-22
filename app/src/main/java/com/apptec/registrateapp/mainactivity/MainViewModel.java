@@ -22,11 +22,13 @@ import com.apptec.registrateapp.mainactivity.fpermission.PermissionPresenterImpl
 import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.NotificationModel;
 import com.apptec.registrateapp.models.PermissionModel;
+import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.util.Constants;
 
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -245,4 +247,11 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
+    public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate) {
+        /**
+         * Save the permission requested
+         */
+
+        permissionPresenter.savePermission(selectedItem, startDate, endDate);
+    }
 }

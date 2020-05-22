@@ -28,7 +28,7 @@ public interface PermissionRetrofitInterface {
     @POST(Constants.PERMISSION_CREATE_URL)
     Call<JsonObject> createPermission(
             @Header(Constants.AUTHORIZATION_HEADER) String token,
-            @Body JsonObject permission);
+            @Body PermissionDto permission);
 
     @GET(Constants.PERMISSION_TYPES_URL)
     Call<JsonObject> getPermissionTypes(

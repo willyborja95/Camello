@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,8 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.mainactivity.MainViewModel;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.util.Constants;
@@ -46,6 +49,8 @@ public class DialogPermission extends DialogFragment {
     String strStartDate;
     String strEndDate;
 
+    MainViewModel mainViewModel;
+
 
 
     @NonNull
@@ -58,6 +63,7 @@ public class DialogPermission extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
 
 
         View viewDialog = inflater.inflate(R.layout.dialog_permission, null);
@@ -76,21 +82,21 @@ public class DialogPermission extends DialogFragment {
         });
 
         setUpTimesPicker();
-        // Binding the UI elements
+
         builder.setView(viewDialog)              // Add action buttons
                 .setPositiveButton(getString(R.string.permission_positive_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-//                        PermissionType permissionType = (PermissionType) spnPermissionType.getSelectedItem();
-//                        PermissionModel permission = new PermissionModel(permissionType, startDate, endDate);
-//                        listener.onPermissionSaved(permission);
+                        // Save the permission requested
+                        Log.w(TAG, "onClick: Ok");
+                        PermissionType permissionType = (PermissionType) spnPermissionType.getSelectedItem();
+                        mainViewModel.savePermission(permissionType, startDate, endDate);
                     }
                 })
                 .setNegativeButton(getString(R.string.permission_negative_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//
-//                        DialogPermission2.this.getDialog().cancel();
-//                        //LoginDialogFragment.this.getDialog().cancel();
+                        DialogPermission.this.getDialog().cancel();
+
                     }
                 });
 
