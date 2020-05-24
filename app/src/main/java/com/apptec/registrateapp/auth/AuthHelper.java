@@ -41,6 +41,7 @@ public class AuthHelper {
         SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, refreshToken);
         SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
         SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
+        SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, user.getId());
 
         this.initRefreshToken();
     }

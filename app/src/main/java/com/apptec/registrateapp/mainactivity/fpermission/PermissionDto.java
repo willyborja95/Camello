@@ -2,31 +2,33 @@ package com.apptec.registrateapp.mainactivity.fpermission;
 
 import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
+import com.google.gson.annotations.SerializedName;
 
 public class PermissionDto {
+
     /**
      * Permission Data Transfer Object
      * <p>
      * This class will help us to transfer Permissions to the server and receive from them
      */
 
-
+    @SerializedName("id")
     private int id;
 
-
+    @SerializedName("startDate")
     private String startDate;
 
-
+    @SerializedName("endDate")
     private String endDate;
 
-
+    @SerializedName("type")
     private int type;
 
-
+    @SerializedName("comment")
     private String comment;
 
-
-    private int fkPermissionStatus;
+    @SerializedName("status")
+    private int status; // THe server return an string, but then we should send a number
 
 
     public PermissionDto(int id, String startDate, String endDate, int type, String comment, int fkPermissionStatus) {
@@ -38,7 +40,7 @@ public class PermissionDto {
         this.endDate = endDate;
         this.type = type;
         this.comment = comment;
-        this.fkPermissionStatus = fkPermissionStatus;
+        this.status = fkPermissionStatus;
     }
 
     public PermissionDto(String startDate, String endDate, int type) {
@@ -62,6 +64,36 @@ public class PermissionDto {
 
     }
 
+    public PermissionModel getAsPermissionModel() {
+        /**
+         * Instance an object from permissionModel using this same object
+         */
+        PermissionModel permissionModel = new PermissionModel(comment, getTypeId(), getStatusId(), getStartDateLong(), getEndDateLong());
+        return permissionModel;
+    }
+
+    public int getTypeId() {
+        /** Return the id of the permission Type */
+        // TODO
+        return 1;
+    }
+
+    public int getStatusId() {
+        /** Return the id of the permission status */
+        // TODO
+        return 1;
+    }
+
+    public Long getStartDateLong() {
+        /** Return this start data string as a long */
+        return DateConverter.toTimestamp(this.startDate);
+
+    }
+
+    public Long getEndDateLong() {
+        /** Return this end data string as a long */
+        return DateConverter.toTimestamp(this.endDate);
+    }
 
     // Getter and setters
     public int getId() {
@@ -104,12 +136,12 @@ public class PermissionDto {
         this.comment = comment;
     }
 
-    public int getFkPermissionStatus() {
-        return fkPermissionStatus;
+    public int getStatus() {
+        return status;
     }
 
-    public void setFkPermissionStatus(int fkPermissionStatus) {
-        this.fkPermissionStatus = fkPermissionStatus;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
 
@@ -121,7 +153,7 @@ public class PermissionDto {
                 ", endDate='" + endDate + '\'' +
                 ", type=" + type +
                 ", comment='" + comment + '\'' +
-                ", fkPermissionStatus=" + fkPermissionStatus +
+                ", fkPermissionStatus=" + status +
                 '}';
     }
 }

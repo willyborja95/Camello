@@ -20,6 +20,7 @@ public class Constants {
     public static final String PERMISSION_TYPES_URL = "/api/catalog/permissiontypes";
     public static final String PERMISSION_CREATE_URL = "/api/permission/";
     public static final String PERMISSIONS_STATUS_URL = "/api/permission";
+    public static final String ALL_PERMISSIONS_URL = "api/permission/employee/{userId}";
 
 
     // Logs messages

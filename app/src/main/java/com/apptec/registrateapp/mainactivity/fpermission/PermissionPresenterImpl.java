@@ -6,7 +6,9 @@ import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
+import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
+import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
 import java.util.Calendar;
@@ -108,5 +110,48 @@ public class PermissionPresenterImpl {
 
             }
         }).start();
+    }
+
+
+    public void syncPermissionsWithNetwork() {
+        /**
+         * This method will bring the permission of this user and save into the database
+         */
+
+
+        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
+
+        Call<List<PermissionDto>> call = permissionRetrofitInterface.getAllPermissions(
+                ApiClient.getAccessToken(), // Header
+                SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, 0) // + Path
+        );
+
+
+        call.enqueue(new Callback<List<PermissionDto>>() {
+            @Override
+            public void onResponse(Call<List<PermissionDto>> call, Response<List<PermissionDto>> response) {
+
+                Timber.d(response.body().toString());
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < response.body().size(); i++) {
+                            // Save the list of permission into data
+                            RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(response.body().get(i).getAsPermissionModel());
+                        }
+                    }
+                }).start();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<PermissionDto>> call, Throwable t) {
+
+            }
+        });
+
+
     }
 }

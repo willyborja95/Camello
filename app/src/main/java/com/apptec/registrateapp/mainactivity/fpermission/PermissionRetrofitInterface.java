@@ -3,6 +3,8 @@ package com.apptec.registrateapp.mainactivity.fpermission;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -36,9 +38,17 @@ public interface PermissionRetrofitInterface {
     );
 
     @GET(Constants.PERMISSIONS_STATUS_URL)
-    Call<JsonObject> getAllPermissions(
+    Call<JsonObject> getPermissionStatus(
             @Header(Constants.AUTHORIZATION_HEADER) String token,
             @Path("userId") int userId
+    );
+
+    @GET(Constants.ALL_PERMISSIONS_URL)
+        // api/permission/employee/3
+    Call<List<PermissionDto>> getAllPermissions(
+            @Header(Constants.AUTHORIZATION_HEADER) String token,
+            @Path("userId") int userId
+
     );
 
 
