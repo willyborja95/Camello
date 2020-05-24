@@ -70,15 +70,30 @@ public class PermissionPresenterImpl {
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
                         // Save the permission also into the database
-                        Timber.d(response.message());
-                        Timber.d("Response successful: " + response.isSuccessful());
-                        Timber.i("Response body: " + response.body());
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                RoomHelper.getAppDatabaseInstance().permissionDao().insert(permission);
-                            }
-                        }).start();
+
+                        if (response.isSuccessful()) {
+
+                            // Get the permission id form the response and also the status by the way
+                            int correctId = Integer.parseInt(response.body().get("data").getAsJsonObject().get("id").toString());
+                            int correctStatus = Integer.parseInt(response.body().get("data").getAsJsonObject().get("status").toString());
+                            Timber.i("CorrectId: " + correctId);
+                            Timber.i("CorrectStatus: " + correctStatus);
+
+                            // Update the permission with the id and status before save into database
+                            permission.setId(correctId);
+                            permission.setFkPermissionStatus(correctStatus);
+
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(permission);
+                                }
+                            }).start();
+                        } else {
+                            // TODO:
+                            Timber.e("Response not successful");
+                        }
+
 
 
                     }
