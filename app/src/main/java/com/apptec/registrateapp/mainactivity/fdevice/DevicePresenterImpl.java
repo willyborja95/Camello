@@ -17,6 +17,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class DevicePresenterImpl {
     /**
@@ -62,8 +63,7 @@ public class DevicePresenterImpl {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
-                Log.d(TAG, "Shot the API");
-                Log.d(TAG, "Device: " + thisDevice.toString());
+
                 // Change the flag
                 if (response.isSuccessful()) {
 
@@ -73,7 +73,7 @@ public class DevicePresenterImpl {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d(TAG, "Save this device information in the local database");
+                            Timber.d("Save this device information in the local database");
                             RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
                         }
                     }).start();

@@ -74,6 +74,17 @@ public class PermissionFragment extends Fragment {
         });
 
 
+        // When the user scroll down, then syn the permissions
+        view.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollX - oldScrollX > 1) {
+                    // If scroll down
+                    mainViewModel.syncPermissions();
+                }
+            }
+        });
+
         return view;
     }
 

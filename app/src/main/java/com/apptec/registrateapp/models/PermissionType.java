@@ -1,5 +1,6 @@
 package com.apptec.registrateapp.models;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -32,5 +33,11 @@ public class PermissionType implements Serializable {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "" + getTypeName();
     }
 }

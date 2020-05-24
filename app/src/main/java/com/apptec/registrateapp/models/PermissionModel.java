@@ -4,6 +4,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 @Entity(foreignKeys = {
@@ -24,17 +26,18 @@ public class PermissionModel implements Serializable {
 
     private String comment;
 
+    @SerializedName("type")
     private int fkPermissionType;
 
     private int fkPermissionStatus;
+
 
     private Long startDate;
 
     private Long endDate;
 
 
-    public PermissionModel(int id, String comment, int fkPermissionType, int fkPermissionStatus, Long startDate, Long endDate) {
-        this.id = id;
+    public PermissionModel(String comment, int fkPermissionType, int fkPermissionStatus, Long startDate, Long endDate) {
         this.comment = comment;
         this.fkPermissionType = fkPermissionType;
         this.fkPermissionStatus = fkPermissionStatus;
