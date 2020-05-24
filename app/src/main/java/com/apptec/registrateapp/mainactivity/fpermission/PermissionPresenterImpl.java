@@ -117,7 +117,7 @@ public class PermissionPresenterImpl {
         /**
          * This method will bring the permission of this user and save into the database
          */
-
+        Timber.i("Starting to sync the permissions list from network");
 
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
 

@@ -254,4 +254,11 @@ public class MainViewModel extends AndroidViewModel {
 
         permissionPresenter.savePermission(selectedItem, startDate, endDate);
     }
+
+    public void syncPermissions() {
+        /**
+         * Sync the permissions database with the network
+         */
+        permissionPresenter.syncPermissionsWithNetwork();
+    }
 }
