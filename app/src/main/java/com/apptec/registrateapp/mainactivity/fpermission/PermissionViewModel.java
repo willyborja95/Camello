@@ -18,7 +18,7 @@ public class PermissionViewModel extends ViewModel {
 
     public PermissionViewModel() {
         // Constructor
-        Timber.w("Constructor used");
+        Timber.d("Permission view model attached");
     }
 
     // Expose the data
@@ -38,7 +38,9 @@ public class PermissionViewModel extends ViewModel {
 
     @Override
     protected void onCleared() {
-        Timber.w("View model cleaned");
+        Timber.w("View model cleared");
         super.onCleared();
     }
+
+
 }
