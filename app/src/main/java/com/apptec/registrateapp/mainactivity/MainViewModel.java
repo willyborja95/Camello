@@ -103,6 +103,10 @@ public class MainViewModel extends AndroidViewModel {
         this.initRefreshToken();
         isUserLogged = new MutableLiveData<>(true);
 
+        // Pull data from the permission catalog
+        permissionPresenter.syncPermissionsWithNetwork();
+        permissionPresenter.pullPermissionCatalog();
+
 
 
     }

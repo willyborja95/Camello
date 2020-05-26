@@ -11,6 +11,7 @@ import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -46,10 +47,6 @@ public class PermissionPresenterImpl {
                  * Call the service
                  * on success save the permission into database
                  */
-//                LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
-//                Call<LoginResponse> call = loginRetrofitInterface.login(userCredential);
-//                call.enqueue(new Callback<LoginResponse>() {
-//                }}
 
                 Date startDateDate = startDate.getTime();
                 Date endDateDate = endDate.getTime();
@@ -88,6 +85,7 @@ public class PermissionPresenterImpl {
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Timber.d("Saving the permission result into database");
                                     RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(permission);
                                 }
                             }).start();
@@ -95,8 +93,6 @@ public class PermissionPresenterImpl {
                             // TODO:
                             Timber.e("Response not successful");
                         }
-
-
 
                     }
 
@@ -110,6 +106,53 @@ public class PermissionPresenterImpl {
 
             }
         }).start();
+    }
+
+
+    public void pullPermissionCatalog() {
+        /**
+         * This method will pull the permission types available and the permission status from the network
+         */
+        Timber.d("Starting to pull the permission catalog from network");
+
+        // Pull the permission types
+        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
+        Call<JsonObject> call = permissionRetrofitInterface.getPermissionTypes(
+                ApiClient.getAccessToken() // Token
+        );
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Timber.d("Response: " + response.body());
+
+                // Save the permissions
+                if (response.isSuccessful()) {
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Timber.d("Permission types: " + response.body().get("data"));
+
+                            List<PermissionType> permissionTypesList = new ArrayList<>();
+
+                            for (int i = 0; i < response.body().get("data").getAsJsonArray().size(); i++) {
+                                // TODO: complete
+                                // permissionTypesList.add(response.body().get("data").getAsJsonArray().get(i));
+                            }
+                        }
+                    }).start();
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+
     }
 
 

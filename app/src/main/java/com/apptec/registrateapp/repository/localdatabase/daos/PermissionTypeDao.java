@@ -20,6 +20,7 @@ public interface PermissionTypeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<PermissionType> permissionTypeList);
 
+
     @Query("SELECT * FROM permissiontype WHERE id = :id")
     PermissionType getPermissionType(int id);
 
