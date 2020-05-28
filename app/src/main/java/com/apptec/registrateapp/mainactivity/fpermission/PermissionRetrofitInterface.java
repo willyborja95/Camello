@@ -1,5 +1,6 @@
 package com.apptec.registrateapp.mainactivity.fpermission;
 
+import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
@@ -13,7 +14,8 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-public interface PermissionRetrofitInterface {
+public interface PermissionRetrofitInterface<T> {
+
 
     @Deprecated
     @POST("permiso/")
@@ -36,6 +38,12 @@ public interface PermissionRetrofitInterface {
     Call<JsonObject> getPermissionTypes(
             @Header(Constants.AUTHORIZATION_HEADER) String token
     );
+
+    @GET(Constants.PERMISSION_TYPES_URL)
+    Call<GeneralResponse<T>> getGeneralPermissionTypes(
+            @Header(Constants.AUTHORIZATION_HEADER) String token
+    );
+
 
     @GET(Constants.PERMISSIONS_STATUS_URL)
     Call<JsonObject> getPermissionStatus(

@@ -164,6 +164,7 @@ public class PermissionPresenterImpl {
 
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
 
+
         Call<List<PermissionDto>> call = permissionRetrofitInterface.getAllPermissions(
                 ApiClient.getAccessToken(), // Header
                 SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, 0) // + Path
