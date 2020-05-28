@@ -61,8 +61,6 @@ public class Constants {
     public static final int INT_NOT_INIT_STATUS = 0;     // Not init
     public static final int INT_WORKING_STATUS = 1;     // Init an working
     public static final int INT_FINISHED_STATUS = 2;     // Finalized
-    // Canceled ?
-    public static final String DATABASE_NAME = "local_database.db";
 
 
 }
