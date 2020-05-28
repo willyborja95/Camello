@@ -8,11 +8,12 @@ import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
+import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,6 @@ public class PermissionPresenterImpl {
     /**
      * Helps the interaction repository - view
      */
-    private static final String TAG = "PermissionPresenterImpl";
 
     public LiveData<List<PermissionModel>> getLiveDataListPermission() {
         /**
@@ -116,45 +116,31 @@ public class PermissionPresenterImpl {
         Timber.d("Starting to pull the permission catalog from network");
 
         // Pull the permission types
-        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-        Call<JsonObject> call = permissionRetrofitInterface.getPermissionTypes(
-                ApiClient.getAccessToken() // Token
-        );
+        PermissionRetrofitInterface getTypesInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
 
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Timber.d("Response: " + response.body());
+        try {
+            Call<GeneralResponse<Collection<PermissionType>>> callTypes = getTypesInterface.getPermissionTypesWrapped(ApiClient.getAccessToken());
 
-                // Save the permissions
-                if (response.isSuccessful()) {
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Timber.d("Permission types: " + response.body().get("data"));
-
-                            List<PermissionType> permissionTypesList = new ArrayList<>();
-
-                            for (int i = 0; i < response.body().get("data").getAsJsonArray().size(); i++) {
-                                // TODO: complete
-                                // permissionTypesList.add(response.body().get("data").getAsJsonArray().get(i));
-                            }
-                        }
-                    }).start();
-
+            callTypes.enqueue(new Callback<GeneralResponse<Collection<PermissionType>>>() {
+                @Override
+                public void onResponse(Call<GeneralResponse<Collection<PermissionType>>> call, Response<GeneralResponse<Collection<PermissionType>>> response) {
+                    Timber.wtf("Response: " + response.body().getWrapperData().getDataResponse());
                 }
 
-            }
+                @Override
+                public void onFailure(Call<GeneralResponse<Collection<PermissionType>>> call, Throwable t) {
+                    Timber.e(t, "onFailure: ");
+                }
+            });
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+        } catch (Exception e) {
+            Timber.e(e);
+        }
 
-            }
-        });
+
+
 
     }
-
 
     public void syncPermissionsWithNetwork() {
         /**

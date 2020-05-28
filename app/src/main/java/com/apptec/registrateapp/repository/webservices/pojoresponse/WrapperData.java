@@ -4,7 +4,6 @@ public class WrapperData<T> {
 
     private T dataResponse;
 
-
     public WrapperData(T POJOResponse) {
         this.dataResponse = POJOResponse;
     }
