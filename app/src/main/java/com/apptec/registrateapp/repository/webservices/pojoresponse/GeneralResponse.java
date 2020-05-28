@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 public class GeneralResponse<T> {
 
     @SerializedName("data")
-    private WrapperData<T> wrapperData;
+    private T wrappedData; // This will the node that could change according to the call
 
     @SerializedName("ok")
     @Nullable
@@ -17,12 +17,12 @@ public class GeneralResponse<T> {
     @Nullable
     private Error error;
 
-    public WrapperData<T> getWrapperData() {
-        return wrapperData;
+    public T getWrappedData() {
+        return wrappedData;
     }
 
-    public void setWrapperData(WrapperData<T> wrapperData) {
-        this.wrapperData = wrapperData;
+    public void setWrappedData(T wrappedData) {
+        this.wrappedData = wrappedData;
     }
 
     public boolean isOk() {

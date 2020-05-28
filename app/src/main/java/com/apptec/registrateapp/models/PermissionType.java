@@ -4,14 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 @Entity
 public class PermissionType implements Serializable {
 
     @PrimaryKey
+    @SerializedName("id")
     private int id;
 
+    @SerializedName("name")
     private String typeName;
 
     public PermissionType(int id, String typeName) {

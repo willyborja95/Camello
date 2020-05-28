@@ -3,6 +3,7 @@ package com.apptec.registrateapp.mainactivity.fpermission;
 import androidx.lifecycle.LiveData;
 
 import com.apptec.registrateapp.models.PermissionModel;
+import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
@@ -13,7 +14,6 @@ import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -111,36 +111,73 @@ public class PermissionPresenterImpl {
 
     public void pullPermissionCatalog() {
         /**
-         * This method will pull the permission types available and the permission status from the network
+         * This method will pull the permission types available and the permission status from the network service
          */
-        Timber.d("Starting to pull the permission catalog from network");
 
-        // Pull the permission types
-        PermissionRetrofitInterface getTypesInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-
-        try {
-            Call<GeneralResponse<Collection<PermissionType>>> callTypes = getTypesInterface.getPermissionTypesWrapped(ApiClient.getAccessToken());
-
-            callTypes.enqueue(new Callback<GeneralResponse<Collection<PermissionType>>>() {
-                @Override
-                public void onResponse(Call<GeneralResponse<Collection<PermissionType>>> call, Response<GeneralResponse<Collection<PermissionType>>> response) {
-                    Timber.wtf("Response: " + response.body().getWrapperData().getDataResponse());
-                }
-
-                @Override
-                public void onFailure(Call<GeneralResponse<Collection<PermissionType>>> call, Throwable t) {
-                    Timber.e(t, "onFailure: ");
-                }
-            });
-
-        } catch (Exception e) {
-            Timber.e(e);
-        }
+        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
 
 
-
+        pullPermissionTypes(permissionRetrofitInterface);
+        pullPermissionStatus(permissionRetrofitInterface);
 
     }
+
+    public void pullPermissionTypes(PermissionRetrofitInterface permissionRetrofitInterface) {
+        Timber.d("Starting to pull the permission types catalog from network");
+
+        // Pull the permission types
+
+        Call<GeneralResponse<List<PermissionType>>> callTypes = permissionRetrofitInterface.getPermissionTypesWrapped(ApiClient.getAccessToken());
+
+        callTypes.enqueue(new Callback<GeneralResponse<List<PermissionType>>>() {
+            @Override
+            public void onResponse(Call<GeneralResponse<List<PermissionType>>> call, Response<GeneralResponse<List<PermissionType>>> response) {
+
+                // Save the response into the database
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        RoomHelper.getAppDatabaseInstance().permissionTypeDao().insertAll(response.body().getWrappedData());
+                    }
+                }).start();
+
+            }
+
+            @Override
+            public void onFailure(Call<GeneralResponse<List<PermissionType>>> call, Throwable t) {
+                Timber.e(t, "onFailure: ");
+            }
+        });
+    }
+
+    public void pullPermissionStatus(PermissionRetrofitInterface permissionRetrofitInterface) {
+        Timber.d("Starting to pull the permission status catalog available");
+
+        // Pull the permission status
+        Call<GeneralResponse<List<PermissionStatus>>> callStatus = permissionRetrofitInterface.getPermissionStatusWrapped(ApiClient.getAccessToken());
+
+        callStatus.enqueue(new Callback<GeneralResponse<List<PermissionStatus>>>() {
+            @Override
+            public void onResponse(Call<GeneralResponse<List<PermissionStatus>>> call, Response<GeneralResponse<List<PermissionStatus>>> response) {
+                // Save the response into the database
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RoomHelper.getAppDatabaseInstance().permissionStatusDao().insertAll(response.body().getWrappedData());
+                    }
+                }).start();
+
+            }
+
+            @Override
+            public void onFailure(Call<GeneralResponse<List<PermissionStatus>>> call, Throwable t) {
+                Timber.e(t, "onFailure: ");
+            }
+        });
+
+    }
+
 
     public void syncPermissionsWithNetwork() {
         /**

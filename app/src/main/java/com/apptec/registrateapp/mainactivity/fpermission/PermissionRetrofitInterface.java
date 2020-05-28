@@ -1,11 +1,11 @@
 package com.apptec.registrateapp.mainactivity.fpermission;
 
+import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
-import java.util.Collection;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,15 +36,19 @@ public interface PermissionRetrofitInterface {
             @Header(Constants.AUTHORIZATION_HEADER) String token,
             @Body PermissionDto permission);
 
-    @GET(Constants.PERMISSION_TYPES_URL)
-    Call<JsonObject> getPermissionTypes(
+
+    @GET(Constants.PERMISSION_TYPES_CATALOG_URL)
+    Call<GeneralResponse<List<PermissionType>>> getPermissionTypesWrapped(
             @Header(Constants.AUTHORIZATION_HEADER) String token
     );
 
-    @GET(Constants.PERMISSION_TYPES_URL)
-    Call<GeneralResponse<Collection<PermissionType>>> getPermissionTypesWrapped(
+    @GET(Constants.PERMISSION_STATUS_CATALOG_URL)
+    Call<GeneralResponse<List<PermissionStatus>>> getPermissionStatusWrapped(
             @Header(Constants.AUTHORIZATION_HEADER) String token
     );
+
+
+
 
 
     @GET(Constants.PERMISSIONS_STATUS_URL)
