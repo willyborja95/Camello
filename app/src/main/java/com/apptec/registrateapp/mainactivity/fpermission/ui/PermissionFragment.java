@@ -26,7 +26,6 @@ public class PermissionFragment extends Fragment {
     /**
      * PermissionFragment
      */
-    private static final String TAG = "PermissionFragment";
 
 
     // Instance of ViewModel
@@ -66,7 +65,7 @@ public class PermissionFragment extends Fragment {
             public void onChanged(List<PermissionModel> permissionModels) {
                 // TODO
                 if (permissionModels.size() == 0) {
-                    Timber.d("No permissions found");
+                    Timber.i("No permissions found");
 
                 }
 
@@ -83,7 +82,7 @@ public class PermissionFragment extends Fragment {
                     Timber.d("Open dialog");
 
                     DialogPermission dialogPermission = new DialogPermission();
-                    dialogPermission.show(getFragmentManager(), TAG);
+                    dialogPermission.show(getFragmentManager(), PermissionFragment.class.getSimpleName());
 
 
                 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <data>
@@ -17,42 +17,41 @@
 
 
         android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        android:layout_height="match_parent">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true"
             android:layout_centerInParent="true"
-            android:visibility="gone"
-            android:text="No has registrado ningún permiso" />
+            android:layout_centerVertical="true"
+            android:text="No has registrado ningún permiso"
+            android:visibility="gone" />
 
 
-        <ListView
-        android:id="@+id/permission_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:dividerHeight="30dp"
-        tools:listitem="permission_element"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/permission_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/list_view_divider"
+            android:dividerHeight="30dp"
             android:visibility="visible"
-        android:divider="@drawable/list_view_divider"></ListView>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="permission_element"></androidx.recyclerview.widget.RecyclerView>
 
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_permission_floating_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:onClick="@{() -> permissionViewModel.onAddNewPermission(true)}"
+            app:srcCompat="@drawable/ic_add" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_permission_floating_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:srcCompat="@drawable/ic_add"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:onClick="@{() -> permissionViewModel.onAddNewPermission(true)}" />
-
-</RelativeLayout>
+    </RelativeLayout>
 </layout>

@@ -4,6 +4,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import androidx.lifecycle.LiveData;
+
+import com.apptec.registrateapp.models.PermissionModel;
+
+import java.util.List;
+
 public class PermissionListAdapter extends BaseAdapter {
     /**
      * PermissionListAdapter
@@ -14,6 +20,8 @@ public class PermissionListAdapter extends BaseAdapter {
      */
 
 
+    // Data source
+    LiveData<List<PermissionModel>> listLiveData;
 
 
     @Override
