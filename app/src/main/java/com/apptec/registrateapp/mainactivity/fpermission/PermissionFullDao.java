@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Query;
 
-import com.apptec.registrateapp.repository.localdatabase.DBConstants;
-
 import java.util.List;
 
 @Dao
 public interface PermissionFullDao {
 
-    @Query("SELECT * FROM " + DBConstants.DV_PERMISSION_FULL)
+    @Query("SELECT * FROM permissionfull")
+        // Using the view
     LiveData<List<PermissionFull>> getAllPermissionsFull();
 }
