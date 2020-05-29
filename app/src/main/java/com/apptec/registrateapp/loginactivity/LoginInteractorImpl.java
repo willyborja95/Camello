@@ -4,20 +4,18 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface;
-import com.apptec.registrateapp.mainactivity.fpermission.PermissionTypeRetrofitInterface;
-import com.apptec.registrateapp.models.Company;
-import com.apptec.registrateapp.models.Device;
-import com.apptec.registrateapp.models.PermissionType;
-import com.apptec.registrateapp.models.User;
+import com.apptec.registrateapp.models.CompanyModel;
+import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UserCredential;
-import com.apptec.registrateapp.models.WorkzonesItem;
+import com.apptec.registrateapp.models.UserModel;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.repository.StaticData;
 import com.apptec.registrateapp.repository.localdatabase.DatabaseAdapter;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
@@ -25,8 +23,6 @@ import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHe
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.repository.webservices.pojoresponse.loginresponse.LoginResponse;
 import com.apptec.registrateapp.util.Constants;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
@@ -41,9 +37,11 @@ public class LoginInteractorImpl implements LoginInteractor {
      * Implementation of the interface
      */
 
+    private static final String TAG = "LoginInteractor";
+
     // Attributes
     LoginPresenterImpl loginPresenter; // Got as an attribute
-    private static final String TAG = "LoginInteractor";
+
 
     // Constructor
     public LoginInteractorImpl(LoginPresenterImpl loginPresenter) {
@@ -77,6 +75,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 
     @Override
     public void handleLogin(UserCredential userCredential) {
+        this.storageIMEI();
         LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
         Call<LoginResponse> call = loginRetrofitInterface.login(userCredential);
         call.enqueue(new Callback<LoginResponse>() {
@@ -87,52 +86,81 @@ public class LoginInteractorImpl implements LoginInteractor {
                 if (response.code() == 200) {
                     Log.d(TAG, response.body().toString());
 
-                    int id = response.body().getData().getId();
-                    String name = response.body().getData().getName();
-                    String lastname = response.body().getData().getName();
-                    String email = userCredential.getEmail();
+                    DeviceModel userDevice = response.body().getData().getDevice();
+                    if (!isCorrectDevice(userDevice)) {
+                        loginPresenter.doNotLetTheUserLogin();
+                    } else {
 
 
-                    User user = new User();
-                    user.setId(id);
-                    user.setName(name);
-                    user.setLastName(lastname);
-                    user.setEmail(email);
+                        int id = response.body().getData().getId();
+                        String name = response.body().getData().getName();
+                        String lastname = response.body().getData().getName();
+                        String email = userCredential.getEmail();
 
-                    // Getting the work zones
-                    ArrayList<WorkzonesItem> workZoneArrayList = new ArrayList<>();
-                    for(int i = 0; i < response.body().getData().getWorkzones().size(); i++){
-                        workZoneArrayList.add(response.body().getData().getWorkzones().get(i));
+                        // Getting the user
+                        UserModel user = new UserModel();
+                        user.setId(id);
+                        user.setName(name);
+                        user.setLastName(lastname);
+                        user.setEmail(email);
+
+                        // Getting the work zones
+                        ArrayList<WorkZoneModel> workZoneArrayList = new ArrayList<>();
+                        for (int i = 0; i < response.body().getData().getWorkzones().size(); i++) {
+                            workZoneArrayList.add(response.body().getData().getWorkzones().get(i));
+                        }
+
+                        // Getting the company
+                        CompanyModel company = new CompanyModel();
+                        company.setCompanyName(response.body().getData().getEnterprise());
+
+
+                        SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().getData().getTokens().getAccessToken().replace("\"", ""));
+                        SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, user.getId());
+                        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
+                        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
+
+                        if (response.body().getData().getDevice() != null) {
+                            SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
+                        } else {
+                            SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, true);
+                        }
+
+
+                        StaticData.setCurrentUser(user);
+
+                        // Storage thing into the database in a background thread
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                // Storage the user
+                                RoomHelper.getAppDatabaseInstance().userDao().insert(user);
+
+                                // Storage the device (if it exist)
+                                if (response.body().getData().getDevice() != null) {
+                                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(response.body().getData().getDevice());
+                                }
+
+                                // Storage the company
+                                RoomHelper.getAppDatabaseInstance().companyDao().insert(company);
+
+                                // Storage the work zones
+                                for (int i = 0; i < workZoneArrayList.size(); i++) {
+                                    RoomHelper.getAppDatabaseInstance().workZoneDao().insert(workZoneArrayList.get(i));
+                                }
+
+
+                            }
+                        }).start();
+
+
+                        loginPresenter.hideLoginProgressDialog();
+                        loginPresenter.navigateToNextView();
 
                     }
 
 
-                    Company company = new Company();
-                    company.setCompanyName(response.body().getData().getEnterprise());
-
-
-                    SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, response.body().getData().getTokens().getAccessToken().replace("\"", ""));
-                    SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, user.getId());
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
-
-
-
-                    StaticData.setCurrentUser(user);
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            RoomHelper.getAppDatabaseInstance().userDao().insert(user);
-                        }
-                    }).start();
-
-
-
-
-                    loginPresenter.hideLoginProgressDialog();
-                    loginPresenter.navigateToNextView();
-                    //   findUserDevice();
                 } else if (response.code() == 404 || response.code() == 401) {
                     loginPresenter.hideLoginProgressDialog();
                     loginPresenter.showMessage("Autenticación fallida", "El usuario y contraseña proporcionados no son correctos.");
@@ -168,10 +196,9 @@ public class LoginInteractorImpl implements LoginInteractor {
          * When the app is running by first time or is reinstalled. But not when is updated.
          *
          * Ask for device permissions.
-         * Read the IMEI and storage it on an shared preferences's variable.
          * Change to false the flag of "is first running"
          */
-
+        Log.w(TAG, "handleFirstRun: First run configurations");
         /** Asking for device permissions*/
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
@@ -189,6 +216,7 @@ public class LoginInteractorImpl implements LoginInteractor {
         /** Change to false the flag of "is first running" */
         SharedPreferencesHelper.putBooleanValue(Constants.IS_RUNNING_BY_FIRST_TIME, false);
 
+
     }
 
     @Override
@@ -200,87 +228,58 @@ public class LoginInteractorImpl implements LoginInteractor {
     }
 
 
-    /**
-     * Searching if the device is registered
-     */
-    public void findUserDevice() {
+    private boolean isCorrectDevice(DeviceModel userDevice) {
         /**
-         * TODO: Refactor this
+         * Check is the device's imei is the same with the user's device passes as param
          */
-        DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Log.d("User ", StaticData.getCurrentUser().getId() + "");
-        Call<JsonObject> deviceCall = deviceRetrofitInterface.get(ApiClient.getAccessToken(), StaticData.getCurrentUser().getId());
-        Log.d("Tokeen", ApiClient.getAccessToken());
-        deviceCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d("deviceImei", "DEVICE ON RESPONSE OK");
+        if (userDevice != null) {
+            String thisDeviceIMEI = SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "");
+            String userDeviceIMEI = userDevice.getIdentifier();
 
-
-                JsonArray deviceList = response.body().getAsJsonArray("data");
-
-                boolean deviceFound = false;
-                for (int i = 0; i < deviceList.size() && deviceFound == false; i++) {
-                    JsonObject jsonDevice = deviceList.get(i).getAsJsonObject();
-
-                    if (SharedPreferencesHelper.getSharedPreferencesInstance().getString(Constants.CURRENT_IMEI, "").equals(jsonDevice.get("imei").getAsString())) {
-                        Device device = new Device();
-                        int deviceId = jsonDevice.get("id").getAsInt();
-                        String deviceName = jsonDevice.get("nombre").getAsString();
-                        String deviceModel = jsonDevice.get("modelo").getAsString();
-                        String deviceImei = jsonDevice.get("imei").getAsString();
-                        boolean deviceStatus = jsonDevice.get("estado").getAsBoolean();
-                        device.setId(deviceId);
-                        device.setName(deviceName);
-                        device.setModel(deviceModel);
-                        device.setIdentifier(deviceImei);
-                        device.setActive(deviceStatus);
-                        DatabaseAdapter.getDatabaseAdapterInstance().insertDevice(device);
-                        deviceFound = true;
-                    }
-                }
-                findPermissionTypes();
+            if (!thisDeviceIMEI.equals(userDeviceIMEI)) {
+                /**
+                 * Case: Do not let the user login
+                 */
+                Log.d(TAG, "Return false");
+                return false;
             }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
+        }
+        return true;
 
     }
 
-    //Get PermissionType
-    public void findPermissionTypes() {
+    public void storageIMEI() {
         /**
-         * Refactor this
+         *
+         * Read the IMEI and storage it on an shared preferences's variable.
+         * Change to false the flag of "is first running"
          */
-        PermissionTypeRetrofitInterface permissionTypeRetrofitInterface = ApiClient.getClient().create(PermissionTypeRetrofitInterface.class);
-        final Call<JsonObject> permissionTypeCall = permissionTypeRetrofitInterface.get(ApiClient.getAccessToken());
-        permissionTypeCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonArray jsonLstPermissionType = response.body().getAsJsonArray("data");
-                if (jsonLstPermissionType.size() > 0) {
-                    for (int i = 0; i < jsonLstPermissionType.size(); i++) {
-                        JsonObject jsonPermissionType = jsonLstPermissionType.get(i).getAsJsonObject();
-                        int permissionTypeId = jsonPermissionType.get("id").getAsInt();
-                        String permissionTypeName = jsonPermissionType.get("nombre").getAsString();
-                        PermissionType permissionType = new PermissionType(permissionTypeId, permissionTypeName);
-                        DatabaseAdapter.getDatabaseAdapterInstance().insertPermissionType(permissionType);
-                        StaticData.getPermissionTypes().add(permissionType);
-                    }
+
+
+        /** Read the IMEI and storage it on an shared preferences's variable. */
+        TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(App.getContext().TELEPHONY_SERVICE);
+        String imei = "";
+
+        // Getting the imei
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // The permission eed to be granted first
+            } else {
+                if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
+                    imei = telephonyManager.getDeviceId();
                 }
-                loginPresenter.hideLoginProgressDialog();
-                loginPresenter.navigateToNextView();
+                if (android.os.Build.VERSION.SDK_INT >= 26) {
+                    imei = telephonyManager.getImei();
+                }
+                Log.d(TAG, "Got IMEI");
             }
+        }
+        // Saving it on shared preferences
+        SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
+        Log.d(TAG, "IMEI: " + imei);
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
     }
+
 
 
 }

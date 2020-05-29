@@ -10,15 +10,15 @@ import android.widget.TextView;
 import androidx.lifecycle.LiveData;
 
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.DeviceModel;
 
 import java.util.List;
 
 public class DeviceListAdapter extends BaseAdapter {
     Context context;
-    LiveData<List<Device>> devices;
+    LiveData<List<DeviceModel>> devices;
 
-    public DeviceListAdapter(Context context, LiveData<List<Device>> devices) {
+    public DeviceListAdapter(Context context, LiveData<List<DeviceModel>> devices) {
         this.context = context;
         this.devices = devices;
     }
@@ -33,7 +33,7 @@ public class DeviceListAdapter extends BaseAdapter {
         convertView = LayoutInflater.from(context).inflate(R.layout.card_view_device, null);
 
         // Getting the object by the position
-        Device device = getItem(position);
+        DeviceModel device = getItem(position);
 
         // Binding UI elements (Maybe with could use data binding in the future)
         TextView txtDeviceName = convertView.findViewById(R.id.text_view_device_name);
@@ -58,7 +58,7 @@ public class DeviceListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Device getItem(int position) {
+    public DeviceModel getItem(int position) {
         return devices.getValue().get(position);
     }
 

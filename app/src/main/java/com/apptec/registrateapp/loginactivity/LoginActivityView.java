@@ -5,7 +5,7 @@ public interface LoginActivityView {
     * The interface for the view.
     * */
 
-    // ToDo: Pass the LoginActivity methods here
+
     void navigateToNextView();
 
     void showMessage(String title, String message);
@@ -14,4 +14,5 @@ public interface LoginActivityView {
     void showLoginProgressDialog(String message);
     void hideLoginProgressDialog();
 
+    void doNotLetTheUserLogin();
 }

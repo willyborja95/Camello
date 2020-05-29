@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.File;
 
+@Deprecated
 public class DataBaseHelper  extends SQLiteOpenHelper {
     /**
      * Singleton class, that means that will be only one instance of this class and could be access
@@ -55,7 +56,6 @@ public class DataBaseHelper  extends SQLiteOpenHelper {
     }
 
 
-
     public static synchronized DataBaseHelper getInstance(Context context, String databaseName, SQLiteDatabase.CursorFactory factory, int dbVersion) {
         /**
          * Use the application context, which will ensure that you
@@ -75,8 +75,6 @@ public class DataBaseHelper  extends SQLiteOpenHelper {
          */
         return sInstance;
     }
-
-
 
 
 }

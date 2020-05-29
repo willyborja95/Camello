@@ -1,5 +1,6 @@
 package com.apptec.registrateapp.models;
 
+
 public class UpdatePushTokenBody {
 
     private String pushToken;

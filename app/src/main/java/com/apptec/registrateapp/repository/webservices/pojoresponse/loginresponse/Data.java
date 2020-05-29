@@ -1,14 +1,29 @@
 package com.apptec.registrateapp.repository.webservices.pojoresponse.loginresponse;
 
-import com.apptec.registrateapp.models.WorkzonesItem;
+import androidx.annotation.Nullable;
+
+import com.apptec.registrateapp.models.DeviceModel;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class Data{
 
+    @SerializedName("employeeId")
+    private int id;
+
 	@SerializedName("name")
 	private String name;
+
+    @SerializedName("lastname")
+    private String lastname;
+
+    @SerializedName("workzones")
+    private List<WorkZoneModel> workzones;
+
+    @SerializedName("device")
+    private DeviceModel device;
 
 	@SerializedName("tokens")
 	private Tokens tokens;
@@ -16,14 +31,6 @@ public class Data{
 	@SerializedName("enterprise")
 	private String enterprise;
 
-	@SerializedName("id")
-	private int id;
-
-	@SerializedName("workzones")
-	private List<WorkzonesItem> workzones;
-
-	@SerializedName("lastname")
-	private String lastname;
 
 
 	// Setter and getter
@@ -59,11 +66,11 @@ public class Data{
 		this.id = id;
 	}
 
-	public List<WorkzonesItem> getWorkzones() {
+    public List<WorkZoneModel> getWorkzones() {
 		return workzones;
 	}
 
-	public void setWorkzones(List<WorkzonesItem> workzones) {
+    public void setWorkzones(List<WorkZoneModel> workzones) {
 		this.workzones = workzones;
 	}
 
@@ -75,17 +82,25 @@ public class Data{
 		this.lastname = lastname;
 	}
 
+    @Nullable
+    public DeviceModel getDevice() {
+        return device;
+    }
 
+    public void setDevice(@Nullable DeviceModel device) {
+        this.device = device;
+    }
 
 	@Override
- 	public String toString(){
-		return 
-			"Data{" + 
-			"name = '" + name + '\'' + 
-			",tokens = '" + tokens + '\'' + 
-			",id = '" + id + '\'' + 
-			",workzones = '" + workzones + '\'' + 
-			",lastname = '" + lastname + '\'' + 
-			"}";
-		}
+	public String toString() {
+		return "Data{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", lastname='" + lastname + '\'' +
+				", workzones=" + workzones +
+				", device=" + device +
+				", tokens=" + tokens +
+				", enterprise='" + enterprise + '\'' +
+				'}';
+	}
 }

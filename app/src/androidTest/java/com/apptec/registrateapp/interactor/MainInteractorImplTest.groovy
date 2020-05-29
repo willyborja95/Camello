@@ -2,7 +2,7 @@ package com.apptec.registrateapp.interactor
 
 import android.util.Log
 import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface
-import com.apptec.registrateapp.models.Device
+import com.apptec.registrateapp.models.DeviceModel
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper
 import com.apptec.registrateapp.repository.webservices.ApiClient
 import com.apptec.registrateapp.util.Constants
@@ -10,7 +10,7 @@ import com.google.gson.JsonObject
 import org.junit.Test
 import retrofit2.Call
 
-class MainInteractorImplTest extends GroovyTestCase {
+class MainInteractorImplTest {
 
     private final TAG = MainInteractorImplTest.getClass().name;
     public static final long TEST_LONG = 12345678L;
@@ -32,7 +32,7 @@ class MainInteractorImplTest extends GroovyTestCase {
         Log.d(TAG, "Save this device into the server.");
 
         // Build the device object
-        Device thisDevice = new Device();
+        DeviceModel thisDevice = new DeviceModel();
         thisDevice.setName(name);
         thisDevice.setModel(model);
         thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
@@ -45,36 +45,6 @@ class MainInteractorImplTest extends GroovyTestCase {
                 // This device
                 thisDevice
         );
-
-        Log.t(TAG, "Testiando");
-
-//
-//        call.enqueue(new Callback<JsonObject>() {
-//            @Override
-//            public void onResponse(Call<JsonObject> _call, Response<JsonObject> response) {
-//
-//
-//                // Change the flag
-//                if (response.isSuccessful()) {
-//
-//                    isNeedRegisterDevice.postValue(false);      // Change the flag to the view model
-//
-//                    // Delete other devices if the database is populated
-//
-//
-//                    Log.d(TAG, "Save this device information in the local database");
-//                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JsonObject> _call, Throwable t) {
-//                // TODO
-//
-//            }
-//        });
 
 
     }

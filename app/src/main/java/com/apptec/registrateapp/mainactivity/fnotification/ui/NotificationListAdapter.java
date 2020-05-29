@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.lifecycle.LiveData;
 
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.models.Notification;
+import com.apptec.registrateapp.models.NotificationModel;
 
 import java.util.List;
 
@@ -20,10 +20,10 @@ public class NotificationListAdapter extends BaseAdapter {
      */
     // Attributes
     Context context;
-    LiveData<List<Notification>> notifications;
+    LiveData<List<NotificationModel>> notifications;
 
 
-    public NotificationListAdapter(Context context, LiveData<List<Notification>> notifications) {
+    public NotificationListAdapter(Context context, LiveData<List<NotificationModel>> notifications) {
         /**
          * Constructor
          * */
@@ -36,10 +36,12 @@ public class NotificationListAdapter extends BaseAdapter {
         /**
          * This method will be used to attach the card view of notification to the list view.
          * */
-        convertView = LayoutInflater.from(context).inflate(R.layout.notification_card_view, null);
+        convertView = LayoutInflater
+                .from(context)
+                .inflate(R.layout.notification_card_view, null);
 
         // Getting the object by the position
-        Notification notification = getItem(position);
+        NotificationModel notification = getItem(position);
 
         // Binding UI elements
         TextView title = convertView.findViewById(R.id.notification_title);
@@ -59,7 +61,7 @@ public class NotificationListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Notification getItem(int position) {
+    public NotificationModel getItem(int position) {
         return notifications.getValue().get(position);
     }
 

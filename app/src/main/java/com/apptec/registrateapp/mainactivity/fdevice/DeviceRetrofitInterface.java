@@ -1,10 +1,7 @@
 package com.apptec.registrateapp.mainactivity.fdevice;
 
-import androidx.lifecycle.LiveData;
-
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UpdatePushTokenBody;
-import com.apptec.registrateapp.repository.webservices.ApiResponse;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
@@ -21,7 +18,7 @@ public interface DeviceRetrofitInterface {
 
 
     @POST(Constants.REGISTER_DEVICE_URL)
-    Call<JsonObject> registerDevice(@Header(Constants.AUTHORIZATION_HEADER) String token, @Body Device device);
+    Call<JsonObject> registerDevice(@Header(Constants.AUTHORIZATION_HEADER) String token, @Body DeviceModel device);
 
     @GET("dispositivo/empleado/{userId}")
     Call<JsonObject> get(@Header(Constants.AUTHORIZATION_HEADER) String token, @Path("userId") int userId);
@@ -37,13 +34,6 @@ public interface DeviceRetrofitInterface {
     Call<JsonObject> getDeviceInfo(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
             @Query("identifier") String IMEI);
-
-
-    @GET(Constants.REQUEST_DEVICE_INFO_URL)
-    LiveData<ApiResponse<JsonObject>> getDeviceInfoLiveData(
-            @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
-            @Query("identifier") String IMEI
-    );
 
 
     @PATCH(Constants.UPDATE_FIREBASE_TOKEN_URL)

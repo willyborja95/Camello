@@ -65,5 +65,11 @@
     <string name="label_notification_sent_date">Fecha de envío:</string>
     <string name="tools_title_example">Lorem Ipsum</string>
     <string name="tools_date_example">06/04/2020</string>
+    <string name="notification_exit_title">Se ha registrado su salida</string>
+    <string name="dialog_permission_title">Solicitar Permiso</string>
+    <string name="start_date_label">Fecha inicio</string>
+    <string name="end_date_label">Fecha fin</string>
+    <string name="permission_positive_button">Ok</string>
+    <string name="permission_negative_button">Cancelar</string>
 
 </resources>

@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.apptec.registrateapp.models.Device;
+import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
@@ -17,6 +17,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class DevicePresenterImpl {
     /**
@@ -31,7 +32,7 @@ public class DevicePresenterImpl {
 
     }
 
-    public LiveData<List<Device>> loadAllDevicesLiveData() {
+    public LiveData<List<DeviceModel>> loadAllDevicesLiveData() {
         /**  Getting the device*/
         return RoomHelper.getAppDatabaseInstance().deviceDao().loadAllDevicesLiveData();
     }
@@ -44,7 +45,7 @@ public class DevicePresenterImpl {
         Log.d(TAG, "Save this device into the server.");
 
         // Build the device object
-        Device thisDevice = new Device();
+        DeviceModel thisDevice = new DeviceModel();
         thisDevice.setName(name);
         thisDevice.setModel(model);
         thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
@@ -62,8 +63,7 @@ public class DevicePresenterImpl {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
-                Log.d(TAG, "Shot the API");
-                Log.d(TAG, "Device: " + thisDevice.toString());
+
                 // Change the flag
                 if (response.isSuccessful()) {
 
@@ -73,7 +73,7 @@ public class DevicePresenterImpl {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d(TAG, "Save this device information in the local database");
+                            Timber.d("Save this device information in the local database");
                             RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
                         }
                     }).start();

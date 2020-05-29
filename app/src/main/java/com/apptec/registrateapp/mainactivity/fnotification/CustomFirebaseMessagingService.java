@@ -5,7 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.apptec.registrateapp.models.Notification;
+import com.apptec.registrateapp.models.NotificationModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
@@ -51,7 +51,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService {
             Date expirationDate =  new Date(Long.parseLong(map.get("expirationDate").toString())*1000);
             Date sentDate = new Date(Long.parseLong(map.get("sentDate").toString())* 1000);
 
-            Notification notification = new Notification(title, text, expirationDate, sentDate);
+            NotificationModel notification = new NotificationModel(title, text, expirationDate, sentDate);
 
 
             /**

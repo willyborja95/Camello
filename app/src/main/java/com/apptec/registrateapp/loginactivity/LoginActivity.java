@@ -128,6 +128,15 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         progressDialog.dismiss();
     }
 
+    @Override
+    public void doNotLetTheUserLogin() {
+        /**
+         * Show an error message
+         */
+        this.showMessage("Ah ocurrido un error", "Al perecer este dispositivo está registrado a otro usuario");
+        this.hideLoginProgressDialog();
+    }
+
 
     @Override
     public void showMessage(String title, String message) {

@@ -6,7 +6,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.apptec.registrateapp.models.WorkingPeriod;
+import com.apptec.registrateapp.models.WorkingPeriodModel;
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 
 @Dao
 public interface WorkingPeriodDao {
@@ -14,18 +15,22 @@ public interface WorkingPeriodDao {
      * Dao for working period
      */
 
-    @Query("SELECT * FROM workingperiod WHERE id=(Select MAX(id) FROM workingperiod)")
-    LiveData<WorkingPeriod> getLiveDataLastWorkingPeriod();
+    @Query("SELECT * FROM " + DBConstants.WORKING_PERIOD_TABLE + " WHERE " + DBConstants.WORKING_PERIOD_PK +
+            "=(Select MAX(" + DBConstants.WORKING_PERIOD_PK + ") FROM " + DBConstants.WORKING_PERIOD_TABLE + ")")
+    LiveData<WorkingPeriodModel> getLiveDataLastWorkingPeriod();
 
-    @Query("SELECT * FROM workingperiod ORDER BY id DESC LIMIT 1")
-    WorkingPeriod getLastWorkingPeriod();
+    @Query("SELECT * FROM " + DBConstants.WORKING_PERIOD_TABLE + " ORDER BY " + DBConstants.WORKING_PERIOD_PK +
+            " DESC LIMIT 1")
+    WorkingPeriodModel getLastWorkingPeriod();
 
     @Insert
-    void insert(WorkingPeriod workingPeriod);
+    void insert(WorkingPeriodModel workingPeriod);
 
     @Delete
-    void delete(WorkingPeriod workingPeriod);
+    void delete(WorkingPeriodModel workingPeriod);
 
-    @Query("UPDATE workingperiod SET status=:status WHERE id=(Select MAX(id) FROM workingperiod)")
+    @Query("UPDATE " + DBConstants.WORKING_PERIOD_TABLE + " SET " + DBConstants.WORKING_PERIOD_STATUS + "=:status " +
+            "WHERE " + DBConstants.WORKING_PERIOD_PK + "=(Select MAX(" + DBConstants.WORKING_PERIOD_PK + ") " +
+            "FROM " + DBConstants.WORKING_PERIOD_TABLE + ")")
     void changeLastWorkingPeriod(int status);
 }

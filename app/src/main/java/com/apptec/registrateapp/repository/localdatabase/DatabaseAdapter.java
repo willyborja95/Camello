@@ -6,17 +6,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.apptec.registrateapp.App;
-import com.apptec.registrateapp.models.Company;
-import com.apptec.registrateapp.models.Device;
-import com.apptec.registrateapp.models.Notification;
+import com.apptec.registrateapp.models.CompanyModel;
+import com.apptec.registrateapp.models.DeviceModel;
+import com.apptec.registrateapp.models.NotificationModel;
 import com.apptec.registrateapp.models.PermissionType;
-import com.apptec.registrateapp.models.User;
+import com.apptec.registrateapp.models.UserModel;
 
 import java.io.File;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+@Deprecated
 public class DatabaseAdapter {
 
     private static String DB_NAME = "registrateapp"; // Database name
@@ -39,7 +40,7 @@ public class DatabaseAdapter {
     }
 
     //User database functions
-    public boolean insertUser(User user) {
+    public boolean insertUser(UserModel user) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", user.getId());
         contentValues.put("names", user.getName());
@@ -48,8 +49,8 @@ public class DatabaseAdapter {
         return sqLiteDatabase.insert("User", null, contentValues) > 0;
     }
 
-    public User getUser() {
-        User user = new User();
+    public UserModel getUser() {
+        UserModel user = new UserModel();
         Cursor cursor = sqLiteDatabase.query("User", null, null, null, null, null, null);
         if (cursor != null & cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -67,7 +68,7 @@ public class DatabaseAdapter {
     }
 
     //Device database functions
-    public boolean insertDevice(Device device) {
+    public boolean insertDevice(DeviceModel device) {
         deleteDevice();
         int deviceStatus = 0;
         if (device.isActive() == false) {
@@ -84,12 +85,12 @@ public class DatabaseAdapter {
         return sqLiteDatabase.insert("Device", null, contentValues) > 0;
     }
 
-    public Device getDevice() {
-        Device device = null;
+    public DeviceModel getDevice() {
+        DeviceModel device = null;
         Cursor cursor = sqLiteDatabase.query("Device", null, null, null, null, null, null);
         if (cursor != null & cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                device = new Device();
+                device = new DeviceModel();
                 int deviceStatus = cursor.getInt(4);
                 device.setId(cursor.getInt(0));
                 device.setName(cursor.getString(1));
@@ -111,8 +112,8 @@ public class DatabaseAdapter {
 
     //Company database functions
 
-    public Company getCompany(){
-        Company company = new Company();
+    public CompanyModel getCompany() {
+        CompanyModel company = new CompanyModel();
         Cursor cursor = sqLiteDatabase.query("Company", null, null, null, null, null, null);
         if (cursor != null & cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -131,7 +132,7 @@ public class DatabaseAdapter {
     public boolean insertPermissionType(PermissionType permissionType) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", permissionType.getId());
-        contentValues.put("name", permissionType.getNombe());
+//        contentValues.put("name", permissionType.getNombe());
         return sqLiteDatabase.insert("PermissionType", null, contentValues) > 0;
     }
 
@@ -158,7 +159,7 @@ public class DatabaseAdapter {
 
 
     // Insert notification
-    public boolean insertNotification(Notification notification){
+    public boolean insertNotification(NotificationModel notification) {
         /**
          * It is messy
          */
@@ -170,11 +171,11 @@ public class DatabaseAdapter {
         return sqLiteDatabase.insert("Notification", null, contentValues) > 0;
     }
 
-    public ArrayList<Notification> getNotifications(){
+    public ArrayList<NotificationModel> getNotifications() {
         /**
          * It is messy
          */
-        ArrayList<Notification> notifications = new ArrayList<Notification>();
+        ArrayList<NotificationModel> notifications = new ArrayList<NotificationModel>();
         Cursor cursor = sqLiteDatabase.query("Notification", null, null, null, null, null, null);
         if (cursor != null & cursor.getCount() > 0){
             while (cursor.moveToNext()){

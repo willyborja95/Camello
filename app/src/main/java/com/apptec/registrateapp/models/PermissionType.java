@@ -5,20 +5,26 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
-@Entity
+@Entity(tableName = DBConstants.PERMISSION_TYPE_TABLE)
 public class PermissionType implements Serializable {
 
     @PrimaryKey
+    @ColumnInfo(name = DBConstants.PERMISSION_TYPE_PK)
+    @SerializedName("id")
     private int id;
 
-    @ColumnInfo(name = "nombre")
-    private String nombe;
+    @ColumnInfo(name = DBConstants.PERMISSION_TYPE_NAME)
+    @SerializedName("name")
+    private String typeName;
 
-    public PermissionType(int id, String permissionType) {
+    public PermissionType(int id, String typeName) {
         this.id = id;
-        this.nombe = permissionType;
+        this.typeName = typeName;
     }
 
     public int getId() {
@@ -29,17 +35,17 @@ public class PermissionType implements Serializable {
         this.id = id;
     }
 
-    public String getNombe() {
-        return nombe;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setNombe(String nombe) {
-        this.nombe = nombe;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return this.nombe;
+        return "" + getTypeName();
     }
 }

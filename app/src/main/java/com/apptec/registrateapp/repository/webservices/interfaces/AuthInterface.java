@@ -1,6 +1,6 @@
 package com.apptec.registrateapp.repository.webservices.interfaces;
 
-import com.apptec.registrateapp.repository.workers.retreshtoken.RefreshTokenBody;
+import com.apptec.registrateapp.auth.refreshtoken.RefreshTokenBody;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 

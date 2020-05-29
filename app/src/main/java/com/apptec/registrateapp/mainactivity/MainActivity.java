@@ -23,7 +23,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.loginactivity.LoginActivity;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements
     private TextView userFullName;
     private NavController navController;
 
+
     TextView toolbar_name;
 
     MainViewModel mainViewModel;
@@ -62,10 +65,6 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);                    // Getting the view model
-
-        // TODO: remove this
-        telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
-
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view_2);
         drawer = findViewById(R.id.drawer_layout_2);
@@ -103,8 +102,8 @@ public class MainActivity extends AppCompatActivity implements
         mainViewModel.setActiveFragmentName(getString(R.string.home_fragment_title));
         mainViewModel.getActiveFragmentName().observe(this, new Observer<String>() {
             @Override
-            public void onChanged(String s) {
-                toolbar_name.setText(s);
+            public void onChanged(String newActiveFragmentsName) {
+                toolbar_name.setText(newActiveFragmentsName);
             }
         });
 
@@ -141,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements
 
                 return true;
             }
+
+
         });
 
 
@@ -150,8 +151,29 @@ public class MainActivity extends AppCompatActivity implements
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
                     // That mean the user needs to register this device
-                    // TODO: Register device
+                    // Register device
                     navController.navigate(R.id.deviceFragment);
+
+                }
+            }
+        });
+
+        // Setting up the geofence ?
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                App.getGeofenceHelper().setUpGeofencing();
+            }
+        });
+
+
+        // Know if logout or not
+        mainViewModel.getIsUserLogged().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean loggedUser) {
+                if (!loggedUser) {
+                    // Logout
+                    navigateToLogoutView();
 
                 }
             }
@@ -284,8 +306,8 @@ public class MainActivity extends AppCompatActivity implements
                 finish();
                 break;
 
-            case R.id.cerrar_sesion:
-                // TODO
+            case R.id.logout_button:
+                mainViewModel.logout();
                 break;
         }
         return true;
@@ -294,6 +316,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public void navigateToLogoutView() {
+        /**
+         * Navigate to the next activity
+         */
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
 }
