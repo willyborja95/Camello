@@ -48,9 +48,6 @@ public interface PermissionRetrofitInterface {
     );
 
 
-
-
-
     @GET(Constants.PERMISSIONS_STATUS_URL)
     Call<JsonObject> getPermissionStatus(
             @Header(Constants.AUTHORIZATION_HEADER) String token,
@@ -59,7 +56,7 @@ public interface PermissionRetrofitInterface {
 
     @GET(Constants.ALL_PERMISSIONS_URL)
         // api/permission/employee/3
-    Call<List<PermissionDto>> getAllPermissions(
+    Call<GeneralResponse<List<PermissionDto>>> getAllPermissions(
             @Header(Constants.AUTHORIZATION_HEADER) String token,
             @Path("userId") int userId
 
