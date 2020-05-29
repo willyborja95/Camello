@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Data{
 
-    @SerializedName("id")
+    @SerializedName("employeeId")
     private int id;
 
 	@SerializedName("name")

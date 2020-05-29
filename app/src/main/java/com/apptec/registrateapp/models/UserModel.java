@@ -6,22 +6,25 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-@Entity
+@Entity(tableName = DBConstants.USER_TABLE)
 public class UserModel implements Serializable {
 
+    @ColumnInfo(name = DBConstants.USER_PK)
     @PrimaryKey
     private int id;
 
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = DBConstants.USER_NAME)
     private String name;
 
-    @ColumnInfo(name = "lastName")
+    @ColumnInfo(name = DBConstants.USER_LAST_NAME)
     private String lastName;
 
-    @ColumnInfo(name = "email")
+    @ColumnInfo(name = DBConstants.USER_EMAIL)
     private String email;
 
     @Embedded

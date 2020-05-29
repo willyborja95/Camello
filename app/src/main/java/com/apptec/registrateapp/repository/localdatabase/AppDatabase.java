@@ -5,6 +5,8 @@ import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import com.apptec.registrateapp.mainactivity.fpermission.PermissionFull;
+import com.apptec.registrateapp.mainactivity.fpermission.PermissionFullDao;
 import com.apptec.registrateapp.models.CompanyModel;
 import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.NotificationModel;
@@ -36,7 +38,10 @@ import com.apptec.registrateapp.repository.localdatabase.daos.WorkingPeriodDao;
         PermissionType.class,
         PermissionStatus.class,
         PermissionModel.class},
-        version = 12,
+        views = {
+                PermissionFull.class
+        },
+        version = 14,
         exportSchema = true)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -65,5 +70,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PermissionStatusDao permissionStatusDao();
 
     public abstract PermissionTypeDao permissionTypeDao();
+
+    public abstract PermissionFullDao permissionFullDao();
 
 }

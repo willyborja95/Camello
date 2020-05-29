@@ -2,29 +2,37 @@ package com.apptec.registrateapp.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 
 import java.util.Date;
 
-@Entity
+@Entity(tableName = DBConstants.WORKING_PERIOD_TABLE)
 public class WorkingPeriodModel {
 
+    @ColumnInfo(name = DBConstants.WORKING_PERIOD_PK)
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @ColumnInfo(name = "work_zone")
-    private int workzoneId;
-
+    @ColumnInfo(name = DBConstants.WORKING_PERIOD_START_DATE)
     private Date start_date;
 
+    @ColumnInfo(name = DBConstants.WORKING_PERIOD_END_DATE)
     private Date end_date;
 
+    @ColumnInfo(name = DBConstants.WORKING_PERIOD_STATUS)
     private int status;                 // 1 = Started   2 = Finished  <0 = Canceled
 
+    @ColumnInfo(name = DBConstants.WORKING_PERIOD_WORK_ZONE_FK)
+    private int workZoneId;
+
     // Constructors
-    public WorkingPeriodModel(int id, int workzoneId, Date start_date, Date end_date, int status) {
+    @Ignore
+    public WorkingPeriodModel(int id, int workZoneId, Date start_date, Date end_date, int status) {
         this.id = id;
-        this.workzoneId = workzoneId;
+        this.workZoneId = workZoneId;
         this.start_date = start_date;
         this.end_date = end_date;
         this.status = status;
@@ -43,12 +51,12 @@ public class WorkingPeriodModel {
         this.id = id;
     }
 
-    public int getWorkzoneId() {
-        return workzoneId;
+    public int getWorkZoneId() {
+        return workZoneId;
     }
 
-    public void setWorkzoneId(int workzoneId) {
-        this.workzoneId = workzoneId;
+    public void setWorkZoneId(int workZoneId) {
+        this.workZoneId = workZoneId;
     }
 
     public Date getStart_date() {

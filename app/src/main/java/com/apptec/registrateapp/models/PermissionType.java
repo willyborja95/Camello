@@ -1,17 +1,25 @@
 package com.apptec.registrateapp.models;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
-@Entity
+@Entity(tableName = DBConstants.PERMISSION_TYPE_TABLE)
 public class PermissionType implements Serializable {
 
     @PrimaryKey
+    @ColumnInfo(name = DBConstants.PERMISSION_TYPE_PK)
+    @SerializedName("id")
     private int id;
 
+    @ColumnInfo(name = DBConstants.PERMISSION_TYPE_NAME)
+    @SerializedName("name")
     private String typeName;
 
     public PermissionType(int id, String typeName) {

@@ -3,11 +3,13 @@ package com.apptec.registrateapp.mainactivity.fpermission;
 import androidx.lifecycle.LiveData;
 
 import com.apptec.registrateapp.models.PermissionModel;
+import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
+import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
@@ -25,7 +27,6 @@ public class PermissionPresenterImpl {
     /**
      * Helps the interaction repository - view
      */
-    private static final String TAG = "PermissionPresenterImpl";
 
     public LiveData<List<PermissionModel>> getLiveDataListPermission() {
         /**
@@ -46,10 +47,6 @@ public class PermissionPresenterImpl {
                  * Call the service
                  * on success save the permission into database
                  */
-//                LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
-//                Call<LoginResponse> call = loginRetrofitInterface.login(userCredential);
-//                call.enqueue(new Callback<LoginResponse>() {
-//                }}
 
                 Date startDateDate = startDate.getTime();
                 Date endDateDate = endDate.getTime();
@@ -88,6 +85,7 @@ public class PermissionPresenterImpl {
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Timber.d("Saving the permission result into database");
                                     RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(permission);
                                 }
                             }).start();
@@ -95,8 +93,6 @@ public class PermissionPresenterImpl {
                             // TODO:
                             Timber.e("Response not successful");
                         }
-
-
 
                     }
 
@@ -113,6 +109,76 @@ public class PermissionPresenterImpl {
     }
 
 
+    public void pullPermissionCatalog() {
+        /**
+         * This method will pull the permission types available and the permission status from the network service
+         */
+
+        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
+
+
+        pullPermissionTypes(permissionRetrofitInterface);
+        pullPermissionStatus(permissionRetrofitInterface);
+
+    }
+
+    public void pullPermissionTypes(PermissionRetrofitInterface permissionRetrofitInterface) {
+        Timber.d("Starting to pull the permission types catalog from network");
+
+        // Pull the permission types
+
+        Call<GeneralResponse<List<PermissionType>>> callTypes = permissionRetrofitInterface.getPermissionTypesWrapped(ApiClient.getAccessToken());
+
+        callTypes.enqueue(new Callback<GeneralResponse<List<PermissionType>>>() {
+            @Override
+            public void onResponse(Call<GeneralResponse<List<PermissionType>>> call, Response<GeneralResponse<List<PermissionType>>> response) {
+
+                // Save the response into the database
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        RoomHelper.getAppDatabaseInstance().permissionTypeDao().insertAll(response.body().getWrappedData());
+                    }
+                }).start();
+
+            }
+
+            @Override
+            public void onFailure(Call<GeneralResponse<List<PermissionType>>> call, Throwable t) {
+                Timber.e(t, "onFailure: ");
+            }
+        });
+    }
+
+    public void pullPermissionStatus(PermissionRetrofitInterface permissionRetrofitInterface) {
+        Timber.d("Starting to pull the permission status catalog available");
+
+        // Pull the permission status
+        Call<GeneralResponse<List<PermissionStatus>>> callStatus = permissionRetrofitInterface.getPermissionStatusWrapped(ApiClient.getAccessToken());
+
+        callStatus.enqueue(new Callback<GeneralResponse<List<PermissionStatus>>>() {
+            @Override
+            public void onResponse(Call<GeneralResponse<List<PermissionStatus>>> call, Response<GeneralResponse<List<PermissionStatus>>> response) {
+                // Save the response into the database
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RoomHelper.getAppDatabaseInstance().permissionStatusDao().insertAll(response.body().getWrappedData());
+                    }
+                }).start();
+
+            }
+
+            @Override
+            public void onFailure(Call<GeneralResponse<List<PermissionStatus>>> call, Throwable t) {
+                Timber.e(t, "onFailure: ");
+            }
+        });
+
+    }
+
+
     public void syncPermissionsWithNetwork() {
         /**
          * This method will bring the permission of this user and save into the database
@@ -121,34 +187,32 @@ public class PermissionPresenterImpl {
 
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
 
-        Call<List<PermissionDto>> call = permissionRetrofitInterface.getAllPermissions(
+        Timber.wtf("Current user id: " + SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, 0));
+        Call<GeneralResponse<List<PermissionDto>>> syncPermissions = permissionRetrofitInterface.getAllPermissions(
                 ApiClient.getAccessToken(), // Header
-                SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, 0) // + Path
+                SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, 0) // + Path user id
         );
 
 
-        call.enqueue(new Callback<List<PermissionDto>>() {
+        syncPermissions.enqueue(new Callback<GeneralResponse<List<PermissionDto>>>() {
             @Override
-            public void onResponse(Call<List<PermissionDto>> call, Response<List<PermissionDto>> response) {
-
-                Timber.d(response.body().toString());
+            public void onResponse(Call<GeneralResponse<List<PermissionDto>>> call, Response<GeneralResponse<List<PermissionDto>>> response) {
+                Timber.d(response.body().getWrappedData().toString());
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for (int i = 0; i < response.body().size(); i++) {
+                        for (int i = 0; i < response.body().getWrappedData().size(); i++) {
                             // Save the list of permission into data
-                            RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(response.body().get(i).getAsPermissionModel());
+                            RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(response.body().getWrappedData().get(i).getAsPermissionModel());
                         }
                     }
                 }).start();
-
-
             }
 
             @Override
-            public void onFailure(Call<List<PermissionDto>> call, Throwable t) {
-
+            public void onFailure(Call<GeneralResponse<List<PermissionDto>>> call, Throwable t) {
+                Timber.e(t, "onFailure: ");
             }
         });
 

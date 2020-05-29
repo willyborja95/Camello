@@ -87,8 +87,8 @@ public class GeofenceHelper {
             geofenceList.add(new Geofence.Builder()
                     .setRequestId(workZones.get(i).getId() + "")
                     .setCircularRegion(
-                            Double.parseDouble(workZones.get(i).getLat()), // Latitude
-                            Double.parseDouble(workZones.get(i).getLng()), // Longitude
+                            Double.parseDouble(workZones.get(i).getLatitude()), // Latitude
+                            Double.parseDouble(workZones.get(i).getLongitude()), // Longitude
                             GeofenceConstants.GEOFENCE_RADIUS_IN_METERS // Radius
                     )
                     .setExpirationDuration(GeofenceConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)

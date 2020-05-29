@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.apptec.registrateapp.models.PermissionStatus;
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
@@ -20,6 +21,6 @@ public interface PermissionStatusDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<PermissionStatus> permissionStatusList);
 
-    @Query("SELECT * FROM PermissionStatus WHERE id = :id")
+    @Query("SELECT * FROM " + DBConstants.PERMISSION_STATUS_TABLE + " WHERE " + DBConstants.PERMISSION_STATUS_PK + " = :id")
     PermissionStatus getPermissionStatus(int id);
 }

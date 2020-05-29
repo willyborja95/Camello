@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.apptec.registrateapp.models.NotificationModel;
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ public interface NotificationDao {
      */
 
 
-    @Query("SELECT * FROM NotificationModel")
+    @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE)
     LiveData<List<NotificationModel>> loadAllLiveData();
 
-    @Query("SELECT * FROM NotificationModel where id = :id")
+    @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE + " where " + DBConstants.NOTIFICATION_PK + " = :id")
     List<NotificationModel> loadNotificationSync(int id);
 
     @Insert

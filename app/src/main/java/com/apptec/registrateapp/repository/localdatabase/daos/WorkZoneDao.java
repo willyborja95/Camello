@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.apptec.registrateapp.models.WorkZoneModel;
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
@@ -22,9 +23,9 @@ public interface WorkZoneDao {
     @Delete
     void delete(WorkZoneModel workZone);
 
-    @Query("SELECT * FROM WorkZoneModel")
+    @Query("SELECT * FROM " + DBConstants.WORK_ZONE_TABLE)
     List<WorkZoneModel> getListWorkZones();
 
-    @Query("Delete FROM workzonemodel")
+    @Query("Delete FROM " + DBConstants.WORK_ZONE_TABLE)
     void deleteAll();
 }

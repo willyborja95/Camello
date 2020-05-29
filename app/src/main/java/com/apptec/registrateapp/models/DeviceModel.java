@@ -4,33 +4,38 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-@Entity
+@Entity(tableName = DBConstants.DEVICE_TABLE)
 public class DeviceModel implements Serializable {
 
     @PrimaryKey
+    @ColumnInfo(name = DBConstants.DEVICE_PK)
     private int id;
 
-    @ColumnInfo(name = "name")
+
+    @ColumnInfo(name = DBConstants.DEVICE_NAME)
     private String name;
 
-    @ColumnInfo(name = "model")
+    @ColumnInfo(name = DBConstants.DEVICE_MODEL)
     private String model;
 
 
     @SerializedName("identifier")
+    @ColumnInfo(name = DBConstants.DEVICE_IDENTIFIER)
     private String identifier;   // This is the imei
 
-    @ColumnInfo(name = "active")
+
+    @ColumnInfo(name = DBConstants.DEVICE_ACTIVE)
     private boolean active;
 
-    @ColumnInfo(name = "pushToken")
+    @ColumnInfo(name = DBConstants.DEVICE_FIREBASE_TOKEN)
     private String pushToken;
 
-    @ColumnInfo(name = "platform")
+    @ColumnInfo(name = DBConstants.DEVICE_PLATFORM)
     private int platform = 0;        // 0 if it is Android and 1 if it is Iphone
 
     public int getId() {

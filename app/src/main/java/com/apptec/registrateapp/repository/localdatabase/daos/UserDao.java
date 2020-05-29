@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.apptec.registrateapp.models.UserModel;
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
@@ -17,13 +18,13 @@ public interface UserDao {
      * @return
      */
 
-    @Query("SELECT * FROM UserModel")
+    @Query("SELECT * FROM " + DBConstants.USER_TABLE)
     List<UserModel> getAll();
 
-    @Query("SELECT * FROM UserModel WHERE 1=1 LIMIT 1")
+    @Query("SELECT * FROM " + DBConstants.USER_TABLE + " WHERE 1=1 LIMIT 1")
     UserModel getUser();
 
-    @Query("SELECT * FROM UserModel WHERE 1=1 LIMIT 1")
+    @Query("SELECT * FROM " + DBConstants.USER_TABLE + " WHERE 1=1 LIMIT 1")
     LiveData<UserModel> getLiveDataUser();
 
     @Insert
@@ -32,7 +33,7 @@ public interface UserDao {
     @Delete
     void delete(UserModel user);
 
-    @Query("DELETE FROM usermodel")
+    @Query("DELETE FROM " + DBConstants.USER_TABLE)
     void deleteAll();
 
 

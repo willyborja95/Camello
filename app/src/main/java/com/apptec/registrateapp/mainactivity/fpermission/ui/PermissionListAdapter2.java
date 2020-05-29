@@ -49,7 +49,7 @@ public class PermissionListAdapter2 extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(context).inflate(R.layout.permission_element, null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.permission_item, null);
         ImageButton imgBtnDeletePermission = (ImageButton) convertView.findViewById(R.id.btnDeletePermission);
         imgBtnDeletePermission.setOnClickListener(new View.OnClickListener() {
             @Override

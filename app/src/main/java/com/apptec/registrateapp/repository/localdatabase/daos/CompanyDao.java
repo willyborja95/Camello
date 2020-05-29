@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.apptec.registrateapp.models.CompanyModel;
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 
 @Dao
 public interface CompanyDao {
@@ -21,7 +22,7 @@ public interface CompanyDao {
     @Delete
     void delete(CompanyModel company);
 
-    @Query("DELETE FROM companymodel")
+    @Query("DELETE FROM " + DBConstants.COMPANY_TABLE)
     void deleteAll();
 
 

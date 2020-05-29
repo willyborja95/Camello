@@ -1,39 +1,46 @@
 package com.apptec.registrateapp.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-@Entity(foreignKeys = {
+@Entity(tableName = DBConstants.PERMISSION_TABLE, foreignKeys = {
         @ForeignKey(entity = PermissionType.class,
-                parentColumns = "id",
-                childColumns = "fkPermissionType",
+                parentColumns = DBConstants.PERMISSION_TYPE_PK,
+                childColumns = DBConstants.PERMISSION_PERMISSION_TYPE_FK,
                 onDelete = ForeignKey.CASCADE),
 
         @ForeignKey(entity = PermissionStatus.class,
-                parentColumns = "id",
-                childColumns = "fkPermissionStatus",
+                parentColumns = DBConstants.PERMISSION_STATUS_PK,
+                childColumns = DBConstants.PERMISSION_PERMISSION_STATUS_FK,
                 onDelete = ForeignKey.CASCADE)
 })
 public class PermissionModel implements Serializable {
 
+    @ColumnInfo(name = DBConstants.PERMISSION_PK)
     @PrimaryKey
     private int id;
 
+    @ColumnInfo(name = DBConstants.PERMISSION_COMMENT)
     private String comment;
 
+    @ColumnInfo(name = DBConstants.PERMISSION_PERMISSION_TYPE_FK)
     @SerializedName("type")
     private int fkPermissionType;
 
+    @ColumnInfo(name = DBConstants.PERMISSION_PERMISSION_STATUS_FK)
     private int fkPermissionStatus;
 
-
+    @ColumnInfo(name = DBConstants.PERMISSION_START_DATE)
     private Long startDate;
 
+    @ColumnInfo(name = DBConstants.PERMISSION_END_DATE)
     private Long endDate;
 
 

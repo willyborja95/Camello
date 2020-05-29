@@ -1,91 +1,93 @@
 package com.apptec.registrateapp.mainactivity.fpermission.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.databinding.FragmentPermissionBinding;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
-import com.apptec.registrateapp.models.PermissionModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.apptec.registrateapp.mainactivity.fpermission.PermissionFull;
+import com.apptec.registrateapp.mainactivity.fpermission.PermissionViewModel;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 public class PermissionFragment extends Fragment {
     /**
      * PermissionFragment
      */
-    private static final String TAG = "PermissionFragment";
 
 
     // Instance of ViewModel
     private MainViewModel mainViewModel;
+    private PermissionViewModel permissionViewModel;
+
+    // Using data binding
+    FragmentPermissionBinding binding;
 
     // Ui elements
-    FloatingActionButton floatingActionButton;
-    ListView permissionsListView;
-    PermissionListAdapter permissionListAdapter;
+    PermissionAdapter permissionAdapter;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the main view model
+        permissionViewModel = ViewModelProviders.of(this).get(PermissionViewModel.class);        // Getting the view model exclusive of this fragment
+
         mainViewModel.setActiveFragmentName(getString(R.string.permissions_fragment_title));
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_permission, container, false);
-        floatingActionButton = view.findViewById(R.id.add_permission_floating_button);
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_permission, container, false);
+        binding.setPermissionViewModel(permissionViewModel);
+
+        // Create the adapter
+        permissionAdapter = new PermissionAdapter(mainViewModel.getPermissionFullList());
+
         // TODO: Observe the mPermissionList
-        mainViewModel.getPermissionsList().observe(this, new Observer<List<PermissionModel>>() {
+        mainViewModel.getPermissionFullList().observe(this, new Observer<List<PermissionFull>>() {
             @Override
-            public void onChanged(List<PermissionModel> permissionModels) {
-                // TODO
-
-            }
-        });
-
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /**
-                 * Open the dialog fragment to add a permission
-                 */
-                Log.d(TAG, "Open dialog");
-
-                DialogPermission dialogPermission = new DialogPermission();
-                dialogPermission.show(getFragmentManager(), TAG);
-
-
-            }
-        });
-
-
-        // When the user scroll down, then syn the permissions
-        view.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollX - oldScrollX > 1) {
-                    // If scroll down
-                    mainViewModel.syncPermissions();
+            public void onChanged(List<PermissionFull> permissionFulls) {
+                if (permissionFulls.size() > 0) {
+                    // Change the result list now
+                    binding.recyclerViewPermissionsList.setAdapter(permissionAdapter);
                 }
             }
         });
 
-        return view;
+        permissionViewModel.addNewPermission().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    /**
+                     * Open the dialog fragment to add a permission
+                     */
+                    Timber.d("Open dialog");
+
+                    DialogPermission dialogPermission = new DialogPermission();
+                    dialogPermission.show(getFragmentManager(), PermissionFragment.class.getSimpleName());
+
+
+                }
+            }
+        });
+
+        return binding.getRoot();
     }
 
 }
