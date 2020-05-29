@@ -1,18 +1,22 @@
 package com.apptec.registrateapp.models;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-@Entity
+@Entity(tableName = DBConstants.COMPANY_TABLE)
 public class CompanyModel implements Serializable {
 
     @PrimaryKey()
     @NonNull
+    @ColumnInfo(name = DBConstants.COMPANY_PK)
     private String companyName;
 
 

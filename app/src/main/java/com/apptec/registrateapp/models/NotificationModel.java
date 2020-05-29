@@ -5,9 +5,11 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
+
 import java.util.Date;
 
-@Entity
+@Entity(tableName = DBConstants.NOTIFICATION_TABLE)
 public class NotificationModel {
     /*
      * Model of a notification.
@@ -16,20 +18,21 @@ public class NotificationModel {
      * */
 
     // Attributes
+    @ColumnInfo(name = DBConstants.NOTIFICATION_PK)
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @ColumnInfo(name = "title")
+    @ColumnInfo(name = DBConstants.NOTIFICATION_TITLE)
     private String title;
 
-    @ColumnInfo(name = "text")
+    @ColumnInfo(name = DBConstants.NOTIFICATION_TEXT)
     private String text;
 
-    @ColumnInfo(name = "expirationDate")
-    private Date expirationDate;
-
-    @ColumnInfo(name = "sentDate")
+    @ColumnInfo(name = DBConstants.NOTIFICATION_SENT_DATE)
     private Date sentDate;
+
+    @ColumnInfo(name = DBConstants.NOTIFICATION_EXPIRATION)
+    private Date expirationDate;
 
     // Constructor
     public NotificationModel(String title, String text, Date expirationDate, Date sentDate) {

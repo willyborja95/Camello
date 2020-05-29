@@ -8,13 +8,14 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.apptec.registrateapp.models.PermissionModel;
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
 @Dao
 public interface PermissionDao {
 
-    @Query("SELECT * FROM permissionmodel")
+    @Query("SELECT * FROM " + DBConstants.PERMISSION_TABLE)
     LiveData<List<PermissionModel>> getLiveDataListPermission();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -24,6 +24,7 @@ public class DBConstants {
     public static final String DEVICE_TABLE = "device";
     public static final String DEVICE_PK = "device_id";
     public static final String DEVICE_NAME = "device_name";
+    public static final String DEVICE_MODEL = "device_model";
     public static final String DEVICE_IDENTIFIER = "device_identifier";
     public static final String DEVICE_ACTIVE = "device_active";
     public static final String DEVICE_FIREBASE_TOKEN = "device_token";
@@ -48,7 +49,7 @@ public class DBConstants {
     public static final String PERMISSION_PK = "permission_id";
     public static final String PERMISSION_COMMENT = "comment";
     public static final String PERMISSION_PERMISSION_TYPE_FK = "type_fk";
-    public static final String PERMISSION_PERMISSION_STATUS = "status_fk";
+    public static final String PERMISSION_PERMISSION_STATUS_FK = "status_fk";
     public static final String PERMISSION_START_DATE = "start_date";
     public static final String PERMISSION_END_DATE = "end_date";
 
@@ -64,9 +65,9 @@ public class DBConstants {
     /**
      * Permission type model
      */
-    public static final String PERMISSION_TYPE_TABLE = "pstatus";
-    public static final String PERMISSION_TYPE_PK = "pstatus_id";
-    public static final String PERMISSION_TYPE_NAME = "status_name";
+    public static final String PERMISSION_TYPE_TABLE = "ptype";
+    public static final String PERMISSION_TYPE_PK = "ptype_id";
+    public static final String PERMISSION_TYPE_NAME = "type_name";
 
 
     /**
@@ -95,6 +96,7 @@ public class DBConstants {
      */
     public static final String WORK_ZONE_TABLE = "zone";
     public static final String WORK_ZONE_PK = "zone_id";
+    public static final String WORK_ZONE_NAME = "zone_name";
     public static final String WORK_ZONE_LATITUDE = "lat";
     public static final String WORK_ZONE_LONGITUDE = "lng";
     public static final String WORK_ZONE_RADIUS = "radius";

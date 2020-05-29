@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.apptec.registrateapp.models.PermissionType;
+import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
@@ -21,9 +22,9 @@ public interface PermissionTypeDao {
     void insertAll(List<PermissionType> permissionTypeList);
 
 
-    @Query("SELECT * FROM permissiontype WHERE id = :id")
+    @Query("SELECT * FROM " + DBConstants.PERMISSION_TYPE_TABLE + " WHERE " + DBConstants.PERMISSION_TYPE_PK + " = :id")
     PermissionType getPermissionType(int id);
 
-    @Query("SELECT * FROM permissiontype")
+    @Query("SELECT * FROM " + DBConstants.PERMISSION_TYPE_TABLE)
     LiveData<List<PermissionType>> getPermissionTypes();
 }
