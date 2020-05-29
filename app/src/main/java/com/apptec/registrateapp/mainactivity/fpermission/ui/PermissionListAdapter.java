@@ -10,6 +10,7 @@ import com.apptec.registrateapp.models.PermissionModel;
 
 import java.util.List;
 
+@Deprecated
 public class PermissionListAdapter extends BaseAdapter {
     /**
      * PermissionListAdapter

@@ -15,8 +15,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.databinding.FragmentPermissionBinding;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
+import com.apptec.registrateapp.mainactivity.fpermission.PermissionFull;
 import com.apptec.registrateapp.mainactivity.fpermission.PermissionViewModel;
-import com.apptec.registrateapp.models.PermissionModel;
 
 import java.util.List;
 
@@ -32,13 +32,11 @@ public class PermissionFragment extends Fragment {
     private MainViewModel mainViewModel;
     private PermissionViewModel permissionViewModel;
 
+    // Using data binding
     FragmentPermissionBinding binding;
 
     // Ui elements
-
-
-    PermissionListAdapter permissionListAdapter;
-
+    PermissionAdapter permissionAdapter;
 
 
     @Override
@@ -58,17 +56,17 @@ public class PermissionFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_permission, container, false);
         binding.setPermissionViewModel(permissionViewModel);
 
+        // Create the adapter
+        permissionAdapter = new PermissionAdapter(mainViewModel.getPermissionFullList());
 
         // TODO: Observe the mPermissionList
-        mainViewModel.getPermissionsList().observe(this, new Observer<List<PermissionModel>>() {
+        mainViewModel.getPermissionFullList().observe(this, new Observer<List<PermissionFull>>() {
             @Override
-            public void onChanged(List<PermissionModel> permissionModels) {
-                // TODO
-                if (permissionModels.size() == 0) {
-                    Timber.i("No permissions found");
-
+            public void onChanged(List<PermissionFull> permissionFulls) {
+                if (permissionFulls.size() > 0) {
+                    // Change the result list now
+                    binding.recyclerViewPermissionsList.setAdapter(permissionAdapter);
                 }
-
             }
         });
 
