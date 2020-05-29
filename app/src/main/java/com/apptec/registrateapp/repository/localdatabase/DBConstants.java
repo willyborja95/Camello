@@ -102,4 +102,11 @@ public class DBConstants {
     public static final String WORK_ZONE_RADIUS = "radius";
 
 
+    /**
+     * Views names
+     * DV means 'DatabaseView'
+     */
+    public static final String DV_PERMISSION_FULL = "dv_permission_full";
+
+
 }
