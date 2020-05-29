@@ -18,10 +18,10 @@ import com.apptec.registrateapp.auth.refreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.mainactivity.fdevice.DevicePresenterImpl;
 import com.apptec.registrateapp.mainactivity.fhome.HomePresenterImpl;
 import com.apptec.registrateapp.mainactivity.fnotification.NotificationPresenterImpl;
+import com.apptec.registrateapp.mainactivity.fpermission.PermissionFull;
 import com.apptec.registrateapp.mainactivity.fpermission.PermissionPresenterImpl;
 import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.NotificationModel;
-import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
@@ -40,15 +40,14 @@ public class MainViewModel extends AndroidViewModel {
     private final String TAG = MainViewModel.class.getSimpleName();
 
 
-
     // To show the notifications
     private final LiveData<List<NotificationModel>> mNotifications; // List of notifications
 
     // To show devices
     private final LiveData<List<DeviceModel>> mDevices;          // List of user devices
 
-    // TO show the permissions
-    private final LiveData<List<PermissionModel>> mPermissions;    // Lst of permissions
+    // To show the permissions
+    private LiveData<List<PermissionFull>> mPermissionFullList;
 
     // Toolbar name according the active fragment
     private MutableLiveData<String> mActiveFragmentName;
@@ -92,7 +91,7 @@ public class MainViewModel extends AndroidViewModel {
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();      // It is used to set the toolbar title
         mLastWorkingPeriod = homePresenter.getLiveDataLastWorkingPeriod();
-        mPermissions = permissionPresenter.getLiveDataListPermission();
+        mPermissionFullList = RoomHelper.getAppDatabaseInstance().permissionFullDao().getAllPermissionsFull();
 
 
         // Handle the first login if is needed
@@ -104,8 +103,8 @@ public class MainViewModel extends AndroidViewModel {
         isUserLogged = new MutableLiveData<>(true);
 
         // Pull data from the permission catalog
-        permissionPresenter.syncPermissionsWithNetwork();
         permissionPresenter.pullPermissionCatalog();
+        permissionPresenter.syncPermissionsWithNetwork();
 
 
 
@@ -150,11 +149,9 @@ public class MainViewModel extends AndroidViewModel {
 
     }
 
-    public LiveData<List<PermissionModel>> getPermissionsList() {
-        /**
-         * Expose the list of permission from the database
-         */
-        return this.mPermissions;
+    public LiveData<List<PermissionFull>> getPermissionFullList() {
+        /** Exposing the list of permissions */
+        return this.mPermissionFullList;
     }
 
 

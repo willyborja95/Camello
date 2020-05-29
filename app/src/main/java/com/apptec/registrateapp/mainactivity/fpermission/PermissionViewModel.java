@@ -11,22 +11,29 @@ public class PermissionViewModel extends ViewModel {
      * Singular view model fro the fragment actions
      * <p>
      * The permission list will be on the main presenter for not be getting the data each time that the fragment onResume
+     * <p>
+     * Note: Do not put data what will hit the database because it will make the query every time the fragment is onResume.
+     * Put it on the main view model instead.
      */
 
     // Variables that observe the fragment view from the get methods
     private MutableLiveData<Boolean> _addNewPermission = new MutableLiveData<Boolean>();
 
+
     public PermissionViewModel() {
         // Constructor
         Timber.d("Permission view model attached");
+
     }
 
-    // Expose the data
+    /**
+     * Expose the data
+     */
     public LiveData<Boolean> addNewPermission() {
         /**
          * This method will be observed by the fragment viewe
          */
-        return _addNewPermission;
+        return this._addNewPermission;
     }
 
 
