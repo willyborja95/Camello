@@ -139,6 +139,7 @@ public class PermissionPresenterImpl {
                     public void run() {
 
                         RoomHelper.getAppDatabaseInstance().permissionTypeDao().insertAll(response.body().getWrappedData());
+                        Timber.d("Permission types catalog pulled successfully");
                     }
                 }).start();
 
@@ -146,7 +147,7 @@ public class PermissionPresenterImpl {
 
             @Override
             public void onFailure(Call<GeneralResponse<List<PermissionType>>> call, Throwable t) {
-                Timber.e(t, "onFailure: ");
+                Timber.e(t, "onFailure pullPermissionTypes: ");
             }
         });
     }
@@ -165,6 +166,7 @@ public class PermissionPresenterImpl {
                     @Override
                     public void run() {
                         RoomHelper.getAppDatabaseInstance().permissionStatusDao().insertAll(response.body().getWrappedData());
+                        Timber.d("Permission status catalog pulled successfully");
                     }
                 }).start();
 
@@ -172,7 +174,7 @@ public class PermissionPresenterImpl {
 
             @Override
             public void onFailure(Call<GeneralResponse<List<PermissionStatus>>> call, Throwable t) {
-                Timber.e(t, "onFailure: ");
+                Timber.e(t, "onFailure pullPermissionStatus: ");
             }
         });
 
@@ -187,7 +189,7 @@ public class PermissionPresenterImpl {
 
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
 
-        Timber.wtf("Current user id: " + SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, 0));
+
         Call<GeneralResponse<List<PermissionDto>>> syncPermissions = permissionRetrofitInterface.getAllPermissions(
                 ApiClient.getAccessToken(), // Header
                 SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, 0) // + Path user id
@@ -212,7 +214,7 @@ public class PermissionPresenterImpl {
 
             @Override
             public void onFailure(Call<GeneralResponse<List<PermissionDto>>> call, Throwable t) {
-                Timber.e(t, "onFailure: ");
+                Timber.e(t, "onFailure syncPermissionsWithNetwork: ");
             }
         });
 
