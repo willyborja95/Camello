@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.databinding.FragmentPermissionBinding;
@@ -58,6 +59,8 @@ public class PermissionFragment extends Fragment {
 
         // Create the adapter
         permissionAdapter = new PermissionAdapter(mainViewModel.getPermissionFullList());
+        // Create a layout manager
+        binding.recyclerViewPermissionsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // TODO: Observe the mPermissionList
         mainViewModel.getPermissionFullList().observe(this, new Observer<List<PermissionFull>>() {
