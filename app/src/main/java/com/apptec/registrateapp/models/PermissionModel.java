@@ -3,6 +3,7 @@ package com.apptec.registrateapp.models;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.apptec.registrateapp.repository.localdatabase.DBConstants;
@@ -44,13 +45,25 @@ public class PermissionModel implements Serializable {
     private Long endDate;
 
 
-    public PermissionModel(String comment, int fkPermissionType, int fkPermissionStatus, Long startDate, Long endDate) {
+    public PermissionModel(int id, String comment, int fkPermissionType, int fkPermissionStatus, Long startDate, Long endDate) {
+        this.id = id;
         this.comment = comment;
         this.fkPermissionType = fkPermissionType;
         this.fkPermissionStatus = fkPermissionStatus;
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
+    @Ignore
+    public PermissionModel(String comment, int fkPermissionType, int fkPermissionStatus, Long startDate, Long endDate) {
+        this.id = id;
+        this.comment = comment;
+        this.fkPermissionType = fkPermissionType;
+        this.fkPermissionStatus = fkPermissionStatus;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
 
     // Getter and setters
     public int getId() {

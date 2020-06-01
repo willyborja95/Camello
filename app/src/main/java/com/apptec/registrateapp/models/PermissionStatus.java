@@ -5,15 +5,18 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.apptec.registrateapp.repository.localdatabase.DBConstants;
+import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = DBConstants.PERMISSION_STATUS_TABLE)
 public class PermissionStatus {
 
     @ColumnInfo(name = DBConstants.PERMISSION_STATUS_PK)
     @PrimaryKey
+    @SerializedName("id")
     private int id;
 
     @ColumnInfo(name = DBConstants.PERMISSION_STATUS_NAME)
+    @SerializedName("name")
     private String statusName;
 
     public PermissionStatus(int id, String statusName) {
@@ -35,5 +38,13 @@ public class PermissionStatus {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    @Override
+    public String toString() {
+        return "PermissionStatus{" +
+                "id=" + id +
+                ", statusName='" + statusName + '\'' +
+                '}';
     }
 }

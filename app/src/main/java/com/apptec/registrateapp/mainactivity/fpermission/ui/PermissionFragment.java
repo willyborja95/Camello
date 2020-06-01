@@ -62,13 +62,14 @@ public class PermissionFragment extends Fragment {
         // Create a layout manager
         binding.recyclerViewPermissionsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // TODO: Observe the mPermissionList
+
         mainViewModel.getPermissionFullList().observe(this, new Observer<List<PermissionFull>>() {
             @Override
             public void onChanged(List<PermissionFull> permissionFulls) {
                 if (permissionFulls.size() > 0) {
                     // Change the result list now
                     binding.recyclerViewPermissionsList.setAdapter(permissionAdapter);
+
                 }
             }
         });
