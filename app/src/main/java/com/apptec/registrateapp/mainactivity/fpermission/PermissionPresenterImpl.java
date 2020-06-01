@@ -139,6 +139,7 @@ public class PermissionPresenterImpl {
                     public void run() {
 
                         RoomHelper.getAppDatabaseInstance().permissionTypeDao().insertAll(response.body().getWrappedData());
+                        Timber.d("Permission types catalog pulled successfully");
                     }
                 }).start();
 
@@ -146,7 +147,7 @@ public class PermissionPresenterImpl {
 
             @Override
             public void onFailure(Call<GeneralResponse<List<PermissionType>>> call, Throwable t) {
-                Timber.e(t, "onFailure: ");
+                Timber.e(t, "onFailure pullPermissionTypes: ");
             }
         });
     }
@@ -161,10 +162,16 @@ public class PermissionPresenterImpl {
             @Override
             public void onResponse(Call<GeneralResponse<List<PermissionStatus>>> call, Response<GeneralResponse<List<PermissionStatus>>> response) {
                 // Save the response into the database
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+
+                        Timber.d("Permission status catalog pulled successfully");
                         RoomHelper.getAppDatabaseInstance().permissionStatusDao().insertAll(response.body().getWrappedData());
+
+                        // Finally we can sync the list of permission of this user
+                        syncPermissionsWithNetwork();
                     }
                 }).start();
 
@@ -172,7 +179,7 @@ public class PermissionPresenterImpl {
 
             @Override
             public void onFailure(Call<GeneralResponse<List<PermissionStatus>>> call, Throwable t) {
-                Timber.e(t, "onFailure: ");
+                Timber.e(t, "onFailure pullPermissionStatus: ");
             }
         });
 
@@ -187,7 +194,7 @@ public class PermissionPresenterImpl {
 
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
 
-        Timber.wtf("Current user id: " + SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, 0));
+
         Call<GeneralResponse<List<PermissionDto>>> syncPermissions = permissionRetrofitInterface.getAllPermissions(
                 ApiClient.getAccessToken(), // Header
                 SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_USER_ID, 0) // + Path user id
@@ -197,7 +204,7 @@ public class PermissionPresenterImpl {
         syncPermissions.enqueue(new Callback<GeneralResponse<List<PermissionDto>>>() {
             @Override
             public void onResponse(Call<GeneralResponse<List<PermissionDto>>> call, Response<GeneralResponse<List<PermissionDto>>> response) {
-                Timber.d(response.body().getWrappedData().toString());
+
 
                 new Thread(new Runnable() {
                     @Override
@@ -206,13 +213,14 @@ public class PermissionPresenterImpl {
                             // Save the list of permission into data
                             RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(response.body().getWrappedData().get(i).getAsPermissionModel());
                         }
+                        Timber.d("Sync permission succeed");
                     }
                 }).start();
             }
 
             @Override
             public void onFailure(Call<GeneralResponse<List<PermissionDto>>> call, Throwable t) {
-                Timber.e(t, "onFailure: ");
+                Timber.e(t, "onFailure syncPermissionsWithNetwork: ");
             }
         });
 

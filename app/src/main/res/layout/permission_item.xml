@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -10,94 +12,92 @@
     </data>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/device_element"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:descendantFocusability="blocksDescendants"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginBottom="2dp">
+
 
             <TextView
                 android:id="@+id/txtPermissionType"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/nunito_bold"
                 android:gravity="center_vertical"
+                android:text="@{permissionFull.permissionType.typeName}"
                 android:textColor="@color/black100"
                 android:textSize="20dp"
-                android:text="@{permissionFull.permissionType.typeName}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Intempestivo" />
+
 
             <ImageButton
                 android:id="@+id/btnDeletePermission"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
                 android:background="@null"
+                android:contentDescription="borrar"
                 android:src="@drawable/ic_delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_delete" />
 
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/lblPermissionStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/opensans_light"
                 android:text="Estado: "
                 android:textColor="@color/black100"
                 android:textSize="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtPermissionType"
                 tools:text="Estado: " />
+
 
             <TextView
                 android:id="@+id/txtPermissionStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 android:fontFamily="@font/opensans_light"
                 android:text="@{permissionFull.permissionStatus.statusName}"
                 android:textColor="@color/black100"
                 android:textSize="15dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lblPermissionStatus"
+                app:layout_constraintStart_toEndOf="@+id/lblPermissionStatus"
                 tools:text="Aceptado" />
-        </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/datetime_chip"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingLeft="5dp"
-                android:paddingRight="15dp">
+                android:paddingRight="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lblPermissionStatus">
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -118,8 +118,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/opensans_light"
+                        android:text="@{permissionFull.onlyStartDate}"
                         android:textColor="@color/white"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        tools:text="03-02-2020" />
 
                     <TextView
                         android:id="@+id/txtStartTime"
@@ -127,22 +129,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/opensans_light"
+                        android:text="@{permissionFull.onlyStartTime}"
                         android:textColor="@color/white"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        tools:text="11:41" />
                 </LinearLayout>
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
+                android:layout_marginStart="50dp"
                 android:background="@drawable/datetime_chip"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingLeft="5dp"
-                android:paddingRight="15dp">
+                android:paddingRight="15dp"
+                app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+                app:layout_constraintTop_toTopOf="@+id/linearLayout2">
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -161,25 +167,30 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/opensans_light"
+                        android:text="@{permissionFull.onlyEndDate}"
                         android:textColor="@color/white"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        tools:text="03-02-2020" />
 
                     <TextView
                         android:id="@+id/txtEndTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/opensans_light"
+                        android:text="@{permissionFull.onlyEndTime}"
                         android:textColor="@color/white"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        tools:text="15:00" />
                 </LinearLayout>
 
 
             </LinearLayout>
 
-        </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 
 </layout>

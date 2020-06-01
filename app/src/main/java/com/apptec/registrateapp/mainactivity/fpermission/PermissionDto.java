@@ -4,6 +4,12 @@ import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import timber.log.Timber;
+
 public class PermissionDto {
 
     /**
@@ -11,6 +17,10 @@ public class PermissionDto {
      * <p>
      * This class will help us to transfer Permissions to the server and receive from them
      */
+
+
+    private static final String DATE_INCOMING_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
 
     @SerializedName("id")
     private int id;
@@ -28,12 +38,12 @@ public class PermissionDto {
     private String comment;
 
     @SerializedName("status")
-    private int status; // THe server return an string, but then we should send a number ? Talk to change it
+    private int status;
 
 
     public PermissionDto(int id, String startDate, String endDate, int type, String comment, int fkPermissionStatus) {
         /**
-         * THis construct is used when the data come from the server
+         * This construct is used when the data come from the server
          */
         this.id = id;
         this.startDate = startDate;
@@ -68,7 +78,7 @@ public class PermissionDto {
         /**
          * Instance an object from permissionModel using this same object
          */
-        PermissionModel permissionModel = new PermissionModel(comment, getTypeId(), getStatusId(), getStartDateLong(), getEndDateLong());
+        PermissionModel permissionModel = new PermissionModel(id, comment, getTypeId(), getStatusId(), getStartDateLong(), getEndDateLong());
         return permissionModel;
     }
 
@@ -86,14 +96,28 @@ public class PermissionDto {
 
     public Long getStartDateLong() {
         /** Return this start data string as a long */
-        return DateConverter.toTimestamp(this.startDate);
+        return toTimestampUsingCustomFormat(this.startDate, PermissionDto.DATE_INCOMING_FORMAT);
 
     }
 
     public Long getEndDateLong() {
         /** Return this end data string as a long */
-        return DateConverter.toTimestamp(this.endDate);
+        return toTimestampUsingCustomFormat(this.endDate, PermissionDto.DATE_INCOMING_FORMAT);
     }
+
+
+    // Converter the incoming format to long ()is can be avoid if the backend return always a Long
+    private Long toTimestampUsingCustomFormat(String stringDate, String custom_format) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(custom_format);
+            Date date = dateFormat.parse(stringDate);
+            return DateConverter.toTimestamp(date);
+        } catch (ParseException p) {
+            Timber.e(p);
+            return null;
+        }
+    }
+
 
     // Getter and setters
     public int getId() {

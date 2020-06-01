@@ -27,7 +27,9 @@ public class DateConverter {
     @TypeConverter
     public static Long toTimestamp(String stringDate) {
         try {
+
             SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT);
+
             Date date = dateFormat.parse(stringDate);
             return toTimestamp(date);
         } catch (ParseException p) {
@@ -36,16 +38,24 @@ public class DateConverter {
         }
     }
 
+
     @TypeConverter
     public static String toStringDateFormat(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT);
         return dateFormat.format(date);
     }
 
+
     @TypeConverter
     public static String toStringDateFormat(Long timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT);
         return dateFormat.format(new Date(timestamp));
     }
+
+    public static String toStringDateFormat(Long timestamp, String custom_pattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(custom_pattern);
+        return dateFormat.format(new Date(timestamp));
+    }
+
 
 }

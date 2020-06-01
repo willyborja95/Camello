@@ -23,4 +23,7 @@ public interface PermissionStatusDao {
 
     @Query("SELECT * FROM " + DBConstants.PERMISSION_STATUS_TABLE + " WHERE " + DBConstants.PERMISSION_STATUS_PK + " = :id")
     PermissionStatus getPermissionStatus(int id);
+
+    @Query("SELECT * FROM " + DBConstants.PERMISSION_STATUS_TABLE)
+    List<PermissionStatus> getListPermission();
 }
