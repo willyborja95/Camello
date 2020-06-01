@@ -38,7 +38,7 @@ public class PermissionDto {
     private String comment;
 
     @SerializedName("status")
-    private int status; // THe server return an string, but then we should send a number ? Talk to change it
+    private int status;
 
 
     public PermissionDto(int id, String startDate, String endDate, int type, String comment, int fkPermissionStatus) {
@@ -78,7 +78,7 @@ public class PermissionDto {
         /**
          * Instance an object from permissionModel using this same object
          */
-        PermissionModel permissionModel = new PermissionModel(comment, getTypeId(), getStatusId(), getStartDateLong(), getEndDateLong());
+        PermissionModel permissionModel = new PermissionModel(id, comment, getTypeId(), getStatusId(), getStartDateLong(), getEndDateLong());
         return permissionModel;
     }
 

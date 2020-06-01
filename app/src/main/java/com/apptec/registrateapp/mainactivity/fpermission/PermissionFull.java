@@ -2,11 +2,14 @@ package com.apptec.registrateapp.mainactivity.fpermission;
 
 import androidx.room.DatabaseView;
 import androidx.room.Embedded;
+import androidx.room.Ignore;
 
 import com.apptec.registrateapp.models.PermissionModel;
 import com.apptec.registrateapp.models.PermissionStatus;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.repository.localdatabase.DBConstants;
+import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
+import com.apptec.registrateapp.util.Constants;
 
 @DatabaseView("SELECT * " +
         " FROM " + DBConstants.PERMISSION_TABLE + ", " + DBConstants.PERMISSION_STATUS_TABLE + ", " + DBConstants.PERMISSION_TYPE_TABLE +
@@ -52,4 +55,33 @@ public class PermissionFull {
     public void setPermissionType(PermissionType permissionType) {
         this.permissionType = permissionType;
     }
+
+
+    // Other attributes useful for the view
+    @Ignore
+    String onlyStartDate, onlyEndDate, onlyStartTime, onlyEndTime;
+
+
+    public String getOnlyStartDate() {
+
+        this.onlyStartDate = DateConverter.toStringDateFormat(this.getPermissionModel().getStartDate(), Constants.PATTERN_DATE_FORMAT_PERMISSION_DATE);
+        return this.onlyStartDate;
+    }
+
+    public String getOnlyEndDate() {
+        this.onlyEndDate = DateConverter.toStringDateFormat(this.getPermissionModel().getEndDate(), Constants.PATTERN_DATE_FORMAT_PERMISSION_DATE);
+        return this.onlyEndDate;
+    }
+
+    public String getOnlyStartTime() {
+        this.onlyStartTime = DateConverter.toStringDateFormat(this.getPermissionModel().getStartDate(), Constants.PATTERN_DATE_FORMAT_PERMISSION_TIME);
+        return this.onlyStartTime;
+    }
+
+    public String getOnlyEndTime() {
+        this.onlyEndTime = DateConverter.toStringDateFormat(this.getPermissionModel().getEndDate(), Constants.PATTERN_DATE_FORMAT_PERMISSION_TIME);
+        return this.onlyEndTime;
+    }
+
+
 }

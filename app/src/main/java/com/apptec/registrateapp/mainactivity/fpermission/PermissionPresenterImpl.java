@@ -162,11 +162,16 @@ public class PermissionPresenterImpl {
             @Override
             public void onResponse(Call<GeneralResponse<List<PermissionStatus>>> call, Response<GeneralResponse<List<PermissionStatus>>> response) {
                 // Save the response into the database
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        RoomHelper.getAppDatabaseInstance().permissionStatusDao().insertAll(response.body().getWrappedData());
+
                         Timber.d("Permission status catalog pulled successfully");
+                        RoomHelper.getAppDatabaseInstance().permissionStatusDao().insertAll(response.body().getWrappedData());
+
+                        // Finally we can sync the list of permission of this user
+                        syncPermissionsWithNetwork();
                     }
                 }).start();
 
@@ -199,7 +204,7 @@ public class PermissionPresenterImpl {
         syncPermissions.enqueue(new Callback<GeneralResponse<List<PermissionDto>>>() {
             @Override
             public void onResponse(Call<GeneralResponse<List<PermissionDto>>> call, Response<GeneralResponse<List<PermissionDto>>> response) {
-                Timber.d(response.body().getWrappedData().toString());
+
 
                 new Thread(new Runnable() {
                     @Override
@@ -208,6 +213,7 @@ public class PermissionPresenterImpl {
                             // Save the list of permission into data
                             RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(response.body().getWrappedData().get(i).getAsPermissionModel());
                         }
+                        Timber.d("Sync permission succeed");
                     }
                 }).start();
             }
