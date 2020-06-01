@@ -45,10 +45,17 @@ public class DateConverter {
         return dateFormat.format(date);
     }
 
+
     @TypeConverter
     public static String toStringDateFormat(Long timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT);
         return dateFormat.format(new Date(timestamp));
     }
+
+    public static String toStringDateFormat(Long timestamp, String custom_pattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(custom_pattern);
+        return dateFormat.format(new Date(timestamp));
+    }
+
 
 }
