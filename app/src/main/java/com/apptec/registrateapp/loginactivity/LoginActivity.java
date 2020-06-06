@@ -1,106 +1,59 @@
 package com.apptec.registrateapp.loginactivity;
 
-import android.Manifest.permission;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.databinding.ActivityLoginBinding;
 import com.apptec.registrateapp.mainactivity.MainActivity;
-import com.apptec.registrateapp.models.UserCredential;
 
-public class LoginActivity extends Activity implements View.OnClickListener, LoginActivityView {
+public class LoginActivity extends AppCompatActivity {
     /**
-     * This is the launcher activity
+     * Login activity
      */
 
-    private final String TAG = LoginActivity.class.getSimpleName();
+    // View model
+    LoginViewModel loginViewModel;
 
-    // UI elements
-    private ImageButton btnLogin;
-    private EditText txtEmail;
-    private EditText txtPassword;
-    ProgressDialog progressDialog;
-
-    // Business logic elements
-    private TelephonyManager telephonyManager;
-
-
-
-    // Instance the presenter
-    LoginPresenterImpl loginPresenter = new LoginPresenterImpl(this);
+    // Using data binding
+    ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(R.style.SplashTheme);                                                  // Showing the splash screen for until the activity is ready
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);                                        // Binding the layout
 
-        // Binding UI elements
-        txtEmail = (EditText) findViewById(R.id.email);
-        txtPassword = (EditText) findViewById(R.id.password);
-        btnLogin = (ImageButton) findViewById(R.id.loginButton);
-        progressDialog = new ProgressDialog(this);
+        // Verify here if is there a previous user logged
 
 
-        btnLogin.setOnClickListener(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login);            // Set the content view
 
-        // This instance help us to get the permissions to hardware
-        telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
-
-        // Checking if it is the first running
-        if (loginPresenter.isTheFirstRun()) {
-            loginPresenter.handleFirstRun(this);
-        }
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);         // Getting the view model
 
 
-        // Verified if a user is still saved
-        loginPresenter.verifyPreviousLogin();
+        // Setup the result listener
+        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+            @Override
+            public void onChanged(LoginResult loginResult) {
+                // Verify is the result is success
+                if (loginResult.getSuccess()) {
+                    // Log in the user
+                    // - navigate to logged activity
+                    navigateToNextView();
 
-
-    }
-
-
-    //Layout GUI methods
-    @Override
-    public void onClick(View v) {
-        /**
-         * Here handle the click on the login button
-         */
-        switch (v.getId()) {
-            case R.id.loginButton:
-                String email = txtEmail.getText().toString().replaceAll("\\s", "");
-                String password = txtPassword.getText().toString().replaceAll("\\s", "");
-                if ((TextUtils.isEmpty(email) || (TextUtils.isEmpty(password)))) { // Validation
-                    txtEmail.setError(getString(R.string.parameter_missing_error));
-                    txtPassword.setError(getString(R.string.parameter_missing_error));
-                } else {
-                    if (checkSelfPermission(permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                        UserCredential userCredential = new UserCredential(email, password);
-                        showLoginProgressDialog(getString(R.string.login_progress_dialog_message));
-                        loginPresenter.handleLogin(userCredential);
-                    } else {
-                        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 225);
-                    }
                 }
-                break;
-        }
+            }
+        });
 
+
+        binding.setLoginViewModel(loginViewModel);
     }
-
 
 
 
@@ -113,55 +66,6 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
         startActivity(intent);
         finish();
     }
-
-
-    public void showLoginProgressDialog(String message) {
-        /** Dialog */
-        progressDialog.setMessage(message);
-        progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        progressDialog.show();
-        progressDialog.setCanceledOnTouchOutside(false);
-    }
-
-    public void hideLoginProgressDialog() {
-        /** Hide the dialog from th screen */
-        progressDialog.dismiss();
-    }
-
-    @Override
-    public void doNotLetTheUserLogin() {
-        /**
-         * Show an error message
-         */
-        this.showMessage("Ah ocurrido un error", "Al perecer este dispositivo está registrado a otro usuario");
-        this.hideLoginProgressDialog();
-    }
-
-
-    @Override
-    public void showMessage(String title, String message) {
-        /** Shows a message on the screen */
-        showAlertDialog(title, message);
-    }
-
-
-
-    @Override
-    public void showAlertDialog(String title, String message) {
-        /** Show an alert dialog */
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
 
 
 }
