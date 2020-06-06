@@ -19,13 +19,13 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.loginactivity.LoginActivity;
+import com.apptec.registrateapp.loginactivity.LoginActivity2;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_main);
 
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);                    // Getting the view model
+
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);   // Getting the view model
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view_2);
         drawer = findViewById(R.id.drawer_layout_2);
@@ -322,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements
         /**
          * Navigate to the next activity
          */
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, LoginActivity2.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
