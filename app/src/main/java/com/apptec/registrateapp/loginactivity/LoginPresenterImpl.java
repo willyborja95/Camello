@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import com.apptec.registrateapp.models.UserCredential;
 
-public class LoginPresenterImpl implements LoginPresenter {
+public class LoginPresenterImpl implements LoginPresenter2 {
 
     // Attributes
     LoginActivityView loginActivityView; // Passed as attribute
