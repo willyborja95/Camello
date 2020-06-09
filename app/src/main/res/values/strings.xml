@@ -11,7 +11,7 @@
 
 
     <!-- Error strings -->
-    <string name="invalid_username">Usuario incorrecto</string>
+    <string name="invalid_email">Usuario incorrecto</string>
     <string name="invalid_password">Contraseña incorrecta</string>
     <string name="geofence_not_available">Geofence service is not available now</string>
     <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
