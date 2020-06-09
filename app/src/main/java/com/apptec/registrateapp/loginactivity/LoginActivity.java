@@ -37,16 +37,28 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);         // Getting the view model
 
 
-        // Setup the result listener
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(LoginResult loginResult) {
-                // Verify is the result is success
-                if (loginResult.getSuccess()) {
-                    // Log in the user
-                    // - navigate to logged activity
-                    navigateToNextView();
+        // Setup the result listener for the result
+        loginViewModel.getLoginResult().observe(this, loginResult -> {
+            // Verify is the result is success
+            if (loginResult.getSuccess()) {
+                // Log in the user
+                // - navigate to logged activity
+                navigateToNextView();
 
+            }
+        });
+
+
+        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+            @Override
+            public void onChanged(LoginFormState loginFormState) {
+                if (loginFormState.isDataValid()) {
+                    //
+
+                } else {
+                    // Data invalid, set errors
+                    binding.email.setError(getString(loginFormState.getUsernameError()));
+                    binding.password.setError(getString(loginFormState.getPasswordError()));
                 }
             }
         });
