@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import com.apptec.registrateapp.models.UserCredential;
 
+
+@Deprecated
 public interface LoginPresenter2 {
     /**
      * Interface for login presenter
