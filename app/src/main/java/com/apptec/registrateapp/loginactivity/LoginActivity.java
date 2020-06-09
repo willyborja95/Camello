@@ -16,6 +16,8 @@ import com.apptec.registrateapp.mainactivity.MainActivity;
 public class LoginActivity extends AppCompatActivity {
     /**
      * Login activity
+     * <p>
+     * This activity is the manager for the user authentication
      */
 
     // View model
