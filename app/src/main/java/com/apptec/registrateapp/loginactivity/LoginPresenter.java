@@ -141,4 +141,9 @@ public class LoginPresenter {
 
     }
 
+    public void handleLogin(MutableLiveData<LoginResult> loginResult) {
+        /**
+         * Call the server to verify credentials
+         */
+    }
 }

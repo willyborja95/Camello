@@ -115,7 +115,7 @@
                     android:layout_height="80dp"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/rigth_button"
-                    android:onClick="@{()->loginViewModel.loginClicked()}"
+                    android:onClick="@{()->loginViewModel.loginClicked(email.getText().toString(), password.getText().toString())}"
                     android:src="@drawable/right_arrow"
                     android:text="Acceder" />
             </RelativeLayout>

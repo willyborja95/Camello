@@ -13,7 +13,10 @@ import com.apptec.registrateapp.R;
 public class LoginViewModel extends AndroidViewModel {
 
 
-    private MutableLiveData<LoginFormState> loginFormState;
+    // This variable help to show error is the form in the ui is wrong
+    public MutableLiveData<LoginFormState> loginFormState;
+
+
     private MutableLiveData<LoginResult> loginResult;
 
 
@@ -47,26 +50,25 @@ public class LoginViewModel extends AndroidViewModel {
     /**
      *
      */
-    public void loginClicked() {
+    public void loginClicked(String email, String password) {
         /**
          * Called when the login button is clicked
          * - Validates username and password
          *
          */
-
-
-    }
-
-
-    public void loginDataChanged(String username, String password) {
-        if (!isUserNameValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
-        } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
+        // Validates data
+        if (!isUserNameValid(email) || !isPasswordValid(password)) {
+            loginFormState.setValue(new LoginFormState(R.string.invalid_email, R.string.invalid_password));
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
+
+        // Call the presenter to verify the credentials and the log the user
+        // Send the result so the activity can observe automatically the result
+        loginPresenter.handleLogin(loginResult);
+
     }
+
 
     // A placeholder username validation check
     private boolean isUserNameValid(String username) {
