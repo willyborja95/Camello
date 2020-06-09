@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.apptec.registrateapp.models.UserCredential;
 
+@Deprecated
 public class LoginPresenterImpl implements LoginPresenter2 {
 
     // Attributes

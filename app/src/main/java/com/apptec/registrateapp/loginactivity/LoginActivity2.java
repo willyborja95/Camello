@@ -22,6 +22,8 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.MainActivity;
 import com.apptec.registrateapp.models.UserCredential;
 
+
+@Deprecated
 public class LoginActivity2 extends Activity implements View.OnClickListener, LoginActivityView {
     /**
      * This is the launcher activity

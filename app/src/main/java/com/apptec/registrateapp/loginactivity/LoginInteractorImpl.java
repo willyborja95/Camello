@@ -32,6 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@Deprecated
 public class LoginInteractorImpl implements LoginInteractor {
     /**
      * Implementation of the interface
@@ -279,7 +280,6 @@ public class LoginInteractorImpl implements LoginInteractor {
         Log.d(TAG, "IMEI: " + imei);
 
     }
-
 
 
 }
