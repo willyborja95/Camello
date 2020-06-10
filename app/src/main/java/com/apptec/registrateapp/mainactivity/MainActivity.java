@@ -25,7 +25,7 @@ import androidx.navigation.Navigation;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.loginactivity.LoginActivity2;
+import com.apptec.registrateapp.loginactivity.LoginActivity;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -309,6 +309,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
             case R.id.logout_button:
+
                 mainViewModel.logout();
                 break;
         }
@@ -322,9 +323,9 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigateToLogoutView() {
         /**
-         * Navigate to the next activity
+         * Navigate to the login activity
          */
-        Intent intent = new Intent(this, LoginActivity2.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

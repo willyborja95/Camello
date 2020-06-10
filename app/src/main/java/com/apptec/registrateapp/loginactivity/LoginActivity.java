@@ -64,10 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         Timber.d("Finished on create");
     }
 
-
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    protected void onResume() {
         /**
          * We attach the login view model to prevent that the activity dint't build correctly
          */
@@ -81,6 +79,8 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+        super.onResume();
+
     }
 
     public void navigateToLoggedView() {
