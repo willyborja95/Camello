@@ -4,8 +4,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import timber.log.Timber;
 
-public abstract class GeneralCallback<T> implements Callback {
+public abstract class GeneralCallback<T> implements Callback<T> {
 
+
+    private final Call<T> call;
+
+    public GeneralCallback(Call<T> call) {
+        this.call = call;
+    }
 
     @Override
     public void onFailure(Call call, Throwable t) {

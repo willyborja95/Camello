@@ -2,36 +2,37 @@ package com.apptec.registrateapp.repository.webservices.pojoresponse.loginrespon
 
 import com.google.gson.annotations.SerializedName;
 
+@Deprecated
 public class LoginResponse{
 
-	@SerializedName("data")
-	private Data data;
+    @SerializedName("data")
+    private Data data;
 
-	@SerializedName("ok")
-	private boolean ok;
+    @SerializedName("ok")
+    private boolean ok;
 
-	public void setData(Data data){
-		this.data = data;
-	}
+    public void setData(Data data){
+        this.data = data;
+    }
 
-	public Data getData(){
-		return data;
-	}
+    public Data getData(){
+        return data;
+    }
 
-	public void setOk(boolean ok){
-		this.ok = ok;
-	}
+    public void setOk(boolean ok){
+        this.ok = ok;
+    }
 
-	public boolean isOk(){
-		return ok;
-	}
+    public boolean isOk(){
+        return ok;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"LoginResponse{" + 
-			"data = '" + data + '\'' + 
-			",ok = '" + ok + '\'' + 
-			"}";
-		}
+    @Override
+    public String toString(){
+        return
+                "LoginResponse{" +
+                        "data = '" + data + '\'' +
+                        ",ok = '" + ok + '\'' +
+                        "}";
+    }
 }

@@ -3,7 +3,7 @@ package com.apptec.registrateapp.loginactivity;
 import androidx.annotation.Nullable;
 
 
-class LoginResult {
+public class LoginResult {
     /**
      * Authentication result : success (user details) or error message.
      */
@@ -17,7 +17,7 @@ class LoginResult {
         this.error = error;
     }
 
-    LoginResult(@Nullable Boolean success) {
+    public LoginResult(@Nullable Boolean success) {
         this.success = success;
     }
 

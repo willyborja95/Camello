@@ -24,6 +24,7 @@
     <string name="geofence_transition_invalid_type">
         Geofence transition error: invalid transition type %1$d
     </string>
+    <string name="device_already_taken">Este dispositivo esta siendo usado por otra persona</string>
 
     <!-- Transition type strings -->
     <string name="geofence_transition_entered">Entered</string>
