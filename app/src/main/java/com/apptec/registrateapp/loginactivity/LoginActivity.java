@@ -13,6 +13,8 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.databinding.ActivityLoginBinding;
 import com.apptec.registrateapp.mainactivity.MainActivity;
 
+import timber.log.Timber;
+
 public class LoginActivity extends AppCompatActivity {
     /**
      * Login activity
@@ -39,16 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);         // Getting the view model
 
 
-        // Setup the result listener for the result
-        loginViewModel.getLoginResult().observe(this, loginResult -> {
-            // Verify is the result is success
-            if (loginResult.getSuccess()) {
-                // Log in the user
-                // - navigate to logged activity
-                navigateToNextView();
 
-            }
-        });
+
 
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -67,11 +61,29 @@ public class LoginActivity extends AppCompatActivity {
 
 
         binding.setLoginViewModel(loginViewModel);
+        Timber.d("Finished on create");
     }
 
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        /**
+         * We attach the login view model to prevent that the activity dint't build correctly
+         */
+        // Setup the result listener for the result
+        loginViewModel.getLoginResult().observe(this, loginResult -> {
+            // Verify is the result is success
+            if (loginResult.getSuccess()) {
+                // Log in the user
+                // - navigate to logged activity
+                navigateToLoggedView();
 
-    public void navigateToNextView() {
+            }
+        });
+    }
+
+    public void navigateToLoggedView() {
         /**
          * Navigate to the next activity
          */
