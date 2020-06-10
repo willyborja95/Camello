@@ -10,11 +10,14 @@ public class LoginResult {
 
     @Nullable
     private Boolean success;
-    @Nullable
-    private Integer error;
 
-    LoginResult(@Nullable Integer error) {
+
+    @Nullable
+    private Integer error, titleError;  // String resource
+
+    public LoginResult(@Nullable Integer titleError, @Nullable Integer error) {
         this.error = error;
+        this.titleError = titleError;
     }
 
     public LoginResult(@Nullable Boolean success) {

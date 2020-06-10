@@ -18,8 +18,6 @@ import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UserCredential;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.models.WorkZoneModel;
-import com.apptec.registrateapp.repository.StaticData;
-import com.apptec.registrateapp.repository.localdatabase.DatabaseAdapter;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.repository.webservices.GeneralCallback;
@@ -50,20 +48,14 @@ public class LoginPresenter {
 
 
         if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_LOGGED, false)) { // If is a previous user logged
+            Timber.d("User already logged");
 
-            DatabaseAdapter databaseAdapter = DatabaseAdapter.getDatabaseAdapterInstance();
-
-            StaticData.setCurrentUser(databaseAdapter.getUser());
-            StaticData.setCurrentDevice(databaseAdapter.getDevice());
-            StaticData.getCurrentUser().setCompany(databaseAdapter.getCompany());
-            StaticData.getCurrentUser().setCompany(databaseAdapter.getCompany());
-            StaticData.setPermissionTypes(databaseAdapter.getPermissionType());
 
             loginResultMutableLiveData.postValue(new LoginResult(true));
         }
     }
 
-// TODO: hanldle login
+
 
 
     public void handleFirstRun(Activity activity) {
@@ -180,56 +172,72 @@ public class LoginPresenter {
         call.enqueue(new GeneralCallback<GeneralResponse<LoginDataResponse>>(call) {
             @Override
             public void onResponse(Call<GeneralResponse<LoginDataResponse>> call, Response<GeneralResponse<LoginDataResponse>> response) {
-                // Get the data from the service here
+                if (response.code() == 200) {
 
-                Timber.d("Data response: " + response.body().getWrappedData().toString());
 
-                // Get the device first to validate and decide if we will continue the process
-                // or not
-                DeviceModel userDevice = response.body().getWrappedData().getDevice();
+                    // Get the data from the service here
 
-                if (!isAvailableDevice(userDevice)) {
-                    // ! Do not let the user interact
-                    Timber.w("This device is used by another person");
-                    loginResult.postValue(new LoginResult(R.string.device_already_taken));
-                } else {
+                    Timber.d("Data response: " + response.body().getWrappedData().toString());
 
-                    Timber.i("This device is available");
-                    // Getting the user
-                    UserModel user = new UserModel();
-                    user.setId(response.body().getWrappedData().getId());
-                    user.setName(response.body().getWrappedData().getName());
-                    user.setLastName(response.body().getWrappedData().getName());
-                    user.setEmail(userCredential.getEmail());
+                    // Get the device first to validate and decide if we will continue the process
+                    // or not
+                    DeviceModel userDevice = response.body().getWrappedData().getDevice();
 
-                    // Getting the work zones
-                    ArrayList<WorkZoneModel> workZoneArrayList = new ArrayList<>();
-                    for (int i = 0; i < response.body().getWrappedData().getWorkzones().size(); i++) {
-                        workZoneArrayList.add(response.body().getWrappedData().getWorkzones().get(i));
+                    if (!isAvailableDevice(userDevice)) {
+                        // ! Do not let the user interact
+                        Timber.w("This device is used by another person");
+                        loginResult.postValue(new LoginResult(R.string.device_already_taken_title, R.string.device_already_taken));
+                    } else {
+
+                        Timber.i("This device is available");
+                        // Getting the user
+                        UserModel user = new UserModel();
+                        user.setId(response.body().getWrappedData().getId());
+                        user.setName(response.body().getWrappedData().getName());
+                        user.setLastName(response.body().getWrappedData().getName());
+                        user.setEmail(userCredential.getEmail());
+
+                        // Getting the work zones
+                        ArrayList<WorkZoneModel> workZoneArrayList = new ArrayList<>();
+                        for (int i = 0; i < response.body().getWrappedData().getWorkzones().size(); i++) {
+                            workZoneArrayList.add(response.body().getWrappedData().getWorkzones().get(i));
+                        }
+
+                        // Getting the company
+                        CompanyModel company = new CompanyModel();
+                        company.setCompanyName(response.body().getWrappedData().getEnterprise());
+
+
+                        // Getting the tokens
+                        String accessToken = response.body().getWrappedData().getTokens().getAccessToken().replace("\"", "");
+                        String refreshToken = response.body().getWrappedData().getTokens().getRefreshToken().replace("\"", "");
+
+                        // Build the data holder for send it to the runnable
+                        LoginDataValidator loginDataValidator = new LoginDataValidator(
+                                user,
+                                company,
+                                userDevice,
+                                workZoneArrayList,
+                                accessToken,
+                                refreshToken);
+
+                        // Storage all
+                        new Thread(new LoggerRunnable(loginResult, loginDataValidator)).start();
+
+
                     }
 
-                    // Getting the company
-                    CompanyModel company = new CompanyModel();
-                    company.setCompanyName(response.body().getWrappedData().getEnterprise());
+                } else if (response.code() == 404 || response.code() == 401) {
+                    // Failed credentials
+                    Timber.w("Invalid credentials");
+                    loginResult.postValue(new LoginResult(R.string.invalid_credentials_title, R.string.invalid_credentials));
 
-
-                    // Getting the tokens
-                    String accessToken = response.body().getWrappedData().getTokens().getAccessToken().replace("\"", "");
-                    String refreshToken = response.body().getWrappedData().getTokens().getRefreshToken().replace("\"", "");
-
-                    // Build the data holder for send it to the runnable
-                    LoginDataValidator loginDataValidator = new LoginDataValidator(
-                            user,
-                            company,
-                            userDevice,
-                            workZoneArrayList,
-                            accessToken,
-                            refreshToken);
-
-                    // Storage all
-                    new Thread(new LoggerRunnable(loginResult, loginDataValidator)).start();
-
-
+                } else if (response.code() == 502) {
+                    // Server error
+                    loginResult.postValue(new LoginResult(R.string.invalid_credentials_title, R.string.invalid_credentials));
+                } else {
+                    // Unexpected error
+                    loginResult.postValue(new LoginResult(R.string.invalid_credentials_title, R.string.invalid_credentials));
                 }
 
             }

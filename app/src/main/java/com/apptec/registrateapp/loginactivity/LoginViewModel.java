@@ -36,7 +36,21 @@ public class LoginViewModel extends AndroidViewModel {
         loginResult = new MutableLiveData<>();
 
         loginPresenter = new LoginPresenter();
+        Timber.d("Login view model view model built");
 
+        // Verify if is there a previous user session active
+        verifyPreviousLogin();
+
+    }
+
+    private void verifyPreviousLogin() {
+        /**
+         * Verify if is there a previous user session active
+         *
+         * Change the login result if yes and the login activity will know that she should navigate
+         * to the main activity
+         */
+        loginPresenter.verifyPreviousLogin(loginResult);
 
     }
 
