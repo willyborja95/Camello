@@ -19,7 +19,7 @@ public interface WorkZoneDao {
      */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(WorkZoneModel workZone);
+    void insertOrReplace(WorkZoneModel workZone);
 
     @Delete
     void delete(WorkZoneModel workZone);

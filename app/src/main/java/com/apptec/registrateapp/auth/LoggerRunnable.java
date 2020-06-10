@@ -57,19 +57,19 @@ public class LoggerRunnable implements Runnable {
 
 
             // Storage the user
-            RoomHelper.getAppDatabaseInstance().userDao().insert(data.user);
+            RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(data.user);
 
             // Storage the device (if it exist)
             if (data.device != null) {
-                RoomHelper.getAppDatabaseInstance().deviceDao().insert(data.device);
+                RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(data.device);
             }
 
             // Storage the company
-            RoomHelper.getAppDatabaseInstance().companyDao().insert(data.company);
+            RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(data.company);
 
             // Storage the work zones
             for (int i = 0; i < data.workZoneModels.size(); i++) {
-                RoomHelper.getAppDatabaseInstance().workZoneDao().insert(data.workZoneModels.get(i));
+                RoomHelper.getAppDatabaseInstance().workZoneDao().insertOrReplace(data.workZoneModels.get(i));
             }
 
             // Notify to hte view model that the process finished
@@ -87,8 +87,8 @@ public class LoggerRunnable implements Runnable {
          * We are running in a new thread so we need directly
          */
 
-        RoomHelper.getAppDatabaseInstance().userDao().insert(user);
-        RoomHelper.getAppDatabaseInstance().companyDao().insert(company);
+        RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(user);
+        RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(company);
 
     }
 

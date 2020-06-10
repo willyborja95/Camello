@@ -136,19 +136,19 @@ public class LoginInteractorImpl implements LoginInteractor {
                             public void run() {
 
                                 // Storage the user
-                                RoomHelper.getAppDatabaseInstance().userDao().insert(user);
+                                RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(user);
 
                                 // Storage the device (if it exist)
                                 if (response.body().getData().getDevice() != null) {
-                                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(response.body().getData().getDevice());
+                                    RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(response.body().getData().getDevice());
                                 }
 
                                 // Storage the company
-                                RoomHelper.getAppDatabaseInstance().companyDao().insert(company);
+                                RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(company);
 
                                 // Storage the work zones
                                 for (int i = 0; i < workZoneArrayList.size(); i++) {
-                                    RoomHelper.getAppDatabaseInstance().workZoneDao().insert(workZoneArrayList.get(i));
+                                    RoomHelper.getAppDatabaseInstance().workZoneDao().insertOrReplace(workZoneArrayList.get(i));
                                 }
 
 
