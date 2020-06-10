@@ -227,7 +227,7 @@ public class MainViewModel extends AndroidViewModel {
         Log.d(TAG, "Login out");
         if (this.getLastWorkingPeriod().getValue() != null) {
             if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
-                // TODO: Advice the user
+                // TODO: Advice the user that his working period will be ended
                 homePresenter.changeLastWorkingStatus();
 
             }
