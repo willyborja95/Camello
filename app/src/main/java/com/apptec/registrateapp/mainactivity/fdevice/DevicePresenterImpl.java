@@ -74,7 +74,7 @@ public class DevicePresenterImpl {
                         @Override
                         public void run() {
                             Timber.d("Save this device information in the local database");
-                            RoomHelper.getAppDatabaseInstance().deviceDao().insert(thisDevice);
+                            RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(thisDevice);
                         }
                     }).start();
 
