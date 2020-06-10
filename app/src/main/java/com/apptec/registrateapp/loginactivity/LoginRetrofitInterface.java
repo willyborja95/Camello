@@ -1,6 +1,7 @@
 package com.apptec.registrateapp.loginactivity;
 
 import com.apptec.registrateapp.models.UserCredential;
+import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.registrateapp.repository.webservices.pojoresponse.loginresponse.LoginResponse;
 import com.apptec.registrateapp.util.Constants;
 
@@ -11,9 +12,18 @@ import retrofit2.http.POST;
 
 
 public interface LoginRetrofitInterface {
+
+
+    @Deprecated
     @Headers({"Accept: application/json"})
     @POST(Constants.LOGIN_URL)
-    Call<LoginResponse> login(@Body UserCredential credential);
+    Call<LoginResponse> loging2(@Body UserCredential credential);
+
+
+    @Headers(value = {"Accept: application/json"})
+    @POST(Constants.LOGIN_URL)
+    Call<GeneralResponse<LoginDataResponse>> login(@Body UserCredential credential);
+
 
 //    @POST("login/refresh")
 //    Call<JsonObject> login(@Body refreshToken);

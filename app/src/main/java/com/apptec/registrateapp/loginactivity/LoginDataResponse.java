@@ -1,15 +1,18 @@
-package com.apptec.registrateapp.repository.webservices.pojoresponse.loginresponse;
+package com.apptec.registrateapp.loginactivity;
 
 import androidx.annotation.Nullable;
 
 import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.WorkZoneModel;
+import com.apptec.registrateapp.repository.webservices.pojoresponse.loginresponse.Tokens;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Deprecated // (We ara now using the LoginDataResponse class)
-public class Data{
+public class LoginDataResponse {
+    /**
+     * Login data that will match the response of database
+     */
 
     @SerializedName("employeeId")
     private int id;

@@ -30,21 +30,7 @@ public class AuthHelper {
     private WorkManager workManager = WorkManager.getInstance(App.getContext()); // Don't used now. It is the main activity meanwhile
 
 
-    public void login(UserModel user, CompanyModel company, String accessToken, String refreshToken) {
-        /**
-         * Save credentials
-         */
-        saveUserAndCompany(user, company);             // Save the unique user into database
 
-
-        SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, accessToken);
-        SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, refreshToken);
-        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
-        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
-        SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, user.getId());
-
-        this.initRefreshToken();
-    }
 
 
     public void logout() {

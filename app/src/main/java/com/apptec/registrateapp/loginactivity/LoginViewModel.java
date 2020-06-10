@@ -10,8 +10,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.R;
 
-public class LoginViewModel extends AndroidViewModel {
+import timber.log.Timber;
 
+public class LoginViewModel extends AndroidViewModel {
+    /**
+     * View model for the login activity
+     */
 
     // This variable help to show error is the form in the ui is wrong
     public MutableLiveData<LoginFormState> loginFormState;
@@ -58,14 +62,20 @@ public class LoginViewModel extends AndroidViewModel {
          */
         // Validates data
         if (!isUserNameValid(email) || !isPasswordValid(password)) {
+            Timber.d("Invalid form");
             loginFormState.setValue(new LoginFormState(R.string.invalid_email, R.string.invalid_password));
         } else {
+            Timber.d("Valid form");
+
+            // This event will be listen by the activity that will show the progress bar
             loginFormState.setValue(new LoginFormState(true));
+
+
+            // Call the presenter to verify the credentials and the log the user
+            // Send the result so the activity can observe automatically the result
+            loginPresenter.handleLogin(loginResult, email, password);
         }
 
-        // Call the presenter to verify the credentials and the log the user
-        // Send the result so the activity can observe automatically the result
-        loginPresenter.handleLogin(loginResult);
 
     }
 
@@ -84,7 +94,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 4;
+        return password != null && password.trim().length() > 3;
     }
 
 

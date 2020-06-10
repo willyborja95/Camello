@@ -78,7 +78,7 @@ public class LoginInteractorImpl implements LoginInteractor {
     public void handleLogin(UserCredential userCredential) {
         this.storageIMEI();
         LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
-        Call<LoginResponse> call = loginRetrofitInterface.login(userCredential);
+        Call<LoginResponse> call = loginRetrofitInterface.loging2(userCredential);
         call.enqueue(new Callback<LoginResponse>() {
 
 
