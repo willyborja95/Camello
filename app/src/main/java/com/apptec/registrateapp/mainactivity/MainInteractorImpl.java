@@ -135,7 +135,7 @@ public class MainInteractorImpl {
                                 @Override
                                 public void run() {
                                     Log.d(TAG, "Saving device into database");
-                                    RoomHelper.getAppDatabaseInstance().deviceDao().insert(device);
+                                    RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(device);
                                 }
                             }).start();
 
