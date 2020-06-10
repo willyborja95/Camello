@@ -16,7 +16,7 @@ import androidx.core.app.TaskStackBuilder;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.loginactivity.LoginActivity2;
+import com.apptec.registrateapp.loginactivity.LoginActivity;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
@@ -104,9 +104,9 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             mNotificationManager.createNotificationChannel(mChannel);
         }
 
-        Intent notificationIntent = new Intent(getApplicationContext(), LoginActivity2.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), LoginActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(LoginActivity2.class);
+        stackBuilder.addParentStack(LoginActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
         PendingIntent notificationPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

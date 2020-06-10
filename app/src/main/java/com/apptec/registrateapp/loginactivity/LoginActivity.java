@@ -2,6 +2,7 @@ package com.apptec.registrateapp.loginactivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.databinding.ActivityLoginBinding;
 import com.apptec.registrateapp.mainactivity.MainActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 import timber.log.Timber;
 
@@ -46,9 +48,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onChanged(LoginFormState loginFormState) {
                 if (loginFormState.isDataValid()) {
                     //
-
+                    binding.progressBar.setVisibility(View.VISIBLE);
                 } else {
                     // Data invalid, set errors
+//                    binding.progressBar.setVisibility(View.INVISIBLE);
                     binding.email.setError(getString(loginFormState.getUsernameError()));
                     binding.password.setError(getString(loginFormState.getPasswordError()));
                 }
@@ -76,7 +79,10 @@ public class LoginActivity extends AppCompatActivity {
                 navigateToLoggedView();
             } else {
                 // Show the errors
-
+                binding.progressBar.setVisibility(View.INVISIBLE);
+                Snackbar snackbar = Snackbar
+                        .make(binding.getRoot(), getString(R.string.invalid_credentials), Snackbar.LENGTH_LONG);
+                snackbar.show();
             }
 
 
