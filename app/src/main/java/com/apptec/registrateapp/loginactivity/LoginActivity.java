@@ -41,10 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);         // Getting the view model
 
 
-
-
-
-
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(LoginFormState loginFormState) {
@@ -71,13 +67,19 @@ public class LoginActivity extends AppCompatActivity {
          */
         // Setup the result listener for the result
         loginViewModel.getLoginResult().observe(this, loginResult -> {
+            Timber.d("Login result has changed");
+
             // Verify is the result is success
             if (loginResult.getSuccess()) {
                 // Log in the user
                 // - navigate to logged activity
                 navigateToLoggedView();
+            } else {
+                // Show the errors
 
             }
+
+
         });
         super.onResume();
 

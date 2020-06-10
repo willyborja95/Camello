@@ -16,8 +16,12 @@ public class LoginResult {
     private Integer error, titleError;  // String resource
 
     public LoginResult(@Nullable Integer titleError, @Nullable Integer error) {
+        /**
+         * Constructor used when an error happen
+         */
         this.error = error;
         this.titleError = titleError;
+        this.success = false;
     }
 
     public LoginResult(@Nullable Boolean success) {
