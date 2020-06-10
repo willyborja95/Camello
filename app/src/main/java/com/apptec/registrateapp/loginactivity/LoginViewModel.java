@@ -33,7 +33,7 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
 
         loginFormState = new MutableLiveData<>();
-        loginResult = new MutableLiveData<>();
+        loginResult = new MutableLiveData<>(new LoginResult(false)); // Because we don't know yet the result
 
         loginPresenter = new LoginPresenter();
         Timber.d("Login view model view model built");

@@ -4,15 +4,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -31,7 +28,7 @@ import com.apptec.registrateapp.util.Constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-import static com.apptec.registrateapp.R.id.user_fullname;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -39,17 +36,9 @@ public class MainActivity extends AppCompatActivity implements
      * This class is the MainActivity
      */
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
-    // TODO: This instance should be remove
-    TelephonyManager telephonyManager;
 
     //UI components
-    ActionBar mainActionBar;
-    Toolbar fragmentToolBar;
     private DrawerLayout drawer;
-    private TextView companyName;
-    private TextView userFullName;
     private NavController navController;
 
 
@@ -73,9 +62,7 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer_2);
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
 
-        // TODO: This elements could be use data binding to a live data
-        companyName = (TextView) viewNavHeader.findViewById(R.id.company_name);
-        userFullName = (TextView) viewNavHeader.findViewById(user_fullname);
+
 
         /** For control the side drawer onNavigationItemSelected */
         drawerNavigationView.setNavigationItemSelectedListener(this);
@@ -237,14 +224,14 @@ public class MainActivity extends AppCompatActivity implements
          * TODO: Remove this to the respective fragment
          * Callback received when a permissions request has been completed.
          */
-        Log.i(TAG, "onRequestPermissionResult");
+        Timber.i("onRequestPermissionResult");
         if (requestCode == Constants.REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
                 // If user interaction was interrupted, the permission request is cancelled and you
                 // receive empty arrays.
-                Log.i(TAG, "User interaction was cancelled.");
+                Timber.i("User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "Permission granted.");
+                Timber.i("Permission granted.");
                 //performPendingGeofenceTask(); TODO
             } else {
                 // Permission denied.

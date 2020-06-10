@@ -1,7 +1,9 @@
 package com.apptec.registrateapp.mainactivity.fdevice;
 
+import com.apptec.registrateapp.auth.CheckDeviceResponse;
 import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UpdatePushTokenBody;
+import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
@@ -30,19 +32,20 @@ public interface DeviceRetrofitInterface {
      * PARAMS
      * identifier IMEI
      */
+
     @GET(Constants.REQUEST_DEVICE_INFO_URL)
-    Call<JsonObject> getDeviceInfo(
+    Call<GeneralResponse<CheckDeviceResponse>> getDeviceInfo(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
             @Query("identifier") String IMEI);
 
 
     @PATCH(Constants.UPDATE_FIREBASE_TOKEN_URL)
-    Call<JsonObject> updateFirebaseToken(
+        // We use Json Object because actually we don need that data response
+    Call<GeneralResponse<JsonObject>> updateFirebaseToken(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
             @Path("id") int id,
             @Body UpdatePushTokenBody updatePushTokenBody
     );
-
 
 
 }
