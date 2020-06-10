@@ -13,12 +13,13 @@ import com.apptec.registrateapp.repository.localdatabase.DBConstants;
 public interface CompanyDao {
     /**
      * Dao fro company
+     *
      * @return
      */
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CompanyModel company);
+    void insertOrReplace(CompanyModel company);
 
     @Delete
     void delete(CompanyModel company);

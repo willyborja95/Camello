@@ -111,8 +111,8 @@ public class AuthHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                RoomHelper.getAppDatabaseInstance().userDao().insert(user);
-                RoomHelper.getAppDatabaseInstance().companyDao().insert(company);
+                RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(user);
+                RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(company);
             }
         }).start();
     }

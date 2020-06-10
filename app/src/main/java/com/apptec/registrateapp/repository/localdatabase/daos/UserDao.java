@@ -29,7 +29,7 @@ public interface UserDao {
     LiveData<UserModel> getLiveDataUser();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(UserModel user);
+    void insertOrReplace(UserModel user);
 
     @Delete
     void delete(UserModel user);
