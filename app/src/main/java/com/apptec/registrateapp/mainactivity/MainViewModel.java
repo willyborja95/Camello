@@ -69,7 +69,7 @@ public class MainViewModel extends AndroidViewModel {
 
 
     // Presenter for each feature
-    MainPresenterImpl mainPresenter;
+    MainPresenter mainPresenter;
     NotificationPresenterImpl notificationPresenter;
     DevicePresenterImpl devicePresenter;
     HomePresenterImpl homePresenter;
@@ -79,7 +79,7 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
 
         // Initialize the presenters (In the future we could use dagger2)
-        mainPresenter = new MainPresenterImpl();
+        mainPresenter = new MainPresenter();
         devicePresenter = new DevicePresenterImpl();
         notificationPresenter = new NotificationPresenterImpl();
         homePresenter = new HomePresenterImpl();
@@ -165,7 +165,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
-    public MainPresenterImpl getMainPresenter() {
+    public MainPresenter getMainPresenter() {
         return this.mainPresenter;
     }
 

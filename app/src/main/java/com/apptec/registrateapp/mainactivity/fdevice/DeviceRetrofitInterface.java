@@ -1,6 +1,5 @@
 package com.apptec.registrateapp.mainactivity.fdevice;
 
-import com.apptec.registrateapp.auth.CheckDeviceResponse;
 import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UpdatePushTokenBody;
 import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
@@ -34,7 +33,7 @@ public interface DeviceRetrofitInterface {
      */
 
     @GET(Constants.REQUEST_DEVICE_INFO_URL)
-    Call<GeneralResponse<CheckDeviceResponse>> getDeviceInfo(
+    Call<GeneralResponse> getDeviceInfo(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
             @Query("identifier") String IMEI);
 

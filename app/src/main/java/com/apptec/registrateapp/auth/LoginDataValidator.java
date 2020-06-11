@@ -9,8 +9,6 @@ import com.apptec.registrateapp.models.WorkZoneModel;
 
 import java.util.ArrayList;
 
-import timber.log.Timber;
-
 public class LoginDataValidator {
     /**
      * This class will hold the logging data response in objects
@@ -42,8 +40,10 @@ public class LoginDataValidator {
 
     public LoginDataValidator getValidData() {
         // Main method of this class, to know if the response is valid or not
-        // TODO
-        Timber.d("Validating login  data");
+        // Validate data her if needed
+        // Timber.d("Validating login  data");
+
+
         return this;
     }
 
