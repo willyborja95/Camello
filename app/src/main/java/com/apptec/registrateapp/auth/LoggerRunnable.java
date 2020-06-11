@@ -69,7 +69,8 @@ public class LoggerRunnable implements Runnable {
 
         } else {
             // Then userImei = localImei ?
-            if (SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "None") == data.device.getIdentifier()) {
+
+            if (SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "None").equals(data.device.getIdentifier())) {
                 // Update firebase token
                 if (isTheSameFirebaseToken(data.device.getPushToken())) {
                     updateTheFirebaseToken(data.device.getPushToken(), data.device.getId());
@@ -80,6 +81,7 @@ public class LoggerRunnable implements Runnable {
                 login(data, false, false);
 
             } else {
+                Timber.wtf("What just happen?");
                 // Request device info
                 // set "advise the user" to true
                 // set "needs to claim this device" to true
@@ -255,9 +257,20 @@ public class LoggerRunnable implements Runnable {
         /**
          * Save credentials
          */
-
+        Timber.d("Login user.");
+        Timber.d("Advise the user = " + adviseTheUser);
+        Timber.d("needsToClamThisDevice = " + needsToClaimThisDevice);
         if (adviseTheUser) {
+            // THis mean that we do not have to save the device data because the user has not register
+            // this phone yet
+
             // TODO: Advise the user before login
+
+        } else {
+            // Save the data.device because the user already has register this phone
+            new Thread(() -> {
+                RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(data.device);
+            }).start();
 
         }
 
