@@ -20,9 +20,14 @@ public class LoginViewModel extends AndroidViewModel {
     // This variable help to show error is the form in the ui is wrong
     public MutableLiveData<LoginFormState> loginFormState;
 
+    // To show the progress of the login progress to the view
+    private MutableLiveData<LoginProgress> loginProgress;
 
-    private MutableLiveData<LoginProgress> loginResult;
+    // Read IMEI permission
+    public MutableLiveData<Boolean> permissionGranted = new MutableLiveData<>(false);
 
+    // Request permission fro read IMEI
+    private MutableLiveData<Boolean> shouldRequestPermission = new MutableLiveData<>(false);
 
     // Presenter that do hard work
     private LoginPresenter loginPresenter;
@@ -33,7 +38,7 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
 
         loginFormState = new MutableLiveData<>();
-        loginResult = new MutableLiveData<>(new LoginProgress(LoginProgress.NOT_INIT)); // Because we don't know yet the result
+        loginProgress = new MutableLiveData<>(new LoginProgress(LoginProgress.NOT_INIT)); // Because we don't know yet the result
 
         loginPresenter = new LoginPresenter();
         Timber.d("Login view model view model built");
@@ -50,7 +55,7 @@ public class LoginViewModel extends AndroidViewModel {
          * Change the login result if yes and the login activity will know that she should navigate
          * to the main activity
          */
-        loginPresenter.verifyPreviousLogin(loginResult);
+        loginPresenter.verifyPreviousLogin(loginProgress);
 
     }
 
@@ -61,8 +66,8 @@ public class LoginViewModel extends AndroidViewModel {
         return loginFormState;
     }
 
-    LiveData<LoginProgress> getLoginResult() {
-        return loginResult;
+    LiveData<LoginProgress> getLoginProgress() {
+        return loginProgress;
     }
 
     /**
@@ -71,6 +76,7 @@ public class LoginViewModel extends AndroidViewModel {
     public void loginClicked(String email, String password) {
         /**
          * Called when the login button is clicked
+         * - Check if the permission for read IMEI is granted
          * - Validates username and password
          *
          */
@@ -81,13 +87,20 @@ public class LoginViewModel extends AndroidViewModel {
         } else {
             Timber.d("Valid form");
 
-            // This event will be listen by the activity that will show the progress bar
-            loginFormState.setValue(new LoginFormState(true));
+            if (this.permissionGranted.getValue()) {
+                // This event will be listen by the activity that will show the progress bar
+                loginFormState.setValue(new LoginFormState(true));
 
 
-            // Call the presenter to verify the credentials and the log the user
-            // Send the result so the activity can observe automatically the result
-            loginPresenter.handleLogin(loginResult, email, password);
+                // Call the presenter to verify the credentials and the log the user
+                // Send the result so the activity can observe automatically the result
+                loginPresenter.handleLogin(loginProgress, email, password);
+            } else {
+                // Say the activity to ask the permission
+                shouldRequestPermission.setValue(true);
+            }
+
+
         }
 
 
@@ -112,4 +125,10 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
 
+    // To notify the activity if we should request the permission
+
+
+    public MutableLiveData<Boolean> getShouldRequestPermission() {
+        return shouldRequestPermission;
+    }
 }
