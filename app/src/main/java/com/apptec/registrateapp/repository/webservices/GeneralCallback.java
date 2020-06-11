@@ -13,6 +13,7 @@ public abstract class GeneralCallback<T> implements Callback<T> {
         this.call = call;
     }
 
+
     @Override
     public void onFailure(Call call, Throwable t) {
         // We manage all the onFailure callBacks here,
