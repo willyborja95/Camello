@@ -38,8 +38,8 @@ public interface DeviceRetrofitInterface {
             @Query("identifier") String IMEI);
 
 
+    // We use Json Object because actually we don need that data response
     @PATCH(Constants.UPDATE_FIREBASE_TOKEN_URL)
-        // We use Json Object because actually we don need that data response
     Call<GeneralResponse<JsonObject>> updateFirebaseToken(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
             @Path("id") int id,

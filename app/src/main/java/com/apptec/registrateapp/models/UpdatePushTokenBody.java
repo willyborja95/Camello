@@ -1,8 +1,11 @@
 package com.apptec.registrateapp.models;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class UpdatePushTokenBody {
 
+    @SerializedName("pushToken")
     private String pushToken;
 
     public String getPushToken() {
@@ -11,5 +14,12 @@ public class UpdatePushTokenBody {
 
     public void setPushToken(String pushToken) {
         this.pushToken = pushToken;
+    }
+
+    @Override
+    public String toString() {
+        return "UpdatePushTokenBody{" +
+                "pushToken='" + pushToken + '\'' +
+                '}';
     }
 }
