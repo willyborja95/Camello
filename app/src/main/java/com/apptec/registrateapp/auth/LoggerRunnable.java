@@ -61,6 +61,7 @@ public class LoggerRunnable implements Runnable {
             SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, data.refreshToken);
 
             if (data.device != null) {
+                Timber.d("This user has a device registered");
                 SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
 
                 if (isTheDeviceFromThisUser(data.device)) {
@@ -100,8 +101,9 @@ public class LoggerRunnable implements Runnable {
 
 
             } else {
+
                 requestDeviceInfo();
-                SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, true);
+
 
             }
 
@@ -181,9 +183,18 @@ public class LoggerRunnable implements Runnable {
                                          SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, true);
                                      } else {
                                          // Case2: This device belong to this person.
-                                         // So we already save device info before and the user can login
+                                         // So we save device info
+                                         Timber.d("Case2: This device belong to this person.");
+                                         Timber.d("So we save device info " + data.device);
+                                         SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
+                                         new Thread(new Runnable() {
+                                             @Override
+                                             public void run() {
+                                                 RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(data.device);
+                                             }
+                                         }).start();
 
-
+                                         loginResult.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
                                      }
 
 
