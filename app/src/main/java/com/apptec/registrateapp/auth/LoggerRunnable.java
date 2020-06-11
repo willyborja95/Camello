@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.loginactivity.LoginResult;
+import com.apptec.registrateapp.loginactivity.LoginProgress;
 import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface;
 import com.apptec.registrateapp.models.CompanyModel;
 import com.apptec.registrateapp.models.DeviceModel;
@@ -32,14 +32,14 @@ public class LoggerRunnable implements Runnable {
      * you can listen when all work is done
      */
 
-    private MutableLiveData<LoginResult> loginResult; // This will be the listener got by the view model
+    private MutableLiveData<LoginProgress> loginResult; // This will be the listener got by the view model
 
 
     private LoginDataValidator data;
 
 
     public LoggerRunnable(
-            MutableLiveData<LoginResult> loginResult,
+            MutableLiveData<LoginProgress> loginResult,
             LoginDataValidator data) {
 
         this.data = data.getValidData();
@@ -94,7 +94,7 @@ public class LoggerRunnable implements Runnable {
 
                     // Notify to the view model the process finished
                     Timber.i("Login successfully");
-                    loginResult.postValue(new LoginResult(true));
+                    loginResult.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
 
                 }
 
@@ -192,7 +192,7 @@ public class LoggerRunnable implements Runnable {
                                      Timber.d("Ok = false");
                                      // TODO: Do not let the user login
 
-                                     loginResult.postValue(new LoginResult(R.string.device_already_taken_title, R.string.device_already_taken));
+                                     loginResult.postValue(new LoginProgress(R.string.device_already_taken_title, R.string.device_already_taken));
                                  }
 
 
@@ -285,7 +285,7 @@ public class LoggerRunnable implements Runnable {
 
                 } else {
                     Timber.e("Unexpected error while updating the firebase token. Here is the response" + response.body());
-                    loginResult.postValue(new LoginResult(R.string.title_error_connection, R.string.message_error_connection));
+                    loginResult.postValue(new LoginProgress(R.string.title_error_connection, R.string.message_error_connection));
                 }
             }
         });
