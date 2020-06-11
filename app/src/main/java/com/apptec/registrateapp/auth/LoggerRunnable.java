@@ -71,9 +71,10 @@ public class LoggerRunnable implements Runnable {
             // Then userImei = localImei ?
 
             if (SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "None").equals(data.device.getIdentifier())) {
-                // Update firebase token
-                if (isTheSameFirebaseToken(data.device.getPushToken())) {
-                    updateTheFirebaseToken(data.device.getPushToken(), data.device.getId());
+                // Update firebase token if are not the same tokens
+                if (!isTheSameFirebaseToken(data.device.getPushToken())) {
+                    String newFirebaseToken = SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, "Error");
+                    updateTheFirebaseToken(newFirebaseToken, data.device.getId());
                 }
                 // Login and set
                 // set "advise the user" to false
@@ -81,7 +82,6 @@ public class LoggerRunnable implements Runnable {
                 login(data, false, false);
 
             } else {
-                Timber.wtf("What just happen?");
                 // Request device info
                 // set "advise the user" to true
                 // set "needs to claim this device" to true
@@ -195,7 +195,7 @@ public class LoggerRunnable implements Runnable {
         }
         // Saving it on shared preferences
         SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
-        Timber.d("IMEI: " + imei);
+        Timber.d("Local IMEI: " + imei);
         return imei;
 
     }
@@ -204,12 +204,15 @@ public class LoggerRunnable implements Runnable {
         /**
          * Return true when the firebase token is the same in the server database
          */
-        if (serverToken.equals(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""))) {
-            Timber.w("There firebase tokens are not the same");
-            return false;
+        String realFirebaseToken = SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, "");
+
+        if (serverToken.equals(realFirebaseToken)) {
+            Timber.d("Firebase tokens are the same");
+            return true;
 
         }
-        return true;
+        Timber.w("The firebase tokens are not the same");
+        return false;
     }
 
     private void updateTheFirebaseToken(String firebaseToken, int deviceId) {
@@ -217,13 +220,15 @@ public class LoggerRunnable implements Runnable {
          * Upload to the server the new firebase token of this device
          */
         Timber.d("Init patch firebase token into the service");
+        Timber.d("New firebase token: " + firebaseToken);
         UpdatePushTokenBody updatePushTokenBody = new UpdatePushTokenBody();
         updatePushTokenBody.setPushToken(firebaseToken);
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<GeneralResponse<JsonObject>> call = deviceRetrofitInterface.updateFirebaseToken(
-                // Token
-                ApiClient.getAccessToken(),
+                // Token (We use the access token got from the login request because we not storage
+                // it into the local storage yet, so we can use ApiClient.getAccessToken())
+                data.accessToken,
                 // Device id
                 deviceId,
                 // Body
@@ -232,14 +237,14 @@ public class LoggerRunnable implements Runnable {
         call.enqueue(new GeneralCallback<GeneralResponse<JsonObject>>(call) {
             @Override
             public void onResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     // Alright
                     Timber.i("Firebase token updated successful");
-
                 } else {
-                    Timber.e("Unexpected error while updating the firebase token. Here is the response" + response.body());
-                    loginResult.postValue(new LoginProgress(R.string.title_error_connection, R.string.message_error_connection));
+                    Timber.e("Unexpected error while updating the firebase token. Here is the response: " + response
+                            + " Here is the request body: " + updatePushTokenBody);
                 }
+
             }
         });
     }
