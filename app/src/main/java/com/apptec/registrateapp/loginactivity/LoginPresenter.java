@@ -41,7 +41,7 @@ public class LoginPresenter {
     }
 
 
-    public void verifyPreviousLogin(MutableLiveData<LoginResult> loginResultMutableLiveData) {
+    public void verifyPreviousLogin(MutableLiveData<LoginProgress> loginResultMutableLiveData) {
         /**
          * Verifying if credentials are saved
          */
@@ -51,7 +51,7 @@ public class LoginPresenter {
             Timber.d("User already logged");
 
 
-            loginResultMutableLiveData.postValue(new LoginResult(true));
+            loginResultMutableLiveData.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
         }
     }
 
@@ -125,7 +125,7 @@ public class LoginPresenter {
 
     }
 
-    public void handleLogin(MutableLiveData<LoginResult> loginResult, String email, String password) {        /**
+    public void handleLogin(MutableLiveData<LoginProgress> loginResult, String email, String password) {        /**
      * This method is called from the MainActivity because at this point we will already have
      * the user data.
      *
@@ -206,7 +206,7 @@ public class LoginPresenter {
                 } else if (response.code() == 404 || response.code() == 401) {
                     // Failed credentials
                     Timber.w("Invalid credentials");
-                    loginResult.postValue(new LoginResult(R.string.invalid_credentials_title, R.string.invalid_credentials));
+                    loginResult.postValue(new LoginProgress(R.string.invalid_credentials_title, R.string.invalid_credentials));
 
                 }
 

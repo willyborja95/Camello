@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.databinding.ActivityLoginBinding;
 import com.apptec.registrateapp.mainactivity.MainActivity;
-import com.google.android.material.snackbar.Snackbar;
 
 import timber.log.Timber;
 
@@ -29,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Using data binding
     ActivityLoginBinding binding;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,16 +73,19 @@ public class LoginActivity extends AppCompatActivity {
             Timber.d("Login result has changed");
 
             // Verify is the result is success
-            if (loginResult.getSuccess()) {
+            if (loginResult.getProcessStatus() == LoginProgress.SUCCESSFUL) {
                 // Log in the user
                 // - navigate to logged activity
                 navigateToLoggedView();
-            } else {
+            } else if (loginResult.getProcessStatus() == LoginProgress.PROCESSING) {
+                // Processing
+                binding.progressBar.setVisibility(View.VISIBLE);
+
+            } else if (loginResult.getProcessStatus() == LoginProgress.FAILED) {
                 // Show the errors
                 binding.progressBar.setVisibility(View.INVISIBLE);
-                Snackbar snackbar = Snackbar
-                        .make(binding.getRoot(), getString(R.string.invalid_credentials), Snackbar.LENGTH_LONG);
-                snackbar.show();
+                ResultDialog resultDialog = new ResultDialog(loginResult.getTitleError(), loginResult.getError());
+                resultDialog.show(getSupportFragmentManager(), "Result");
             }
 
 

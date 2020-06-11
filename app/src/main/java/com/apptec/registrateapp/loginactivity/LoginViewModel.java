@@ -21,7 +21,7 @@ public class LoginViewModel extends AndroidViewModel {
     public MutableLiveData<LoginFormState> loginFormState;
 
 
-    private MutableLiveData<LoginResult> loginResult;
+    private MutableLiveData<LoginProgress> loginResult;
 
 
     // Presenter that do hard work
@@ -33,7 +33,7 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
 
         loginFormState = new MutableLiveData<>();
-        loginResult = new MutableLiveData<>(new LoginResult(false)); // Because we don't know yet the result
+        loginResult = new MutableLiveData<>(new LoginProgress(LoginProgress.NOT_INIT)); // Because we don't know yet the result
 
         loginPresenter = new LoginPresenter();
         Timber.d("Login view model view model built");
@@ -61,7 +61,7 @@ public class LoginViewModel extends AndroidViewModel {
         return loginFormState;
     }
 
-    LiveData<LoginResult> getLoginResult() {
+    LiveData<LoginProgress> getLoginResult() {
         return loginResult;
     }
 

@@ -76,6 +76,6 @@
     <string name="permission_negative_button">Cancelar</string>
     <string name="device_already_taken_title">Ah ocurrido un error</string>
     <string name="invalid_credentials_title">Autenticación fallida</string>
-    <string name="invalid_credentials">El usuario y contraseña proporcionados no son correctos.</string>
+    <string name="invalid_credentials">El usuario y contraseña \nproporcionados no son correctos.</string>
 
 </resources>
