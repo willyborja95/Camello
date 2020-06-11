@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Entity(tableName = DBConstants.PERMISSION_TYPE_TABLE)
 public class PermissionType implements Serializable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = DBConstants.PERMISSION_TYPE_PK)
     @SerializedName("id")
     private int id;

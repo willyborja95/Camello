@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.App;
@@ -11,13 +12,13 @@ import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.loginactivity.LoginProgress;
 import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface;
 import com.apptec.registrateapp.models.CompanyModel;
-import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UpdatePushTokenBody;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.repository.webservices.GeneralCallback;
+import com.apptec.registrateapp.repository.webservices.pojoresponse.Error;
 import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
@@ -30,6 +31,10 @@ public class LoggerRunnable implements Runnable {
     /**
      * This runnable will do the work for log in the user and
      * you can listen when all work is done
+     * <p>
+     * The process is describe in this flowchart:
+     * https://app.diagrams.net/#G1PANL8t1ijf6I4f7RaZlSYtvjSb_KnJJb
+     * If you do not have access to it. Contact Renato with the email renatojobal@gmail.com
      */
 
     private MutableLiveData<LoginProgress> loginResult; // This will be the listener got by the view model
@@ -51,66 +56,39 @@ public class LoggerRunnable implements Runnable {
 
     @Override
     public void run() {
-        try {
 
-            saveUserAndCompany(data.user, data.company);             // Save the unique user into database
+        String localImei = getLocalImei();
+        // At this point we already have the login response
+        // We only need to compare the data.device and follow the flowchart
 
-            Timber.d("Saving data into local storage");
+        if (data.device == null) {
+            // Request device info
+            // set "advise the user" to false
+            // set "needs to claim this device" to true
+            requestDeviceInfo(localImei, false, true);
 
-            SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, data.accessToken);
-            SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, data.refreshToken);
-
-            if (data.device != null) {
-                Timber.d("This user has a device registered");
-                SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
-
-                if (isTheDeviceFromThisUser(data.device)) {
-                    // The user is trying to login in another device, we
-                    // Advise the user that he will lost his previous device
-
-                    requestDeviceInfo();
-                } else {
-                    // The user is trying to login in his own device, so let him login
-                    RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(data.device);             // Storage the device
-                    if (!isTheSameFirebaseToken(data.device.getPushToken())) { // Updated the firebase token if needed
-                        updateTheFirebaseToken(data.device.getPushToken(), data.device.getId());
-                    }
-
-                    // Storage the user
-                    RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(data.user);
-
-
-                    // Storage the company
-                    RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(data.company);
-
-                    // Storage the work zones
-                    for (int i = 0; i < data.workZoneModels.size(); i++) {
-                        RoomHelper.getAppDatabaseInstance().workZoneDao().insertOrReplace(data.workZoneModels.get(i));
-                    }
-
-
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
-                    SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
-                    SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, data.user.getId());
-
-                    // Notify to the view model the process finished
-                    Timber.i("Login successfully");
-                    loginResult.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
-
+        } else {
+            // Then userImei = localImei ?
+            if (SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "None") == data.device.getIdentifier()) {
+                // Update firebase token
+                if (isTheSameFirebaseToken(data.device.getPushToken())) {
+                    updateTheFirebaseToken(data.device.getPushToken(), data.device.getId());
                 }
-
+                // Login and set
+                // set "advise the user" to false
+                // set "needs to claim this device" to false
+                login(data, false, false);
 
             } else {
-
-                requestDeviceInfo();
-
-
+                // Request device info
+                // set "advise the user" to true
+                // set "needs to claim this device" to true
+                requestDeviceInfo(localImei, true, true);
             }
 
-
-        } catch (NullPointerException npe) {
-            Timber.e(npe);
         }
+
+
     }
 
 
@@ -119,113 +97,75 @@ public class LoggerRunnable implements Runnable {
          * This method will save the user into the database and the company
          * We are running in a new thread so we need directly
          */
+        new Thread(() -> {
+            RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(user);
+            RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(company);
+        }).start();
 
-        RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(user);
-        RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(company);
 
     }
 
-    public void requestDeviceInfo() {
+    public void requestDeviceInfo(String localImei, boolean adviseTheUser, @Nullable boolean needsToClaimThisDevice) {
         /**
-         * This method is called from the MainActivity because at this point we will already have
-         * the user data.
          *
          * Here we request the information about this device.
          *
-         * The process is describe in this flowchart:
-         * https://app.diagrams.net/#G1ECP8hY6_T7yfvYlv98ANLYkrdva3_54I
-         * iI you do not have access to it. Contact Renato with the email renatojobal@gmail.com
-         *
-         *
+         * @param localImei = current phone's imei
+         * @param userHasPreviousDevice = this boolean will be used for know if we have to send or
+         *                              an advice to the user about losing his registration with his
+         *                              previous phone
+         * @param needsToClaimThisDevice = param to know if we should make the user register this device
+         *                               by default it would be false ai this point and we need this variable
+         *                               to send it to the login method
          *
          */
-
-        // First we save the IMEI into shared preferences
-        storageIMEI();
-
+        Timber.d("Need to request device info");
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
-        Call<GeneralResponse<CheckDeviceResponse>> call = deviceRetrofitInterface.getDeviceInfo(
+        Call<GeneralResponse> call = deviceRetrofitInterface.getDeviceInfo(
                 // Token:
                 ApiClient.getAccessToken(),
                 // IMEI:
-                SharedPreferencesHelper.getSharedPreferencesInstance().getString(Constants.CURRENT_IMEI, "")
+                localImei
         );
 
+        call.enqueue(
+                new GeneralCallback<GeneralResponse>(call) {
+                    @Override
+                    public void onResponse(Call<GeneralResponse> call, Response<GeneralResponse> response) {
 
-        call.enqueue(new GeneralCallback<GeneralResponse<CheckDeviceResponse>>(call) {
-                         @Override
-                         public void onResponse(Call<GeneralResponse<CheckDeviceResponse>> call, Response<GeneralResponse<CheckDeviceResponse>> response) {
+                        // If device is available
+                        if (isDeviceAvailable(response.body())) {
+                            // Login
+                            login(data, adviseTheUser, needsToClaimThisDevice);
+                        } else {
+                            // Do not let the user login
+                            doNotLetLogin();
+                        }
 
-                             try {
-                                 if (response.body().isOk()) {  // On response is ok = True
-                                     Timber.d("Ok = true");
-                                     // Is the data null?
-                                     if (response.body().getWrappedData() == null) {
-                                         // Case1: This device is not registered.
-                                         // So the user could register as device to himself,
-                                         // but first we should verify has another device registered to
-                                         // advise him he would lost his previous device
+                    }
 
-                                         // Request information about this user devices
-                                         // If the user has previous devices
-                                         if (data.device != null) {
-                                             // Case1.1: The user has another device.
-                                             // Advice thee user the previous devices will be replaced
-                                             // TODO: Advice
+                    private boolean isDeviceAvailable(GeneralResponse body) {
+                        try {
+                            Error error = body.getError();
+                            if (error != null) {
+                                Timber.d("This device is register by another person");
+                                return false;
+                            }
+                        } catch (NullPointerException npe) {
+                            Timber.d("This device is available to be claimed");
 
-                                         } else {
-                                             // Case1.2: The user has no other devices
-                                             // Continue
-                                         }
-                                         // Register new device
-                                         Timber.d("The user needs to register this device");
-                                         SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, true);
-                                     } else {
-                                         // Case2: This device belong to this person.
-                                         // So we save device info
-                                         Timber.d("Case2: This device belong to this person.");
-                                         Timber.d("So we save device info " + data.device);
-                                         SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
-                                         new Thread(new Runnable() {
-                                             @Override
-                                             public void run() {
-                                                 RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(data.device);
-                                             }
-                                         }).start();
+                        }
+                        return true;
 
-                                         loginResult.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
-                                     }
-
-
-                                 } else {
-                                     // Case3: The device is already used by another person
-                                     Timber.d("Ok = false");
-                                     // TODO: Do not let the user login
-
-                                     loginResult.postValue(new LoginProgress(R.string.device_already_taken_title, R.string.device_already_taken));
-                                 }
-
-
-                                 /** Change to false the flag of "needed device info" */
-                                 SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
-
-
-                             } catch (NullPointerException npe) {
-                                 Timber.w(npe.getMessage());
-                                 /** Change to false the flag of "needed device info" */
-                                 SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
-                             }
-                         }
-                     }
-
-
+                    }
+                }
         );
 
 
     }
 
-    public void storageIMEI() {
+    private String getLocalImei() {
         /**
          *
          * Read the IMEI and storage it on an shared preferences's variable.
@@ -254,6 +194,7 @@ public class LoggerRunnable implements Runnable {
         // Saving it on shared preferences
         SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
         Timber.d("IMEI: " + imei);
+        return imei;
 
     }
 
@@ -277,7 +218,6 @@ public class LoggerRunnable implements Runnable {
         UpdatePushTokenBody updatePushTokenBody = new UpdatePushTokenBody();
         updatePushTokenBody.setPushToken(firebaseToken);
 
-        // TODO:
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<GeneralResponse<JsonObject>> call = deviceRetrofitInterface.updateFirebaseToken(
                 // Token
@@ -303,29 +243,47 @@ public class LoggerRunnable implements Runnable {
     }
 
 
-    private boolean isTheDeviceFromThisUser(DeviceModel userDevice) {
+    private void login(LoginDataValidator data, boolean adviseTheUser, boolean needsToClaimThisDevice) {
         /**
-         * Check if the device's imei is the same with the user's device passed as param
+         * We call this method when we finally verify the credentials
+         *
+         * Here:
+         * - save user data in local database
+         * - set shared preferences variables
          */
-        Timber.d("Checking if this device is available");
-        if (userDevice != null) {
-            String currentDeviceIMEI = SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "Didn't found");
-            String userDeviceIMEI = userDevice.getIdentifier();
-            Timber.d("Current device IMEI: " + currentDeviceIMEI);
-            Timber.d("User device IMEI " + userDeviceIMEI);
-            if (!currentDeviceIMEI.equals(userDeviceIMEI)) {
-                /**
-                 * Case: Do not let the user login
-                 *
-                 * This means that user has a another device and is trying to log in this device but
-                 * it is registered with another person
-                 */
-                Timber.d("Return false");
-                return false;
-            }
-        }
-        return true;
 
+        /**
+         * Save credentials
+         */
+
+        if (adviseTheUser) {
+            // TODO: Advise the user before login
+
+        }
+
+
+        Timber.d("Saving data into local storage");
+        saveUserAndCompany(data.user, data.company);             // Save the unique user into database
+
+        SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, data.accessToken);
+        SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, data.refreshToken);
+        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, true);
+        SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_WORKING, false);
+        SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, data.user.getId());
+        SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, needsToClaimThisDevice);
+
+
+        loginResult.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
+
+    }
+
+    private void doNotLetLogin() {
+        /**
+         * We call this method when the user is trying to login
+         * but this phone is claimed by another user
+         */
+
+        loginResult.postValue(new LoginProgress(R.string.device_already_taken_title, R.string.device_already_taken));
     }
 
 

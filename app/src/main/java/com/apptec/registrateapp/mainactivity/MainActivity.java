@@ -168,6 +168,8 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+        // Sent the user to the device fragment if needs to register this device
+
 
     }
 

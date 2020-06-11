@@ -1,12 +1,9 @@
 package com.apptec.registrateapp.loginactivity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.telephony.TelephonyManager;
 
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.registrateapp.App;
@@ -56,41 +53,8 @@ public class LoginPresenter {
     }
 
 
-    public void handleFirstRun(Activity activity) {
-        /**
-         * When the app is running by first time or is reinstalled. But not when is updated.
-         *
-         * Ask for device permissions.
-         * Change to false the flag of "is first running"
-         */
-        Timber.w("handleFirstRun: First run configurations");
-        /** Asking for device permissions*/
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activity.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
-                    activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    activity.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, new String[]{
-                        android.Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                }, 225);
-            }
-        }
-
-        /** Change to false the flag of "is first running" */
-        SharedPreferencesHelper.putBooleanValue(Constants.IS_RUNNING_BY_FIRST_TIME, false);
 
 
-    }
-
-
-    public boolean isTheFirstRun() {
-        /**
-         * Method that returns true when the app is running by first time on the device.
-         */
-        return SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_RUNNING_BY_FIRST_TIME, true);
-    }
 
 
     public void storageIMEI() {
@@ -125,17 +89,18 @@ public class LoginPresenter {
 
     }
 
-    public void handleLogin(MutableLiveData<LoginProgress> loginResult, String email, String password) {        /**
-     * This method is called from the MainActivity because at this point we will already have
-     * the user data.
-     *
-     * Here we request the information about this device.
-     *
-     * The process is describe in this flowchart:
-     * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
-     * iI you do not have access to it. Contact Renato with the email renatojobal@gmail.com
-     *
-     *
+    public void handleLogin(MutableLiveData<LoginProgress> loginResult, String email, String password) {
+        /**
+         * This method is called from the MainActivity because at this point we will already have
+         * the user data.
+         *
+         * Here we request the information about this device.
+         *
+         * The process is describe in this flowchart:
+         * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
+         * iI you do not have access to it. Contact Renato with the email renatojobal@gmail.com
+         *
+         *
      *
      */
 
@@ -157,17 +122,13 @@ public class LoginPresenter {
             public void onResponse(Call<GeneralResponse<LoginDataResponse>> call, Response<GeneralResponse<LoginDataResponse>> response) {
                 if (response.code() == 200) {
 
-
+                    // Parse teh data to sent to the login data validator
                     // Get the data from the service here
-
                     Timber.d("Data response: " + response.body().getWrappedData().toString());
 
-                    // Get the device first to validate and decide if we will continue the process
-                    // or not
+                    // Get device
                     DeviceModel userDevice = response.body().getWrappedData().getDevice();
 
-
-                    Timber.i("This device is available");
                     // Getting the user
                     UserModel user = new UserModel();
                     user.setId(response.body().getWrappedData().getId());
@@ -199,7 +160,7 @@ public class LoginPresenter {
                             accessToken,
                             refreshToken);
 
-                    // Storage all
+                    // Continue with the process
                     new Thread(new LoggerRunnable(loginResult, loginDataValidator)).start();
 
 

@@ -50,5 +50,15 @@ public class LoginProgress {
         return error;
     }
 
+    public void setProcessStatus(int processStatus) {
+        this.processStatus = processStatus;
+    }
 
+    public void setError(@Nullable Integer error) {
+        this.error = error;
+    }
+
+    public void setTitleError(@Nullable Integer titleError) {
+        this.titleError = titleError;
+    }
 }

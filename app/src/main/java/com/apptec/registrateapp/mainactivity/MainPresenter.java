@@ -5,11 +5,18 @@ import androidx.lifecycle.MutableLiveData;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
 
-public class MainInteractorImpl {
+public class MainPresenter {
     /**
-     * Interactor for Main Activity
+     * This class will help the main activity
      */
 
+
+    public MainPresenter() {
+        /**
+         * Empty constructor
+         */
+
+    }
 
 
     public void initializeDeviceVerification(MutableLiveData<Boolean> isNeedRegisterDevice) {
@@ -22,12 +29,11 @@ public class MainInteractorImpl {
 
         // This flag will be changed to false when we have storage the device info
         boolean needed_device_info = SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.NEEDED_DEVICE_INFO, true);
+
+
         isNeedRegisterDevice.postValue(needed_device_info);
 
     }
-
-
-
 
 
 }
