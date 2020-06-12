@@ -13,7 +13,6 @@ import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface DeviceRetrofitInterface {
 
@@ -35,7 +34,7 @@ public interface DeviceRetrofitInterface {
     @GET(Constants.REQUEST_DEVICE_INFO_URL)
     Call<GeneralResponse> getDeviceInfo(
             @Header(Constants.AUTHORIZATION_HEADER) String accessToken,
-            @Query("identifier") String IMEI);
+            @Path("imei") String IMEI);
 
 
     // We use Json Object because actually we don need that data response
