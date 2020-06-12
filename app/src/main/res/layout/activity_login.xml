@@ -13,13 +13,14 @@
             type="com.apptec.registrateapp.loginactivity.LoginViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/root_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/login_background"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layoutDescription="@xml/activity_login_xml_root_constraint_layout_scene">
 
         <ImageView
             android:id="@+id/imageView"
@@ -159,7 +160,7 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
 
 </layout>
