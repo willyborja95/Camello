@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +25,13 @@ import com.apptec.registrateapp.models.NotificationModel;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class NotificationFragment extends Fragment {
     /**
      * NotificationsFragment
      */
 
-    private final String TAG = NotificationFragment.class.getSimpleName();
 
     //UI elements
     private ListView notificationsListView;
@@ -79,7 +79,7 @@ public class NotificationFragment extends Fragment {
                 /**
                  * Show a dialog with extended information about the dialog
                  */
-                Log.d(TAG, "Item clicked");
+                Timber.d("Item clicked");
                 NotificationModel notification = notificationListAdapter.getItem(position);
                 DialogNotification dialogNotification = new DialogNotification().setNotification(notification);
                 dialogNotification.show(getFragmentManager(), DialogNotification.class.getSimpleName());
@@ -157,12 +157,12 @@ public class NotificationFragment extends Fragment {
         if (notificationTextView != null) {
             notificationTextView.setVisibility(View.VISIBLE);
         } else {
-            Log.d(TAG, "notificationTextView is null");
+            Timber.d("notificationTextView is null");
         }
         if (notificationsListView != null) {
             notificationsListView.setVisibility(View.GONE);
         } else {
-            Log.d(TAG, "notificationListView is null");
+            Timber.d("notificationListView is null");
         }
 
     }

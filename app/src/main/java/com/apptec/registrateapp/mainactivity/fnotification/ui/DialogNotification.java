@@ -3,7 +3,6 @@ package com.apptec.registrateapp.mainactivity.fnotification.ui;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -16,11 +15,12 @@ import androidx.fragment.app.DialogFragment;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.NotificationModel;
 
+import timber.log.Timber;
+
 public class DialogNotification extends DialogFragment {
     /**
      * Class for present the notification on a dialog
      */
-    private final String TAG = "DialogNotification";
 
     // UI elements
     private TextView sent_date, title_content, message_content;
@@ -66,7 +66,7 @@ public class DialogNotification extends DialogFragment {
                 .setPositiveButton(getString(R.string.notification_ok_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Log.d(TAG, "Ok clicked");
+                        Timber.d("Ok clicked");
                         DialogNotification.this.getDialog().cancel();
                     }
                 });
