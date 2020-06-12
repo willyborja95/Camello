@@ -11,7 +11,7 @@
 
 
     <!-- Error strings -->
-    <string name="invalid_username">Usuario incorrecto</string>
+    <string name="invalid_email">Usuario incorrecto</string>
     <string name="invalid_password">Contraseña incorrecta</string>
     <string name="geofence_not_available">Geofence service is not available now</string>
     <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
@@ -24,6 +24,7 @@
     <string name="geofence_transition_invalid_type">
         Geofence transition error: invalid transition type %1$d
     </string>
+    <string name="device_already_taken">Este dispositivo esta siendo usado por otra persona</string>
 
     <!-- Transition type strings -->
     <string name="geofence_transition_entered">Entered</string>
@@ -73,5 +74,8 @@
     <string name="end_date_label">Fecha fin</string>
     <string name="permission_positive_button">Ok</string>
     <string name="permission_negative_button">Cancelar</string>
+    <string name="device_already_taken_title">Ah ocurrido un error</string>
+    <string name="invalid_credentials_title">Autenticación fallida</string>
+    <string name="invalid_credentials">El usuario y contraseña \nproporcionados no son correctos.</string>
 
 </resources>

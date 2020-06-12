@@ -69,7 +69,7 @@ public class MainViewModel extends AndroidViewModel {
 
 
     // Presenter for each feature
-    MainPresenterImpl mainPresenter;
+    MainPresenter mainPresenter;
     NotificationPresenterImpl notificationPresenter;
     DevicePresenterImpl devicePresenter;
     HomePresenterImpl homePresenter;
@@ -79,7 +79,7 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
 
         // Initialize the presenters (In the future we could use dagger2)
-        mainPresenter = new MainPresenterImpl();
+        mainPresenter = new MainPresenter();
         devicePresenter = new DevicePresenterImpl();
         notificationPresenter = new NotificationPresenterImpl();
         homePresenter = new HomePresenterImpl();
@@ -103,7 +103,6 @@ public class MainViewModel extends AndroidViewModel {
         isUserLogged = new MutableLiveData<>(true);
 
         // Pull data from the permission catalog
-        permissionPresenter.pullPermissionCatalog();
         permissionPresenter.syncPermissionsWithNetwork();
 
 
@@ -165,7 +164,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
-    public MainPresenterImpl getMainPresenter() {
+    public MainPresenter getMainPresenter() {
         return this.mainPresenter;
     }
 
@@ -227,7 +226,7 @@ public class MainViewModel extends AndroidViewModel {
         Log.d(TAG, "Login out");
         if (this.getLastWorkingPeriod().getValue() != null) {
             if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
-                // TODO: Advice the user
+                // TODO: Advice the user that his working period will be ended
                 homePresenter.changeLastWorkingStatus();
 
             }

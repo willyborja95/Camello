@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 public class PermissionStatus {
 
     @ColumnInfo(name = DBConstants.PERMISSION_STATUS_PK)
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     @SerializedName("id")
     private int id;
 

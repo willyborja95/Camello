@@ -41,4 +41,13 @@ public class GeneralResponse<T> {
     public void setError(@Nullable Error error) {
         this.error = error;
     }
+
+    @Override
+    public String toString() {
+        return "GeneralResponse{" +
+                "wrappedData=" + wrappedData +
+                ", ok=" + ok +
+                ", error=" + error +
+                '}';
+    }
 }

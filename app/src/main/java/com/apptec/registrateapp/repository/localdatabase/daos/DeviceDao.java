@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.apptec.registrateapp.models.DeviceModel;
@@ -24,8 +25,8 @@ public interface DeviceDao {
     LiveData<List<DeviceModel>> loadAllDevicesLiveData();
 
 
-    @Insert
-    void insert(DeviceModel device);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertOrReplace(DeviceModel device);
 
     @Delete
     void delete(DeviceModel device);

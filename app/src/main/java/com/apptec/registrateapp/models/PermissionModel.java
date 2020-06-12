@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class PermissionModel implements Serializable {
 
     @ColumnInfo(name = DBConstants.PERMISSION_PK)
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     private int id;
 
     @ColumnInfo(name = DBConstants.PERMISSION_COMMENT)
