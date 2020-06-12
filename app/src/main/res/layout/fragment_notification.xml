@@ -36,7 +36,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="No hay nuevas notificaciones"
-            android:visibility="gonevisible"></TextView>
+            android:visibility="gone"></TextView>
 
     </RelativeLayout>
 
