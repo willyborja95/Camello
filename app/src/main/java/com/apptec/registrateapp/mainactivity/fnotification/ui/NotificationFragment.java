@@ -1,9 +1,6 @@
 package com.apptec.registrateapp.mainactivity.fnotification.ui;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +34,6 @@ public class NotificationFragment extends Fragment {
     private ListView notificationsListView;
     private NotificationListAdapter notificationListAdapter;
     private TextView notificationTextView;
-    ProgressDialog progressDialog;
 
     // Instance of ViewModel
     private MainViewModel mainViewModel;
@@ -99,7 +95,7 @@ public class NotificationFragment extends Fragment {
          */
 
         // Linking UI elements
-        progressDialog = new ProgressDialog(getContext());
+
         notificationsListView = view.findViewById(R.id.notification_list_view);
         // notificationTextView = view.findViewById(R.id.notification_text_view);
 
@@ -113,59 +109,8 @@ public class NotificationFragment extends Fragment {
     }
 
 
-    // Dialogs
-    // These methods are not used. Probably in the future we will remove it
-    public void showAssistanceProgressDialog(String message) {
-        /**
-         * This is not called now.
-         */
-        progressDialog.setMessage(message);
-        progressDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        progressDialog.show();
-        progressDialog.setCanceledOnTouchOutside(false);
-    }
 
 
-    public void hideAssistanceProgressDialog() {
-        progressDialog.dismiss();
-    }
-
-
-    public void showConnectionErrorMessage() {
-        showDialog(getContext().getString(R.string.title_error_connection), getContext().getString(R.string.message_error_connection));
-    }
-
-
-    public void showDialog(String title, String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
-        alertDialog.show();
-    }
-
-
-    public void showNotNewNotificationsMessage() {
-        if (notificationTextView != null) {
-            notificationTextView.setVisibility(View.VISIBLE);
-        } else {
-            Timber.d("notificationTextView is null");
-        }
-        if (notificationsListView != null) {
-            notificationsListView.setVisibility(View.GONE);
-        } else {
-            Timber.d("notificationListView is null");
-        }
-
-    }
 
 
 }
