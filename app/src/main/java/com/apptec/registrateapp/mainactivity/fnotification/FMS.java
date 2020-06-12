@@ -15,11 +15,10 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class CustomFirebaseMessagingService extends FirebaseMessagingService {
+public class FMS extends FirebaseMessagingService {
     /**
-     * Class for manage the FCM
+     * Class for manage the Firebase Messaging Service
      */
-
 
 
     @Override
