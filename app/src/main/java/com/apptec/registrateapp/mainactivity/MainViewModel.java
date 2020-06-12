@@ -17,7 +17,7 @@ import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.auth.refreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.mainactivity.fdevice.DevicePresenterImpl;
 import com.apptec.registrateapp.mainactivity.fhome.HomePresenterImpl;
-import com.apptec.registrateapp.mainactivity.fnotification.NotificationPresenterImpl;
+import com.apptec.registrateapp.mainactivity.fnotification.NotificationPresenter;
 import com.apptec.registrateapp.mainactivity.fpermission.PermissionFull;
 import com.apptec.registrateapp.mainactivity.fpermission.PermissionPresenterImpl;
 import com.apptec.registrateapp.models.DeviceModel;
@@ -70,7 +70,7 @@ public class MainViewModel extends AndroidViewModel {
 
     // Presenter for each feature
     MainPresenter mainPresenter;
-    NotificationPresenterImpl notificationPresenter;
+    NotificationPresenter notificationPresenter;
     DevicePresenterImpl devicePresenter;
     HomePresenterImpl homePresenter;
     PermissionPresenterImpl permissionPresenter;
@@ -81,7 +81,7 @@ public class MainViewModel extends AndroidViewModel {
         // Initialize the presenters (In the future we could use dagger2)
         mainPresenter = new MainPresenter();
         devicePresenter = new DevicePresenterImpl();
-        notificationPresenter = new NotificationPresenterImpl();
+        notificationPresenter = new NotificationPresenter();
         homePresenter = new HomePresenterImpl();
         permissionPresenter = new PermissionPresenterImpl();
 

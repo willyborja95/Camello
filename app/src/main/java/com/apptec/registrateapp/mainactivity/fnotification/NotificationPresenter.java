@@ -7,17 +7,17 @@ import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 
 import java.util.List;
 
-public class NotificationPresenterImpl {
+public class NotificationPresenter {
     /**
      * This class is in the middle of the MVVM pattern.
-    * It interacts as an intermediary between the Model and the View.
-    * */
+     * It interacts as an intermediary between the Model and the View.
+     */
 
 
-    public NotificationPresenterImpl() {
+    public NotificationPresenter() {
         /**
          * Empty constructor
-        * */
+         * */
 
     }
 
