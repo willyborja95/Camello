@@ -125,8 +125,9 @@ public class LoggerRunnable implements Runnable {
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<GeneralResponse> call = deviceRetrofitInterface.getDeviceInfo(
-                // Token:
-                ApiClient.getAccessToken(),
+                // Token (We use the access token got from the login request because we not storage
+                // it into the local storage yet, so we can use ApiClient.getAccessToken())
+                data.accessToken,
                 // IMEI:
                 localImei
         );
@@ -135,13 +136,14 @@ public class LoggerRunnable implements Runnable {
                 new GeneralCallback<GeneralResponse>(call) {
                     @Override
                     public void onResponse(Call<GeneralResponse> call, Response<GeneralResponse> response) {
-
                         // If device is available
                         if (isDeviceAvailable(response.body())) {
                             // Login
+                            Timber.d("This device is available to be claimed");
                             login(data, adviseTheUser, needsToClaimThisDevice);
                         } else {
                             // Do not let the user login
+                            Timber.w("This device is register by another person");
                             doNotLetLogin();
                         }
 
@@ -151,11 +153,10 @@ public class LoggerRunnable implements Runnable {
                         try {
                             Error error = body.getError();
                             if (error != null) {
-                                Timber.d("This device is register by another person");
+
                                 return false;
                             }
                         } catch (NullPointerException npe) {
-                            Timber.d("This device is available to be claimed");
 
                         }
                         return true;
