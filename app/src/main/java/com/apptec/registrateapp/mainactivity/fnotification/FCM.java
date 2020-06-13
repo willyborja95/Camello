@@ -28,6 +28,9 @@ public class FCM extends FirebaseMessagingService {
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Timber.d("New message from: " + remoteMessage.getFrom());
 
+
+        new Thread(new NotificationBuilder(remoteMessage)).start();
+
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Timber.d("Message data payload: " + remoteMessage.getData().getClass());
@@ -80,22 +83,6 @@ public class FCM extends FirebaseMessagingService {
 
     }
 
-    public boolean isValidMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        /**
-         * This method help us to validate the message or cnacel the process before the app crashes
-         */
-        // TODO
-        return true;
-    }
 
-
-    public void sendNotification() {
-        /**
-         * Create a notification even if the app is in foreground
-         */
-        // TODO
-
-
-    }
 
 }

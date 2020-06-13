@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.databinding.ActivityLoginBinding;
 import com.apptec.registrateapp.mainactivity.MainActivity;
+import com.apptec.registrateapp.mainactivity.fnotification.NotificationBuilder;
 
 import timber.log.Timber;
 
@@ -65,6 +66,11 @@ public class LoginActivity extends AppCompatActivity {
 
         binding.setLoginViewModel(loginViewModel);
 
+        // Handle possible data accompanying notification message.
+        // [START handle_data_extras]
+        if (getIntent().getExtras() != null) {
+            new Thread(new NotificationBuilder(getIntent().getExtras())).start();
+        }
 
         Timber.d("Finished on create");
 
