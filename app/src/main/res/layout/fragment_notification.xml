@@ -2,14 +2,18 @@
 <layout>
 
     <data>
+        <!-- For any reason we can use the main view model as variable here,
+            we wanted to use it to show or not the message of no new notifications, but
+            we are showing this pragmatically into the fragment class
+        -->
+        <!--        <variable-->
+        <!--            name="mainViewModel"-->
+        <!--            type="com.apptec.registrateapp.mainactivity.MainViewModel" />-->
+
 
         <variable
             name="notificationViewModel"
             type="com.apptec.registrateapp.mainactivity.fnotification.NotificationViewModel" />
-
-        <variable
-            name="mainViewModel"
-            type="com.apptec.registrateapp.mainactivity.MainViewModel" />
 
 
     </data>
@@ -24,20 +28,25 @@
             android:id="@+id/notification_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!--        android:visibility="@{mainViewModel.notifications.empty? notificationListView.GONE : notificationListView.VISIBLE}"-->
+
         <TextView
-            android:id="@+id/notification_text_view"
+            android:id="@+id/no_notifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="No hay nuevas notificaciones"
-            android:visibility="gone"></TextView>
 
+            android:text="No hay nuevas notificaciones"
+
+
+            />
+
+        <!--        android:visibility="@{mainViewModel.notifications.empty? notificationListView.VISIBLE : notificationListView.GONE}"-->
     </RelativeLayout>
 
 </layout>

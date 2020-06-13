@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.registrateapp.App;
@@ -19,8 +18,6 @@ import com.apptec.registrateapp.databinding.FragmentNotificationBinding;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
 import com.apptec.registrateapp.mainactivity.fnotification.NotificationViewModel;
 import com.apptec.registrateapp.models.NotificationModel;
-
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -67,14 +64,29 @@ public class NotificationFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_notification, container, false);
 
 
+        // Bind the view models
+        //binding.setMainViewModel(mainViewModel);
+        binding.setNotificationViewModel(notificationViewModel);
+
         // Observing the view model mNotification
         notificationListAdapter = new NotificationListAdapter(App.getContext(), mainViewModel.getNotifications());
-        mainViewModel.getNotifications().observe(getActivity(), new Observer<List<NotificationModel>>() {
-            @Override
-            public void onChanged(List<NotificationModel> notifications) {
-                binding.notificationListView.setAdapter(notificationListAdapter);
-            }
-        });
+        mainViewModel.getNotifications().observe(
+                getActivity(),
+                notificationModels -> {
+                    if (notificationModels.isEmpty()) {
+                        // If the list is empty
+                        binding.notificationListView.setVisibility(View.GONE);
+                        binding.noNotifications.setVisibility(View.VISIBLE);
+                    } else {
+                        // If is  not empty
+                        binding.notificationListView.setVisibility(View.VISIBLE);
+                        binding.noNotifications.setVisibility(View.GONE);
+                        binding.notificationListView.setAdapter(notificationListAdapter);
+                    }
+                }
+
+
+        );
 
         // When clicked show a dialog with more information
         binding.notificationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -92,9 +104,6 @@ public class NotificationFragment extends Fragment {
 
         return binding.getRoot();
     }
-
-
-
 
 
 }
