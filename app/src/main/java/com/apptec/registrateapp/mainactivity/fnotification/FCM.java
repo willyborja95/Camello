@@ -15,7 +15,7 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class FMS extends FirebaseMessagingService {
+public class FCM extends FirebaseMessagingService {
     /**
      * Class for manage the Firebase Messaging Service
      */
