@@ -80,5 +80,22 @@ public class FCM extends FirebaseMessagingService {
 
     }
 
+    public boolean isValidMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        /**
+         * This method help us to validate the message or cnacel the process before the app crashes
+         */
+        // TODO
+        return true;
+    }
+
+
+    public void sendNotification() {
+        /**
+         * Create a notification even if the app is in foreground
+         */
+        // TODO
+
+
+    }
 
 }
