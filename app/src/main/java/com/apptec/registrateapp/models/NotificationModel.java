@@ -3,6 +3,7 @@ package com.apptec.registrateapp.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.apptec.registrateapp.repository.localdatabase.DBConstants;
@@ -41,6 +42,14 @@ public class NotificationModel {
         this.text = text;
         this.expirationDate = expirationDate;
         this.sentDate = sentDate;
+    }
+
+    /**
+     * This constructor is called from the Notification Builder
+     */
+    @Ignore
+    public NotificationModel() {
+
     }
 
     // Setter and getters
