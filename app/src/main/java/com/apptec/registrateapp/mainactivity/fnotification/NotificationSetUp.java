@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.os.Build;
 
 import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.R;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 
@@ -19,7 +20,21 @@ public class NotificationSetUp implements Runnable {
      */
     @Override
     public void run() {
-        // TODO:
+
+        createNotificationChannel(
+                NotificationConstants.MESSAGES_CHANNEL_ID,
+                NotificationConstants.MESSAGES_IMPORTANCE,
+                App.getContext().getString(R.string.notification_channel_name),
+                App.getContext().getString(R.string.notification_channel_description)
+        );
+
+        createNotificationChannel(
+                NotificationConstants.LOCATION_CHANNEL_ID,
+                NotificationConstants.LOCATION_IMPORTANCE,
+                App.getContext().getString(R.string.location_channel_name),
+                App.getContext().getString(R.string.location_channel_description)
+        );
+
 
     }
 

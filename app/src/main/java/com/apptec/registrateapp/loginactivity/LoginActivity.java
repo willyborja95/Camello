@@ -40,9 +40,8 @@ public class LoginActivity extends AppCompatActivity {
         setTheme(R.style.SplashTheme);                                                  // Showing the splash screen for until the activity is ready
         super.onCreate(savedInstanceState);
 
+
         // Verify here if is there a previous user logged
-
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);            // Set the content view
 
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);         // Getting the view model

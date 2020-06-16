@@ -7,6 +7,7 @@ import android.util.Log;
 import com.apptec.registrateapp.auth.AuthHelper;
 import com.apptec.registrateapp.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.registrateapp.mainactivity.fhome.geofence.GeofenceHelper;
+import com.apptec.registrateapp.mainactivity.fnotification.NotificationSetUp;
 
 import timber.log.Timber;
 
@@ -32,6 +33,9 @@ public class App extends Application {
         App.context = getApplicationContext();
         sGeofenceHelper = new GeofenceHelper();
         sAuthHelper = new AuthHelper();
+
+        // Call the notification setup. It does not matter if the channel is create twice, it don't have effect
+        new Thread(new NotificationSetUp()).run();
 
 
         // Setting up timber
