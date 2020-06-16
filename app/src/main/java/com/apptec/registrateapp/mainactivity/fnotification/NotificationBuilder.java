@@ -3,9 +3,17 @@ package com.apptec.registrateapp.mainactivity.fnotification;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.models.NotificationModel;
+import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
+import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Date;
 
 import timber.log.Timber;
 
@@ -65,16 +73,28 @@ public class NotificationBuilder implements Runnable {
     @Override
     public void run() {
         Timber.d("Notification builder running");
+        NotificationModel notification;
+
         if (isMessageReceivedInForeground) {
             // Get the message from the remoteMessage object
             Timber.d("Searching for message received in foreground");
-            NotificationModel notification = getNotificationFromRemoteMessage(remoteMessage);
+            notification = getNotificationFromRemoteMessage(remoteMessage);
         } else {
             // Get the message from the bundle extras
             Timber.d("Searching for message received in background");
-            NotificationModel notification = getNotificationFromExtras(extras);
+            notification = getNotificationFromExtras(extras);
 
         }
+
+        if (notification != null) {
+            // Also if you intend on generating your own notifications as a result of a received FCM
+            // message, here is where that should be initiated. See sendNotification method below
+            sendNotification(notification);
+
+            // Also save the notification into database
+            saveNotificationIntoDatabase(notification);
+        }
+
 
     }
 
@@ -107,6 +127,33 @@ public class NotificationBuilder implements Runnable {
     private NotificationModel getNotificationFromRemoteMessage(@NonNull RemoteMessage remoteMessage) {
         NotificationModel targetNotification = new NotificationModel();
 
+
+        try {
+            Timber.d("Message data payload: " + remoteMessage.getData());
+
+
+            // Get the data from the message payload
+            Timber.d("Message title: " + remoteMessage.getData().get("title"));
+            Timber.d("Message content: " + remoteMessage.getData().get("content"));
+            Timber.d("Message sentDate: " + remoteMessage.getData().get("sentDate"));
+            Timber.d("Message expirationDate: " + remoteMessage.getData().get("expirationDate"));
+
+            String title = remoteMessage.getData().get("title");
+            String content = remoteMessage.getData().get("content");
+            Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get("sentDate")));
+            Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get("expirationDate")));
+
+            targetNotification.setTitle(title);
+            targetNotification.setText(content);
+            targetNotification.setSentDate(sentDate.getTime());
+            targetNotification.setExpirationDate(expirationDate.getTime());
+
+
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+
+
         return targetNotification;
     }
 
@@ -129,8 +176,32 @@ public class NotificationBuilder implements Runnable {
      * @param notification = NotificationModel instance
      */
     public void sendNotification(@NonNull NotificationModel notification) {
+        Timber.d("Creating the notification");
+        // Build the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(App.getContext())
+                .setSmallIcon(R.drawable.icon)
+                .setContentTitle(notification.getTitle())
+                .setContentText(notification.getText())
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setOngoing(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
 
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(App.getContext());
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(0, builder.build());
+
+
+    }
+
+    /**
+     * @param notification
+     */
+    public void saveNotificationIntoDatabase(@NonNull NotificationModel notification) {
+        new Thread(
+                () -> RoomHelper.getAppDatabaseInstance().notificationDao().insert(notification)
+        ).run();
     }
 
 }
