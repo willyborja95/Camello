@@ -3,11 +3,10 @@ package com.apptec.registrateapp.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.apptec.registrateapp.repository.localdatabase.DBConstants;
-
-import java.util.Date;
 
 @Entity(tableName = DBConstants.NOTIFICATION_TABLE)
 public class NotificationModel {
@@ -29,18 +28,26 @@ public class NotificationModel {
     private String text;
 
     @ColumnInfo(name = DBConstants.NOTIFICATION_SENT_DATE)
-    private Date sentDate;
+    private Long sentDate;
 
     @ColumnInfo(name = DBConstants.NOTIFICATION_EXPIRATION)
-    private Date expirationDate;
+    private Long expirationDate;
 
     // Constructor
-    public NotificationModel(String title, String text, Date expirationDate, Date sentDate) {
+    public NotificationModel(String title, String text, Long expirationDate, Long sentDate) {
 
         this.title = title;
         this.text = text;
         this.expirationDate = expirationDate;
         this.sentDate = sentDate;
+    }
+
+    /**
+     * This constructor is called from the Notification Builder
+     */
+    @Ignore
+    public NotificationModel() {
+
     }
 
     // Setter and getters
@@ -68,19 +75,19 @@ public class NotificationModel {
         this.text = text;
     }
 
-    public Date getExpirationDate() {
+    public Long getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(Long expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public Date getSentDate() {
+    public Long getSentDate() {
         return sentDate;
     }
 
-    public void setSentDate(Date sentDate) {
+    public void setSentDate(Long sentDate) {
         this.sentDate = sentDate;
     }
 

@@ -60,7 +60,7 @@
             android:exported="true" />
 
         <service
-            android:name="com.apptec.registrateapp.mainactivity.fnotification.CustomFirebaseMessagingService"
+            android:name="com.apptec.registrateapp.mainactivity.fnotification.FCM"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
