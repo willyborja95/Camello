@@ -79,6 +79,11 @@ public class NotificationBuilder implements Runnable {
             // Get the message from the remoteMessage object
             Timber.d("Searching for message received in foreground");
             notification = getNotificationFromRemoteMessage(remoteMessage);
+
+            // Also if you intend on generating your own notifications as a result of a received FCM
+            // message, here is where that should be initiated. See sendNotification method below
+            sendNotification(notification);
+
         } else {
             // Get the message from the bundle extras
             Timber.d("Searching for message received in background");
@@ -87,9 +92,6 @@ public class NotificationBuilder implements Runnable {
         }
 
         if (notification != null) {
-            // Also if you intend on generating your own notifications as a result of a received FCM
-            // message, here is where that should be initiated. See sendNotification method below
-            sendNotification(notification);
 
             // Also save the notification into database
             saveNotificationIntoDatabase(notification);
@@ -108,11 +110,24 @@ public class NotificationBuilder implements Runnable {
         Timber.d(extras.getClass().getName());
         NotificationModel targetNotification = new NotificationModel();
 
+        try {
+            // Get the data from the message payload
+            Timber.d("Title: " + extras.getString("title"));
+            Timber.d("Message content: " + extras.getString("content"));
+            Timber.d("Message sentDate: " + extras.getString("sentDate"));
+            Timber.d("Message expirationDate: " + extras.getString("expirationDate"));
 
-        for (String key : extras.keySet()) {
-            Object value = extras.get(key);
-            Timber.d("Key: " + key.getClass() + " Value: " + value.getClass());
+            String title = extras.getString("title");
+            String content = extras.getString("content");
+            Date sentDate = DateConverter.toDate(Long.parseLong(extras.getString("sentDate")));
+            Date expirationDate = DateConverter.toDate(Long.parseLong(extras.getString("expirationDate")));
 
+            targetNotification.setTitle(title);
+            targetNotification.setText(content);
+            targetNotification.setSentDate(sentDate.getTime());
+            targetNotification.setExpirationDate(expirationDate.getTime());
+        } catch (Exception e) {
+            Timber.e(e);
         }
         return targetNotification;
 
