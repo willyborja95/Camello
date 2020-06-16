@@ -1,7 +1,5 @@
 package com.apptec.registrateapp.mainactivity.fnotification;
 
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,7 +8,6 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
-import com.apptec.registrateapp.loginactivity.LoginActivity;
 import com.apptec.registrateapp.models.NotificationModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
@@ -198,18 +195,6 @@ public class NotificationBuilder implements Runnable {
         notificationManager.notify(0, builder.build());
 
 
-    }
-
-
-    /**
-     * @return PedingIntent for attach to the action when the notification is clicked
-     */
-    public PendingIntent getPendingIntent() {
-        // Create an explicit intent for an Activity in your app
-        Intent intent = new Intent(App.getContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(App.getContext(), 0, intent, 0);
-        return pendingIntent;
     }
 
 
