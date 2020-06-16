@@ -85,4 +85,10 @@
     <string name="logo_alt">logo</string>
     <string name="login_button_alt">Acceder</string>
 
+    <!-- Notification sttings -->
+    <string name="notification_channel_name">Mensajes</string>
+    <string name="notification_channel_description">Mensajes de la empresa</string>
+    <string name="location_channel_name">Notificaciones</string>
+    <string name="location_channel_description">Notificaciones de tu locaclización</string>
+
 </resources>
