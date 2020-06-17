@@ -112,15 +112,10 @@ public class NotificationBuilder implements Runnable {
 
         try {
             // Get the data from the message payload
-            Timber.d("Title: " + extras.getString("title"));
-            Timber.d("Message content: " + extras.getString("content"));
-            Timber.d("Message sentDate: " + extras.getString("sentDate"));
-            Timber.d("Message expirationDate: " + extras.getString("expirationDate"));
-
-            String title = extras.getString("title");
-            String content = extras.getString("content");
-            Date sentDate = DateConverter.toDate(Long.parseLong(extras.getString("sentDate")));
-            Date expirationDate = DateConverter.toDate(Long.parseLong(extras.getString("expirationDate")));
+            String title = extras.getString(NotificationConstants.NOTIFICATION_TITLE);
+            String content = extras.getString(NotificationConstants.NOTIFICATION_MESSAGE);
+            Date sentDate = DateConverter.toDate(Long.parseLong(extras.getString(NotificationConstants.NOTIFICATION_SENT_DATE)));
+            Date expirationDate = DateConverter.toDate(Long.parseLong(extras.getString(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
 
             targetNotification.setTitle(title);
             targetNotification.setText(content);
@@ -148,15 +143,11 @@ public class NotificationBuilder implements Runnable {
 
 
             // Get the data from the message payload
-            Timber.d("Message title: " + remoteMessage.getData().get("title"));
-            Timber.d("Message content: " + remoteMessage.getData().get("content"));
-            Timber.d("Message sentDate: " + remoteMessage.getData().get("sentDate"));
-            Timber.d("Message expirationDate: " + remoteMessage.getData().get("expirationDate"));
 
-            String title = remoteMessage.getData().get("title");
-            String content = remoteMessage.getData().get("content");
-            Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get("sentDate")));
-            Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get("expirationDate")));
+            String title = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_TITLE);
+            String content = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_MESSAGE);
+            Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_SENT_DATE)));
+            Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
 
             targetNotification.setTitle(title);
             targetNotification.setText(content);

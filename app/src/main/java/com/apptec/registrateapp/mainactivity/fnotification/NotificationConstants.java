@@ -14,4 +14,12 @@ public class NotificationConstants {
     public static final String LOCATION_CHANNEL_ID = "location";
     public static final int LOCATION_IMPORTANCE = NotificationManager.IMPORTANCE_HIGH;
 
+    /**
+     * Payload node names for notifications
+     */
+    public static final String NOTIFICATION_TITLE = "title";
+    public static final String NOTIFICATION_MESSAGE = "message";
+    public static final String NOTIFICATION_SENT_DATE = "createdAt";
+    public static final String NOTIFICATION_EXPIRATION_DATE = "expiresAt";
+
 }
