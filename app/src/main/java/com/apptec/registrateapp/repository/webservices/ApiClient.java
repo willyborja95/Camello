@@ -14,6 +14,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import timber.log.Timber;
 
 public class ApiClient {
     /**
@@ -38,7 +39,21 @@ public class ApiClient {
             }
 
 
+            int tryCount = 0;
+            while (!response.isSuccessful() && tryCount < 3) {
+
+                Timber.d("Request is not successful" + tryCount);
+
+                tryCount++;
+
+                // retry the request
+                response = chain.proceed(request);
+            }
+
+            // otherwise just pass the original response on
             return response;
+
+
         }
     };
 
@@ -71,13 +86,6 @@ public class ApiClient {
     }
 
 
-    public static void saveAccessToken(String value){
-        /**
-        * Save the access token into shared preferences in private mode
-        * */
-        SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, value);
-    }
-
     public static String getRefreshToken(){
         /**
          * Get the refresh token previously save in shared preferences
@@ -85,41 +93,8 @@ public class ApiClient {
         return SharedPreferencesHelper.getStringValue(Constants.USER_REFRESH_TOKEN, "");
     }
 
-    public static void saveRefreshToken(String value){
-        /**
-         * Save the refresh token into shared preferences in private mode
-         */
-        SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, value);
-    }
-
-    public static void askNewTokenWithRefreshToken(){
-        /**
-         * When the access token has expired. We request a new one with the refresh token.
-         *
-         * Ask for a new token.
-         * Save it on shared preferences
-         */
-
-        // ToDo:
 
 
-    }
-
-    public static boolean isRefreshTokenExpired(){
-        /**
-         * Return true when the refresh token is already expired
-         */
-        // ToDo:
-        return true;
-    }
-
-    public static boolean isAccessTokenExpired(){
-        /**
-         * Return true when the access token is already expired
-         */
-        // ToDo:
-        return true;
-    }
 
 
 }
