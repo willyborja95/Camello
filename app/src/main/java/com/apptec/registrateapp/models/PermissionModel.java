@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.apptec.registrateapp.repository.localdatabase.DBConstants;
@@ -11,17 +12,24 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-@Entity(tableName = DBConstants.PERMISSION_TABLE, foreignKeys = {
-        @ForeignKey(entity = PermissionType.class,
-                parentColumns = DBConstants.PERMISSION_TYPE_PK,
-                childColumns = DBConstants.PERMISSION_PERMISSION_TYPE_FK,
-                onDelete = ForeignKey.CASCADE),
+@Entity(
+        tableName = DBConstants.PERMISSION_TABLE,
+        foreignKeys = {
+                @ForeignKey(entity = PermissionType.class,
+                        parentColumns = DBConstants.PERMISSION_TYPE_PK,
+                        childColumns = DBConstants.PERMISSION_PERMISSION_TYPE_FK,
+                        onDelete = ForeignKey.CASCADE),
 
-        @ForeignKey(entity = PermissionStatus.class,
-                parentColumns = DBConstants.PERMISSION_STATUS_PK,
-                childColumns = DBConstants.PERMISSION_PERMISSION_STATUS_FK,
-                onDelete = ForeignKey.CASCADE)
-})
+                @ForeignKey(entity = PermissionStatus.class,
+                        parentColumns = DBConstants.PERMISSION_STATUS_PK,
+                        childColumns = DBConstants.PERMISSION_PERMISSION_STATUS_FK,
+                        onDelete = ForeignKey.CASCADE)
+        },
+        indices = {
+                @Index(value = DBConstants.PERMISSION_PERMISSION_TYPE_FK),
+                @Index(value = DBConstants.PERMISSION_PERMISSION_STATUS_FK)
+        }
+)
 public class PermissionModel implements Serializable {
 
     @ColumnInfo(name = DBConstants.PERMISSION_PK)
