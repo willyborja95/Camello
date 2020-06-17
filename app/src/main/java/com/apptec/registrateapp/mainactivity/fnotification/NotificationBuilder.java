@@ -79,6 +79,11 @@ public class NotificationBuilder implements Runnable {
             // Get the message from the remoteMessage object
             Timber.d("Searching for message received in foreground");
             notification = getNotificationFromRemoteMessage(remoteMessage);
+
+            // Also if you intend on generating your own notifications as a result of a received FCM
+            // message, here is where that should be initiated. See sendNotification method below
+            sendNotification(notification);
+
         } else {
             // Get the message from the bundle extras
             Timber.d("Searching for message received in background");
@@ -87,10 +92,7 @@ public class NotificationBuilder implements Runnable {
         }
 
         if (notification != null) {
-            // Also if you intend on generating your own notifications as a result of a received FCM
-            // message, here is where that should be initiated. See sendNotification method below
-            sendNotification(notification);
-
+            Timber.d(notification.toString());
             // Also save the notification into database
             saveNotificationIntoDatabase(notification);
         }
@@ -108,11 +110,19 @@ public class NotificationBuilder implements Runnable {
         Timber.d(extras.getClass().getName());
         NotificationModel targetNotification = new NotificationModel();
 
+        try {
+            // Get the data from the message payload
+            String title = extras.getString(NotificationConstants.NOTIFICATION_TITLE);
+            String content = extras.getString(NotificationConstants.NOTIFICATION_MESSAGE);
+            Date sentDate = DateConverter.toDate(Long.parseLong(extras.getString(NotificationConstants.NOTIFICATION_SENT_DATE)));
+            Date expirationDate = DateConverter.toDate(Long.parseLong(extras.getString(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
 
-        for (String key : extras.keySet()) {
-            Object value = extras.get(key);
-            Timber.d("Key: " + key.getClass() + " Value: " + value.getClass());
-
+            targetNotification.setTitle(title);
+            targetNotification.setText(content);
+            targetNotification.setSentDate(sentDate.getTime());
+            targetNotification.setExpirationDate(expirationDate.getTime());
+        } catch (Exception e) {
+            Timber.e(e);
         }
         return targetNotification;
 
@@ -133,15 +143,11 @@ public class NotificationBuilder implements Runnable {
 
 
             // Get the data from the message payload
-            Timber.d("Message title: " + remoteMessage.getData().get("title"));
-            Timber.d("Message content: " + remoteMessage.getData().get("content"));
-            Timber.d("Message sentDate: " + remoteMessage.getData().get("sentDate"));
-            Timber.d("Message expirationDate: " + remoteMessage.getData().get("expirationDate"));
 
-            String title = remoteMessage.getData().get("title");
-            String content = remoteMessage.getData().get("content");
-            Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get("sentDate")));
-            Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get("expirationDate")));
+            String title = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_TITLE);
+            String content = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_MESSAGE);
+            Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_SENT_DATE)));
+            Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
 
             targetNotification.setTitle(title);
             targetNotification.setText(content);
@@ -178,13 +184,15 @@ public class NotificationBuilder implements Runnable {
     public void sendNotification(@NonNull NotificationModel notification) {
         Timber.d("Creating the notification");
         // Build the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(App.getContext())
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(App.getContext(), NotificationConstants.MESSAGES_CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon)
                 .setContentTitle(notification.getTitle())
                 .setContentText(notification.getText())
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setOngoing(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setAllowSystemGeneratedContextualActions(true)
+                .setAutoCancel(true);
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(App.getContext());
@@ -194,6 +202,7 @@ public class NotificationBuilder implements Runnable {
 
 
     }
+
 
     /**
      * @param notification

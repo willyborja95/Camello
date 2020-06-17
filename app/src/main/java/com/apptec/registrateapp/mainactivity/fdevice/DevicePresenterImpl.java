@@ -67,7 +67,7 @@ public class DevicePresenterImpl {
                 // Change the flag
                 if (response.isSuccessful()) {
 
-                    isNeedRegisterDevice.postValue(false);      // Change the flag of the view model
+
 
                     // The room queries do not should be executed in the main thread, so we create a thread
                     new Thread(new Runnable() {
@@ -75,6 +75,8 @@ public class DevicePresenterImpl {
                         public void run() {
                             Timber.d("Save this device information in the local database");
                             RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(thisDevice);
+                            isNeedRegisterDevice.postValue(false);      // Change the flag of the view model
+                            SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
                         }
                     }).start();
 
