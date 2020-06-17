@@ -273,10 +273,12 @@ public class LoggerRunnable implements Runnable {
             // TODO: Advise the user before login
 
         } else {
-            // Save the data.device because the user already has register this phone
-            new Thread(() -> {
-                RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(data.device);
-            }).start();
+            if (!needsToClaimThisDevice) {
+                // Save the data.device because the user already has register this phone
+                new Thread(() -> {
+                    RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(data.device);
+                }).start();
+            }
 
         }
 
