@@ -84,14 +84,14 @@ public class PermissionDto {
 
     public int getTypeId() {
         /** Return the id of the permission Type */
-        // TODO
-        return 1;
+
+        return this.type;
     }
 
     public int getStatusId() {
         /** Return the id of the permission status */
-        // TODO
-        return 1;
+
+        return this.status;
     }
 
     public Long getStartDateLong() {
