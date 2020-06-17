@@ -92,7 +92,7 @@ public class NotificationBuilder implements Runnable {
         }
 
         if (notification != null) {
-
+            Timber.d(notification.toString());
             // Also save the notification into database
             saveNotificationIntoDatabase(notification);
         }
