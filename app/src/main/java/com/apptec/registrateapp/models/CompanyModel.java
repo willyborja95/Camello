@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @Entity(tableName = DBConstants.COMPANY_TABLE)
 public class CompanyModel implements Serializable {
 
-    @PrimaryKey()
+    @PrimaryKey
     @NonNull
     @ColumnInfo(name = DBConstants.COMPANY_PK)
     private String companyName;
