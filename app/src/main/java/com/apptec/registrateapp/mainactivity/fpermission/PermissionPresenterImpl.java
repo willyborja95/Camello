@@ -8,7 +8,7 @@ import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.repository.webservices.GeneralCallback;
-import com.google.gson.JsonObject;
+import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -53,22 +53,22 @@ public class PermissionPresenterImpl {
             PermissionDto permissionDto = new PermissionDto(permission);
 
             PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-            Call<JsonObject> call = permissionRetrofitInterface.createPermission(
+            Call<GeneralResponse<PermissionDto>> call = permissionRetrofitInterface.createPermission(
                     ApiClient.getAccessToken(),
                     permissionDto
             );
             Timber.d(permissionDto.toString(), permissionDto);
-            call.enqueue(new GeneralCallback<JsonObject>(call) {
-                @Override
-                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            call.enqueue(new GeneralCallback<GeneralResponse<PermissionDto>>(call) {
 
+                @Override
+                public void onResponse(Call<GeneralResponse<PermissionDto>> call, Response<GeneralResponse<PermissionDto>> response) {
                     // Save the permission also into the database
 
                     if (response.isSuccessful()) {
 
                         // Get the permission id form the response and also the status by the way
-                        int correctId = Integer.parseInt(response.body().get("data").getAsJsonObject().get("id").toString());
-                        int correctStatus = Integer.parseInt(response.body().get("data").getAsJsonObject().get("status").toString());
+                        int correctId = response.body().getWrappedData().getId();
+                        int correctStatus = response.body().getWrappedData().getStatusId();
                         Timber.i("CorrectId: " + correctId);
                         Timber.i("CorrectStatus: " + correctStatus);
 
@@ -84,12 +84,10 @@ public class PermissionPresenterImpl {
                             }
                         }).start();
                     } else {
-                        // TODO:
+
                         Timber.e("Response not successful");
                     }
-
                 }
-
             });
 
         }).start();

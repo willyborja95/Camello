@@ -32,7 +32,7 @@ public interface PermissionRetrofitInterface {
     Call<JsonObject> delete(@Header("authorization") String token, @Path("permisoId") int permisoId);
 
     @POST(Constants.PERMISSION_CREATE_URL)
-    Call<JsonObject> createPermission(
+    Call<GeneralResponse<PermissionDto>> createPermission(
             @Header(Constants.AUTHORIZATION_HEADER) String token,
             @Body PermissionDto permission);
 

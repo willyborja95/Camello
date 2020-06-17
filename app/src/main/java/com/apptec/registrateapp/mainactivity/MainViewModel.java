@@ -177,7 +177,6 @@ public class MainViewModel extends AndroidViewModel {
         /**
          *      The activity will be observing this to request new device information or not
          */
-        // TODO:
         return this.isNeededRegisterDevice;
     }
 
