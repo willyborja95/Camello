@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 15,
-    "identityHash": "afd94e6d1eee4adc98b752bb32a2dd57",
+    "identityHash": "2d63e13512c5897886656aa2c7d1c75d",
     "entities": [
       {
         "tableName": "user",
@@ -355,7 +355,24 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_permission_type_fk",
+            "unique": false,
+            "columnNames": [
+              "type_fk"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_permission_type_fk` ON `${TABLE_NAME}` (`type_fk`)"
+          },
+          {
+            "name": "index_permission_status_fk",
+            "unique": false,
+            "columnNames": [
+              "status_fk"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_permission_status_fk` ON `${TABLE_NAME}` (`status_fk`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "ptype",
@@ -390,7 +407,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'afd94e6d1eee4adc98b752bb32a2dd57')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2d63e13512c5897886656aa2c7d1c75d')"
     ]
   }
 }
