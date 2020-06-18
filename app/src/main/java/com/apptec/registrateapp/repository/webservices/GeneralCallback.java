@@ -68,6 +68,7 @@ public abstract class GeneralCallback<T> implements Callback<T> {
      * @param t
      */
     public void onFinalFailure(Call<T> call, Throwable t) {
+        Timber.i("On final failure no override");
         Timber.e("Call failed ");
         Timber.e(t);
     }
