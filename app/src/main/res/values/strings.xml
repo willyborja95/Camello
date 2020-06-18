@@ -90,5 +90,7 @@
     <string name="notification_channel_description">Mensajes de la empresa</string>
     <string name="location_channel_name">Notificaciones</string>
     <string name="location_channel_description">Notificaciones de tu locaclización</string>
+    <string name="no_internet_connection_title">Error de red</string>
+    <string name="no_internet_connection">Al parecer no tienes acceso a internet</string>
 
 </resources>

@@ -6,10 +6,14 @@ import com.apptec.registrateapp.repository.webservices.interfaces.AuthInterface;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import timber.log.Timber;
 
@@ -28,9 +32,9 @@ public class InterceptorImpl implements okhttp3.Interceptor {
 
 
         // Deal with the issues the way we need to
-        if (response.code() == 401) {
-            Timber.e("Unauthorized");
-            Timber.e("Response code is: " + 401);
+        if (isTokenExpired(response)) {
+            Timber.e("Token expired");
+            Timber.e("Custom response code is: " + 502);
             // Unauthorized
             // Ask a new refresh token and retry the call
 
@@ -72,4 +76,56 @@ public class InterceptorImpl implements okhttp3.Interceptor {
 
         return newAccessToken;
     }
+
+
+    /**
+     * We analise the response body here.
+     * We have to make a 'dirty hack' for read the body of the response twice
+     * without closing the response scope.
+     * <p>
+     * We have to do this because we need to read the status code of the error node.
+     * This error node is in the response body in this way:
+     * <p>
+     * {
+     * "ok": false,
+     * "error": {
+     * "message": "Token expirado",
+     * "code": 502                       <---- This is the value that we have to read
+     * }
+     * }
+     * <p>
+     * <p>
+     * I use the solution that I found in this github issue:
+     * https://github.com/square/okhttp/issues/1240#issuecomment-330813274
+     *
+     * @return true when the token is expired
+     */
+    public boolean isTokenExpired(Response response) {
+
+        if (response.code() == 401) {
+            try {
+                ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
+                String content = responseBodyCopy.string();
+                ;
+                JSONObject jsonObject = new JSONObject(content);
+
+                String errorCode = jsonObject.getJSONObject("error").getString("code");
+                if (errorCode.equals("502")) {
+                    return true;
+                }
+
+            } catch (IOException e) {
+                Timber.e(e);
+
+            } catch (JSONException e) {
+                Timber.e(e);
+
+            } catch (NullPointerException e) {
+                Timber.e(e);
+            }
+        }
+        return false;
+
+    }
+
 }

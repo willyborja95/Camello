@@ -1,6 +1,6 @@
 <p align="center">  
    <a href="https://github.com/willyborja95/RegistrateApp/releases">  
-    <img src="https://img.shields.io/badge/release-v2.1.0-green" alt="Latest Stable Version" />  
+    <img src="https://img.shields.io/badge/release-v2.2.2-green" alt="Latest Stable Version" />  
   </a>  
    <a href="https://developer.android.com/about/versions/marshmallow/android-6.0">  
     <img src="https://img.shields.io/badge/API-%2B23-yellow" alt="Min Sdk Version" />  

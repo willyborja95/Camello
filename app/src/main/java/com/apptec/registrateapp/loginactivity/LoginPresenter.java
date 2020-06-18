@@ -172,6 +172,20 @@ public class LoginPresenter {
                 }
 
             }
+
+
+            /**
+             * We get her if there is a problem with the internet connection
+             *
+             * @param call
+             * @param t
+             */
+            @Override
+            public void onFinalFailure(Call<GeneralResponse<LoginDataResponse>> call, Throwable t) {
+                Timber.w("Maybe there is not internet connection");
+                loginResult.postValue(new LoginProgress(R.string.no_internet_connection_title, R.string.no_internet_connection));
+
+            }
         });
 
 

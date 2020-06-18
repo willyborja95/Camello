@@ -48,16 +48,27 @@ public abstract class GeneralCallback<T> implements Callback<T> {
         if (retryCount++ < TOTAL_RETRIES) {
             Timber.i("Retrying call (" + retryCount + " out of " + TOTAL_RETRIES + ")");
             retryCall();
+        } else {
+            onFinalFailure(call, t);
         }
 
 
     }
 
-    public void onFinalResponse(Call<T> call, Response<T> response) { // to be overriden by calling class
+
+    // to be overriden by calling class
+    public void onFinalResponse(Call<T> call, Response<T> response) {
 
     }
 
-    public void onFinalFailure(Call<T> call, Throwable t) { // to be overriden by calling class
+    /**
+     * Method to be override by the calling class
+     *
+     * @param call
+     * @param t
+     */
+    public void onFinalFailure(Call<T> call, Throwable t) {
+        Timber.i("On final failure no override");
         Timber.e("Call failed ");
         Timber.e(t);
     }
