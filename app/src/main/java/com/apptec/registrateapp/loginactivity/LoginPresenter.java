@@ -172,6 +172,15 @@ public class LoginPresenter {
                 }
 
             }
+
+
+            @Override
+            public void onFinalFailure(Call<GeneralResponse<LoginDataResponse>> call, Throwable t) {
+                Timber.w("Invalid credentials");
+                loginResult.postValue(new LoginProgress(R.string.invalid_credentials_title, R.string.invalid_credentials));
+
+
+            }
         });
 
 
