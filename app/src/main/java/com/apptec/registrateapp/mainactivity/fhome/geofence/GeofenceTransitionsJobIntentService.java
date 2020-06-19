@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
@@ -23,11 +22,12 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
     private static final int JOB_ID = 573;
 
-    private static final String TAG = "GeofenceTransitionsIS";
 
     private static final String CHANNEL_ID = "channel_01";
 
@@ -43,7 +43,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
                     geofencingEvent.getErrorCode());
-            Log.e(TAG, errorMessage);
+            Timber.e(errorMessage);
             return;
         }
 
@@ -52,7 +52,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
         // Register exit
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
-            Log.d(TAG, "Transition exit");
+            Timber.d("Transition exit");
             // Get the geofences that were triggered. A single event can trigger multiple geofences.
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
@@ -64,11 +64,11 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             // Send notification and log about the transition details.
             sendNotification(geofenceTransitionDetails);
             // Register current time as exit time
-            Log.i(TAG, geofenceTransitionDetails);
+            Timber.i(geofenceTransitionDetails);
             App.changeWorkStatus(); // Global app method to change the work status
         } else {
             // Log the error.
-            Log.e(TAG, "Invalid transition");
+            Timber.e("Invalid transition");
         }
     }
 

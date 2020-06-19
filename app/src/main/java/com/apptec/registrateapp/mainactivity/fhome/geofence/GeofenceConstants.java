@@ -2,10 +2,11 @@ package com.apptec.registrateapp.mainactivity.fhome.geofence;
 
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
+/**
+ * Apparently this class is not used
+ */
 public class GeofenceConstants {
-    /**
-     * Apparently this class is not used
-     */
+
     private GeofenceConstants() {}
 
     public static final String GEOFENCES_ADDED_KEY = PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
