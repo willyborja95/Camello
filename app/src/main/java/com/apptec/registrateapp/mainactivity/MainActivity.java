@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.databinding.ActivityMainBinding;
 import com.apptec.registrateapp.loginactivity.LoginActivity;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
     //UI components
-    private DrawerLayout drawer;
     private NavController navController;
 
 
@@ -46,19 +46,21 @@ public class MainActivity extends AppCompatActivity implements
 
     MainViewModel mainViewModel;
 
+    // Using data binding
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
 
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);   // Getting the view model
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view);
-        drawer = findViewById(R.id.drawer_layout);
+
         NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer);
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
 
@@ -72,10 +74,11 @@ public class MainActivity extends AppCompatActivity implements
          */
         ImageButton menuRight = findViewById(R.id.image_button_side_menu);
         menuRight.setOnClickListener(v -> {
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
+
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
             } else {
-                drawer.openDrawer(GravityCompat.START);
+                binding.drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
@@ -233,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements
         /**
          * Drawer Item selected logic
          */
-        drawer.closeDrawer(GravityCompat.START);
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
         switch (menuItem.getItemId()) {
             case R.id.privacy_politic:
                 Intent policiesIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/POLI%CC%81TICA_DE_PRIVACIDAD_APP_REGISTRATE.pdf"));
