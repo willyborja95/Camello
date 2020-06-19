@@ -38,57 +38,57 @@ android {
 
 dependencies {
 
-
-
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.google.android.material:material:1.2.0-alpha04'
+    /** UI */
+    implementation "com.google.android.material:material:$version_material"
+    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
+    implementation 'androidx.navigation:navigation-ui:2.0.0'
+    implementation "com.github.kizitonwose:CalendarView:$version_calendar_view"
 
+    
     /** Play services */
-
     implementation "com.google.android.gms:play-services-location:$version_play_services"
     implementation "com.google.android.gms:play-services-maps:$version_play_services"
     implementation "com.google.android.gms:play-services-places:$version_play_services"
 
-    implementation 'com.google.code.gson:gson:2.8.1'
-    implementation 'com.github.kizitonwose:CalendarView:0.3.1'
 
-    /** Android X */
+    /** Retrofit library */
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$version_retrofit"
+    /** Gson */
+    implementation "com.google.code.gson:gson:$version_gson"
+
+
+    /** Other Android X dependencies */
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.navigation:navigation-fragment:2.0.0'
-    implementation 'androidx.navigation:navigation-ui:2.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-alpha03'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
+    implementation 'androidx.navigation:navigation-fragment:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
 
     // ViewModel and lifecycle support for java
-    implementation "androidx.lifecycle:lifecycle-viewmodel:${version_lifecycle}"
-    implementation "androidx.lifecycle:lifecycle-livedata:${version_lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$version_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata:$version_lifecycle"
 
-    /** Material design */
-    implementation "com.google.android.material:material:$version_material"
 
     /** Butter knife */
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 
-    /** Retrofit library */
-    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$version_retrofit"
 
-
+    /** Testing */
     testImplementation("com.squareup.okhttp3:mockwebserver:4.3.1")
-    // Required for local unit tests (JUnit 4 framework)
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'      // Required for local unit tests (JUnit 4 framework)
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+
     /** Firebase (https://firebase.google.com/docs/cloud-messaging/android/client?authuser=0) */
-    implementation 'com.google.firebase:firebase-messaging:20.1.5'                                  // Firebase Cloud Messaging
+    implementation "com.google.firebase:firebase-messaging:$version_fmc"                                  // Firebase Cloud Messaging
 
 
-    /** ROOM */
+    /** Room */
     implementation "androidx.room:room-runtime:$version_room"
     annotationProcessor "androidx.room:room-compiler:$version_room"
     // Test helpers
@@ -97,8 +97,8 @@ dependencies {
     // optional - RxJava support for Room
     implementation "androidx.room:room-rxjava2:$version_room"
 
-    /** Workmanager */
 
+    /** Work manager */
     // (Java only)
     implementation "androidx.work:work-runtime:$version_work_manager"
 
@@ -116,6 +116,8 @@ dependencies {
 
     // optional - Test helpers
     // androidTestImplementation "androidx.work:work-testing:$work_version"
+
+
     /** Timber for log better */
     implementation "com.jakewharton.timber:timber:$version_timber"
 
