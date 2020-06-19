@@ -8,6 +8,8 @@ import com.apptec.registrateapp.auth.AuthHelper;
 import com.apptec.registrateapp.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.registrateapp.mainactivity.fhome.geofence.GeofenceHelper;
 import com.apptec.registrateapp.mainactivity.fnotification.NotificationSetUp;
+import com.apptec.registrateapp.timber.DebugTree;
+import com.apptec.registrateapp.timber.ReleaseTree;
 
 import timber.log.Timber;
 
@@ -34,17 +36,33 @@ public class App extends Application {
         sGeofenceHelper = new GeofenceHelper();
         sAuthHelper = new AuthHelper();
 
+
+        // Setting up timber
+        setUpTimber();
+
+
         // Call the notification setup. It does not matter if the channel is create twice, it don't have effect
         new Thread(new NotificationSetUp()).run();
 
 
-        // Setting up timber
-        Timber.plant(new Timber.DebugTree());
+    }
+
+    /**
+     * Timber is a library to log in a better way
+     */
+    private void setUpTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new DebugTree());
+            Timber.i("Timber set up in DEBUG level");
+        } else {
+            Timber.plant(new ReleaseTree());
+        }
+
 
     }
 
 
-    public static Context getContext(){
+    public static Context getContext() {
         /**
          * Be careful using this method only when you need the global application context. Do not use
          * it when you need a view context.
