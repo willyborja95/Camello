@@ -6,24 +6,25 @@ import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 
+/**
+ * This class is in the middle of the MVVM pattern.
+ * It interacts as an intermediary between the Model and the View.
+ */
 public class HomePresenterImpl {
 
-    /**
-     * This class is in the middle of the MVVM pattern.
-     * It interacts as an intermediary between the Model and the View.
-     */
 
+    /**
+     * @return the last working period saved
+     */
     public LiveData<WorkingPeriodModel> getLiveDataLastWorkingPeriod() {
-        /**
-         * Return the last working period saved
-         */
+
         return RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLiveDataLastWorkingPeriod();
     }
 
+    /**
+     * Create a new thread and then run the process there
+     */
     public void changeLastWorkingStatus() {
-        /**
-         * Create a new thread and then run the process there
-         */
 
         App.changeWorkStatus();
     }

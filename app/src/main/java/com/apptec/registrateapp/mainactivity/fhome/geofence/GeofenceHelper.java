@@ -2,7 +2,6 @@ package com.apptec.registrateapp.mainactivity.fhome.geofence;
 
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -21,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class GeofenceHelper {
     /**
      * This class will instance a geofence client
@@ -28,7 +29,6 @@ public class GeofenceHelper {
      * @param sGeofencingList is a singleton
      */
 
-    private final String TAG = GeofenceHelper.class.getSimpleName();
 
     private static GeofencingClient sGeofencingClient;
 
@@ -63,7 +63,7 @@ public class GeofenceHelper {
         /**
          * Set up the geofencing
          */
-        Log.d(TAG, "Setting up the geofencing");
+        Timber.d("Setting up the geofencing");
         geofenceList = new ArrayList<>();
         geofencePendingIntent = null;
         populateGeofenceList();
@@ -143,14 +143,14 @@ public class GeofenceHelper {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Geofences added
-                        Log.d(TAG, "Geofences added");
+                        Timber.d("Geofences added");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Failed to add geofences
-                        Log.d(TAG, "Failed to add geofences");
+                        Timber.d("Failed to add geofences");
                     }
                 });
     }

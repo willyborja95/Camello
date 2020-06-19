@@ -1,7 +1,6 @@
 package com.apptec.registrateapp.mainactivity.fhome;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
-import com.apptec.registrateapp.mainactivity.fhome.generic.DayViewContainer;
-import com.apptec.registrateapp.mainactivity.fhome.generic.MonthHeaderViewContainer;
+import com.apptec.registrateapp.mainactivity.fhome.ui.DayViewContainer;
+import com.apptec.registrateapp.mainactivity.fhome.ui.MonthHeaderViewContainer;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.util.Constants;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -37,13 +36,13 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
+/**
+ * Home fragment
+ */
 public class HomeFragment extends Fragment {
-    /**
-     * Home fragment
-     */
 
-    private final String TAG = HomeFragment.class.getSimpleName();
 
     // Instance of ViewModel
     private MainViewModel mainViewModel;
@@ -94,10 +93,10 @@ public class HomeFragment extends Fragment {
     }
 
 
+    /**
+     * Setting up an observer to the mLastWorkingPeriod
+     */
     private void setupCentralButtonManager() {
-        /**
-         * Setting up an observer to the mLastWorkingPeriod
-         */
 
         mainViewModel.getLastWorkingPeriod().observe(this, new Observer<WorkingPeriodModel>() {
             @Override
@@ -110,7 +109,7 @@ public class HomeFragment extends Fragment {
 
                     } else {
                         // It is not
-                        Log.w(TAG, "No working period create yet");
+                        Timber.w("No working period create yet");
                         centralButton.setText(getString(R.string.home_button_finish_message));
                         centralMessage.setText(getString(R.string.home_text_view_finish_message));
 
