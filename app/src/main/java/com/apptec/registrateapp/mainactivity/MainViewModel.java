@@ -32,10 +32,10 @@ import java.util.Calendar;
 import java.util.List;
 
 
+/**
+ * View model shared by the fragments
+ */
 public class MainViewModel extends AndroidViewModel {
-    /**
-     * View model shared by the fragments
-     */
 
     private final String TAG = MainViewModel.class.getSimpleName();
 
