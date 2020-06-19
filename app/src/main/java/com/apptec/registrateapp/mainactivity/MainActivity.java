@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements
         });
 
 
+        // Sent the user to the device fragment if needs to register this device
         // Handling here the if the first login of this user
         mainViewModel.getIsNeededRegisterDevice().observe(this, new Observer<Boolean>() {
             @Override
@@ -167,8 +168,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
-
-        // Sent the user to the device fragment if needs to register this device
 
 
     }
