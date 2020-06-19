@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.mainactivity.fhome.generic;
+package com.apptec.registrateapp.mainactivity.fhome.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;

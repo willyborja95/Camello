@@ -1,4 +1,4 @@
-package com.apptec.registrateapp.mainactivity.fhome.generic;
+package com.apptec.registrateapp.mainactivity.fhome.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
