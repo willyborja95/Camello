@@ -13,15 +13,14 @@ import com.apptec.registrateapp.timber.ReleaseTree;
 
 import timber.log.Timber;
 
+/**
+ * This class is used:
+ * - For return an access to the application context from every part of the app.
+ * - For provide the global methods to change work status
+ * - Provide an AuthHelper for all the app
+ */
 public class App extends Application {
 
-    /**
-     * This class is used:
-     * - For return an access to the application context from every part of the app.
-     * - For provide the global methods to change work status
-     * - Provide an AuthHelper for all the app
-     */
-    private static final String TAG = "App";
 
     private static Context context;
     private static GeofenceHelper sGeofenceHelper;
@@ -62,41 +61,37 @@ public class App extends Application {
     }
 
 
+    /**
+     * Be careful using this method only when you need the global application context. Do not use
+     * it when you need a view context.
+     */
     public static Context getContext() {
-        /**
-         * Be careful using this method only when you need the global application context. Do not use
-         * it when you need a view context.
-         */
         return App.context;
     }
 
+    /**
+     * This method will be called when:
+     * - The user press the 'finish work' button
+     * - The user hang out from the work zone
+     */
     public static void changeWorkStatus() {
-        /**
-         * This method will be called when:
-         * - The user press the 'finish work' button
-         * - The user hang out from the work zone
-         */
         new Thread(new HandlerChangeWorkingStatus()).start();
-
     }
 
+    /**
+     * Return the singleton of geofence helper
+     */
     public static GeofenceHelper getGeofenceHelper() {
-        /**
-         * Return the singleton of geofence helper
-         */
+
         return sGeofenceHelper;
     }
 
-    public static AuthHelper getAuthHelper(){
-        /**
-         * Expose the auth helper
-         */
+    /**
+     * Expose the auth helper
+     */
+    public static AuthHelper getAuthHelper() {
         return App.sAuthHelper;
     }
-
-
-
-
 
 
 }
