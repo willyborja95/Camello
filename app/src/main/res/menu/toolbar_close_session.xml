@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/btnLogout"
+        android:id="@+id/btn_logout"
         android:icon="@drawable/ic_close_session"
         android:title="actualizar"
         app:showAsAction="always" />

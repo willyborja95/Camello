@@ -57,11 +57,10 @@ public class MainActivity extends AppCompatActivity implements
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);   // Getting the view model
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view_2);
-        drawer = findViewById(R.id.drawer_layout_2);
-        NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer_2);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view);
+        drawer = findViewById(R.id.drawer_layout);
+        NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer);
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
-
 
 
         /** For control the side drawer onNavigationItemSelected */
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements
         /**
          * Open or close the side menu
          */
-        ImageButton menuRight = findViewById(R.id.image_button_side_menu2);
+        ImageButton menuRight = findViewById(R.id.image_button_side_menu);
         menuRight.setOnClickListener(v -> {
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -81,10 +80,8 @@ public class MainActivity extends AppCompatActivity implements
         });
 
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
-        toolbar_name = (TextView) findViewById(R.id.toolbar_name2);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar_name = (TextView) findViewById(R.id.toolbar_name);
 
 
         setSupportActionBar(toolbar);
@@ -100,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements
 
         getSupportActionBar().show();
 
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment_2);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -172,51 +169,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    //    TODO: This method should be remove and placed in the home fragment
-//
-//    public boolean checkPermissions() {
-//        int coarseLocation = ActivityCompat.checkSelfPermission(this,
-//                Manifest.permission.ACCESS_COARSE_LOCATION);
-//        int backgroundLocation = ActivityCompat.checkSelfPermission(this,
-//                Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-//        return coarseLocation == PackageManager.PERMISSION_GRANTED ||
-//                backgroundLocation == PackageManager.PERMISSION_GRANTED;
-//    }
-//
-//    public void requestPermissions() {
-//        boolean shouldProvideRationale =
-//                ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                        Manifest.permission.ACCESS_COARSE_LOCATION) ||
-//                        ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                                Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-//
-//        // Provide an additional rationale to the user. This would happen if the user denied the
-//        // request previously, but didn't check the "Don't ask again" checkbox.
-//        if (shouldProvideRationale) {
-//            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-//            showSnackbar(R.string.permission_rationale, android.R.string.ok,
-//                    view -> {
-//                        // Request permission
-//                        ActivityCompat.requestPermissions(MainActivity2.this,
-//                                new String[]{
-//                                        Manifest.permission.ACCESS_COARSE_LOCATION,
-//                                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
-//                                },
-//                                Constants.REQUEST_PERMISSIONS_REQUEST_CODE);
-//                    });
-//        } else {
-//            Log.i(TAG, "Requesting permission");
-//            // Request permission. It's possible this can be auto answered if device policy
-//            // sets the permission in a given state or the user denied the permission
-//            // previously and checked "Never ask again".
-//            ActivityCompat.requestPermissions(MainActivity2.this,
-//                    new String[]{
-//                            Manifest.permission.ACCESS_COARSE_LOCATION,
-//                            Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-//                    Constants.REQUEST_PERMISSIONS_REQUEST_CODE);
-//        }
-//    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -263,10 +215,10 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         /** I do not know if this method is used or not*/
         switch (item.getItemId()) {
-            case R.id.btnUpdatePermissions:
+            case R.id.btn_update_permissions:
                 //permissionFragment2.updatePermissions();
                 break;
-            case R.id.btnLogout:
+            case R.id.btn_logout:
                 SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
                 // TODO closeSession();
                 break;
@@ -283,14 +235,14 @@ public class MainActivity extends AppCompatActivity implements
          */
         drawer.closeDrawer(GravityCompat.START);
         switch (menuItem.getItemId()) {
-            case R.id.politica_privacidad:
+            case R.id.privacy_politic:
                 Intent policiesIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/POLI%CC%81TICA_DE_PRIVACIDAD_APP_REGISTRATE.pdf"));
                 startActivity(policiesIntent);
                 finish();
 
                 break;
 
-            case R.id.manual_usuario:
+            case R.id.user_manual:
                 Intent guideIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/Manual_de_Usuario.pdf"));
                 startActivity(guideIntent);
                 finish();
@@ -309,10 +261,10 @@ public class MainActivity extends AppCompatActivity implements
         super.onDestroy();
     }
 
+    /**
+     * Navigate to the login activity
+     */
     public void navigateToLogoutView() {
-        /**
-         * Navigate to the login activity
-         */
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
