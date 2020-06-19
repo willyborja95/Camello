@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="user"
+            type="com.apptec.registrateapp.models.UserModel" />
+    </data>
 
     <LinearLayout
         android:id="@+id/nav_header_main"
@@ -28,6 +34,7 @@
             android:gravity="center"
             android:textColor="@color/black100"
             android:textSize="20dp"
+            android:text="@{user.company.companyName}"
             tools:text="App Tec S.A." />
 
         <TextView
@@ -35,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black100"
+            android:text="@{user.name}"
             tools:text="Mario Piedrita" />
 
     </LinearLayout>
