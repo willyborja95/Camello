@@ -7,12 +7,13 @@ import com.apptec.registrateapp.R;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.GeofenceStatusCodes;
 
+/**
+ * Returns the error string for a geofencing exception.
+ */
 public class GeofenceErrorMessages {
     private GeofenceErrorMessages() {}
 
-    /**
-     * Returns the error string for a geofencing exception.
-     */
+
     public static String getErrorString(Context context, Exception e) {
         if (e instanceof ApiException) {
             return getErrorString(context, ((ApiException) e).getStatusCode());
