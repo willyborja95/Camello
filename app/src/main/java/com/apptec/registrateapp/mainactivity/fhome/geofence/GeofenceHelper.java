@@ -22,14 +22,12 @@ import java.util.List;
 
 import timber.log.Timber;
 
+/**
+ * This class will instance a geofence client
+ */
 public class GeofenceHelper {
-    /**
-     * This class will instance a geofence client
-     *
-     * @param sGeofencingList is a singleton
-     */
 
-
+    // sGeofencingList is a singleton
     private static GeofencingClient sGeofencingClient;
 
     private enum PendingGeofenceTask {
@@ -47,11 +45,12 @@ public class GeofenceHelper {
     }
 
 
+    /**
+     * This method will return the global geofence client for the app.
+     */
     public GeofencingClient getGeofencingClient() {
-        /**
-         * This method will return the global geofence client for the app.
-         */
-        // Verify is not null, otherwise gen an instance
+
+        // Verify is not null, otherwise get an instance
         if (sGeofencingClient == null) {
             sGeofencingClient = LocationServices.getGeofencingClient(App.getContext());
 
@@ -59,10 +58,10 @@ public class GeofenceHelper {
         return sGeofencingClient;
     }
 
+    /**
+     * Set up the geofencing
+     */
     public void setUpGeofencing() {
-        /**
-         * Set up the geofencing
-         */
         Timber.d("Setting up the geofencing");
         geofenceList = new ArrayList<>();
         geofencePendingIntent = null;
@@ -72,14 +71,14 @@ public class GeofenceHelper {
 
     }
 
+    /**
+     * First, use Geofence.Builder to create a geofence, setting the desired radius,
+     * duration, and transition types for the geofence.
+     * <p>
+     * Create as many geofences as company's work zones.
+     */
     private void populateGeofenceList() {
-        /**
-         * First, use Geofence.Builder to create a geofence, setting the desired radius,
-         * duration, and transition types for the geofence.
-         *
-         * Create as many geofences as company's work zones.
-         */
-
+        Timber.d("Populating geofencing");
         // Maybe the list of work zones could be obtained from other source
         List<WorkZoneModel> workZones = RoomHelper.getAppDatabaseInstance().workZoneDao().getListWorkZones();
 
@@ -95,15 +94,16 @@ public class GeofenceHelper {
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build());
         }
-
+        Timber.d("Finished populating geofencing");
     }
 
 
+    /**
+     * Use the GeofencingRequest class and its nested GeofencingRequestBuilder class to
+     * specify the geofences to monitor and to set how related geofence events are triggered
+     */
     private GeofencingRequest getGeofencingRequest() {
-        /**
-         * Use the GeofencingRequest class and its nested GeofencingRequestBuilder class to
-         * specify the geofences to monitor and to set how related geofence events are triggered
-         */
+        Timber.d("getGeofencingRequest() ");
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_EXIT);
         builder.addGeofences(geofenceList);
@@ -111,15 +111,16 @@ public class GeofenceHelper {
     }
 
 
+    /**
+     * An Intent sent from Location Services can trigger various actions in your app,
+     * but you should not have it start an activity or fragment, because components
+     * should only become visible in response to a user action. In many cases, a
+     * BroadcastReceiver is a good way to handle a geofence transition. A BroadcastReceiver
+     * gets updates when an event occurs, such as a transition into or out of a geofence,
+     * and can start long-running background work.
+     */
     private PendingIntent getGeofencePendingIntent() {
-        /**
-         * An Intent sent from Location Services can trigger various actions in your app,
-         * but you should not have it start an activity or fragment, because components
-         * should only become visible in response to a user action. In many cases, a
-         * BroadcastReceiver is a good way to handle a geofence transition. A BroadcastReceiver
-         * gets updates when an event occurs, such as a transition into or out of a geofence,
-         * and can start long-running background work.
-         */
+        Timber.d("getGeofencePendingIntent()");
         // Reuse the PendingIntent if we already have it.
         if (geofencePendingIntent != null) {
             return geofencePendingIntent;
@@ -132,12 +133,12 @@ public class GeofenceHelper {
         return geofencePendingIntent;
     }
 
+    /**
+     * To add geofences, use the GeofencingClient.addGeofences() method.
+     * Provide the GeofencingRequest object, and the PendingIntent.
+     */
     private void addGeofences() {
-        /**
-         * To add geofences, use the GeofencingClient.addGeofences() method.
-         * Provide the GeofencingRequest object, and the PendingIntent.
-         */
-
+        Timber.d("Adding pre populate geofencing");
         sGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
