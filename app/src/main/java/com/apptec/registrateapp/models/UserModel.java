@@ -82,7 +82,8 @@ public class UserModel implements Serializable {
         this.workingPeriodList = workingPeriodList;
     }
 
-    public Object getFullName() {
+    @Ignore
+    public String getFullName() {
         return this.name + " " + this.lastName;
     }
 }

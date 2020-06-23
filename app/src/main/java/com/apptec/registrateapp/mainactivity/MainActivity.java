@@ -134,12 +134,26 @@ public class MainActivity extends AppCompatActivity implements
         });
 
 
+        // Setting up the names into the nav drawer
+        TextView userName = viewNavHeader.findViewById(R.id.user_fullname);
+        TextView companyName = viewNavHeader.findViewById(R.id.company_name);
+        mainViewModel.getCurrentUser().observe(this, userModel -> {
+            if (userModel != null) {
+                userName.setText(userModel.getFullName());
+                if (userModel.getCompany() != null) {
+                    companyName.setText(userModel.getCompany().getCompanyName());
+                }
+
+            }
+        });
+
+
         // Sent the user to the device fragment if needs to register this device
         // Handling here the if the first login of this user
         mainViewModel.getIsNeededRegisterDevice().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     // That mean the user needs to register this device
                     // Register device
                     navController.navigate(R.id.deviceFragment);

@@ -2,6 +2,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- We not use this variable, but we don't remove it because the data biding class-
+     is not being generated -->
     <data>
 
         <variable
