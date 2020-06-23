@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         // Setting up the geofence ?
+        Timber.d("Setup geofencing");
         new Thread(new Runnable() {
             @Override
             public void run() {
