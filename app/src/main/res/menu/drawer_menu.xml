@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/politica_privacidad"
+            android:id="@+id/privacy_politic"
             android:layout_gravity="center"
             android:title="Política de Privacidad" />
         <item
-            android:id="@+id/manual_usuario"
+            android:id="@+id/user_manual"
             android:layout_gravity="center"
             android:title="Manual de Usuario" />
         <item
