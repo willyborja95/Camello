@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.databinding.ActivityMainBinding;
 import com.apptec.registrateapp.loginactivity.LoginActivity;
@@ -162,25 +161,13 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        // Setting up the geofence ?
-        Timber.d("Setup geofencing");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                App.getGeofenceHelper().setUpGeofencing();
-            }
-        });
-
 
         // Know if logout or not
-        mainViewModel.getIsUserLogged().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean loggedUser) {
-                if (!loggedUser) {
-                    // Logout
-                    navigateToLogoutView();
+        mainViewModel.getIsUserLogged().observe(this, loggedUser -> {
+            if (!loggedUser) {
+                // Logout
+                navigateToLogoutView();
 
-                }
             }
         });
 
