@@ -4,24 +4,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.registrateapp.R;
+import com.apptec.registrateapp.databinding.FragmentHomeBinding;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
 import com.apptec.registrateapp.mainactivity.fhome.ui.DayViewContainer;
 import com.apptec.registrateapp.mainactivity.fhome.ui.MonthHeaderViewContainer;
-import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.util.Constants;
 import com.jakewharton.threetenabp.AndroidThreeTen;
-import com.kizitonwose.calendarview.CalendarView;
 import com.kizitonwose.calendarview.model.CalendarDay;
 import com.kizitonwose.calendarview.model.CalendarMonth;
 import com.kizitonwose.calendarview.ui.DayBinder;
@@ -34,8 +31,6 @@ import org.threeten.bp.temporal.WeekFields;
 
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -47,18 +42,18 @@ public class HomeFragment extends Fragment {
     // Instance of ViewModel
     private MainViewModel mainViewModel;
 
+
+    // Using data binding
+    private FragmentHomeBinding binding;
+
+    // Constant for the calendar view
     private static final Locale LOCALE_ES = Locale.forLanguageTag("es-419");
 
-
-    @BindView(R.id.calendarView)
-    CalendarView calendarView;
-    Button centralButton;
-    TextView centralMessage;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);            // Getting the view model
         mainViewModel.setActiveFragmentName(getString(R.string.home_fragment_title));
 
 
@@ -67,13 +62,11 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_home, container, false); // Inflate the view
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false); // Inflate the view
 
-        ButterKnife.bind(this, view);
+        // Set the main viewmodel instance to the layout
+        binding.setMainViewModel(mainViewModel);
 
-        // Binding UI elements (THis can be replaced with data binding)
-        centralButton = view.findViewById(R.id.fragment_home_start_button);
-        centralMessage = view.findViewById(R.id.fragment_home_button_message);
 
         this.setupCalendar();                        // Setting up the calendar view
 
@@ -81,7 +74,7 @@ public class HomeFragment extends Fragment {
 
 
         // Creating a lister for the button
-        centralButton.setOnClickListener(new View.OnClickListener() {
+        binding.fragmentHomeStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mainViewModel.changeLastWorkingState();
@@ -89,7 +82,7 @@ public class HomeFragment extends Fragment {
         });
 
 
-        return view;
+        return binding.getRoot();
     }
 
 
@@ -98,42 +91,40 @@ public class HomeFragment extends Fragment {
      */
     private void setupCentralButtonManager() {
 
-        mainViewModel.getLastWorkingPeriod().observe(this, new Observer<WorkingPeriodModel>() {
-            @Override
-            public void onChanged(WorkingPeriodModel workingPeriod) {
-                try {
-                    if (workingPeriod.getStatus() == Constants.INT_NOT_INIT_STATUS) {
-                        // The user is working
-                        centralButton.setText(getString(R.string.home_button_start_message));
-                        centralMessage.setText(getString(R.string.home_text_view_start_message));
+        mainViewModel.getLastWorkingPeriod().observe(getViewLifecycleOwner(), workingPeriod -> {
+            try {
+                if (workingPeriod.getStatus() == Constants.INT_NOT_INIT_STATUS) {
+                    // The user is working
+                    binding.fragmentHomeStartButton.setText(getString(R.string.home_button_start_message));
+                    binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_start_message));
 
-                    } else {
-                        // It is not
-                        Timber.w("No working period create yet");
-                        centralButton.setText(getString(R.string.home_button_finish_message));
-                        centralMessage.setText(getString(R.string.home_text_view_finish_message));
-
-                    }
-                } catch (NullPointerException npe) {
+                } else {
                     // It is not
-                    centralButton.setText(getString(R.string.home_button_start_message));
-                    centralMessage.setText(getString(R.string.home_text_view_start_message));
+                    Timber.w("No working period create yet");
+                    binding.fragmentHomeStartButton.setText(getString(R.string.home_button_finish_message));
+                    binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_finish_message));
 
                 }
+            } catch (NullPointerException npe) {
+                // It is not working
+                binding.fragmentHomeStartButton.setText(getString(R.string.home_button_start_message));
+                binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_start_message));
 
             }
+
         });
 
     }
 
 
+    /**
+     * Here is the logic for setup the calendar
+     */
     private void setupCalendar() {
-        /**
-         * Here is the logic for setup the calendar
-         */
+
         // Calendar
         AndroidThreeTen.init(getActivity());
-        calendarView.setDayBinder(new DayBinder<DayViewContainer>() {
+        binding.calendarView.setDayBinder(new DayBinder<DayViewContainer>() {
             @NonNull
             @Override
             public DayViewContainer create(@NonNull View view) {
@@ -148,7 +139,7 @@ public class HomeFragment extends Fragment {
                 container.getDayNameText().setText(dayName);
             }
         });
-        calendarView.setMonthHeaderBinder(new MonthHeaderFooterBinder<MonthHeaderViewContainer>() {
+        binding.calendarView.setMonthHeaderBinder(new MonthHeaderFooterBinder<MonthHeaderViewContainer>() {
             @NonNull
             @Override
             public MonthHeaderViewContainer create(@NonNull View view) {
@@ -171,8 +162,8 @@ public class HomeFragment extends Fragment {
         YearMonth firstMonth = currentMonth.minusMonths(10);
         YearMonth lastMonth = currentMonth.plusMonths(10);
         DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
-        calendarView.setup(firstMonth, lastMonth, firstDayOfWeek);
-        calendarView.scrollToMonth(currentMonth);
+        binding.calendarView.setup(firstMonth, lastMonth, firstDayOfWeek);
+        binding.calendarView.scrollToMonth(currentMonth);
     }
 
 }
