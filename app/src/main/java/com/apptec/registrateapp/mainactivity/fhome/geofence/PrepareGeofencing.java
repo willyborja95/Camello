@@ -17,7 +17,7 @@ import timber.log.Timber;
 
 /**
  * Class runnable that will implements the settings for the location service
- * IT will be like a builder for the {@link GeofenceHelper}
+ * It will be like a builder for the {@link GeofenceHelper}
  */
 public class PrepareGeofencing implements Runnable {
 
