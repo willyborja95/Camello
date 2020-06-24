@@ -1,7 +1,6 @@
 package com.apptec.registrateapp.mainactivity;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -31,13 +30,15 @@ import com.apptec.registrateapp.util.Constants;
 import java.util.Calendar;
 import java.util.List;
 
+import timber.log.Timber;
+
 
 /**
  * View model shared by the fragments
  */
 public class MainViewModel extends AndroidViewModel {
 
-    private final String TAG = MainViewModel.class.getSimpleName();
+
 
 
     // To show the notifications
@@ -139,11 +140,10 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
+    /**
+     * If the user is working change to no working and vice versa
+     */
     public void changeLastWorkingState() {
-        /**
-         * If the user is working change to no working and vice versa
-         */
-
         homePresenter.changeLastWorkingStatus();
 
     }
@@ -222,7 +222,7 @@ public class MainViewModel extends AndroidViewModel {
          *
          * if the user is working, advice him that the work will be finalized
          */
-        Log.d(TAG, "Login out");
+        Timber.d("Login out");
         if (this.getLastWorkingPeriod().getValue() != null) {
             if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
                 // TODO: Advice the user that his working period will be ended

@@ -12,6 +12,7 @@ import androidx.work.WorkManager;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.auth.refreshtoken.RefreshTokenWorker;
+import com.apptec.registrateapp.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.registrateapp.models.CompanyModel;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
@@ -134,4 +135,12 @@ public class AuthHelper {
     }
 
 
+    /**
+     * This method will be called when:
+     * - The user press the 'finish work' button
+     * - The user hang out from the work zone
+     */
+    public void changeWorkStatus() {
+        new Thread(new HandlerChangeWorkingStatus()).start();
+    }
 }
