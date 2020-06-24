@@ -28,7 +28,7 @@ public class PrepareGeofencing implements Runnable {
     private PrepareListener prepareListener;
 
     /**
-     * UNique construcotr
+     * Unique constructor
      *
      * @param geofenceList
      * @param geofencePendingIntent
