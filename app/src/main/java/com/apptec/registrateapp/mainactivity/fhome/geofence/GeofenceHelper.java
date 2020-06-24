@@ -6,8 +6,6 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 
 import com.apptec.registrateapp.App;
-import com.apptec.registrateapp.models.WorkZoneModel;
-import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -17,7 +15,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -28,7 +25,7 @@ import timber.log.Timber;
 public class GeofenceHelper {
 
     // sGeofencingList is a singleton
-    private static GeofencingClient sGeofencingClient;
+    private GeofencingClient sGeofencingClient;
 
     private enum PendingGeofenceTask {
         ADD, REMOVE, NONE
@@ -39,63 +36,19 @@ public class GeofenceHelper {
     private PendingIntent geofencePendingIntent;
 
 
-    // Constructor
+    /**
+     * Constructor that will prepare the geofences
+     */
     public GeofenceHelper() {
         sGeofencingClient = LocationServices.getGeofencingClient(App.getContext());
+        new Thread(new PrepareGeofencing(geofenceList, geofencePendingIntent, sGeofencingClient, (geofenceList, sGeofencingClient, geofencePendingIntent) -> {
+            this.geofenceList = geofenceList;
+            this.sGeofencingClient = sGeofencingClient;
+            this.geofencePendingIntent = geofencePendingIntent;
+        })).start();
     }
 
 
-    /**
-     * This method will return the global geofence client for the app.
-     */
-    public GeofencingClient getGeofencingClient() {
-
-        // Verify is not null, otherwise get an instance
-        if (sGeofencingClient == null) {
-            sGeofencingClient = LocationServices.getGeofencingClient(App.getContext());
-
-        }
-        return sGeofencingClient;
-    }
-
-    /**
-     * Set up the geofencing
-     */
-    public void setUpGeofencing() {
-        Timber.d("Setting up the geofencing");
-        geofenceList = new ArrayList<>();
-        geofencePendingIntent = null;
-        populateGeofenceList();
-        sGeofencingClient = getGeofencingClient();
-        addGeofences();
-
-    }
-
-    /**
-     * First, use Geofence.Builder to create a geofence, setting the desired radius,
-     * duration, and transition types for the geofence.
-     * <p>
-     * Create as many geofences as company's work zones.
-     */
-    private void populateGeofenceList() {
-        Timber.d("Populating geofencing");
-        // Maybe the list of work zones could be obtained from other source
-        List<WorkZoneModel> workZones = RoomHelper.getAppDatabaseInstance().workZoneDao().getListWorkZones();
-
-        for (int i = 0; i < workZones.size(); i++) {
-            geofenceList.add(new Geofence.Builder()
-                    .setRequestId(workZones.get(i).getId() + "")
-                    .setCircularRegion(
-                            Double.parseDouble(workZones.get(i).getLatitude()), // Latitude
-                            Double.parseDouble(workZones.get(i).getLongitude()), // Longitude
-                            GeofenceConstants.GEOFENCE_RADIUS_IN_METERS // Radius
-                    )
-                    .setExpirationDuration(GeofenceConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                    .build());
-        }
-        Timber.d("Finished populating geofencing");
-    }
 
 
     /**
