@@ -5,7 +5,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.apptec.registrateapp.auth.AuthHelper;
-import com.apptec.registrateapp.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.registrateapp.mainactivity.fhome.geofence.GeofenceHelper;
 import com.apptec.registrateapp.mainactivity.fnotification.NotificationSetUp;
 import com.apptec.registrateapp.timber.DebugTree;
@@ -70,12 +69,10 @@ public class App extends Application {
     }
 
     /**
-     * This method will be called when:
-     * - The user press the 'finish work' button
-     * - The user hang out from the work zone
+     * Let the geofence helper handle this
      */
     public static void changeWorkStatus() {
-        new Thread(new HandlerChangeWorkingStatus()).start();
+        getAuthHelper().changeWorkStatus();
     }
 
     /**
