@@ -63,6 +63,10 @@ public class WorkZoneModel {
         return radius;
     }
 
+    public float getRadiusAsFloat() {
+        return Float.parseFloat(this.radius);
+    }
+
     public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
@@ -70,6 +74,15 @@ public class WorkZoneModel {
     public String getLatitude() {
         return latitude;
     }
+
+    public Double getLatitudeAsDouble() {
+        return Double.parseDouble(this.latitude);
+    }
+
+    public Double getLongitudeAsDouble() {
+        return Double.parseDouble(this.longitude);
+    }
+
 
     @Override
     public String toString() {
