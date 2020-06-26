@@ -50,6 +50,7 @@ public class DevicePresenterImpl {
         thisDevice.setModel(model);
         thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
         thisDevice.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
+        thisDevice.setActive(true);
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
         Call<JsonObject> call = deviceRetrofitInterface.registerDevice(

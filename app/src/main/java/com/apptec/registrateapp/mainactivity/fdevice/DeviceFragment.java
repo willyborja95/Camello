@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
@@ -37,7 +37,7 @@ public class DeviceFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);                    // Getting the view model
         mainViewModel.setActiveFragmentName(getString(R.string.devices_fragment_title));
 
 
