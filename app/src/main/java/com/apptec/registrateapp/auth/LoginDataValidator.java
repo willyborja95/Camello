@@ -7,7 +7,7 @@ import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UserModel;
 import com.apptec.registrateapp.models.WorkZoneModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class LoginDataValidator {
     /**
@@ -18,21 +18,19 @@ public class LoginDataValidator {
     public CompanyModel company;
     @Nullable
     public DeviceModel device;
-    public ArrayList<WorkZoneModel> workZoneModels;
+    public List<WorkZoneModel> workZoneModels;
     public String accessToken, refreshToken;
 
-
-    public LoginDataValidator(
-            UserModel user,
-            CompanyModel company,
-            @Nullable DeviceModel device,
-            ArrayList<WorkZoneModel> workZoneModels,
-            String accessToken,
-            String refreshToken) {
+    public LoginDataValidator(UserModel user,
+                              CompanyModel company,
+                              @Nullable DeviceModel userDevice,
+                              List<WorkZoneModel> workzones,
+                              String accessToken,
+                              String refreshToken) {
         this.user = user;
         this.company = company;
-        this.device = device;
-        this.workZoneModels = workZoneModels;
+        this.device = userDevice;
+        this.workZoneModels = workzones;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }

@@ -21,6 +21,9 @@ public interface WorkZoneDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrReplace(WorkZoneModel workZone);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAllOrReplace(List<WorkZoneModel> workZoneModels);
+
     @Delete
     void delete(WorkZoneModel workZone);
 
