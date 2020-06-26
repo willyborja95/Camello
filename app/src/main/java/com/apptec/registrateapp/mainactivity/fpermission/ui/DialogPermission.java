@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
@@ -31,15 +30,19 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import timber.log.Timber;
+
+/**
+ * This dialog is for let the user create a new permission
+ */
 public class DialogPermission extends DialogFragment {
-    /**
-     * This dialog is for let the user create a new permission
-     */
+
     private static final String TAG = "DialogPermission";
 
     // UI elements
     private EditText txtStartDate;
     private EditText txtEndDate;
+    private EditText txtComment;
     private DatePicker dpStartDate;
     private Spinner spnPermissionType;
     private ArrayAdapter<PermissionType> adapterPermissionType;
@@ -52,7 +55,6 @@ public class DialogPermission extends DialogFragment {
     MainViewModel mainViewModel;
 
 
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -63,13 +65,14 @@ public class DialogPermission extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
+        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);              // Getting the view model
 
 
         View viewDialog = inflater.inflate(R.layout.dialog_permission, null);
         txtStartDate = (EditText) viewDialog.findViewById(R.id.txtStartDate);
         txtEndDate = (EditText) viewDialog.findViewById(R.id.txtEndDate);
         spnPermissionType = (Spinner) viewDialog.findViewById(R.id.spnPermissionType);
+        txtComment = viewDialog.findViewById(R.id.dialog_permission_comment);
 
         RoomHelper.getAppDatabaseInstance().permissionTypeDao().getPermissionTypes().observe(this, new Observer<List<PermissionType>>() {
             @Override
@@ -88,9 +91,9 @@ public class DialogPermission extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // Save the permission requested
-                        Log.w(TAG, "onClick: Ok");
+                        Timber.d("onClick: Ok");
                         PermissionType permissionType = (PermissionType) spnPermissionType.getSelectedItem();
-                        mainViewModel.savePermission(permissionType, startDate, endDate);
+                        mainViewModel.savePermission(permissionType, startDate, endDate, txtComment.getText().toString());
                     }
                 })
                 .setNegativeButton(getString(R.string.permission_negative_button), new DialogInterface.OnClickListener() {

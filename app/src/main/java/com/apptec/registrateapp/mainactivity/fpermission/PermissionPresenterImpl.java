@@ -31,7 +31,7 @@ public class PermissionPresenterImpl {
         return RoomHelper.getAppDatabaseInstance().permissionDao().getLiveDataListPermission();
     }
 
-    public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate) {
+    public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate, String comment) {
         /**
          * Save the permission requested
          */
@@ -49,7 +49,7 @@ public class PermissionPresenterImpl {
             Long endDate1 = DateConverter.toTimestamp(endDateDate);
 
             // Creating the body
-            PermissionModel permission = new PermissionModel("", selectedItem.getId(), 1, startDate1, endDate1);
+            PermissionModel permission = new PermissionModel(comment, selectedItem.getId(), 1, startDate1, endDate1);
             PermissionDto permissionDto = new PermissionDto(permission);
 
             PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
@@ -69,6 +69,7 @@ public class PermissionPresenterImpl {
                         // Get the permission id form the response and also the status by the way
                         int correctId = response.body().getWrappedData().getId();
                         int correctStatus = response.body().getWrappedData().getStatusId();
+                        Timber.d("Permission: " + response.body().getWrappedData().toString());
                         Timber.i("CorrectId: " + correctId);
                         Timber.i("CorrectStatus: " + correctStatus);
 
