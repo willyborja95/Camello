@@ -44,12 +44,13 @@
 
             <TextView
                 android:id="@+id/text_view_device_model"
-                tools:text="Nexus 5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/opensans_light"
+                android:paddingStart="16dp"
                 android:textColor="@color/black100"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                tools:text="Nexus 5" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,12 +71,13 @@
 
             <TextView
                 android:id="@+id/text_view_device_imei"
-                tools:text="1099193543645091"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/opensans_light"
+                android:paddingStart="16dp"
                 android:textColor="@color/black100"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                tools:text="1099193543645091" />
 
         </LinearLayout>
 
@@ -99,11 +101,12 @@
                 android:id="@+id/text_view_device_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="@string/text_status_active"
-                android:text="@string/text_status_active"
                 android:fontFamily="@font/opensans_light"
+                android:paddingStart="16dp"
+                android:text="@string/text_status_active"
                 android:textColor="@color/black100"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                tools:text="@string/text_status_active" />
 
         </LinearLayout>
 
