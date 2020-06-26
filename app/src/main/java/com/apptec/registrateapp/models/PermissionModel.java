@@ -121,5 +121,17 @@ public class PermissionModel implements Serializable {
     public void setEndDate(Long endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    public String toString() {
+        return "PermissionModel{" +
+                "id=" + id +
+                ", comment='" + comment + '\'' +
+                ", fkPermissionType=" + fkPermissionType +
+                ", fkPermissionStatus=" + fkPermissionStatus +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 }
 

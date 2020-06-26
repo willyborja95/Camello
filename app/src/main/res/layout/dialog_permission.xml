@@ -70,6 +70,7 @@
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/dialog_permission_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
