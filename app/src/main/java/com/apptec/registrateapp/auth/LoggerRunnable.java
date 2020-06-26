@@ -14,6 +14,7 @@ import com.apptec.registrateapp.mainactivity.fdevice.DeviceRetrofitInterface;
 import com.apptec.registrateapp.models.CompanyModel;
 import com.apptec.registrateapp.models.UpdatePushTokenBody;
 import com.apptec.registrateapp.models.UserModel;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
@@ -22,6 +23,8 @@ import com.apptec.registrateapp.repository.webservices.pojoresponse.Error;
 import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -94,7 +97,7 @@ public class LoggerRunnable implements Runnable {
     }
 
 
-    public void saveUserAndCompany(UserModel user, CompanyModel company) {
+    public void saveUserAndCompany(UserModel user, CompanyModel company, List<WorkZoneModel> workZoneModels) {
         /**
          * This method will save the user into the database and the company
          * We are running in a new thread so we need directly
@@ -102,6 +105,7 @@ public class LoggerRunnable implements Runnable {
         new Thread(() -> {
             RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(user);
             RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(company);
+            RoomHelper.getAppDatabaseInstance().workZoneDao().insertAllOrReplace(workZoneModels);
         }).start();
 
 
@@ -284,7 +288,7 @@ public class LoggerRunnable implements Runnable {
 
 
         Timber.d("Saving data into local storage");
-        saveUserAndCompany(data.user, data.company);             // Save the unique user into database
+        saveUserAndCompany(data.user, data.company, data.workZoneModels);             // Save the unique user into database
 
         SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, data.accessToken);
         SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, data.refreshToken);

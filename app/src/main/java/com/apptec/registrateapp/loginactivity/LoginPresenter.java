@@ -14,14 +14,11 @@ import com.apptec.registrateapp.models.CompanyModel;
 import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.UserCredential;
 import com.apptec.registrateapp.models.UserModel;
-import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
 import com.apptec.registrateapp.repository.webservices.GeneralCallback;
 import com.apptec.registrateapp.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.registrateapp.util.Constants;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -136,11 +133,7 @@ public class LoginPresenter {
                     user.setLastName(response.body().getWrappedData().getName());
                     user.setEmail(userCredential.getEmail());
 
-                    // Getting the work zones
-                    ArrayList<WorkZoneModel> workZoneArrayList = new ArrayList<>();
-                    for (int i = 0; i < response.body().getWrappedData().getWorkzones().size(); i++) {
-                        workZoneArrayList.add(response.body().getWrappedData().getWorkzones().get(i));
-                    }
+
 
                     // Getting the company
                     CompanyModel company = new CompanyModel();
@@ -156,7 +149,7 @@ public class LoginPresenter {
                             user,
                             company,
                             userDevice,
-                            workZoneArrayList,
+                            response.body().getWrappedData().getWorkzones(),
                             accessToken,
                             refreshToken);
 

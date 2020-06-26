@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.databinding.FragmentHomeBinding;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
+import com.apptec.registrateapp.mainactivity.fhome.geofence.VerifyLocation;
 import com.apptec.registrateapp.mainactivity.fhome.ui.DayViewContainer;
 import com.apptec.registrateapp.mainactivity.fhome.ui.MonthHeaderViewContainer;
 import com.apptec.registrateapp.util.Constants;
@@ -77,7 +78,47 @@ public class HomeFragment extends Fragment {
         binding.fragmentHomeStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainViewModel.changeLastWorkingState();
+                Timber.d("Button clicked");
+                /**
+                 * Verify first if the location service is available and the if
+                 * the user is in a work zone
+                 */
+                new Thread(new VerifyLocation(new VerifyLocation.Listener() {
+
+                    /**
+                     * Show a SnackBar
+                     */
+                    @Override
+                    public void onPermissionDenied() {
+                        Timber.e("Location permission are denied");
+                        requestLocationPermissions();
+                    }
+
+                    /**
+                     * Show a message
+                     */
+                    @Override
+                    public void onNotAvailableLocation() {
+                        Timber.e("The user is not in a work zone");
+                        // TODO
+                    }
+
+
+                    /**
+                     * If all is right, the permission has granted and the user is inside a work zone
+                     *
+                     * @param workZoneId is if of the work zone where the user is
+                     */
+                    @Override
+                    public void onAvailableLotion(int workZoneId) {
+                        Timber.i("The user is correctly inside a work zone");
+                        mainViewModel.changeLastWorkingState();
+                    }
+
+
+                })).start();
+
+
             }
         });
 
@@ -165,5 +206,17 @@ public class HomeFragment extends Fragment {
         binding.calendarView.setup(firstMonth, lastMonth, firstDayOfWeek);
         binding.calendarView.scrollToMonth(currentMonth);
     }
+
+
+    /**
+     * Method to create a dialog and request the permission about location
+     */
+    private void requestLocationPermissions() {
+        requestPermissions(
+                new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION},
+                1);
+    }
+
 
 }
