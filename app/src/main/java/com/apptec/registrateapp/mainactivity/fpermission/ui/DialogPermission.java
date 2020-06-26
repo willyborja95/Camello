@@ -93,7 +93,15 @@ public class DialogPermission extends DialogFragment {
                         // Save the permission requested
                         Timber.d("onClick: Ok");
                         PermissionType permissionType = (PermissionType) spnPermissionType.getSelectedItem();
-                        mainViewModel.savePermission(permissionType, startDate, endDate, txtComment.getText().toString());
+                        if (isValidPermission()) {
+                            Timber.d("Valid data, saving permission");
+                            mainViewModel.savePermission(permissionType, startDate, endDate, txtComment.getText().toString());
+                        } else {
+                            Timber.w("Invalid data, do not save permission");
+                            txtStartDate.setError("Inválido");
+                            txtEndDate.setError("Inválido");
+                        }
+
                     }
                 })
                 .setNegativeButton(getString(R.string.permission_negative_button), new DialogInterface.OnClickListener() {
@@ -104,6 +112,19 @@ public class DialogPermission extends DialogFragment {
                 });
 
         return builder.create();
+    }
+
+    /**
+     * Method that validates the permission entered
+     *
+     * @return true when the start date is before end date
+     */
+    private boolean isValidPermission() {
+        Timber.d("Validating data");
+        if (txtStartDate.getText().length() < 1 || txtEndDate.getText().length() < 1) {
+            return false;
+        }
+        return startDate.before(endDate);
     }
 
 
