@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.databinding.FragmentHomeBinding;
+import com.apptec.registrateapp.mainactivity.BaseDialog;
 import com.apptec.registrateapp.mainactivity.MainViewModel;
 import com.apptec.registrateapp.mainactivity.fhome.geofence.VerifyLocation;
 import com.apptec.registrateapp.mainactivity.fhome.ui.DayViewContainer;
@@ -100,7 +101,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onNotAvailableLocation() {
                         Timber.e("The user is not in a work zone");
-                        // TODO
+                        handleUserIsNotInWorkZone();
                     }
 
 
@@ -124,6 +125,14 @@ public class HomeFragment extends Fragment {
 
 
         return binding.getRoot();
+    }
+
+    /**
+     * Present a dialog that notify the user
+     */
+    private void handleUserIsNotInWorkZone() {
+        BaseDialog baseDialog = new BaseDialog(R.string.not_correct_location_title, R.string.not_correct_location_message);
+        baseDialog.show(getParentFragmentManager(), "not_location_available");
     }
 
 
