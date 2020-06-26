@@ -69,6 +69,7 @@
                     android:paddingBottom="20sp"
                     android:text="@string/home_button_start_message"
                     android:textAllCaps="false"
+                    android:onClick="handleButtonClicked"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     tools:text="@string/home_button_start_message" />
