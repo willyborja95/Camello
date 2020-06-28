@@ -42,7 +42,6 @@ public class App extends Application {
         // Call the notification setup. It does not matter if the channel is create twice, it don't have effect
         new Thread(new NotificationSetUp()).run();
 
-
     }
 
     /**
