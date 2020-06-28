@@ -9,13 +9,13 @@ import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.repository.webservices.ApiClient;
+import com.apptec.registrateapp.repository.webservices.GeneralCallback;
 import com.apptec.registrateapp.util.Constants;
 import com.google.gson.JsonObject;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
@@ -60,14 +60,12 @@ public class DevicePresenterImpl {
                 thisDevice
         );
 
-        call.enqueue(new Callback<JsonObject>() {
+        call.enqueue(new GeneralCallback<JsonObject>(call) {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
-
                 // Change the flag
                 if (response.isSuccessful()) {
-
 
 
                     // The room queries do not should be executed in the main thread, so we create a thread
@@ -85,13 +83,8 @@ public class DevicePresenterImpl {
                 }
 
             }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                // TODO
-
-            }
         });
+
 
 
     }

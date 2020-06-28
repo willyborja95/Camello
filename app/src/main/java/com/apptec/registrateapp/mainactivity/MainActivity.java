@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.btn_logout:
                 SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
-                // TODO closeSession();
+                mainViewModel.logout();
                 break;
         }
         return true;
