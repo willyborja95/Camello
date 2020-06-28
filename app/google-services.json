@@ -36,8 +36,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "750918137410-4htn4i22o3o045qhbmd17es7av96ufkm.apps.googleusercontent.com",
+              "client_id": "750918137410-p4q40i3dmdars21hpis6860192u2q51r.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "750918137410-m9cffa5etto4gbh4h3btia9ce1fb8rmj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Registrate"
+              }
             }
           ]
         }
@@ -73,8 +80,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "750918137410-4htn4i22o3o045qhbmd17es7av96ufkm.apps.googleusercontent.com",
+              "client_id": "750918137410-p4q40i3dmdars21hpis6860192u2q51r.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "750918137410-m9cffa5etto4gbh4h3btia9ce1fb8rmj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Registrate"
+              }
             }
           ]
         }

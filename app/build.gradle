@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'androidx.navigation.safeargs'
 
+// Apply the Crashlytics Gradle plugin
+apply plugin: 'com.google.firebase.crashlytics'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -83,9 +86,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    /** Firebase */
 
-    /** Firebase (https://firebase.google.com/docs/cloud-messaging/android/client?authuser=0) */
+    /** - Recommended: Add the Firebase SDK for Google Analytics. */
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
+
+    /** - FMC (https://firebase.google.com/docs/cloud-messaging/android/client?authuser=0) */
     implementation "com.google.firebase:firebase-messaging:$version_fmc"                                  // Firebase Cloud Messaging
+
+
+    /** - Add the Firebase Crashlytics SDK. */
+    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
 
 
     /** Room */
