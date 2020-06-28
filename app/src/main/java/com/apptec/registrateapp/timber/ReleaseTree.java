@@ -7,6 +7,8 @@ package com.apptec.registrateapp.timber;
 
 import android.util.Log;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +50,7 @@ public class ReleaseTree extends Timber.Tree {
 
             // Report caught exception to yout crash library
             if (priority == Log.ERROR && t != null) {
-                // Crashlytics.log(t)
+                FirebaseCrashlytics.getInstance().log(tag + message + t.getMessage());
             }
 
 
