@@ -142,27 +142,18 @@ public class NotificationBuilder implements Runnable {
     private NotificationModel getNotificationFromRemoteMessage(@NonNull RemoteMessage remoteMessage) {
         NotificationModel targetNotification = new NotificationModel();
 
+        Timber.d("Message data payload: " + remoteMessage.getData());
 
-        try {
-            Timber.d("Message data payload: " + remoteMessage.getData());
+        // Get the data from the message payload
+        String title = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_TITLE);
+        String content = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_MESSAGE);
+        Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_SENT_DATE)));
+        Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
 
-
-            // Get the data from the message payload
-
-            String title = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_TITLE);
-            String content = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_MESSAGE);
-            Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_SENT_DATE)));
-            Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
-
-            targetNotification.setTitle(title);
-            targetNotification.setText(content);
-            targetNotification.setSentDate(sentDate.getTime());
-            targetNotification.setExpirationDate(expirationDate.getTime());
-
-
-        } catch (Exception e) {
-            Timber.e(e);
-        }
+        targetNotification.setTitle(title);
+        targetNotification.setText(content);
+        targetNotification.setSentDate(sentDate.getTime());
+        targetNotification.setExpirationDate(expirationDate.getTime());
 
 
         return targetNotification;
@@ -186,6 +177,8 @@ public class NotificationBuilder implements Runnable {
             Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
             return true;
         } catch (Exception e) {
+            Timber.e("Notification has not a valid payload");
+            Timber.e(e);
             return false;
         }
     }
