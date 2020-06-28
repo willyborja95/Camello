@@ -1,9 +1,5 @@
 package com.apptec.registrateapp.auth;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
-
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -49,34 +45,7 @@ public class AuthHelper {
 
     }
 
-    public boolean imeiPermissionGranted(){
-        // TODO
-        return true;
-    }
 
-    public boolean locationPermissionGranted(){
-        // TODO
-        return true;
-    }
-
-
-
-    public boolean allPermissionsGranted() {
-        /**
-         * TODO: Find the better way to handle the device permissions stuff
-         */
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
-                    App.getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    App.getContext().checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return true;
-            }else {
-                return false;
-            }
-
-        }
-        return true;
-    }
 
 
     private void initRefreshToken() {
