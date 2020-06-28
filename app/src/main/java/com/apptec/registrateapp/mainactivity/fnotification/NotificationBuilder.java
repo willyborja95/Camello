@@ -78,11 +78,16 @@ public class NotificationBuilder implements Runnable {
         if (isMessageReceivedInForeground) {
             // Get the message from the remoteMessage object
             Timber.d("Searching for message received in foreground");
-            notification = getNotificationFromRemoteMessage(remoteMessage);
+            if (isValidMessageReceived(remoteMessage)) {
+                notification = getNotificationFromRemoteMessage(remoteMessage);
 
-            // Also if you intend on generating your own notifications as a result of a received FCM
-            // message, here is where that should be initiated. See sendNotification method below
-            sendNotification(notification);
+                // Also if you intend on generating your own notifications as a result of a received FCM
+                // message, here is where that should be initiated. See sendNotification method below
+                sendNotification(notification);
+
+            } else {
+                notification = null;
+            }
 
         } else {
             // Get the message from the bundle extras
@@ -137,27 +142,18 @@ public class NotificationBuilder implements Runnable {
     private NotificationModel getNotificationFromRemoteMessage(@NonNull RemoteMessage remoteMessage) {
         NotificationModel targetNotification = new NotificationModel();
 
+        Timber.d("Message data payload: " + remoteMessage.getData());
 
-        try {
-            Timber.d("Message data payload: " + remoteMessage.getData());
+        // Get the data from the message payload
+        String title = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_TITLE);
+        String content = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_MESSAGE);
+        Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_SENT_DATE)));
+        Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
 
-
-            // Get the data from the message payload
-
-            String title = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_TITLE);
-            String content = remoteMessage.getData().get(NotificationConstants.NOTIFICATION_MESSAGE);
-            Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_SENT_DATE)));
-            Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
-
-            targetNotification.setTitle(title);
-            targetNotification.setText(content);
-            targetNotification.setSentDate(sentDate.getTime());
-            targetNotification.setExpirationDate(expirationDate.getTime());
-
-
-        } catch (Exception e) {
-            Timber.e(e);
-        }
+        targetNotification.setTitle(title);
+        targetNotification.setText(content);
+        targetNotification.setSentDate(sentDate.getTime());
+        targetNotification.setExpirationDate(expirationDate.getTime());
 
 
         return targetNotification;
@@ -171,8 +167,20 @@ public class NotificationBuilder implements Runnable {
      * @return true when the message is valid otherwise false
      */
     public boolean isValidMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        try {
+            Timber.d("Message data payload: " + remoteMessage.getData());
 
-        return true;
+            // Get the data from the message payload
+            Timber.d(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_TITLE));
+            Timber.d(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_MESSAGE));
+            Date sentDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_SENT_DATE)));
+            Date expirationDate = DateConverter.toDate(Long.parseLong(remoteMessage.getData().get(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
+            return true;
+        } catch (Exception e) {
+            Timber.e("Notification has not a valid payload");
+            Timber.e(e);
+            return false;
+        }
     }
 
 
