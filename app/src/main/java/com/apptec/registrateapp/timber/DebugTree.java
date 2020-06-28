@@ -1,5 +1,9 @@
 package com.apptec.registrateapp.timber;
 
+import android.util.Log;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,13 +16,27 @@ public class DebugTree extends Timber.DebugTree {
 
 
     /**
-     * Extract the tag which should be used for the message from the {@code element}. By default
-     * this will use the class name without any anonymous class suffixes (e.g., {@code Foo$1}
-     * becomes {@code Foo}).
-     * <p>
-     * Note: This will not be called if a {@linkplain #tag(String) manual tag} was specified.
+     * Log normally, but create log to Crashlytics if an error happen
      *
-     * @param element
+     * @param priority
+     * @param tag
+     * @param message
+     * @param t
+     */
+    @Override
+    protected void log(int priority, String tag, @NotNull String message, Throwable t) {
+        if (priority == Log.ERROR || priority == Log.WARN) {
+            if (t != null) {
+                FirebaseCrashlytics.getInstance().log(tag + " " + message + t.getMessage());
+            } else {
+                FirebaseCrashlytics.getInstance().log(tag + " " + message);
+            }
+        }
+        super.log(priority, tag, message, t);
+    }
+
+    /**
+     * Custom the message that appears in the console
      */
     @Override
     protected @Nullable String createStackElementTag(@NotNull StackTraceElement element) {
