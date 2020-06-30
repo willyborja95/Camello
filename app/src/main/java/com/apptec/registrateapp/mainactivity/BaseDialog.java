@@ -47,7 +47,7 @@ public class BaseDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View viewDialog = inflater.inflate(R.layout.dialog_notification, null);
+        View viewDialog = inflater.inflate(R.layout.dialog_base, null);
 
         // Binding the UI elements
         title = viewDialog.findViewById(R.id.dialog_base_title);

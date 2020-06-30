@@ -19,6 +19,7 @@ import com.apptec.registrateapp.mainactivity.MainViewModel;
 import com.apptec.registrateapp.mainactivity.fhome.geofence.VerifyLocation;
 import com.apptec.registrateapp.mainactivity.fhome.ui.DayViewContainer;
 import com.apptec.registrateapp.mainactivity.fhome.ui.MonthHeaderViewContainer;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.util.Constants;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.kizitonwose.calendarview.model.CalendarDay;
@@ -108,12 +109,13 @@ public class HomeFragment extends Fragment {
                     /**
                      * If all is right, the permission has granted and the user is inside a work zone
                      *
-                     * @param workZoneId is if of the work zone where the user is
+                     * @param workZoneModel is if of the work zone where the user is
                      */
                     @Override
-                    public void onAvailableLotion(int workZoneId) {
+                    public void onAvailableLotion(WorkZoneModel workZoneModel) {
                         Timber.i("The user is correctly inside a work zone");
-                        mainViewModel.changeLastWorkingState();
+                        mainViewModel.changeLastWorkingState(workZoneModel);
+
                     }
 
 

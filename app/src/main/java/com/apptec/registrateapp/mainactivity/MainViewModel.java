@@ -23,6 +23,7 @@ import com.apptec.registrateapp.models.DeviceModel;
 import com.apptec.registrateapp.models.NotificationModel;
 import com.apptec.registrateapp.models.PermissionType;
 import com.apptec.registrateapp.models.UserModel;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.util.Constants;
@@ -145,7 +146,10 @@ public class MainViewModel extends AndroidViewModel {
      */
     public void changeLastWorkingState() {
         homePresenter.changeLastWorkingStatus();
+    }
 
+    public void changeLastWorkingState(WorkZoneModel workZoneModel) {
+        homePresenter.changeLastWorkingStatus(workZoneModel);
     }
 
     public LiveData<List<PermissionFull>> getPermissionFullList() {
@@ -260,4 +264,6 @@ public class MainViewModel extends AndroidViewModel {
          */
         permissionPresenter.syncPermissionsWithNetwork();
     }
+
+
 }
