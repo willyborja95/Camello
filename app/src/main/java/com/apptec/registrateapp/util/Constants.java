@@ -5,11 +5,11 @@ import java.util.concurrent.TimeUnit;
 public class Constants {
     /**
      * Here goes the constants for no hardcoding
-     * */
+     */
 
 
     // Urls
-    public static final String BASE_URL = "https://registrate-staging.herokuapp.com";
+    public static final String BASE_URL = "https://api.camello.com.ec";
     public static final String NOTIFICATIONS_URL = "notifications";
     public static final String LOGIN_URL = "/api/auth/login";
     public static final String DEVICE_URL = "/api/employee";  // api/employee/{{userid}}/devices/
