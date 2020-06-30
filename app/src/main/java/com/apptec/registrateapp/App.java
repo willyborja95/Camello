@@ -9,6 +9,7 @@ import com.apptec.registrateapp.mainactivity.fnotification.NotificationSetUp;
 import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.timber.DebugTree;
 import com.apptec.registrateapp.timber.ReleaseTree;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import timber.log.Timber;
 
@@ -48,9 +49,13 @@ public class App extends Application {
     private void setUpTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(new DebugTree());
+            // Set a key to an int.
+            FirebaseCrashlytics.getInstance().setCustomKey("Build config", "DEBUG");
             Timber.i("Timber set up in DEBUG level");
         } else {
             Timber.plant(new ReleaseTree());
+            // Set a key to an int.
+            FirebaseCrashlytics.getInstance().setCustomKey("Build config", "RELEASE");
         }
 
 
