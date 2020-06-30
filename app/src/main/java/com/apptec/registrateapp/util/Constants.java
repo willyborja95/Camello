@@ -65,4 +65,5 @@ public class Constants {
     public static final int INT_FINISHED_STATUS = 2;     // Finalized
 
 
+    public static final int NOT_WORK_ZONE_ID = -1;
 }

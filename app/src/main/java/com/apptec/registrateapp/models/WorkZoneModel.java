@@ -11,8 +11,8 @@ import com.google.gson.annotations.SerializedName;
 public class WorkZoneModel {
 
     @ColumnInfo(name = DBConstants.WORK_ZONE_PK)
-    @SerializedName("id")
     @PrimaryKey
+    @SerializedName("id")
     private int id;
 
     @ColumnInfo(name = DBConstants.WORK_ZONE_NAME)
