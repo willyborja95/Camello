@@ -2,11 +2,11 @@ package com.apptec.registrateapp;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.apptec.registrateapp.auth.AuthHelper;
 import com.apptec.registrateapp.mainactivity.fhome.geofence.GeofenceHelper;
 import com.apptec.registrateapp.mainactivity.fnotification.NotificationSetUp;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.timber.DebugTree;
 import com.apptec.registrateapp.timber.ReleaseTree;
 
@@ -25,22 +25,20 @@ public class App extends Application {
     private static GeofenceHelper sGeofenceHelper;
     private static AuthHelper sAuthHelper;
 
-
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("RegisterApp", "onCreate called");
         App.context = getApplicationContext();
-        sGeofenceHelper = new GeofenceHelper();
-        sAuthHelper = new AuthHelper();
-
 
         // Setting up timber
         setUpTimber();
 
+        sGeofenceHelper = new GeofenceHelper();
+        sAuthHelper = new AuthHelper();
+
 
         // Call the notification setup. It does not matter if the channel is create twice, it don't have effect
-        new Thread(new NotificationSetUp()).run();
+        new Thread(new NotificationSetUp()).run(); // Running in the main thread ?
 
     }
 
@@ -73,6 +71,11 @@ public class App extends Application {
     public static void changeWorkStatus() {
         getAuthHelper().changeWorkStatus();
     }
+
+    public static void changeWorkStatus(WorkZoneModel workZoneModel) {
+        getAuthHelper().changeWorkStatus(workZoneModel);
+    }
+
 
     /**
      * Return the singleton of geofence helper

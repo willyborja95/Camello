@@ -1,5 +1,7 @@
 package com.apptec.registrateapp.mainactivity.fhome;
 
+import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.models.WorkingPeriodModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.util.Constants;
@@ -11,6 +13,23 @@ import timber.log.Timber;
  */
 public class HandlerChangeWorkingStatus implements Runnable {
 
+    // This instance of WorkZoneModel will be useful when the transition will be an enter
+    private WorkZoneModel workZoneModel;
+
+    /**
+     * Constructor called when the transition will be an enter
+     *
+     * @param workZoneModel
+     */
+    public HandlerChangeWorkingStatus(WorkZoneModel workZoneModel) {
+        this.workZoneModel = workZoneModel;
+    }
+
+    /**
+     * Empty constructor when we don't know which is the work zone
+     */
+    public HandlerChangeWorkingStatus() {
+    }
 
     @Override
     public void run() {
@@ -27,19 +46,22 @@ public class HandlerChangeWorkingStatus implements Runnable {
             Timber.i("New worker created");
 
             createAndSaveWorkingPeriod(Constants.INT_WORKING_STATUS);
-
+            App.getGeofenceHelper().startTracking(workZoneModel);
+            notifyTheServer();
         } else if (isWorking()) {
             /** If the user is working now, then finish whe work and create a new one */
             Timber.i("Finishing job and creating a new one");
             RoomHelper.getAppDatabaseInstance().workingPeriodDao().changeLastWorkingPeriod(Constants.INT_FINISHED_STATUS);
-            notifyTheServer();
             createAndSaveWorkingPeriod(Constants.INT_NOT_INIT_STATUS);
+            App.getGeofenceHelper().stopTracking();
+            notifyTheServer();
         } else if (isNotInitWorking()) {
             /** If the period of working is not init start it*/
             Timber.i("A new working period created");
             notifyTheServer();
             createAndSaveWorkingPeriod(Constants.INT_WORKING_STATUS);
-
+            App.getGeofenceHelper().startTracking(workZoneModel);
+            notifyTheServer();
         }
 
     }

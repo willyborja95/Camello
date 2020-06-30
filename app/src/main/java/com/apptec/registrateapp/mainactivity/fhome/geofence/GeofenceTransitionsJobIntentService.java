@@ -1,6 +1,5 @@
 package com.apptec.registrateapp.mainactivity.fhome.geofence;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -16,6 +15,7 @@ import androidx.core.app.TaskStackBuilder;
 import com.apptec.registrateapp.App;
 import com.apptec.registrateapp.R;
 import com.apptec.registrateapp.loginactivity.LoginActivity;
+import com.apptec.registrateapp.mainactivity.fnotification.NotificationConstants;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
@@ -28,8 +28,6 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
     private static final int JOB_ID = 573;
 
-
-    private static final String CHANNEL_ID = "channel_01";
 
     private static Context mContext;
 
@@ -57,10 +55,13 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
             for (int i = 0; i < triggeringGeofences.size(); i++) {
+                Timber.d(triggeringGeofences.get(i).toString());
                 triggeringGeofences.get(i).getRequestId();
             }
+
             String geofenceTransitionDetails = getGeofenceTransitionDetails(geofenceTransition,
                     triggeringGeofences);
+            Timber.d("Geofence transition details: " + geofenceTransitionDetails);
             // Send notification and log about the transition details.
             sendNotification(geofenceTransitionDetails);
             // Register current time as exit time
@@ -93,17 +94,6 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Android O requires a Notification Channel.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.app_name);
-            // Create the channel for the notification
-            NotificationChannel mChannel =
-                    new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
-
-            // Set the Notification Channel for the Notification Manager.
-            mNotificationManager.createNotificationChannel(mChannel);
-        }
-
         Intent notificationIntent = new Intent(getApplicationContext(), LoginActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(LoginActivity.class);
@@ -121,7 +111,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
         // Set the Channel ID for Android O.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setChannelId(CHANNEL_ID); // Channel ID
+            builder.setChannelId(NotificationConstants.LOCATION_CHANNEL_ID); // Channel ID
         }
 
         // Dismiss notification once the user touches it.
