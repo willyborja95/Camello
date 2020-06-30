@@ -11,6 +11,7 @@ import com.apptec.registrateapp.auth.refreshtoken.RefreshTokenWorker;
 import com.apptec.registrateapp.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.registrateapp.models.CompanyModel;
 import com.apptec.registrateapp.models.UserModel;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.apptec.registrateapp.repository.localdatabase.RoomHelper;
 import com.apptec.registrateapp.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.registrateapp.util.Constants;
@@ -111,5 +112,9 @@ public class AuthHelper {
      */
     public void changeWorkStatus() {
         new Thread(new HandlerChangeWorkingStatus()).start();
+    }
+
+    public void changeWorkStatus(WorkZoneModel workZoneModel) {
+        new Thread(new HandlerChangeWorkingStatus(workZoneModel)).start();
     }
 }

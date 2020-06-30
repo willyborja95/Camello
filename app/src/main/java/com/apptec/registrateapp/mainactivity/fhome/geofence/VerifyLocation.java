@@ -47,9 +47,9 @@ public class VerifyLocation implements Runnable {
         /**
          * If all is right, the permission has granted and the user is inside a work zone
          *
-         * @param workZoneId is if of the work zone where the user is
+         * @param workZone is the work zone instance
          */
-        void onAvailableLotion(int workZoneId);       // If all is right
+        void onAvailableLotion(WorkZoneModel workZone);       // If all is right
     }
 
 
@@ -95,7 +95,7 @@ public class VerifyLocation implements Runnable {
                                     Timber.d("Distance: " + distance.toString());
                                     if (distance[0] <= workZones.get(i).getRadiusAsFloat()) { // If the user is inside the radius
                                         Timber.i("The user is inside a work zone");
-                                        listener.onAvailableLotion(workZones.get(i).getId());
+                                        listener.onAvailableLotion(workZones.get(i));
                                         return; // Break
                                     }
 

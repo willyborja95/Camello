@@ -6,6 +6,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 
 import com.apptec.registrateapp.App;
+import com.apptec.registrateapp.models.WorkZoneModel;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -15,6 +16,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -32,7 +34,6 @@ public class GeofenceHelper {
     }
 
     private PendingGeofenceTask pendingGeofenceTask = PendingGeofenceTask.NONE;
-    private List<Geofence> geofenceList;
     private PendingIntent geofencePendingIntent;
 
 
@@ -40,22 +41,45 @@ public class GeofenceHelper {
      * Constructor that will prepare the geofences
      */
     public GeofenceHelper() {
+        Timber.d("Geofence Helper constructor called");
         sGeofencingClient = LocationServices.getGeofencingClient(App.getContext());
-        new Thread(new PrepareGeofencing(geofenceList, geofencePendingIntent, sGeofencingClient, (geofenceList, sGeofencingClient, geofencePendingIntent) -> {
-            this.geofenceList = geofenceList;
+        new Thread(new PrepareGeofencing(geofencePendingIntent, sGeofencingClient, (sGeofencingClient, geofencePendingIntent) -> {
             this.sGeofencingClient = sGeofencingClient;
             this.geofencePendingIntent = geofencePendingIntent;
         })).start();
     }
 
 
+    /**
+     * Call a new thread to populate the geofence list
+     */
+    private List<Geofence> getGeofenceListWithOneWorkZone(WorkZoneModel workZone) {
+
+        Timber.d("Populating geofencing");
+        List<Geofence> geofenceList = new ArrayList<>();
+        // Get target work zone from the
+        geofenceList.add(new Geofence.Builder()
+                .setRequestId(workZone.getId() + "")
+                .setCircularRegion(
+                        Double.parseDouble(workZone.getLatitude()), // Latitude
+                        Double.parseDouble(workZone.getLongitude()), // Longitude
+                        workZone.getRadiusAsFloat() // Radius
+                )
+                .setExpirationDuration(GeofenceConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build());
+
+        Timber.d("Finished populating geofencing");
+
+        return geofenceList;
+    }
 
 
     /**
      * Use the GeofencingRequest class and its nested GeofencingRequestBuilder class to
      * specify the geofences to monitor and to set how related geofence events are triggered
      */
-    private GeofencingRequest getGeofencingRequest() {
+    private GeofencingRequest getGeofencingRequest(List<Geofence> geofenceList) {
         Timber.d("getGeofencingRequest() ");
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_EXIT);
@@ -90,9 +114,12 @@ public class GeofenceHelper {
      * To add geofences, use the GeofencingClient.addGeofences() method.
      * Provide the GeofencingRequest object, and the PendingIntent.
      */
-    private void addGeofences() {
-        Timber.d("Adding pre populate geofencing");
-        sGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+    public void startTracking(WorkZoneModel workZoneModel) {
+        Timber.i("Start to tracking");
+        Timber.d("Start to tracking the work zone: " + workZoneModel.toString());
+        sGeofencingClient.addGeofences(getGeofencingRequest(
+                getGeofenceListWithOneWorkZone(workZoneModel)),
+                getGeofencePendingIntent())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -110,9 +137,8 @@ public class GeofenceHelper {
     }
 
 
-    private void removeGeofences() {
-
-
+    public void stopTracking() {
+        Timber.i("Stop tracking");
         sGeofencingClient.removeGeofences(getGeofencePendingIntent()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
