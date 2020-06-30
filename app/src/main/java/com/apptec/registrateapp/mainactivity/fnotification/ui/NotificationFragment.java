@@ -74,10 +74,12 @@ public class NotificationFragment extends Fragment {
                 getActivity(),
                 notificationModels -> {
                     if (notificationModels.isEmpty()) {
+                        Timber.d("List notifications is empty");
                         // If the list is empty
                         binding.notificationListView.setVisibility(View.GONE);
                         binding.noNotifications.setVisibility(View.VISIBLE);
                     } else {
+                        Timber.d("List notifications is not empty");
                         // If is  not empty
                         binding.notificationListView.setVisibility(View.VISIBLE);
                         binding.noNotifications.setVisibility(View.GONE);

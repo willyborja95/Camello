@@ -100,6 +100,8 @@ public class NotificationBuilder implements Runnable {
             Timber.d(notification.toString());
             // Also save the notification into database
             saveNotificationIntoDatabase(notification);
+        } else {
+            Timber.w("Notification did not found");
         }
 
 
@@ -118,6 +120,12 @@ public class NotificationBuilder implements Runnable {
         try {
             // Get the data from the message payload
             String title = extras.getString(NotificationConstants.NOTIFICATION_TITLE);
+            // Validate if there is a notification in the extras or not
+            if (title == null) {
+                //It means that there is not notification in the extras
+                Timber.w("There is not a notification into the bundle extras");
+                return null;
+            }
             String content = extras.getString(NotificationConstants.NOTIFICATION_MESSAGE);
             Date sentDate = DateConverter.toDate(Long.parseLong(extras.getString(NotificationConstants.NOTIFICATION_SENT_DATE)));
             Date expirationDate = DateConverter.toDate(Long.parseLong(extras.getString(NotificationConstants.NOTIFICATION_EXPIRATION_DATE)));
@@ -128,6 +136,7 @@ public class NotificationBuilder implements Runnable {
             targetNotification.setExpirationDate(expirationDate.getTime());
         } catch (Exception e) {
             Timber.e(e);
+            return null;
         }
         return targetNotification;
 
@@ -213,9 +222,10 @@ public class NotificationBuilder implements Runnable {
 
 
     /**
-     * @param notification
+     * @param notification: built notification instance
      */
     public void saveNotificationIntoDatabase(@NonNull NotificationModel notification) {
+        Timber.d("Saving notification into database: %s", notification.toString());
         new Thread(
                 () -> RoomHelper.getAppDatabaseInstance().notificationDao().insert(notification)
         ).run();
