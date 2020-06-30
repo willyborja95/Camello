@@ -1,7 +1,5 @@
 package com.apptec.registrateapp.timber;
 
-import android.util.Log;
-
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,12 +23,10 @@ public class DebugTree extends Timber.DebugTree {
      */
     @Override
     protected void log(int priority, String tag, @NotNull String message, Throwable t) {
-        if (priority == Log.ERROR || priority == Log.WARN) {
-            if (t != null) {
-                FirebaseCrashlytics.getInstance().log(tag + " " + message + t.getMessage());
-            } else {
-                FirebaseCrashlytics.getInstance().log(tag + " " + message);
-            }
+        if (t != null) {
+            FirebaseCrashlytics.getInstance().log(tag + "\n" + message + "\n" + t.getMessage());
+        } else {
+            FirebaseCrashlytics.getInstance().log(tag + "\n" + message);
         }
         super.log(priority, tag, message, t);
     }
