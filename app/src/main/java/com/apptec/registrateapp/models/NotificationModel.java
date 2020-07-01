@@ -7,6 +7,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.apptec.registrateapp.repository.localdatabase.DBConstants;
+import com.apptec.registrateapp.repository.localdatabase.converter.DateConverter;
 
 @Entity(tableName = DBConstants.NOTIFICATION_TABLE)
 public class NotificationModel {
@@ -89,6 +90,28 @@ public class NotificationModel {
 
     public void setSentDate(Long sentDate) {
         this.sentDate = sentDate;
+    }
+
+
+    // Attributes and methods for the view
+    @Ignore
+    String readableSentDate = null;
+    @Ignore
+    String readAbleExpirationDate = null;
+
+    // Getters
+    public String getReadableSentDate() {
+        if (readableSentDate == null) {
+            readableSentDate = DateConverter.toStringDateFormat(this.sentDate);
+        }
+        return readableSentDate;
+    }
+
+    public String getReadAbleExpirationDate() {
+        if (expirationDate == null) {
+            readAbleExpirationDate = DateConverter.toStringDateFormat(this.expirationDate);
+        }
+        return readAbleExpirationDate;
     }
 
 
