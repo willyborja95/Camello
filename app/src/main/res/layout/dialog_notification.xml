@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_view_sent_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,8 @@
         app:layout_constraintTop_toTopOf="@+id/guideline3"
         tools:text="06/08/2020" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:id="@+id/text_view_label_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +25,8 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/text_view_title_content"
         app:layout_constraintStart_toStartOf="@+id/guideline" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/TextAppearance.MaterialComponents.Body2"
         android:id="@+id/text_view_title_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +36,8 @@
         app:layout_constraintTop_toBottomOf="@+id/text_view_sent_date"
         tools:text="@string/title_example" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:id="@+id/text_view_label_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,11 +47,11 @@
         app:layout_constraintTop_toBottomOf="@+id/text_view_label_title" />
 
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/TextAppearance.MaterialComponents.Body2"
         android:id="@+id/text_view_message_content"
-        android:layout_width="361dp"
+        android:layout_width="0dp"
         android:layout_height="52dp"
-        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/text_view_label_message"
@@ -66,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="386dp" />
+        app:layout_constraintGuide_end="24dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"

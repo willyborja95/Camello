@@ -57,7 +57,7 @@ public class DialogNotification extends DialogFragment {
 
 
         // Setting the content for the elements (Be sure the method setNotification i called before this happens)
-        sent_date.setText(notification.getSentDate().toString());
+        sent_date.setText(notification.getReadableSentDate());
         title_content.setText(notification.getTitle());
         message_content.setText(notification.getText());
 

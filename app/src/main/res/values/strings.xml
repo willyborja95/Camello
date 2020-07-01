@@ -57,7 +57,7 @@
     <string name="notification_ok_button">Entendido</string>
     <string name="title_example">Comunicado</string>
     <string name="title_label">Título: </string>
-    <string name="message_label">Mensage: </string>
+    <string name="message_label">Mensaje: </string>
     <string name="title_add_device_fragment">Agregar Dispositivo</string>
     <string name="text_status_active">Activo</string>
     <string name="label_device_status">Estado: </string>

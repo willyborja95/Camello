@@ -14,6 +14,8 @@ import com.apptec.registrateapp.models.NotificationModel;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class NotificationListAdapter extends BaseAdapter {
     /**
      * NotificationListAdapter
@@ -38,17 +40,17 @@ public class NotificationListAdapter extends BaseAdapter {
          * */
         convertView = LayoutInflater
                 .from(context)
-                .inflate(R.layout.notification_card_view, null);
+                .inflate(R.layout.notification_item, null);
 
         // Getting the object by the position
         NotificationModel notification = getItem(position);
-
+        Timber.d("Notification ot be placed: " + notification.toString());
         // Binding UI elements
         TextView title = convertView.findViewById(R.id.notification_title);
         TextView sentDate = convertView.findViewById(R.id.notification_sent_date);
 
         title.setText(notification.getTitle());
-        sentDate.setText(notification.getText());
+        sentDate.setText(notification.getReadableSentDate());
 
 
         return convertView;
