@@ -130,7 +130,7 @@ public class LoginPresenter {
                     UserModel user = new UserModel();
                     user.setId(response.body().getWrappedData().getId());
                     user.setName(response.body().getWrappedData().getName());
-                    user.setLastName(response.body().getWrappedData().getName());
+                    user.setLastName(response.body().getWrappedData().getLastname());
                     user.setEmail(userCredential.getEmail());
 
 
