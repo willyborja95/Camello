@@ -10,7 +10,7 @@
 
         <variable
             name="loginViewModel"
-            type="com.apptec.registrateapp.loginactivity.LoginViewModel" />
+            type="com.apptec.camello.loginactivity.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

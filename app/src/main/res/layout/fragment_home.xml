@@ -7,7 +7,7 @@
         <!-- Main view model to know the status of the button -->
         <variable
             name="mainViewModel"
-            type="com.apptec.registrateapp.mainactivity.MainViewModel" />
+            type="com.apptec.camello.mainactivity.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,7 +77,7 @@
 
         </LinearLayout>
 
-        <com.apptec.registrateapp.mainactivity.fhome.ui.CurveBgRelativeLayout
+        <com.apptec.camello.mainactivity.fhome.ui.CurveBgRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="10dp"
@@ -102,7 +102,7 @@
                 app:cv_scrollMode="paged" />
 
 
-        </com.apptec.registrateapp.mainactivity.fhome.ui.CurveBgRelativeLayout>
+        </com.apptec.camello.mainactivity.fhome.ui.CurveBgRelativeLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

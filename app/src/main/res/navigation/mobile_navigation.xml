@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.apptec.registrateapp.mainactivity.fhome.HomeFragment"
+        android:name="com.apptec.camello.mainactivity.fhome.HomeFragment"
         android:label="HomeFragment">
         <action
             android:id="@+id/action_homeFragment_to_notificationsFragment"
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.apptec.registrateapp.mainactivity.fnotification.ui.NotificationFragment"
+        android:name="com.apptec.camello.mainactivity.fnotification.ui.NotificationFragment"
         android:label="NotificationsFragment">
         <action
             android:id="@+id/action_notificationsFragment_to_permissionFragment"
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/permissionFragment"
-        android:name="com.apptec.registrateapp.mainactivity.fpermission.ui.PermissionFragment"
+        android:name="com.apptec.camello.mainactivity.fpermission.ui.PermissionFragment"
         android:label="PermissionFragment">
         <action
             android:id="@+id/action_permissionFragment_to_dialogDevice"
@@ -31,6 +31,6 @@
     </fragment>
     <fragment
         android:id="@+id/deviceFragment"
-        android:name="com.apptec.registrateapp.mainactivity.fdevice.DeviceFragment"
+        android:name="com.apptec.camello.mainactivity.fdevice.DeviceFragment"
         android:label="DeviceFragment" />
 </navigation>

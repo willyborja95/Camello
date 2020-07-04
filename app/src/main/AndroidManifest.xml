@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.apptec.registrateapp">
+    package="com.apptec.camello">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />                          <!-- Dangerous permission-->
@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name="com.apptec.registrateapp.App"
+        android:name="com.apptec.camello.App"
         android:allowBackup="false"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
@@ -29,11 +29,11 @@
             android:value="AIzaSyA1xA6dIzFsB2vS26HFVqLrGhaeEsshW9o" />
 
         <activity
-            android:name="com.apptec.registrateapp.mainactivity.MainActivity"
+            android:name="com.apptec.camello.mainactivity.MainActivity"
             android:label="@string/title_activity_bottom_navigation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.apptec.registrateapp.loginactivity.LoginActivity"
+            android:name="com.apptec.camello.loginactivity.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize"
             android:theme="@style/SplashTheme">
@@ -45,22 +45,22 @@
         </activity>
 
         <receiver
-            android:name="com.apptec.registrateapp.mainactivity.fhome.geofence.GeofenceBroadcastReceiver"
+            android:name="com.apptec.camello.mainactivity.fhome.geofence.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
 
         <service
-            android:name="com.apptec.registrateapp.mainactivity.fhome.geofence.GeofenceTransitionsJobIntentService"
+            android:name="com.apptec.camello.mainactivity.fhome.geofence.GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
-            android:name="com.apptec.registrateapp.repository.alarmmanager.AlarmBroadcastReceiver"
+            android:name="com.apptec.camello.repository.alarmmanager.AlarmBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
 
         <service
-            android:name="com.apptec.registrateapp.mainactivity.fnotification.FCM"
+            android:name="com.apptec.camello.mainactivity.fnotification.FCM"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
