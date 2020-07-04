@@ -15,6 +15,7 @@ buildscript {
         version_fmc = '20.1.5'    // Firebase cloud message
         version_calendar_view = '0.3.1'
         version_gson = '2.8.1'
+        version_crashlytics = '2.2.0'
     }
 
     repositories {
@@ -31,7 +32,7 @@ buildscript {
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$version_navigation"
 
         // Add the Crashlytics Gradle plugin.
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
+        classpath "com.google.firebase:firebase-crashlytics-gradle:$version_crashlytics"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
