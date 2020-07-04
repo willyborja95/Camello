@@ -9,7 +9,7 @@
 
         <variable
             name="permissionViewModel"
-            type="com.apptec.registrateapp.mainactivity.fpermission.PermissionViewModel" />
+            type="com.apptec.camello.mainactivity.fpermission.PermissionViewModel" />
     </data>
 
 

@@ -13,7 +13,7 @@
 
         <variable
             name="notificationViewModel"
-            type="com.apptec.registrateapp.mainactivity.fnotification.NotificationViewModel" />
+            type="com.apptec.camello.mainactivity.fnotification.NotificationViewModel" />
 
 
     </data>

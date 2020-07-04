@@ -7,7 +7,7 @@
   </a>  
 </p>  
   
-# Registrate App  
+# Camello App  
   
 This app in build on Java using the Android Studio IDE.  
   

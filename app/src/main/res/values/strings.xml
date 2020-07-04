@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Regístrate</string>
+    <string name="app_name">Camello</string>
     <string name="title_activity_bottom_navigation">BottomNavigation</string>
     <string name="home_fragment_title">Panel Principal</string>
     <string name="title_dashboard">Historial</string>
