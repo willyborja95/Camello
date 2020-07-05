@@ -51,24 +51,17 @@ public class HandlerChangeWorkingStatus implements Runnable {
         if (RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod() == null) {
             /** We entry here when is the first time when the button is pressed since the app was installed.*/
             Timber.d("Not worker initialized");
-            Timber.i("New worker created");
 
-            createAndSaveWorkingPeriod(Constants.INT_WORKING_STATUS);
-            App.getGeofenceHelper().startTracking(workZoneModel);
-            notifyTheServer(workZoneModel);
+            startWorking(workZoneModel, true);
+
         } else if (isWorking()) {
             /** If the user is working now, then finish whe work and create a new one */
-            Timber.i("Finishing job and creating a new one");
-            RoomHelper.getAppDatabaseInstance().workingPeriodDao().changeLastWorkingPeriod(Constants.INT_FINISHED_STATUS);
-            createAndSaveWorkingPeriod(Constants.INT_NOT_INIT_STATUS);
-            App.getGeofenceHelper().stopTracking();
-            notifyTheServer(null);
+
+            stopWorking();
+
         } else if (isNotInitWorking()) {
             /** If the period of working is not init start it*/
-            Timber.i("A new working period created");
-            createAndSaveWorkingPeriod(Constants.INT_WORKING_STATUS);
-            App.getGeofenceHelper().startTracking(workZoneModel);
-            notifyTheServer(workZoneModel);
+            startWorking(workZoneModel, false);
         }
 
     }
@@ -80,6 +73,7 @@ public class HandlerChangeWorkingStatus implements Runnable {
      * @param workZoneModel When the param is -1 means an exit
      */
     private void notifyTheServer(@Nullable WorkZoneModel workZoneModel) {
+        Timber.d("Notify the server the user has change his working status");
         AssistanceRetrofitInterface retrofitInterface = ApiClient.getClient().create(AssistanceRetrofitInterface.class);
         Call<GeneralResponse<JsonObject>> call;
         if (workZoneModel == null) { // We don't have the work zone because the event is an exit
@@ -134,17 +128,95 @@ public class HandlerChangeWorkingStatus implements Runnable {
         return RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod().getStatus() == Constants.INT_NOT_INIT_STATUS;
     }
 
+
     /**
-     * Create a new working period with
-     * the param
-     *
-     * @param status For example could be: 'not init'
+     * Create a new working period into database and set the start working time to the current time
      */
-    private void createAndSaveWorkingPeriod(int status) {
-        WorkingPeriodModel startedWorkingPeriod = new WorkingPeriodModel();
-        startedWorkingPeriod.setStatus(status);
-        RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(startedWorkingPeriod);
+    private void startWorking(WorkZoneModel workZoneModel, boolean firstTime) {
+        Timber.i("A new working period created");
+
+        if (firstTime) {
+            // If there is not a previous working period into the database
+            Timber.d("Not previous working period created, maybe the app is running by first time");
+
+            Timber.d("Created a new working period");
+            // Create a working period instance
+            WorkingPeriodModel startedWorkingPeriod = new WorkingPeriodModel(
+                    System.currentTimeMillis(),   // Current time
+                    Constants.INT_WORKING_STATUS, // Not init status
+                    workZoneModel.getId());       // Foreign key to the work zone
+
+            Timber.d("Save the working period into database");
+            // Save the working period into database
+            RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(startedWorkingPeriod);
+
+        } else {
+            // Change the status of the last working period to "working"
+
+            new Thread(() -> {
+                Timber.d("Change the status of the last working period to \"working\"");
+                // Get the last working period
+                WorkingPeriodModel lastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod();
+
+                // Update it
+                lastWorkingPeriod.setStatus(Constants.INT_WORKING_STATUS);
+                lastWorkingPeriod.setStart_date(System.currentTimeMillis());
+                lastWorkingPeriod.setWorkZoneId(workZoneModel.getId());
+
+                // Save the changes into database
+                RoomHelper.getAppDatabaseInstance().workingPeriodDao().updateWorkingPeriod(lastWorkingPeriod);
+
+            }).start();
+
+        }
+
+
+        // Start tracking the work zone
+        App.getGeofenceHelper().startTracking(workZoneModel);
+
+        // Notify the server
+        notifyTheServer(workZoneModel);
     }
+
+    /**
+     * Change the last working period on the database and set the
+     */
+    private void stopWorking() {
+        Timber.i("Finishing job and creating a new one");
+
+        // Change the status of the last working period to "finished" and the end time
+        // to the current time
+        new Thread(() -> {
+            // Get the last working period
+            WorkingPeriodModel lastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod();
+
+            // Update it
+            lastWorkingPeriod.setStatus(Constants.INT_FINISHED_STATUS);
+            lastWorkingPeriod.setEnd_date(System.currentTimeMillis());
+
+            // Save the changes into database
+            RoomHelper.getAppDatabaseInstance().workingPeriodDao().updateWorkingPeriod(lastWorkingPeriod);
+
+            // Create a new working period with the status not init
+            WorkingPeriodModel startedWorkingPeriod = new WorkingPeriodModel(
+                    System.currentTimeMillis(),    // Current time
+                    Constants.INT_NOT_INIT_STATUS, // Not init status
+                    workZoneModel.getId());        // Foreign key to the work zone
+
+            // Save the new working period into database
+            RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(startedWorkingPeriod);
+
+        }).start();
+
+        // Stop tracking the work zone
+        App.getGeofenceHelper().stopTracking();
+
+        // Notify the server
+        notifyTheServer(null);
+    }
+
+
+
 
 
 }

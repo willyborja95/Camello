@@ -147,18 +147,20 @@ public class HomeFragment extends Fragment {
             try {
                 if (workingPeriod.getStatus() == Constants.INT_NOT_INIT_STATUS) {
                     // The user is working
+                    Timber.d("Update the UI to not working");
                     binding.fragmentHomeStartButton.setText(getString(R.string.home_button_start_message));
                     binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_start_message));
 
                 } else {
                     // It is not
-                    Timber.w("No working period create yet");
+                    Timber.d("Update the UI to working");
                     binding.fragmentHomeStartButton.setText(getString(R.string.home_button_finish_message));
                     binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_finish_message));
 
                 }
             } catch (NullPointerException npe) {
                 // It is not working
+                Timber.d("Update the UI to not working");
                 binding.fragmentHomeStartButton.setText(getString(R.string.home_button_start_message));
                 binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_start_message));
 

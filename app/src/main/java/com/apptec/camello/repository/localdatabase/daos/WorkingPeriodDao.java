@@ -5,9 +5,12 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.DBConstants;
+
+import java.util.List;
 
 @Dao
 public interface WorkingPeriodDao {
@@ -29,8 +32,12 @@ public interface WorkingPeriodDao {
     @Delete
     void delete(WorkingPeriodModel workingPeriod);
 
-    @Query("UPDATE " + DBConstants.WORKING_PERIOD_TABLE + " SET " + DBConstants.WORKING_PERIOD_STATUS + "=:status " +
-            "WHERE " + DBConstants.WORKING_PERIOD_PK + "=(Select MAX(" + DBConstants.WORKING_PERIOD_PK + ") " +
-            "FROM " + DBConstants.WORKING_PERIOD_TABLE + ")")
-    void changeLastWorkingPeriod(int status);
+
+    // Method called when we want to start a previous working period save into database
+    @Update
+    void updateWorkingPeriod(WorkingPeriodModel workingPeriodModel);
+
+    // Get all the entrances
+    @Query("SELECT * FROM " + DBConstants.WORKING_PERIOD_TABLE)
+    List<WorkingPeriodModel> getAll();
 }
