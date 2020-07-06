@@ -60,6 +60,11 @@ public class WorkingPeriodModel {
 
     }
 
+    @Ignore
+    public WorkingPeriodModel(int status) {
+        this.status = status;
+    }
+
 
     // Setters and getters
     public int getId() {

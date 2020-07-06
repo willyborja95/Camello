@@ -8,6 +8,7 @@ import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.camello.util.Constants;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.Nullable;
@@ -64,6 +65,7 @@ public class HandlerChangeWorkingStatus implements Runnable {
             startWorking(workZoneModel, false);
         }
 
+        Timber.i(RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod().toString());
     }
 
 
@@ -88,6 +90,7 @@ public class HandlerChangeWorkingStatus implements Runnable {
             public void onResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
                 Timber.i("Assistance changed");
                 Timber.i("Request code: " + response.code());
+                FirebaseCrashlytics.getInstance().recordException(new Exception("Test exception"));
             }
         });
 
@@ -198,13 +201,12 @@ public class HandlerChangeWorkingStatus implements Runnable {
             RoomHelper.getAppDatabaseInstance().workingPeriodDao().updateWorkingPeriod(lastWorkingPeriod);
 
             // Create a new working period with the status not init
-            WorkingPeriodModel startedWorkingPeriod = new WorkingPeriodModel(
-                    System.currentTimeMillis(),    // Current time
-                    Constants.INT_NOT_INIT_STATUS, // Not init status
-                    workZoneModel.getId());        // Foreign key to the work zone
+            WorkingPeriodModel notInitWorkingPeriod = new WorkingPeriodModel(
+                    Constants.INT_NOT_INIT_STATUS // Not init status
+            );
 
             // Save the new working period into database
-            RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(startedWorkingPeriod);
+            RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(notInitWorkingPeriod);
 
         }).start();
 

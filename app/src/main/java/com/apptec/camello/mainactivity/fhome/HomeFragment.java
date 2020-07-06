@@ -145,6 +145,7 @@ public class HomeFragment extends Fragment {
 
         mainViewModel.getLastWorkingPeriod().observe(getViewLifecycleOwner(), workingPeriod -> {
             try {
+                Timber.d("Working period status: %s", workingPeriod.getStatus());
                 if (workingPeriod.getStatus() == Constants.INT_NOT_INIT_STATUS) {
                     // The user is working
                     Timber.d("Update the UI to not working");
