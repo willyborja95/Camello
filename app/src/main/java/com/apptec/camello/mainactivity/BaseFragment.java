@@ -47,8 +47,10 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
                 onProcessing();
             } else if (process.getProcessStatus() == Process.SUCCESSFUL) {
                 onSuccessProcess();
+                process = null;
             } else if (process.getProcessStatus() == Process.FAILED) {
                 onErrorOccurred(process.getTitleError(), process.getError());
+                process = null;
             }
         });
 
@@ -73,6 +75,7 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     public void onProcessing() {
         //  TODO: Show a progress dialog
         Timber.d("Show a progress dialog");
+
 
     }
 

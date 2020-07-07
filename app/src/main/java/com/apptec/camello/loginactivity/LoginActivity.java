@@ -76,20 +76,22 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * We attach the login view model to prevent that the activity dint't build correctly
+     */
     @Override
     protected void onResume() {
-        /**
-         * We attach the login view model to prevent that the activity dint't build correctly
-         */
+
         // Setup the result listener for the result
         loginViewModel.getLoginProgress().observe(this, loginResult -> {
             Timber.d("Login result has changed");
-
+            Timber.d(loginResult.toString());
             // Verify is the result is success
             if (loginResult.getProcessStatus() == LoginProgress.SUCCESSFUL) {
                 // Log in the user
                 // - navigate to logged activity
                 navigateToLoggedView();
+                loginResult = null;
             } else if (loginResult.getProcessStatus() == LoginProgress.PROCESSING) {
                 // Processing
                 binding.progressBar.setVisibility(View.VISIBLE);
@@ -99,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                 binding.progressBar.setVisibility(View.INVISIBLE);
                 ResultDialog resultDialog = new ResultDialog(loginResult.getTitleError(), loginResult.getError());
                 resultDialog.show(getSupportFragmentManager(), "Result");
+                loginResult = null;
             }
 
 
@@ -118,8 +121,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Asking for device permissions
+     */
     private void askReadImeiPermission() {
-        /** Asking for device permissions*/
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{
@@ -140,10 +146,11 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Navigate to the next activity
+     */
     public void navigateToLoggedView() {
-        /**
-         * Navigate to the next activity
-         */
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

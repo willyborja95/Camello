@@ -11,7 +11,6 @@ import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.camello.util.Constants;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
@@ -99,7 +98,7 @@ public class StopWorking implements Runnable {
             public void onResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
                 Timber.i("Assistance changed");
                 Timber.i("Request code: %s", response.code());
-                FirebaseCrashlytics.getInstance().recordException(new Exception("Test exception"));
+
 
                 // Notify the listener
                 if (listener != null) {
