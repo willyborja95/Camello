@@ -41,7 +41,7 @@ import com.apptec.camello.repository.localdatabase.daos.WorkingPeriodDao;
         views = {
                 PermissionFull.class
         },
-        version = 17,
+        version = 18,
         exportSchema = true)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {

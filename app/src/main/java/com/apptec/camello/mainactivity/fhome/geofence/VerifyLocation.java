@@ -92,7 +92,7 @@ public class VerifyLocation implements Runnable {
                                             workZones.get(i).getLatitudeAsDouble(),
                                             workZones.get(i).getLongitudeAsDouble(),
                                             distance);
-                                    Timber.d("Distance: " + distance.toString());
+                                    Timber.d("Distance: " + distance[0]);
                                     if (distance[0] <= workZones.get(i).getRadiusAsFloat()) { // If the user is inside the radius
                                         Timber.i("The user is inside a work zone");
                                         listener.onAvailableLotion(workZones.get(i));

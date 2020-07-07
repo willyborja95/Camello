@@ -2,8 +2,6 @@ package com.apptec.camello.mainactivity.fhome;
 
 import androidx.lifecycle.LiveData;
 
-import com.apptec.camello.App;
-import com.apptec.camello.models.WorkZoneModel;
 import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 
@@ -22,14 +20,5 @@ public class HomePresenterImpl {
         return RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLiveDataLastWorkingPeriod();
     }
 
-    /**
-     * Create a new thread and then run the process there
-     */
-    public void changeLastWorkingStatus() {
-        App.changeWorkStatus();
-    }
 
-    public void changeLastWorkingStatus(WorkZoneModel workZoneModel) {
-        App.changeWorkStatus(workZoneModel);
-    }
 }

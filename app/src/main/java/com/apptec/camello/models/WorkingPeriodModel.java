@@ -1,5 +1,6 @@
 package com.apptec.camello.models;
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -36,12 +37,13 @@ public class WorkingPeriodModel {
     @ColumnInfo(name = DBConstants.WORKING_PERIOD_STATUS)
     private int status;                 // 1 = Started   2 = Finished  <0 = Canceled
 
+    @Nullable
     @ColumnInfo(name = DBConstants.WORKING_PERIOD_WORK_ZONE_FK)
-    private int workZoneId;
+    private Integer workZoneId;
 
     // Constructors
     @Ignore
-    public WorkingPeriodModel(int id, Long start_date, Long end_date, int status, int workZoneId) {
+    public WorkingPeriodModel(int id, Long start_date, Long end_date, int status, Integer workZoneId) {
         this.id = id;
         this.start_date = start_date;
         this.end_date = end_date;
@@ -49,13 +51,13 @@ public class WorkingPeriodModel {
         this.workZoneId = workZoneId;
     }
 
-    public WorkingPeriodModel(Long start_date, int status, int workZoneId) {
+    @Ignore
+    public WorkingPeriodModel(Long start_date, int status, Integer workZoneId) {
         this.start_date = start_date;
         this.status = status;
         this.workZoneId = workZoneId;
     }
 
-    @Deprecated
     public WorkingPeriodModel() {
 
     }
@@ -99,11 +101,11 @@ public class WorkingPeriodModel {
         this.status = status;
     }
 
-    public int getWorkZoneId() {
+    public Integer getWorkZoneId() {
         return workZoneId;
     }
 
-    public void setWorkZoneId(int workZoneId) {
+    public void setWorkZoneId(Integer workZoneId) {
         this.workZoneId = workZoneId;
     }
 

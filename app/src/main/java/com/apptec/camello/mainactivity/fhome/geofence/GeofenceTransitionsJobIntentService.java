@@ -11,7 +11,6 @@ import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
-import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.loginactivity.LoginActivity;
 import com.apptec.camello.mainactivity.fnotification.NotificationConstants;
@@ -69,7 +68,8 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             // Register current time as exit time
             Timber.i(geofenceTransitionDetails);
             Timber.d("Calling the global method to change the work status");
-            App.changeWorkStatus(); // Global app method to change the work status
+
+            new Thread(new StopWorking(null)).run(); // Stop working
         } else {
             // Log the error.
             Timber.e("Invalid transition");

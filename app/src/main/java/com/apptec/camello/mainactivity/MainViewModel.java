@@ -15,7 +15,9 @@ import androidx.work.WorkManager;
 import com.apptec.camello.App;
 import com.apptec.camello.auth.refreshtoken.RefreshTokenWorker;
 import com.apptec.camello.mainactivity.fdevice.DevicePresenterImpl;
+import com.apptec.camello.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.camello.mainactivity.fhome.HomePresenterImpl;
+import com.apptec.camello.mainactivity.fhome.geofence.StopWorking;
 import com.apptec.camello.mainactivity.fnotification.NotificationPresenter;
 import com.apptec.camello.mainactivity.fpermission.PermissionFull;
 import com.apptec.camello.mainactivity.fpermission.PermissionPresenterImpl;
@@ -70,6 +72,26 @@ public class MainViewModel extends AndroidViewModel {
     private WorkManager workManager = WorkManager.getInstance(App.getContext());
 
 
+    // Show a process
+    private BaseProcessListener processListener = new BaseProcessListener() {
+        @Override
+        public void onErrorOccurred(int title, int message) {
+            _currentProcess.postValue(new Process(title, message));
+        }
+
+        @Override
+        public void onProcessing() {
+            _currentProcess.postValue(new Process(Process.PROCESSING));
+        }
+
+        @Override
+        public void onSuccessProcess() {
+            _currentProcess.postValue(new Process(Process.SUCCESSFUL));
+        }
+    };
+    private final MutableLiveData<Process> _currentProcess = new MutableLiveData<>(null);
+
+
     // Presenter for each feature
     MainPresenter mainPresenter;
     NotificationPresenter notificationPresenter;
@@ -108,10 +130,27 @@ public class MainViewModel extends AndroidViewModel {
         permissionPresenter.syncPermissionsWithNetwork();
 
 
-
     }
 
 
+    /**
+     * Expose the process
+     */
+    public LiveData<Process> getProcess() {
+        return this._currentProcess;
+    }
+
+    /**
+     * FOr be sure that we present the process one time
+     */
+    public void processConsumed() {
+        this._currentProcess.setValue(null);
+    }
+
+
+    /**
+     * Verify if the user already register this device if needed
+     */
     private void initializeDeviceVerification() {
         mainPresenter.initializeDeviceVerification(isNeededRegisterDevice);
     }
@@ -119,24 +158,25 @@ public class MainViewModel extends AndroidViewModel {
 
     /**
      * Expose the LiveData so the UI can observe it for the fragment Notification
+     * <p>
+     * Exposing the notifications
      */
     public LiveData<List<NotificationModel>> getNotifications() {
-        /** Exposing the notifications */
         return mNotifications;
     }
 
+    /** Exposing the user */
     public LiveData<UserModel> getCurrentUser() {
-        /** Exposing the user */
         return mUser;
     }
 
+    /** Exposing the list of devices */
     public LiveData<List<DeviceModel>> getDevices() {
-        /** Exposing the list of devices */
         return mDevices;
     }
 
+    /** Exposing the last working period */
     public LiveData<WorkingPeriodModel> getLastWorkingPeriod() {
-        /** Exposing the last working period */
         return mLastWorkingPeriod;
     }
 
@@ -144,16 +184,15 @@ public class MainViewModel extends AndroidViewModel {
     /**
      * If the user is working change to no working and vice versa
      */
-    public void changeLastWorkingState() {
-        homePresenter.changeLastWorkingStatus();
-    }
-
     public void changeLastWorkingState(WorkZoneModel workZoneModel) {
-        homePresenter.changeLastWorkingStatus(workZoneModel);
+        new Thread(new HandlerChangeWorkingStatus(workZoneModel, processListener)).start();
     }
 
+
+    /**
+     * Exposing the list of permissions
+     */
     public LiveData<List<PermissionFull>> getPermissionFullList() {
-        /** Exposing the list of permissions */
         return this.mPermissionFullList;
     }
 
@@ -230,7 +269,7 @@ public class MainViewModel extends AndroidViewModel {
         if (this.getLastWorkingPeriod().getValue() != null) {
             if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
                 // TODO: Advice the user that his working period will be ended
-                homePresenter.changeLastWorkingStatus();
+                new Thread(new StopWorking(null)).start();
 
             }
         }
@@ -264,6 +303,7 @@ public class MainViewModel extends AndroidViewModel {
          */
         permissionPresenter.syncPermissionsWithNetwork();
     }
+
 
 
 }

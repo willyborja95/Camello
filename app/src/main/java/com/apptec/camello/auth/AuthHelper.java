@@ -8,10 +8,8 @@ import androidx.work.WorkManager;
 
 import com.apptec.camello.App;
 import com.apptec.camello.auth.refreshtoken.RefreshTokenWorker;
-import com.apptec.camello.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.camello.models.CompanyModel;
 import com.apptec.camello.models.UserModel;
-import com.apptec.camello.models.WorkZoneModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
@@ -105,16 +103,5 @@ public class AuthHelper {
     }
 
 
-    /**
-     * This method will be called when:
-     * - The user press the 'finish work' button
-     * - The user hang out from the work zone
-     */
-    public void changeWorkStatus() {
-        new Thread(new HandlerChangeWorkingStatus()).start();
-    }
 
-    public void changeWorkStatus(WorkZoneModel workZoneModel) {
-        new Thread(new HandlerChangeWorkingStatus(workZoneModel)).start();
-    }
 }
