@@ -3,6 +3,7 @@ package com.apptec.camello.repository.webservices;
 import com.apptec.camello.auth.refreshtoken.RefreshTokenBody;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.repository.webservices.interfaces.AuthInterface;
+import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.camello.util.Constants;
 import com.google.gson.JsonObject;
 
@@ -60,19 +61,19 @@ public class InterceptorImpl implements okhttp3.Interceptor {
     private String askNewToken() throws IOException {
         Timber.i("Asking a new token");
         AuthInterface authInterface = ApiClient.getClient().create(AuthInterface.class);
-        Call<JsonObject> refreshCall = authInterface.refreshToken(
+        Call<GeneralResponse<JsonObject>> refreshCall = authInterface.refreshToken(
                 new RefreshTokenBody(ApiClient.getAccessToken(), ApiClient.getRefreshToken())
         );
 
 
         // With do not enqueue the call because it is no necessary an immediate response from this worker
-        retrofit2.Response<JsonObject> response = refreshCall.execute();
+        retrofit2.Response<GeneralResponse<JsonObject>> response = refreshCall.execute();
         // Get the new access token
-        String newAccessToken = response.body().get("data").getAsJsonObject().get("accessToken").getAsString();
+        String newAccessToken = response.body().getWrappedData().get("accessToken").getAsString();
         SharedPreferencesHelper.putStringValue(Constants.USER_ACCESS_TOKEN, newAccessToken); // Storage in shared preferences
 
         Timber.i("Token refreshed");
-        Timber.d("New token: " + newAccessToken);
+        Timber.d("New token: %s", newAccessToken);
 
         return newAccessToken;
     }
