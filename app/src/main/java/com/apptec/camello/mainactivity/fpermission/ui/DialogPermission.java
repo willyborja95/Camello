@@ -46,7 +46,7 @@ public class DialogPermission extends DialogFragment {
     private DatePicker dpStartDate;
     private Spinner spnPermissionType;
     private ArrayAdapter<PermissionType> adapterPermissionType;
-    SimpleDateFormat dateformat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.PATTERN_DATE_FORMAT);
     final Calendar startDate = Calendar.getInstance();
     final Calendar endDate = Calendar.getInstance();
     String strStartDate;
@@ -143,7 +143,7 @@ public class DialogPermission extends DialogFragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         startDate.set(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
-                        strStartDate = dateformat.format(startDate.getTime());
+                        strStartDate = dateFormat.format(startDate.getTime());
                         txtStartDate.setText(strStartDate);
                         startDate.add(Calendar.MONTH, -1);
 
@@ -158,7 +158,7 @@ public class DialogPermission extends DialogFragment {
                                           int monthOfYear, int dayOfMonth) {
 
                         startDate.set(year, monthOfYear, dayOfMonth);
-                        strStartDate = dateformat.format(startDate.getTime());
+                        strStartDate = dateFormat.format(startDate.getTime());
                         txtStartDate.setText(strStartDate);
                         tpStartDate.show();
                     }
@@ -169,7 +169,7 @@ public class DialogPermission extends DialogFragment {
                     public void onCancel(DialogInterface dialog) {
                         System.out.println(startDate.getTime());
                         startDate.add(Calendar.MONTH, 1);
-                        strStartDate = dateformat.format(startDate.getTime());
+                        strStartDate = dateFormat.format(startDate.getTime());
                         txtStartDate.setText(strStartDate);
                     }
                 });
@@ -188,7 +188,7 @@ public class DialogPermission extends DialogFragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         endDate.set(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
-                        strEndDate = dateformat.format(endDate.getTime());
+                        strEndDate = dateFormat.format(endDate.getTime());
                         txtEndDate.setText(strEndDate);
                         endDate.add(Calendar.MONTH, -1);
                     }
@@ -202,7 +202,7 @@ public class DialogPermission extends DialogFragment {
                                           int monthOfYear, int dayOfMonth) {
 
                         endDate.set(year, monthOfYear, dayOfMonth);
-                        strEndDate = dateformat.format(endDate.getTime());
+                        strEndDate = dateFormat.format(endDate.getTime());
                         txtEndDate.setText(strEndDate);
                         tpEndDate.show();
                     }
@@ -212,7 +212,7 @@ public class DialogPermission extends DialogFragment {
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         endDate.add(Calendar.MONTH, 1);
-                        strEndDate = dateformat.format(endDate.getTime());
+                        strEndDate = dateFormat.format(endDate.getTime());
                         txtEndDate.setText(strEndDate);
                     }
                 });
