@@ -25,15 +25,19 @@ public class BaseDialog extends DialogFragment {
 
     int titleContent, messageContent;
 
+    // Listener from the user action
+    DialogListener listener;
+
     /**
      * COnstrucotr to set the content of the title and the message
      *
      * @param titleContent
      * @param messageContent
      */
-    public BaseDialog(int titleContent, int messageContent) {
+    public BaseDialog(int titleContent, int messageContent, @Nullable DialogListener listener) {
         this.titleContent = titleContent;
         this.messageContent = messageContent;
+        this.listener = listener;
     }
 
     /**
@@ -67,5 +71,17 @@ public class BaseDialog extends DialogFragment {
                 });
 
         return builder.create();
+    }
+
+
+    /**
+     * Remove dialog.
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (this.listener != null) {
+            listener.onClose();
+        }
     }
 }

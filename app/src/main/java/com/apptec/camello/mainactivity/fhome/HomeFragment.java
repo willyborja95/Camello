@@ -9,13 +9,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentHomeBinding;
-import com.apptec.camello.mainactivity.BaseDialog;
-import com.apptec.camello.mainactivity.MainViewModel;
+import com.apptec.camello.mainactivity.BaseFragment;
 import com.apptec.camello.mainactivity.fhome.geofence.VerifyLocation;
 import com.apptec.camello.mainactivity.fhome.ui.DayViewContainer;
 import com.apptec.camello.mainactivity.fhome.ui.MonthHeaderViewContainer;
@@ -39,11 +36,7 @@ import timber.log.Timber;
 /**
  * Home fragment
  */
-public class HomeFragment extends Fragment {
-
-
-    // Instance of ViewModel
-    private MainViewModel mainViewModel;
+public class HomeFragment extends BaseFragment {
 
 
     // Using data binding
@@ -56,7 +49,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);            // Getting the view model
         mainViewModel.setActiveFragmentName(getString(R.string.home_fragment_title));
 
 
@@ -102,7 +94,8 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onNotAvailableLocation() {
                         Timber.e("The user is not in a work zone");
-                        handleUserIsNotInWorkZone();
+                        HomeFragment.super.onErrorOccurred(R.string.not_correct_location_title, R.string.not_correct_location_message);
+
                     }
 
 
@@ -129,13 +122,6 @@ public class HomeFragment extends Fragment {
         return binding.getRoot();
     }
 
-    /**
-     * Present a dialog that notify the user
-     */
-    private void handleUserIsNotInWorkZone() {
-        BaseDialog baseDialog = new BaseDialog(R.string.not_correct_location_title, R.string.not_correct_location_message);
-        baseDialog.show(getParentFragmentManager(), "not_location_available");
-    }
 
 
     /**
@@ -145,20 +131,23 @@ public class HomeFragment extends Fragment {
 
         mainViewModel.getLastWorkingPeriod().observe(getViewLifecycleOwner(), workingPeriod -> {
             try {
+                Timber.d("Working period status: %s", workingPeriod.getStatus());
                 if (workingPeriod.getStatus() == Constants.INT_NOT_INIT_STATUS) {
                     // The user is working
+                    Timber.d("Update the UI to not working");
                     binding.fragmentHomeStartButton.setText(getString(R.string.home_button_start_message));
                     binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_start_message));
 
                 } else {
                     // It is not
-                    Timber.w("No working period create yet");
+                    Timber.d("Update the UI to working");
                     binding.fragmentHomeStartButton.setText(getString(R.string.home_button_finish_message));
                     binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_finish_message));
 
                 }
             } catch (NullPointerException npe) {
                 // It is not working
+                Timber.d("Update the UI to not working");
                 binding.fragmentHomeStartButton.setText(getString(R.string.home_button_start_message));
                 binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_start_message));
 

@@ -138,8 +138,15 @@ public class LoggerRunnable implements Runnable {
 
         call.enqueue(
                 new GeneralCallback<GeneralResponse>(call) {
+
+                    /**
+                     * Method to be override by the classes that implement this method
+                     *
+                     * @param call     call
+                     * @param response response
+                     */
                     @Override
-                    public void onResponse(Call<GeneralResponse> call, Response<GeneralResponse> response) {
+                    public void onFinalResponse(Call<GeneralResponse> call, Response<GeneralResponse> response) {
                         // If device is available
                         if (isDeviceAvailable(response.body())) {
                             // Login
@@ -150,14 +157,18 @@ public class LoggerRunnable implements Runnable {
                             Timber.w("This device is register by another person");
                             doNotLetLogin();
                         }
-
                     }
 
+                    /**
+                     * Simple method to know if the device is available
+                     *
+                     * @param body
+                     * @return
+                     */
                     private boolean isDeviceAvailable(GeneralResponse body) {
                         try {
                             Error error = body.getError();
                             if (error != null) {
-
                                 return false;
                             }
                         } catch (NullPointerException npe) {
@@ -240,8 +251,15 @@ public class LoggerRunnable implements Runnable {
                 updatePushTokenBody
         );
         call.enqueue(new GeneralCallback<GeneralResponse<JsonObject>>(call) {
+
+            /**
+             * Method to be override by the classes that implement this method
+             *
+             * @param call     call
+             * @param response response
+             */
             @Override
-            public void onResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
+            public void onFinalResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
                 if (response.isSuccessful()) {
                     // Alright
                     Timber.i("Firebase token updated successful");
@@ -249,7 +267,6 @@ public class LoggerRunnable implements Runnable {
                     Timber.e("Unexpected error while updating the firebase token. Here is the response: " + response
                             + " Here is the request body: " + updatePushTokenBody);
                 }
-
             }
         });
     }

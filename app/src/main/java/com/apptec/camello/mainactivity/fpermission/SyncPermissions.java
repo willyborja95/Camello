@@ -52,9 +52,16 @@ public class SyncPermissions implements Runnable {
         Call<GeneralResponse<List<PermissionType>>> callTypes = permissionRetrofitInterface.getPermissionTypesWrapped(ApiClient.getAccessToken());
 
         callTypes.enqueue(new GeneralCallback<GeneralResponse<List<PermissionType>>>(callTypes) {
+            /**
+             * Method that will be called after the onResponse default method after doing some validations
+             * * see {@link GeneralCallback}
+             * This need to be override by the classes that implement GeneralCallback
+             *
+             * @param call     call
+             * @param response response
+             */
             @Override
-            public void onResponse(Call<GeneralResponse<List<PermissionType>>> call, Response<GeneralResponse<List<PermissionType>>> response) {
-
+            public void onFinalResponse(Call<GeneralResponse<List<PermissionType>>> call, Response<GeneralResponse<List<PermissionType>>> response) {
                 // Save the response into the database
                 new Thread(() -> {
 
@@ -64,7 +71,6 @@ public class SyncPermissions implements Runnable {
                     // Pull the permission states catalog
                     pullPermissionStatus(permissionRetrofitInterface);
                 }).start();
-
             }
         });
     }
@@ -78,8 +84,17 @@ public class SyncPermissions implements Runnable {
         Call<GeneralResponse<List<PermissionStatus>>> callStatus = permissionRetrofitInterface.getPermissionStatusWrapped(ApiClient.getAccessToken());
 
         callStatus.enqueue(new GeneralCallback<GeneralResponse<List<PermissionStatus>>>(callStatus) {
+
+            /**
+             * Method that will be called after the onResponse default method after doing some validations
+             * * see {@link GeneralCallback}
+             * This need to be override by the classes that implement GeneralCallback
+             *
+             * @param call     call
+             * @param response response
+             */
             @Override
-            public void onResponse(Call<GeneralResponse<List<PermissionStatus>>> call, Response<GeneralResponse<List<PermissionStatus>>> response) {
+            public void onFinalResponse(Call<GeneralResponse<List<PermissionStatus>>> call, Response<GeneralResponse<List<PermissionStatus>>> response) {
                 // Save the response into the database
 
                 new Thread(() -> {
@@ -90,7 +105,6 @@ public class SyncPermissions implements Runnable {
                     // Finally we can sync the list of permission of this user
                     syncPermissionsWithNetwork(permissionRetrofitInterface);
                 }).start();
-
             }
 
 
@@ -114,10 +128,16 @@ public class SyncPermissions implements Runnable {
 
 
         syncPermissions.enqueue(new GeneralCallback<GeneralResponse<List<PermissionDto>>>(syncPermissions) {
+            /**
+             * Method that will be called after the onResponse default method after doing some validations
+             * * see {@link GeneralCallback}
+             * This need to be override by the classes that implement GeneralCallback
+             *
+             * @param call     call
+             * @param response response
+             */
             @Override
-            public void onResponse(Call<GeneralResponse<List<PermissionDto>>> call, Response<GeneralResponse<List<PermissionDto>>> response) {
-
-
+            public void onFinalResponse(Call<GeneralResponse<List<PermissionDto>>> call, Response<GeneralResponse<List<PermissionDto>>> response) {
                 new Thread(() -> {
                     for (int i = 0; i < response.body().getWrappedData().size(); i++) {
                         // Save the list of permission into data

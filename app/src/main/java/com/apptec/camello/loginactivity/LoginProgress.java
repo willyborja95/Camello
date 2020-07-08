@@ -2,17 +2,16 @@ package com.apptec.camello.loginactivity;
 
 import androidx.annotation.Nullable;
 
-
+/**
+ * Authentication result : success (user details) or error message.
+ */
 public class LoginProgress {
-    /**
-     * Authentication result : success (user details) or error message.
-     */
+
 
     public static final int NOT_INIT = -3;
     public static final int SUCCESSFUL = 1;
     public static final int PROCESSING = 0;
     public static final int FAILED = -1;
-    public static final int CANCELED = -2;
 
 
     @Nullable
@@ -22,10 +21,11 @@ public class LoginProgress {
     @Nullable
     private Integer error, titleError;  // String resource
 
+    /**
+     * Constructor used when an error happen
+     */
     public LoginProgress(@Nullable Integer titleError, @Nullable Integer error) {
-        /**
-         * Constructor used when an error happen
-         */
+
         this.error = error;
         this.titleError = titleError;
         this.processStatus = LoginProgress.FAILED;
@@ -60,5 +60,14 @@ public class LoginProgress {
 
     public void setTitleError(@Nullable Integer titleError) {
         this.titleError = titleError;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginProgress{" +
+                "processStatus=" + processStatus +
+                ", error=" + error +
+                ", titleError=" + titleError +
+                '}';
     }
 }

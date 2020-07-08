@@ -1,6 +1,7 @@
 package com.apptec.camello.loginactivity;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.apptec.camello.R;
+
+import timber.log.Timber;
 
 public class ResultDialog extends DialogFragment {
     /**
@@ -46,7 +49,15 @@ public class ResultDialog extends DialogFragment {
         title_message.setText(title_resource);
         message.setText(message_resource);
 
-        builder.setView(viewDialog);
+        // Set a ok button to close the dialog
+        builder.setView(viewDialog)
+                .setPositiveButton(getString(R.string.notification_ok_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Timber.d("Ok clicked");
+                        ResultDialog.this.getDialog().cancel();
+                    }
+                });
 
         return builder.create();
     }

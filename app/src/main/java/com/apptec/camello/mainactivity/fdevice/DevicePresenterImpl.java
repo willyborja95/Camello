@@ -61,9 +61,15 @@ public class DevicePresenterImpl {
         );
 
         call.enqueue(new GeneralCallback<JsonObject>(call) {
+            /**
+             * Method that will be called after the onResponse default method after doing some validations
+             * see {@link GeneralCallback}
+             *
+             * @param call     call
+             * @param response response
+             */
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
+            public void onFinalResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 // Change the flag
                 if (response.isSuccessful()) {
 
@@ -81,7 +87,6 @@ public class DevicePresenterImpl {
 
 
                 }
-
             }
         });
 

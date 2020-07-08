@@ -60,8 +60,16 @@ public class PermissionPresenterImpl {
             Timber.d(permissionDto.toString(), permissionDto);
             call.enqueue(new GeneralCallback<GeneralResponse<PermissionDto>>(call) {
 
+                /**
+                 * Method that will be called after the onResponse default method after doing some validations
+                 * * see {@link GeneralCallback}
+                 * This need to be override by the classes that implement GeneralCallback
+                 *
+                 * @param call     call
+                 * @param response response
+                 */
                 @Override
-                public void onResponse(Call<GeneralResponse<PermissionDto>> call, Response<GeneralResponse<PermissionDto>> response) {
+                public void onFinalResponse(Call<GeneralResponse<PermissionDto>> call, Response<GeneralResponse<PermissionDto>> response) {
                     // Save the permission also into the database
 
                     if (response.isSuccessful()) {

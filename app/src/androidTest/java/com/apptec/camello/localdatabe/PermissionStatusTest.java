@@ -1,4 +1,4 @@
-package com.apptec.camello;
+package com.apptec.camello.localdatabe;
 
 
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.apptec.camello.App;
 import com.apptec.camello.models.PermissionStatus;
 import com.apptec.camello.repository.localdatabase.AppDatabase;
 import com.apptec.camello.repository.localdatabase.daos.PermissionStatusDao;

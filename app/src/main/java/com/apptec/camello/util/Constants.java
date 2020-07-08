@@ -23,6 +23,7 @@ public class Constants {
     public static final String PERMISSIONS_STATUS_URL = "/api/permission";
     public static final String REGISTER_ASSISTANCE_URL = "/api/attendance";
     public static final String ALL_PERMISSIONS_URL = "api/permission/employee/{userId}";
+    public static final String SYNC_ASSISTANCE_URL = "/api/attendance/sync";
 
 
     // Logs messages
@@ -66,4 +67,7 @@ public class Constants {
 
 
     public static final int NOT_WORK_ZONE_ID = -1;
+    public static final String NEED_SYNC_ASSISTANCE = "NEED_TO_SYNC";
+
+    public static final int SYNC_JOB_ID = 1235;
 }

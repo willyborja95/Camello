@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.text.TextUtils;
 
@@ -12,10 +11,10 @@ import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
-import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.loginactivity.LoginActivity;
 import com.apptec.camello.mainactivity.fnotification.NotificationConstants;
+import com.apptec.camello.repository.localdatabase.converter.DateConverter;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
@@ -37,6 +36,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
     @Override
     protected void onHandleWork(Intent intent) {
+        Timber.d("Transition intent");
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
@@ -50,7 +50,8 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
         // Register exit
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
-            Timber.d("Transition exit");
+            Timber.d("Transition exit at: " + DateConverter.toStringDateFormat(System.currentTimeMillis()));
+
             // Get the geofences that were triggered. A single event can trigger multiple geofences.
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
@@ -66,7 +67,9 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             sendNotification(geofenceTransitionDetails);
             // Register current time as exit time
             Timber.i(geofenceTransitionDetails);
-            App.changeWorkStatus(); // Global app method to change the work status
+            Timber.d("Calling the global method to change the work status");
+
+            new Thread(new StopWorking(null)).run(); // Stop working
         } else {
             // Log the error.
             Timber.e("Invalid transition");
@@ -100,12 +103,10 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         stackBuilder.addNextIntent(notificationIntent);
         PendingIntent notificationPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.icon) // TODO: Cambiar por un vector mas sencillo
-                // In a real app, you may want to use a library like Volley
-                // to decode the Bitmap.
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                        R.drawable.icon))
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                getApplicationContext(),
+                NotificationConstants.LOCATION_CHANNEL_ID);
+        builder.setSmallIcon(R.drawable.logo)
                 .setContentTitle(getString(R.string.notification_exit_title))
                 .setContentIntent(notificationPendingIntent);
 

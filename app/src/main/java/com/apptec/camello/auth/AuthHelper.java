@@ -2,16 +2,16 @@ package com.apptec.camello.auth;
 
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.apptec.camello.App;
 import com.apptec.camello.auth.refreshtoken.RefreshTokenWorker;
-import com.apptec.camello.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.camello.models.CompanyModel;
 import com.apptec.camello.models.UserModel;
-import com.apptec.camello.models.WorkZoneModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
@@ -25,7 +25,7 @@ public class AuthHelper {
      */
 
     // Work manager
-    private WorkManager workManager = WorkManager.getInstance(App.getContext()); // Don't used now. It is the main activity meanwhile
+    private static WorkManager workManager = WorkManager.getInstance(App.getContext()); // Don't used now. It is the main activity meanwhile
 
 
 
@@ -47,13 +47,12 @@ public class AuthHelper {
     }
 
 
-
-
+    /**
+     * This method we got a worker for refresh the token periodically
+     * Dont used actually
+     */
     private void initRefreshToken() {
-        /**
-         * This method we got a worker for refresh the token periodically
-         * Dont used actually
-         */
+
 
         // Constraints: Do the work if the the network is connected
         Constraints constraints = new Constraints.Builder()
@@ -74,6 +73,31 @@ public class AuthHelper {
                 refreshTokenRequest);
 
     }
+
+
+    /**
+     *
+     */
+    public static void scheduleSync() {
+        // Constraints: Do the work if the the network is connected
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        // Create a work request
+        OneTimeWorkRequest syncRequest = new OneTimeWorkRequest.Builder(
+                SyncAssistanceWorker.class)
+                .setConstraints(constraints)
+                .build();
+
+        workManager.enqueueUniqueWork(
+                Constants.SYNC_JOB_ID + "",
+                ExistingWorkPolicy.APPEND,
+                syncRequest
+        );
+
+    }
+
 
     public void saveUserAndCompany(UserModel user, CompanyModel company) {
         /**
@@ -105,16 +129,5 @@ public class AuthHelper {
     }
 
 
-    /**
-     * This method will be called when:
-     * - The user press the 'finish work' button
-     * - The user hang out from the work zone
-     */
-    public void changeWorkStatus() {
-        new Thread(new HandlerChangeWorkingStatus()).start();
-    }
 
-    public void changeWorkStatus(WorkZoneModel workZoneModel) {
-        new Thread(new HandlerChangeWorkingStatus(workZoneModel)).start();
-    }
 }

@@ -9,7 +9,7 @@ android {
 
     // Version code
     def versionMajor = 4
-    def versionMinor = 0
+    def versionMinor = 1
     def versionPatch = 0
 
 
@@ -21,9 +21,9 @@ android {
         targetSdkVersion 29
 
         // Version code (It will appear like: 41010)
-        versionCode versionMajor * 10000
-        + versionMinor * 100
-        + versionPatch
+        versionCode = versionMajor * 10000
+                    + versionMinor * 100
+                    + versionPatch
 
         // Version name (It will appear like: 4.1.1)
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"

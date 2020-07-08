@@ -6,7 +6,6 @@ import android.content.Context;
 import com.apptec.camello.auth.AuthHelper;
 import com.apptec.camello.mainactivity.fhome.geofence.GeofenceHelper;
 import com.apptec.camello.mainactivity.fnotification.NotificationSetUp;
-import com.apptec.camello.models.WorkZoneModel;
 import com.apptec.camello.timber.DebugTree;
 import com.apptec.camello.timber.ReleaseTree;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -70,16 +69,6 @@ public class App extends Application {
         return App.context;
     }
 
-    /**
-     * Let the geofence helper handle this
-     */
-    public static void changeWorkStatus() {
-        getAuthHelper().changeWorkStatus();
-    }
-
-    public static void changeWorkStatus(WorkZoneModel workZoneModel) {
-        getAuthHelper().changeWorkStatus(workZoneModel);
-    }
 
 
     /**

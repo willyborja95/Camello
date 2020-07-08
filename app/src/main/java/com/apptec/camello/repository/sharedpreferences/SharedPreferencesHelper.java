@@ -5,80 +5,72 @@ import android.content.SharedPreferences;
 
 import com.apptec.camello.App;
 import com.apptec.camello.util.Constants;
-
+/**
+ * Class for provide a unique SharedPreferences instance for all the app
+ */
 public class SharedPreferencesHelper {
-    /**
-     * Class for provide a unique SharedPreferences instance for all the app
-     */
 
 
     private static SharedPreferences sharedPreferences;                      // Singleton
     private SharedPreferenceBooleanLiveData sharedPreferenceLiveData;        // Singleton of live data class
 
+    /**
+     * Return a instance for the shared preferences using the context of the app.
+     */
+    public static SharedPreferences getSharedPreferencesInstance() {
 
-    public static SharedPreferences getSharedPreferencesInstance(){
-        /**
-         * Return a instance for the shared preferences using the context of the app.
-         */
-        if(sharedPreferences == null){
+        if (sharedPreferences == null) {
             sharedPreferences = App.getContext().getApplicationContext().getSharedPreferences(Constants.SHARED_PREFERENCES_GLOBAL, Context.MODE_PRIVATE);
         }
         return sharedPreferences;
     }
 
+    /**
+     * Method to get a string value
+     */
     public static String getStringValue(String key, String defaultValue) {
-        /** Method to get a string value */
+
         return getSharedPreferencesInstance().getString(key, defaultValue);
     }
 
+    /**
+     * Method to save a string value
+     */
     public static void putStringValue(String key, String value) {
-        /** Method to save a string value */
+
         SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
-        editor.putString(key , value);
+        editor.putString(key, value);
         editor.commit();
     }
 
-    public static void putIntValue(String key, int value){
-        /** Method to save an int value */
+    /**
+     * Method to save an int value
+     */
+    public static void putIntValue(String key, int value) {
+
         SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
-        editor.putInt(key , value);
+        editor.putInt(key, value);
         editor.commit();
     }
 
+    /**
+     * Method to save a boolean value
+     */
+    public static void putBooleanValue(String key, boolean value) {
 
-    public static void putBooleanValue(String key, boolean value){
-        /** Method to save a boolean value */
         SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
         editor.putBoolean(key, value);
         editor.commit();
     }
 
-
-
-    public SharedPreferenceBooleanLiveData getSharedPreferenceForLiveData(){
-        /**
-         * Use this as follows:
-         *
-         * SharedPreferenceBooleanLiveData sharedPreferenceLiveData = SharedPreferencesHelper.getSharedPreferenceForLiveData();
-         * sharedPreferenceLiveData.getBooleanLiveData(PreferenceKey.KEY_LOCATION_PERMISSION,false).observe(this,check->{
-         *         if(check){
-         *             setPermissionGranted(check);
-         *         }
-         *     });
-         */
-
-        return sharedPreferenceLiveData;
-    }
-
-    public void setSharedPreferences(String key, boolean value) {
+    /**
+     * Method to save a long value
+     */
+    public static void putLongValue(String key, Long value) {
         SharedPreferences.Editor editor = getSharedPreferencesInstance().edit();
-        editor.putBoolean(key, value);
-        editor.apply();
-        sharedPreferenceLiveData = new SharedPreferenceBooleanLiveData(getSharedPreferencesInstance(),key,value);
+        editor.putLong(key, value);
+        editor.commit();
     }
-
-
-
 
 
 }

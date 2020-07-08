@@ -115,8 +115,17 @@ public class LoginPresenter {
 
         Timber.d("Sending credentials to the server");
         call.enqueue(new GeneralCallback<GeneralResponse<LoginDataResponse>>(call) {
+
+            /**
+             * Method that will be called after the onResponse() default method after doing some validations
+             * * see {@link GeneralCallback}
+             * This need to be override by the classes that implement GeneralCallback
+             *
+             * @param call     call
+             * @param response response
+             */
             @Override
-            public void onResponse(Call<GeneralResponse<LoginDataResponse>> call, Response<GeneralResponse<LoginDataResponse>> response) {
+            public void onFinalResponse(Call<GeneralResponse<LoginDataResponse>> call, Response<GeneralResponse<LoginDataResponse>> response) {
                 if (response.code() == 200) {
 
                     // Parse teh data to sent to the login data validator
@@ -132,7 +141,6 @@ public class LoginPresenter {
                     user.setName(response.body().getWrappedData().getName());
                     user.setLastName(response.body().getWrappedData().getLastname());
                     user.setEmail(userCredential.getEmail());
-
 
 
                     // Getting the company
@@ -163,7 +171,6 @@ public class LoginPresenter {
                     loginResult.postValue(new LoginProgress(R.string.invalid_credentials_title, R.string.invalid_credentials));
 
                 }
-
             }
 
 

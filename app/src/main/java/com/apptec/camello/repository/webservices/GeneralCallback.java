@@ -30,19 +30,39 @@ public abstract class GeneralCallback<T> implements Callback<T> {
 
 
     /**
+     * Do some validations before call the onFinalResponse
+     *
+     * @param call     call
+     * @param response response
+     */
+    @Override
+    public void onResponse(Call<T> call, Response<T> response) {
+        try {
+            if (!response.isSuccessful()) {
+                Timber.w("Response is not successful");
+            }
+            Timber.d("Response: %s", response.toString());
+        } catch (Exception e) {
+            Timber.w("The response have some problems");
+            Timber.e(e);
+        }
+
+        // Finally call the onFinalResponse, a method that have to be override by the implementations classes
+        this.onFinalResponse(call, response);
+    }
+
+
+    /**
      * We manage all the onFailure callBacks here,
      * but you can override this function if you want
      *
-     * @param call
-     * @param t
+     * @param call call
+     * @param t    throwable
      */
     @Override
     public void onFailure(Call<T> call, Throwable t) {
-
-
         Timber.e("Call failed ");
         Timber.e(t);
-        Timber.d(t.getMessage());
 
         // Retry the call
         if (retryCount++ < TOTAL_RETRIES) {
@@ -52,20 +72,24 @@ public abstract class GeneralCallback<T> implements Callback<T> {
             onFinalFailure(call, t);
         }
 
-
     }
 
 
-    // to be overriden by calling class
-    public void onFinalResponse(Call<T> call, Response<T> response) {
-
-    }
+    /**
+     * Method that will be called after the onResponse() default method after doing some validations
+     * * see {@link GeneralCallback}
+     * This need to be override by the classes that implement GeneralCallback
+     *
+     * @param call     call
+     * @param response response
+     */
+    abstract public void onFinalResponse(Call<T> call, Response<T> response);
 
     /**
      * Method to be override by the calling class
      *
-     * @param call
-     * @param t
+     * @param call call
+     * @param t    throwable
      */
     public void onFinalFailure(Call<T> call, Throwable t) {
         Timber.i("On final failure no override");
