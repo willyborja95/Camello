@@ -97,6 +97,8 @@
 
     <string name="no_internet_connection_title">Error de red</string>
     <string name="no_internet_connection">Al parecer no tienes acceso a internet</string>
+    <string name="available_device">Habilitado</string>
+    <string name="not_available_device">Deshabilitado</string>
 
 
 </resources>
