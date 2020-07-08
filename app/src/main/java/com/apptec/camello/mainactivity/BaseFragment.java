@@ -69,6 +69,7 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
                 mainViewModel.processConsumed();
             }
         });
+        dialog.show(getFragmentManager(), "ErrorDialog");
     }
 
     @Override
