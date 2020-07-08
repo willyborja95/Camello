@@ -119,9 +119,15 @@ public class StopWorking implements Runnable {
                 }
             }
 
+            /**
+             * On final failure we save the last time when the user exit for sync when internet is available
+             *
+             * @param call call
+             * @param t    throwable
+             */
             @Override
             public void onFinalFailure(Call<GeneralResponse<JsonObject>> call, Throwable t) {
-
+                Timber.d("Save the last time when the user exit for sync after");
                 // Save stop working time to syn after
                 SharedPreferencesHelper.putBooleanValue(Constants.NEED_SYNC_ASSISTANCE, true);
                 SharedPreferencesHelper.putLongValue(Constants.LAST_EXIT_TIME, System.currentTimeMillis());

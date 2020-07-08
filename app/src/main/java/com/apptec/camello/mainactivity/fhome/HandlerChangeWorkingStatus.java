@@ -75,6 +75,7 @@ public class HandlerChangeWorkingStatus implements Runnable {
      *
      * @return
      */
+    @Deprecated
     private boolean isWorking() {
 
         return RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod().getStatus() == Constants.INT_WORKING_STATUS;
@@ -85,6 +86,7 @@ public class HandlerChangeWorkingStatus implements Runnable {
      *
      * @return
      */
+    @Deprecated
     private boolean isNotInitWorking() {
         return RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod().getStatus() == Constants.INT_NOT_INIT_STATUS;
     }
