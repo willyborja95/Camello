@@ -45,7 +45,7 @@ public class DeviceListAdapter extends BaseAdapter {
         txtDeviceName.setText(device.getName());
         txtDeviceModel.setText(device.getModel());
         txtDeviceImei.setText(device.getIdentifier());
-        txtDeviceStatus.setText(device.isActive() ? "Activo" : "Inactivo");
+        txtDeviceStatus.setText(device.isActive() ? R.string.available_device : R.string.not_available_device);
 
 
 

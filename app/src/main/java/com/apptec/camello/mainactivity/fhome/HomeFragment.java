@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -157,15 +156,12 @@ public class HomeFragment extends BaseFragment {
                         calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL, LOCALE_ES);
                 String monthYearTxt = String.format("%s de %d", month, calendarMonth.getYear());
                 container.getMonthText().setText(monthYearTxt);
-                // Week scroll buttons
-                container.getLeftMonthButton().setOnClickListener(view -> {
-                    Toast.makeText(getActivity(), "<-", Toast.LENGTH_SHORT).show();
-                });
+
             }
         });
         YearMonth currentMonth = YearMonth.now();
-        YearMonth firstMonth = currentMonth.minusMonths(10);
-        YearMonth lastMonth = currentMonth.plusMonths(10);
+        YearMonth firstMonth = currentMonth.minusMonths(0);
+        YearMonth lastMonth = currentMonth.plusMonths(0);
         DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
         binding.calendarView.setup(firstMonth, lastMonth, firstDayOfWeek);
         binding.calendarView.scrollToMonth(currentMonth);

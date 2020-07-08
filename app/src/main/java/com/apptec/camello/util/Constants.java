@@ -35,8 +35,8 @@ public class Constants {
 
 
     public static final String LAST_EXIT_TIME = "LAST_EXIT_TIME";                                   //
-    public static final String PATTERN_DATE_FORMAT = "yyyy-MM-dd HH:mm";                  // ?
-    public static final String PATTERN_DATE_FORMAT_PERMISSION_DATE = "dd-MM-yyyy";
+    public static final String PATTERN_DATE_FORMAT = "dd/MM/yyyy HH:mm";                  // ?
+    public static final String PATTERN_DATE_FORMAT_PERMISSION_DATE = "dd/MM/yyyy";
     public static final String PATTERN_DATE_FORMAT_PERMISSION_TIME = "HH:mm";
 
     public static final String IS_RUNNING_BY_FIRST_TIME = "APP_RUN_FIRST_TIME";                     // Storage a boolean
