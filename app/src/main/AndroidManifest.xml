@@ -81,13 +81,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <!--
-            Broadcast receiver for alarm manager (We are not using it)
-        -->
-        <receiver
-            android:name="com.apptec.camello.repository.alarmmanager.AlarmBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true" />
 
         <!--
             Service for do the job when a transition is got in background
@@ -96,6 +89,7 @@
             android:name="com.apptec.camello.mainactivity.fhome.geofence.GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
 
         <service
             android:name="com.apptec.camello.mainactivity.fnotification.FCM"
