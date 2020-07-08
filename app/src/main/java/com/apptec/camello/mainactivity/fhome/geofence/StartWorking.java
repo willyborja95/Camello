@@ -112,10 +112,19 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
 
 
         call.enqueue(new GeneralCallback<GeneralResponse<JsonObject>>(call) {
+
+            /**
+             * Method that will be called after the onResponse() default method after doing some validations
+             * * see {@link GeneralCallback}
+             * This need to be override by the classes that implement GeneralCallback
+             *
+             * @param call     call
+             * @param response response
+             */
             @Override
-            public void onResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
+            public void onFinalResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
                 Timber.i("Assistance changed");
-                Timber.i("Request code: " + response.code());
+                Timber.i("Request code: %s", response.code());
 
                 // Notify the listener
                 listener.onSuccessProcess();

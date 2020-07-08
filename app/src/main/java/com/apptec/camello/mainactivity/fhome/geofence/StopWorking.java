@@ -3,10 +3,12 @@ package com.apptec.camello.mainactivity.fhome.geofence;
 
 import com.apptec.camello.App;
 import com.apptec.camello.R;
+import com.apptec.camello.auth.AuthHelper;
 import com.apptec.camello.mainactivity.BaseProcessListener;
 import com.apptec.camello.mainactivity.fhome.AssistanceRetrofitInterface;
 import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
+import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
@@ -94,11 +96,22 @@ public class StopWorking implements Runnable {
 
 
         call.enqueue(new GeneralCallback<GeneralResponse<JsonObject>>(call) {
+
+
+            /**
+             * Method that will be called after the onResponse() default method after doing some validations
+             * * see {@link GeneralCallback}
+             * This need to be override by the classes that implement GeneralCallback
+             *
+             * @param call     call
+             * @param response response
+             */
             @Override
-            public void onResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
+            public void onFinalResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
                 Timber.i("Assistance changed");
                 Timber.i("Request code: %s", response.code());
 
+                SharedPreferencesHelper.putBooleanValue(Constants.NEED_SYNC_ASSISTANCE, false);
 
                 // Notify the listener
                 if (listener != null) {
@@ -108,12 +121,28 @@ public class StopWorking implements Runnable {
 
             @Override
             public void onFinalFailure(Call<GeneralResponse<JsonObject>> call, Throwable t) {
+
+                // Save stop working time to syn after
+                SharedPreferencesHelper.putBooleanValue(Constants.NEED_SYNC_ASSISTANCE, true);
+                SharedPreferencesHelper.putLongValue(Constants.LAST_EXIT_TIME, System.currentTimeMillis());
+
+                scheduleJob();
+
+
                 // Notify the listener
                 if (listener != null) {
                     listener.onErrorOccurred(R.string.no_internet_connection_title, R.string.no_internet_connection);
                 }
             }
         });
+
+    }
+
+    /**
+     * Schedule the job for sync the time when the user exit
+     */
+    private void scheduleJob() {
+        AuthHelper.scheduleSync();
 
     }
 
