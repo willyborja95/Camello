@@ -15,8 +15,8 @@ import androidx.work.WorkManager;
 import com.apptec.camello.App;
 import com.apptec.camello.auth.refreshtoken.RefreshTokenWorker;
 import com.apptec.camello.mainactivity.fdevice.DevicePresenterImpl;
-import com.apptec.camello.mainactivity.fhome.HandlerChangeWorkingStatus;
 import com.apptec.camello.mainactivity.fhome.HomePresenterImpl;
+import com.apptec.camello.mainactivity.fhome.geofence.HandleButtonClicked;
 import com.apptec.camello.mainactivity.fhome.geofence.StopWorking;
 import com.apptec.camello.mainactivity.fnotification.NotificationPresenter;
 import com.apptec.camello.mainactivity.fpermission.PermissionFull;
@@ -25,7 +25,6 @@ import com.apptec.camello.models.DeviceModel;
 import com.apptec.camello.models.NotificationModel;
 import com.apptec.camello.models.PermissionType;
 import com.apptec.camello.models.UserModel;
-import com.apptec.camello.models.WorkZoneModel;
 import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.util.Constants;
@@ -40,8 +39,6 @@ import timber.log.Timber;
  * View model shared by the fragments
  */
 public class MainViewModel extends AndroidViewModel {
-
-
 
 
     // To show the notifications
@@ -64,6 +61,9 @@ public class MainViewModel extends AndroidViewModel {
 
     // To handle if needed the first login
     private MutableLiveData<Boolean> isNeededRegisterDevice;
+
+    // Handle if needed to request location permissions
+    private MutableLiveData<Boolean> _requestLocationPermissions = new MutableLiveData<>(false);
 
     // This boolean variable is needed to the activity could know if we should logout
     private MutableLiveData<Boolean> isUserLogged;
@@ -165,28 +165,118 @@ public class MainViewModel extends AndroidViewModel {
         return mNotifications;
     }
 
-    /** Exposing the user */
+    /**
+     * Exposing the user
+     */
     public LiveData<UserModel> getCurrentUser() {
         return mUser;
     }
 
-    /** Exposing the list of devices */
+    /**
+     * Exposing the list of devices
+     */
     public LiveData<List<DeviceModel>> getDevices() {
         return mDevices;
     }
 
-    /** Exposing the last working period */
+    /**
+     * Exposing the last working period
+     */
     public LiveData<WorkingPeriodModel> getLastWorkingPeriod() {
         return mLastWorkingPeriod;
+    }
+
+    /**
+     * Expose if the user has to grant location permissions
+     */
+    public LiveData<Boolean> isNeededToRequestLocationPermissions() {
+        return this._requestLocationPermissions;
     }
 
 
     /**
      * If the user is working change to no working and vice versa
      */
-    public void changeLastWorkingState(WorkZoneModel workZoneModel) {
-        new Thread(new HandlerChangeWorkingStatus(workZoneModel, processListener)).start();
+    public void changeLastWorkingState() {
+        Timber.d("Button clicked");
+        _currentProcess.setValue(new Process(Process.NOT_INIT));
+        /*
+          Verify if the user is trying to stop or start
+          see {@link HandleButtonClicked}
+         */
+        new Thread(new HandleButtonClicked(new HandleButtonClicked.Listener() {
+            @Override
+            public void onErrorOccurred(int title, int message) {
+                Timber.e("Error ocurred");
+                if (_currentProcess.getValue() != null) {
+                    _currentProcess.getValue().errorOccurred(title, message);
+                } else {
+                    _currentProcess.postValue(new Process(title, message));
+                }
+            }
+
+            @Override
+            public void onProcessing() {
+                if (_currentProcess.getValue() != null) {
+                    _currentProcess.getValue().setProcessStatus(Process.PROCESSING);
+                } else {
+                    _currentProcess.postValue(new Process(Process.PROCESSING));
+                }
+            }
+
+            @Override
+            public void onSuccessProcess() {
+                if (_currentProcess.getValue() != null) {
+                    _currentProcess.getValue().setProcessStatus(Process.SUCCESSFUL);
+                } else {
+                    _currentProcess.postValue(new Process(Process.SUCCESSFUL));
+                }
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                Timber.e("Location permission are denied");
+                _requestLocationPermissions.postValue(true);
+            }
+
+
+        }, App.getContext())).start();
+
+
     }
+
+    /**
+     * Methods to listen process
+     */ // Not used now
+    private BaseProcessListener baseProcessListener = new BaseProcessListener() {
+        @Override
+        public void onErrorOccurred(int title, int message) {
+            if (_currentProcess.getValue() != null) {
+                _currentProcess.getValue().errorOccurred(title, message);
+            } else {
+                _currentProcess.postValue(new Process(title, message));
+            }
+        }
+
+        @Override
+        public void onProcessing() {
+            if (_currentProcess.getValue() != null) {
+                _currentProcess.getValue().setProcessStatus(Process.PROCESSING);
+            } else {
+                _currentProcess.postValue(new Process(Process.PROCESSING));
+            }
+        }
+
+        @Override
+        public void onSuccessProcess() {
+            if (_currentProcess.getValue() != null) {
+                _currentProcess.getValue().setProcessStatus(Process.SUCCESSFUL);
+            } else {
+                _currentProcess.postValue(new Process(Process.SUCCESSFUL));
+            }
+
+        }
+    };
 
 
     /**
@@ -303,7 +393,6 @@ public class MainViewModel extends AndroidViewModel {
          */
         permissionPresenter.syncPermissionsWithNetwork();
     }
-
 
 
 }

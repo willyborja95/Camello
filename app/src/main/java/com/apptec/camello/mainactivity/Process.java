@@ -2,7 +2,9 @@ package com.apptec.camello.mainactivity;
 
 import androidx.annotation.Nullable;
 
-public class Process implements BaseProcessListener {
+import java.util.Objects;
+
+public class Process {
     /**
      * Authentication result : success (user details) or error message.
      */
@@ -69,32 +71,26 @@ public class Process implements BaseProcessListener {
         this.titleError = titleError;
     }
 
-    /**
-     * Method to show an error if it happens in some process
-     *
-     * @param title
-     * @param message
-     */
-    @Override
-    public void onErrorOccurred(int title, int message) {
+
+    public void errorOccurred(int title, int message) {
         this.error = title;
         this.titleError = message;
         this.processStatus = Process.FAILED;
     }
 
-    /**
-     * The process is running
-     */
+
     @Override
-    public void onProcessing() {
-        this.setProcessStatus(Process.PROCESSING);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Process process = (Process) o;
+        return processStatus == process.processStatus &&
+                Objects.equals(error, process.error) &&
+                Objects.equals(titleError, process.titleError);
     }
 
-    /**
-     * Process finished right
-     */
     @Override
-    public void onSuccessProcess() {
-        this.setProcessStatus(Process.SUCCESSFUL);
+    public int hashCode() {
+        return Objects.hash(processStatus, error, titleError);
     }
 }

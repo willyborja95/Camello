@@ -13,10 +13,8 @@ import androidx.databinding.DataBindingUtil;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentHomeBinding;
 import com.apptec.camello.mainactivity.BaseFragment;
-import com.apptec.camello.mainactivity.fhome.geofence.VerifyLocation;
 import com.apptec.camello.mainactivity.fhome.ui.DayViewContainer;
 import com.apptec.camello.mainactivity.fhome.ui.MonthHeaderViewContainer;
-import com.apptec.camello.models.WorkZoneModel;
 import com.apptec.camello.util.Constants;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.kizitonwose.calendarview.model.CalendarDay;
@@ -67,6 +65,7 @@ public class HomeFragment extends BaseFragment {
 
         this.setupCentralButtonManager();                       // Setting up the button
 
+        this.requestLocationPermissions();
 
         // Creating a lister for the button
         binding.fragmentHomeStartButton.setOnClickListener(new View.OnClickListener() {
@@ -77,42 +76,7 @@ public class HomeFragment extends BaseFragment {
                  * Verify first if the location service is available and the if
                  * the user is in a work zone
                  */
-                new Thread(new VerifyLocation(new VerifyLocation.Listener() {
-
-                    /**
-                     * Show a SnackBar
-                     */
-                    @Override
-                    public void onPermissionDenied() {
-                        Timber.e("Location permission are denied");
-                        requestLocationPermissions();
-                    }
-
-                    /**
-                     * Show a message
-                     */
-                    @Override
-                    public void onNotAvailableLocation() {
-                        Timber.e("The user is not in a work zone");
-                        HomeFragment.super.onErrorOccurred(R.string.not_correct_location_title, R.string.not_correct_location_message);
-
-                    }
-
-
-                    /**
-                     * If all is right, the permission has granted and the user is inside a work zone
-                     *
-                     * @param workZoneModel is if of the work zone where the user is
-                     */
-                    @Override
-                    public void onAvailableLotion(WorkZoneModel workZoneModel) {
-                        Timber.i("The user is correctly inside a work zone");
-                        mainViewModel.changeLastWorkingState(workZoneModel);
-
-                    }
-
-
-                })).start();
+                mainViewModel.changeLastWorkingState();
 
 
             }
@@ -212,10 +176,15 @@ public class HomeFragment extends BaseFragment {
      * Method to create a dialog and request the permission about location
      */
     private void requestLocationPermissions() {
-        requestPermissions(
-                new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION},
-                1);
+        mainViewModel.isNeededToRequestLocationPermissions().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                requestPermissions(
+                        new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                                android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        1);
+
+            }
+        });
     }
 
 

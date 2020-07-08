@@ -16,6 +16,8 @@ import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
 
+import timber.log.Timber;
+
 public class AuthHelper {
     /**
      * This class will contain auth stuff
@@ -79,6 +81,7 @@ public class AuthHelper {
      *
      */
     public static void scheduleSync() {
+        Timber.d("Scheduling sync when internet is available");
         // Constraints: Do the work if the the network is connected
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
