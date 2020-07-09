@@ -54,12 +54,21 @@ public interface PermissionRetrofitInterface {
             @Path("userId") int userId
     );
 
+    // api/permission/employee/3
     @GET(Constants.ALL_PERMISSIONS_URL)
-        // api/permission/employee/3
     Call<GeneralResponse<List<PermissionDto>>> getAllPermissions(
             @Header(Constants.AUTHORIZATION_HEADER) String token,
             @Path("userId") int userId
 
+    );
+
+    /**
+     * Endpoint to delete a permission by the id
+     */
+    @DELETE(Constants.PERMISSION_DELETE_URL)
+    Call<JsonObject> deletePermission(
+            @Header(Constants.AUTHORIZATION_HEADER) String token,
+            @Path("permissionId") int permissionId
     );
 
 

@@ -8,26 +8,34 @@ public class Constants {
      */
 
 
-    // Urls
+    /**
+     * URLS
+     */
     public static final String BASE_URL = "https://api.camello.com.ec";
-    public static final String NOTIFICATIONS_URL = "notifications";
+    // Auth
     public static final String LOGIN_URL = "/api/auth/login";
-    public static final String DEVICE_URL = "/api/employee";  // api/employee/{{userid}}/devices/
     public static final String REFRESH_TOKEN_URL = "/api/auth/token";
-    public static final String REGISTER_DEVICE_URL = "/api/device";
-    public static final String REQUEST_DEVICE_INFO_URL = "/api/device/check/{imei}";
-    public static final String UPDATE_FIREBASE_TOKEN_URL = "/api/device/{id}/pushtoken";
+
+    // Permissions
+    public static final String ALL_PERMISSIONS_URL = "api/permission/employee/{userId}";
     public static final String PERMISSION_TYPES_CATALOG_URL = "/api/catalog/permissiontypes";
     public static final String PERMISSION_STATUS_CATALOG_URL = "/api/catalog/permissionstatuses";
     public static final String PERMISSION_CREATE_URL = "/api/permission/";
     public static final String PERMISSIONS_STATUS_URL = "/api/permission";
+    public static final String PERMISSION_DELETE_URL = "/api/permission/{permissionId}";
+
+    // Notifications
+    public static final String NOTIFICATIONS_URL = "notifications";
+
+    //Devices
+    public static final String DEVICE_URL = "/api/employee";  // api/employee/{{userid}}/devices/
+    public static final String REGISTER_DEVICE_URL = "/api/device";
+    public static final String REQUEST_DEVICE_INFO_URL = "/api/device/check/{imei}";
+    public static final String UPDATE_FIREBASE_TOKEN_URL = "/api/device/{id}/pushtoken";
+
+    // Assistance
     public static final String REGISTER_ASSISTANCE_URL = "/api/attendance";
-    public static final String ALL_PERMISSIONS_URL = "api/permission/employee/{userId}";
     public static final String SYNC_ASSISTANCE_URL = "/api/attendance/sync";
-
-
-    // Logs messages
-    public static final String UPDATING_CHANGES = "Actualizando datos";
 
 
     // Shared preferences key words values

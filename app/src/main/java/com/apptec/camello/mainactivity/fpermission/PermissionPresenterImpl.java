@@ -2,6 +2,8 @@ package com.apptec.camello.mainactivity.fpermission;
 
 import androidx.lifecycle.LiveData;
 
+import com.apptec.camello.R;
+import com.apptec.camello.mainactivity.BaseProcessListener;
 import com.apptec.camello.models.PermissionModel;
 import com.apptec.camello.models.PermissionType;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
@@ -9,6 +11,10 @@ import com.apptec.camello.repository.localdatabase.converter.DateConverter;
 import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
+import com.google.gson.JsonObject;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -110,4 +116,71 @@ public class PermissionPresenterImpl {
         new Thread(new SyncPermissions()).start();
 
     }
+
+    /**
+     * Method that call the server to delete a permission
+     *
+     * @param permission the target permission
+     * @param listener   listener of the process
+     */
+    public void deletePermission(@NotNull PermissionModel permission, @Nullable BaseProcessListener listener) {
+
+        if (listener != null) {
+            listener.onProcessing();
+        }
+
+        PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
+        Call<JsonObject> call = permissionRetrofitInterface.deletePermission(
+                ApiClient.getAccessToken(),
+                permission.getId()
+        );
+        Timber.d(call.request().toString());
+        call.enqueue(new GeneralCallback<JsonObject>(call) {
+
+
+            /**
+             * Method that will be called after the onResponse() default method after doing some validations
+             * * see {@link GeneralCallback}
+             * This need to be override by the classes that implement GeneralCallback
+             *
+             * @param call     call
+             * @param response response
+             */
+            @Override
+            public void onFinalResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Timber.d(response.toString());
+                Timber.d(response.body().toString());
+
+                Timber.d("Permission deleted successful");
+
+                // Delete also from database
+                new Thread(() -> {
+
+                    RoomHelper.getAppDatabaseInstance().permissionDao().delete(permission);
+                    if (listener != null) {
+                        listener.onSuccessProcess();
+                    }
+
+                }).start();
+
+
+            }
+
+            /**
+             * Method to be override by the calling class
+             *
+             * @param call call
+             * @param t    throwable
+             */
+            @Override
+            public void onFinalFailure(Call<JsonObject> call, Throwable t) {
+                Timber.e(t);
+                if (listener != null) {
+                    listener.onErrorOccurred(R.string.no_internet_connection_title, R.string.no_internet_connection);
+                }
+            }
+        });
+
+    }
+
 }
