@@ -16,9 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.mainactivity.MainViewModel;
-import com.apptec.camello.models.DeviceModel;
-
-import java.util.List;
 
 public class DeviceFragment extends Fragment {
     /**
@@ -59,7 +56,7 @@ public class DeviceFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_device, container, false);
 
         // Observing if is needed to register this device
-        mainViewModel.getIsNeededRegisterDevice().observe(this, new Observer<Boolean>() {
+        mainViewModel.getIsNeededRegisterDevice().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 // Request register device
@@ -74,14 +71,13 @@ public class DeviceFragment extends Fragment {
 
         // Observe the mDevicesList
         deviceListAdapter = new DeviceListAdapter(App.getContext(), mainViewModel.getDevices());
-        mainViewModel.getDevices().observe(getActivity(), new Observer<List<DeviceModel>>() {
-            @Override
-            public void onChanged(List<DeviceModel> devices) {
-                devicesListView.setAdapter(deviceListAdapter);
-            }
-        });
+        mainViewModel.getDevices().observe(getActivity(), devices -> devicesListView.setAdapter(deviceListAdapter));
 
 
         return view;
     }
+
+
+
+
 }
