@@ -23,6 +23,7 @@ import com.apptec.camello.mainactivity.fpermission.PermissionFull;
 import com.apptec.camello.mainactivity.fpermission.PermissionPresenterImpl;
 import com.apptec.camello.models.DeviceModel;
 import com.apptec.camello.models.NotificationModel;
+import com.apptec.camello.models.PermissionModel;
 import com.apptec.camello.models.PermissionType;
 import com.apptec.camello.models.UserModel;
 import com.apptec.camello.models.WorkingPeriodModel;
@@ -76,19 +77,33 @@ public class MainViewModel extends AndroidViewModel {
     private BaseProcessListener processListener = new BaseProcessListener() {
         @Override
         public void onErrorOccurred(int title, int message) {
-            _currentProcess.postValue(new Process(title, message));
+            if (_currentProcess.getValue() != null) {
+                _currentProcess.getValue().errorOccurred(title, message);
+            } else {
+                _currentProcess.postValue(new Process(title, message));
+            }
         }
 
         @Override
         public void onProcessing() {
-            _currentProcess.postValue(new Process(Process.PROCESSING));
+            if (_currentProcess.getValue() != null) {
+                _currentProcess.getValue().setProcessStatus(Process.PROCESSING);
+            } else {
+                _currentProcess.postValue(new Process(Process.PROCESSING));
+            }
         }
 
         @Override
         public void onSuccessProcess() {
-            _currentProcess.postValue(new Process(Process.SUCCESSFUL));
+            if (_currentProcess.getValue() != null) {
+                _currentProcess.getValue().setProcessStatus(Process.SUCCESSFUL);
+            } else {
+                _currentProcess.postValue(new Process(Process.SUCCESSFUL));
+            }
+
         }
     };
+
     private final MutableLiveData<Process> _currentProcess = new MutableLiveData<>(null);
 
 
@@ -245,39 +260,6 @@ public class MainViewModel extends AndroidViewModel {
 
     }
 
-    /**
-     * Methods to listen process
-     */ // Not used now
-    private BaseProcessListener baseProcessListener = new BaseProcessListener() {
-        @Override
-        public void onErrorOccurred(int title, int message) {
-            if (_currentProcess.getValue() != null) {
-                _currentProcess.getValue().errorOccurred(title, message);
-            } else {
-                _currentProcess.postValue(new Process(title, message));
-            }
-        }
-
-        @Override
-        public void onProcessing() {
-            if (_currentProcess.getValue() != null) {
-                _currentProcess.getValue().setProcessStatus(Process.PROCESSING);
-            } else {
-                _currentProcess.postValue(new Process(Process.PROCESSING));
-            }
-        }
-
-        @Override
-        public void onSuccessProcess() {
-            if (_currentProcess.getValue() != null) {
-                _currentProcess.getValue().setProcessStatus(Process.SUCCESSFUL);
-            } else {
-                _currentProcess.postValue(new Process(Process.SUCCESSFUL));
-            }
-
-        }
-    };
-
 
     /**
      * Exposing the list of permissions
@@ -392,6 +374,15 @@ public class MainViewModel extends AndroidViewModel {
          * Sync the permissions database with the network
          */
         permissionPresenter.syncPermissionsWithNetwork();
+    }
+
+    /**
+     * Method called by the view to delete a permission
+     *
+     * @param permission instance of PermissionModel
+     */
+    public void deletePermission(PermissionModel permission) {
+        permissionPresenter.deletePermission(permission, this.processListener);
     }
 
 

@@ -1,4 +1,4 @@
-package com.apptec.camello.mainactivity.fpermission.ui;
+package com.apptec.camello.mainactivity.fpermission;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,22 +8,22 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentPermissionBinding;
+import com.apptec.camello.mainactivity.BaseFragment;
 import com.apptec.camello.mainactivity.MainViewModel;
-import com.apptec.camello.mainactivity.fpermission.PermissionFull;
-import com.apptec.camello.mainactivity.fpermission.PermissionViewModel;
+import com.apptec.camello.mainactivity.fpermission.ui.DialogPermission;
+import com.apptec.camello.mainactivity.fpermission.ui.PermissionAdapter;
 
 import java.util.List;
 
 import timber.log.Timber;
 
-public class PermissionFragment extends Fragment {
+public class PermissionFragment extends BaseFragment {
     /**
      * PermissionFragment
      */
@@ -74,7 +74,7 @@ public class PermissionFragment extends Fragment {
             }
         });
 
-        permissionViewModel.addNewPermission().observe(this, new Observer<Boolean>() {
+        permissionViewModel.addNewPermission().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
@@ -90,6 +90,7 @@ public class PermissionFragment extends Fragment {
                 }
             }
         });
+
 
         return binding.getRoot();
     }

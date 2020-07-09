@@ -20,7 +20,7 @@ public class PermissionDto {
 
 
     private static final String DATE_INCOMING_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-
+    private static final String DATE_OUT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @SerializedName("id")
     private int id;
@@ -67,8 +67,8 @@ public class PermissionDto {
          * This construct automatic will transform a Permission model to a PermissionDto
          */
         this.id = permissionModel.getId();
-        this.startDate = DateConverter.toStringDateFormat(permissionModel.getStartDate());
-        this.endDate = DateConverter.toStringDateFormat(permissionModel.getEndDate());
+        this.startDate = DateConverter.toStringDateFormat(permissionModel.getStartDate(), DATE_OUT_FORMAT);
+        this.endDate = DateConverter.toStringDateFormat(permissionModel.getEndDate(), DATE_OUT_FORMAT);
         this.type = permissionModel.getFkPermissionType();
         this.comment = permissionModel.getComment();
 
