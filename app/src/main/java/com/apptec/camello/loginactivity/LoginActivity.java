@@ -18,6 +18,8 @@ import com.apptec.camello.R;
 import com.apptec.camello.databinding.ActivityLoginBinding;
 import com.apptec.camello.mainactivity.MainActivity;
 import com.apptec.camello.mainactivity.fnotification.NotificationBuilder;
+import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
+import com.apptec.camello.util.Constants;
 
 import timber.log.Timber;
 
@@ -153,6 +155,13 @@ public class LoginActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        // Verify if redirect the user to the notifications fragment
+
+        intent.putExtra(Constants.NAVIGATE_TO_NOTIFICATIONS_FRAGMENT,
+                SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.NAVIGATE_TO_NOTIFICATIONS_FRAGMENT, false));
+
+
         startActivity(intent);
         finish();
     }
