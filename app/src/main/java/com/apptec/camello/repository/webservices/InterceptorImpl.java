@@ -35,19 +35,26 @@ public class InterceptorImpl implements okhttp3.Interceptor {
         // Deal with the issues the way we need to
         if (isTokenExpired(response)) {
             Timber.e("Token expired");
-            Timber.e("Custom response code is: " + 502);
+
             // Unauthorized
             // Ask a new refresh token and retry the call
 
-            String newToken = askNewToken();
+            try {
+                String newToken = askNewToken();
+                // Retry call
+                Timber.d("Retrying call");
+                // use the original request with the new auth token
+                Request newRequest = request.newBuilder().header(Constants.AUTHORIZATION_HEADER, newToken).build();
+                Timber.d("Response before retry%s", response.toString());
+                response = chain.proceed(newRequest);
+                Timber.d("Response after retry%s", response.toString());
+            } catch (NullPointerException npe) {
+                Timber.e("Probably a invalid token is being sent");
+                // TODO: Logout the user
 
-            // Retry call
-            Timber.d("Retrying call");
-            // use the original request with the new auth token
-            Request newRequest = request.newBuilder().header(Constants.AUTHORIZATION_HEADER, newToken).build();
-            Timber.d("Response before retry" + response.toString());
-            response = chain.proceed(newRequest);
-            Timber.d("Response after retry" + response.toString());
+            }
+
+
         }
 
 
@@ -58,13 +65,15 @@ public class InterceptorImpl implements okhttp3.Interceptor {
     }
 
 
-    private String askNewToken() throws IOException {
+    private String askNewToken() throws IOException, NullPointerException {
         Timber.i("Asking a new token");
         AuthInterface authInterface = ApiClient.getClient().create(AuthInterface.class);
-        Call<GeneralResponse<JsonObject>> refreshCall = authInterface.refreshToken(
-                new RefreshTokenBody(ApiClient.getAccessToken(), ApiClient.getRefreshToken())
-        );
+        String refreshToken = ApiClient.getRefreshToken();
 
+        Call<GeneralResponse<JsonObject>> refreshCall = authInterface.refreshToken(
+                new RefreshTokenBody(ApiClient.getAccessToken(), refreshToken)
+        );
+        Timber.d("Refresh token: %s", refreshToken);
 
         // With do not enqueue the call because it is no necessary an immediate response from this worker
         retrofit2.Response<GeneralResponse<JsonObject>> response = refreshCall.execute();
@@ -107,22 +116,17 @@ public class InterceptorImpl implements okhttp3.Interceptor {
             try {
                 ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
                 String content = responseBodyCopy.string();
-                ;
-                JSONObject jsonObject = new JSONObject(content);
 
+                JSONObject jsonObject = new JSONObject(content);
+                Timber.d(jsonObject.toString());
                 String errorCode = jsonObject.getJSONObject("error").getString("code");
                 if (errorCode.equals("502")) {
                     return true;
                 }
 
-            } catch (IOException e) {
+            } catch (IOException | JSONException | NullPointerException e) {
                 Timber.e(e);
 
-            } catch (JSONException e) {
-                Timber.e(e);
-
-            } catch (NullPointerException e) {
-                Timber.e(e);
             }
         }
         return false;
