@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements
                 if (aBoolean) {
                     // That mean the user needs to register this device
                     // Register device
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_device);
                     navController.navigate(R.id.deviceFragment);
 
                 }
@@ -171,17 +172,24 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+        // Verify if we enter from a notification, then navigate to notifications fragment
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().getBoolean(Constants.NAVIGATE_TO_NOTIFICATIONS_FRAGMENT, false)) {
+                // Should navigate to notifications fragment
+                bottomNavigationView.setSelectedItemId(R.id.navigation_notifications);
+                navController.navigate(R.id.notificationsFragment);
+            }
+        }
 
     }
 
-
+    /**
+     * Callback received when a permissions request has been completed.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        /**
-         * TODO: Remove this to the respective fragment
-         * Callback received when a permissions request has been completed.
-         */
+
         Timber.i("onRequestPermissionResult");
         if (requestCode == Constants.REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
@@ -261,10 +269,7 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+
 
     /**
      * Navigate to the login activity
