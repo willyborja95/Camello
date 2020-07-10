@@ -78,4 +78,7 @@ public class Constants {
     public static final String NEED_SYNC_ASSISTANCE = "NEED_TO_SYNC";
 
     public static final int SYNC_JOB_ID = 1235;
+
+    // Constant to put in an intent so the main activity could know if navigate to the notifications fragment
+    public static final String NAVIGATE_TO_NOTIFICATIONS_FRAGMENT = "navigate_to_notifications";
 }
