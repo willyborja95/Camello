@@ -32,13 +32,12 @@
     <string name="unknown_geofence_transition">Unknown Transition</string>
 
     <string name="geofence_transition_notification_text">
-        Click notification to return to app
+        Click para regresar a la app
     </string>
 
-    <string name="insufficient_permissions">Insufficient permissions.</string>
-    <string name="permission_rationale">Location permission is needed for core functionality</string>
-    <string name="permission_denied_explanation">Permission was denied, but is needed for core
-        functionality.</string>
+    <string name="insufficient_permissions">Permisos insuficientes.</string>
+    <string name="permission_rationale">Permisos de localización es necesario</string>
+    <string name="permission_denied_explanation">Permiso denegado es necesario para el funcionamiento de esta app</string>
     <string name="settings">Settings</string>
 
     <!-- UI string values -->
