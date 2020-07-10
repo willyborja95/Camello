@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.apptec.camello.BuildConfig;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.ActivityMainBinding;
 import com.apptec.camello.loginactivity.LoginActivity;
@@ -27,6 +29,7 @@ import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import timber.log.Timber;
 
@@ -190,37 +193,37 @@ public class MainActivity extends AppCompatActivity implements
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        Timber.i("onRequestPermissionResult");
-        if (requestCode == Constants.REQUEST_PERMISSIONS_REQUEST_CODE) {
-            if (grantResults.length <= 0) {
-                // If user interaction was interrupted, the permission request is cancelled and you
-                // receive empty arrays.
-                Timber.i("User interaction was cancelled.");
-            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Timber.i("Permission granted.");
-                //performPendingGeofenceTask(); TODO
-            } else {
-                // Permission denied.
+        Timber.d("onRequestPermissionResult");
+        if (grantResults.length <= 0) {
+            // If user interaction was interrupted, the permission request is cancelled and you
+            // receive empty arrays.
+            Timber.i("User interaction was cancelled.");
+        } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Timber.i("Permission granted.");
 
-                // Notify the user via a SnackBar that they have rejected a core permission for the
-                // app, which makes the Activity useless. In a real app, core permissions would
-                // typically be best requested during a welcome-screen flow.
-//                showSnackbar(R.string.permission_denied_explanation, R.string.settings, TODO
-//                        view -> {
-//                            // Build intent that displays the App settings screen.
-//                            Intent intent = new Intent();
-//                            intent.setAction(
-//                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                            Uri uri = Uri.fromParts("package",
-//                                    BuildConfig.APPLICATION_ID, null);
-//                            intent.setData(uri);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            startActivity(intent);
-//                            finish();
-//                        });
-//                pendingGeofenceTask = PendingGeofenceTask.NONE;
-            }
+        } else {
+            Timber.d("Permission denied");
+            // Permission denied.
+
+            // Notify the user via a SnackBar that they have rejected a core permission for the
+            // app, which makes the Activity useless. In a real app, core permissions would
+            // typically be best requested during a welcome-screen flow.
+            showSnackBar(R.string.permission_denied_explanation, R.string.settings,
+                    view -> {
+                        // Build intent that displays the App settings screen.
+                        Intent intent = new Intent();
+                        intent.setAction(
+                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package",
+                                BuildConfig.APPLICATION_ID, null);
+                        intent.setData(uri);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    });
+
         }
+
     }
 
 
@@ -238,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         return true;
     }
-
 
 
     @Override
@@ -270,6 +272,21 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    /**
+     * Method to show a snack bar
+     *
+     * @param mainTextStringId An id to of a string resource
+     * @param actionStringId
+     * @param listener
+     */
+    private void showSnackBar(final int mainTextStringId, final int actionStringId,
+                              View.OnClickListener listener) {
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(mainTextStringId),
+                Snackbar.LENGTH_LONG)
+                .setAction(getString(actionStringId), listener).show();
+    }
 
     /**
      * Navigate to the login activity
