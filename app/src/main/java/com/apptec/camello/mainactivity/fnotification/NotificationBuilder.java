@@ -11,6 +11,8 @@ import com.apptec.camello.R;
 import com.apptec.camello.models.NotificationModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.repository.localdatabase.converter.DateConverter;
+import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
+import com.apptec.camello.util.Constants;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Date;
@@ -134,6 +136,10 @@ public class NotificationBuilder implements Runnable {
             targetNotification.setText(content);
             targetNotification.setSentDate(sentDate.getTime());
             targetNotification.setExpirationDate(expirationDate.getTime());
+
+            // Save this flag so the main activity will know to redirect the user to the notifications fragment
+            SharedPreferencesHelper.putBooleanValue(Constants.NAVIGATE_TO_NOTIFICATIONS_FRAGMENT, true);
+
         } catch (Exception e) {
             Timber.e(e);
             return null;
