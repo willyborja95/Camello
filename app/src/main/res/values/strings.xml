@@ -98,6 +98,8 @@
     <string name="no_internet_connection">Al parecer no tienes acceso a internet</string>
     <string name="available_device">Habilitado</string>
     <string name="not_available_device">Deshabilitado</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancelar</string>
 
 
 </resources>
