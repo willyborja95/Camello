@@ -106,7 +106,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 getApplicationContext(),
                 NotificationConstants.LOCATION_CHANNEL_ID);
-        builder.setSmallIcon(R.drawable.logo)
+        builder.setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(getString(R.string.notification_exit_title))
                 .setContentIntent(notificationPendingIntent);
 
