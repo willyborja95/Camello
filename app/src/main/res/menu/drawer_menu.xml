@@ -12,6 +12,7 @@
         <item
             android:id="@+id/logout_button"
             android:layout_gravity="center"
-            android:title="Cerrar Sesión" />
+            android:title="@string/sign_out_label" />
+
     </group>
 </menu>

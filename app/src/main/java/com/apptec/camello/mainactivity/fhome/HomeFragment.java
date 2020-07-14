@@ -66,25 +66,25 @@ public class HomeFragment extends BaseFragment {
 
         this.requestLocationPermissions();
 
-        // Creating a lister for the button
-        binding.fragmentHomeStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Timber.d("Button clicked");
-                /**
-                 * Verify first if the location service is available and the if
-                 * the user is in a work zone
-                 */
-                mainViewModel.changeLastWorkingState();
 
+        binding.fragmentHomeStartButton.setOnClickListener(
+                new View.OnClickListener() {
+                    /**
+                     * Verify first if the location service is available and the if
+                     * the user is in a work zone
+                     */
+                    @Override
+                    public void onClick(View v) {
+                        Timber.d("Button clicked");
 
-            }
-        });
+                        mainViewModel.changeLastWorkingState();
+
+                    }
+                });
 
 
         return binding.getRoot();
     }
-
 
 
     /**
@@ -137,7 +137,7 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void bind(@NonNull DayViewContainer container, @NonNull CalendarDay calendarDay) {
-                container.getDayText().setText(calendarDay.getDate().getDayOfMonth() + "");
+                container.getDayText().setText(calendarDay.getDate().getDayOfMonth()+"");
                 String dayName =
                         calendarDay.getDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, LOCALE_ES);
                 container.getDayNameText().setText(dayName);
@@ -164,7 +164,9 @@ public class HomeFragment extends BaseFragment {
         YearMonth lastMonth = currentMonth.plusMonths(0);
         DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
         binding.calendarView.setup(firstMonth, lastMonth, firstDayOfWeek);
+
         binding.calendarView.scrollToMonth(currentMonth);
+
     }
 
 
