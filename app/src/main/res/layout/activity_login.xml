@@ -152,7 +152,7 @@
                 android:background="@drawable/rigth_button"
                 android:contentDescription="@string/login_button_alt"
                 android:onClick="@{()->loginViewModel.loginClicked(email.getText().toString(), password.getText().toString())}"
-                android:src="@drawable/right_arrow"
+                android:src="@drawable/ic_baseline_arrow_forward_ios_24"
                 android:text="@string/access_label"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
