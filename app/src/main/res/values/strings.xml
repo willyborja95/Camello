@@ -100,6 +100,7 @@
     <string name="not_available_device">Deshabilitado</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
+    <string name="sign_out_label">Cerrar Sesión</string>
 
 
 </resources>

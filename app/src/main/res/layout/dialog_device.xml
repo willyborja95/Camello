@@ -9,7 +9,7 @@
         android:layout_gravity="center"
         android:text="@string/title_add_device_fragment"
         android:fontFamily="@font/nunito_bold"
-        android:textColor="@color/black100"
+        android:textColor="@color/black"
         android:textSize="20dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="20dp"

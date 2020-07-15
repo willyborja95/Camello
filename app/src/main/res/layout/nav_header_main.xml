@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/black100"
+            android:textColor="@color/black"
             android:textSize="20dp"
             android:text="@{user.company.companyName}"
             tools:text="App Tec S.A." />
@@ -43,7 +43,7 @@
             android:id="@+id/user_fullname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black100"
+            android:textColor="@color/black"
             android:text="@{user.name}"
             tools:text="Mario Piedrita" />
 
