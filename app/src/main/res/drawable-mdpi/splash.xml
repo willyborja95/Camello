@@ -9,6 +9,6 @@
 
         <bitmap
             android:gravity="center"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_launcher_camello" />
     </item>
 </layer-list>
