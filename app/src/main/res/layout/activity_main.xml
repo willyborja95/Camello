@@ -62,7 +62,7 @@
         android:fitsSystemWindows="true"
         android:paddingTop="50dp"
         app:headerLayout="@layout/nav_header_main"
-        app:itemTextColor="@color/black100"
+        app:itemTextColor="@color/black"
         app:menu="@menu/drawer_menu" />
 
 
