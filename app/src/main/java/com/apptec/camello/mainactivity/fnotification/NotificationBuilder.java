@@ -208,7 +208,7 @@ public class NotificationBuilder implements Runnable {
         Timber.d("Creating the notification");
         // Build the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(App.getContext(), NotificationConstants.MESSAGES_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher_camello)
                 .setContentTitle(notification.getTitle())
                 .setContentText(notification.getText())
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
