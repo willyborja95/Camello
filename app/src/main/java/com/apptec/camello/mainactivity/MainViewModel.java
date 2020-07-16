@@ -222,7 +222,7 @@ public class MainViewModel extends AndroidViewModel {
         new Thread(new HandleButtonClicked(new HandleButtonClicked.Listener() {
             @Override
             public void onErrorOccurred(int title, int message) {
-                Timber.e("Error ocurred");
+                Timber.e("Error occurred");
                 if (_currentProcess.getValue() != null) {
                     _currentProcess.getValue().errorOccurred(title, message);
                 } else {

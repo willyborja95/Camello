@@ -73,8 +73,8 @@ public class Process {
 
 
     public void errorOccurred(int title, int message) {
-        this.error = title;
-        this.titleError = message;
+        this.titleError = title;
+        this.error = message;
         this.processStatus = Process.FAILED;
     }
 
