@@ -103,4 +103,12 @@
     <string name="sign_out_label">Cerrar Sesión</string>
 
 
+    <!-- Diccionario de errores del servidor -->
+    <string name="server_error_600">Fuera de horario laboral</string>
+    <string name="server_error_600_outside_working_hours">Fuera de horario laboral</string>
+    <string name="server_error_601">No se pudo sincronizar la asistencia correctamente</string>
+    <string name="error">Error</string>
+    <string name="unknown_error">Ah ocurrido un error</string>
+
+
 </resources>
