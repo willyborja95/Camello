@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements
 
     MainViewModel mainViewModel;
 
+    BottomNavigationView bottomNavigationView;
+
     // Using data binding
     ActivityMainBinding binding;
 
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);   // Getting the view model
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view);
+        bottomNavigationView = findViewById(R.id.bottom_view);
 
         NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer);
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
@@ -125,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements
                     case R.id.navigation_device:
                         navController.navigate(R.id.deviceFragment);
                         break;
+
                 }
 
                 ft.commit();
@@ -226,10 +229,11 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-
+    /**
+     * I do not know if this method is used or not
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        /** I do not know if this method is used or not*/
         switch (item.getItemId()) {
             case R.id.btn_update_permissions:
                 //permissionFragment2.updatePermissions();
@@ -243,17 +247,19 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    /**
+     * Drawer Item selected logic
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        /**
-         * Drawer Item selected logic
-         */
+
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         switch (menuItem.getItemId()) {
             case R.id.privacy_politic:
-                Intent policiesIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/POLI%CC%81TICA_DE_PRIVACIDAD_APP_REGISTRATE.pdf"));
-                startActivity(policiesIntent);
-                finish();
+
+                // TODO: Navigate to privacy fragment
+                navController.navigate(R.id.privacyFragment);
+
 
                 break;
 

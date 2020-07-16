@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_notificationsFragment_to_permissionFragment"
             app:destination="@id/permissionFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/permissionFragment"
@@ -28,9 +31,20 @@
         <action
             android:id="@+id/action_permissionFragment_to_dialogDevice"
             app:destination="@id/deviceFragment" />
+        <action
+            android:id="@+id/action_permissionFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
     </fragment>
     <fragment
         android:id="@+id/deviceFragment"
         android:name="com.apptec.camello.mainactivity.fdevice.DeviceFragment"
-        android:label="DeviceFragment" />
+        android:label="DeviceFragment">
+        <action
+            android:id="@+id/action_deviceFragment_to_permissionFragment"
+            app:destination="@id/permissionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/privacyFragment"
+        android:name="com.apptec.camello.mainactivity.sidefragments.PrivacyFragment"
+        android:label="PrivacyFragment" />
 </navigation>
