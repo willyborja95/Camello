@@ -223,29 +223,23 @@ public class MainViewModel extends AndroidViewModel {
             @Override
             public void onErrorOccurred(int title, int message) {
                 Timber.e("Error occurred");
-                if (_currentProcess.getValue() != null) {
-                    _currentProcess.getValue().errorOccurred(title, message);
-                } else {
-                    _currentProcess.postValue(new Process(title, message));
-                }
+
+                _currentProcess.postValue(new Process(title, message));
+
             }
 
             @Override
             public void onProcessing() {
-                if (_currentProcess.getValue() != null) {
-                    _currentProcess.getValue().setProcessStatus(Process.PROCESSING);
-                } else {
-                    _currentProcess.postValue(new Process(Process.PROCESSING));
-                }
+
+                _currentProcess.postValue(new Process(Process.PROCESSING));
+
             }
 
             @Override
             public void onSuccessProcess() {
-                if (_currentProcess.getValue() != null) {
-                    _currentProcess.getValue().setProcessStatus(Process.SUCCESSFUL);
-                } else {
-                    _currentProcess.postValue(new Process(Process.SUCCESSFUL));
-                }
+
+                _currentProcess.postValue(new Process(Process.SUCCESSFUL));
+
             }
 
             @Override
