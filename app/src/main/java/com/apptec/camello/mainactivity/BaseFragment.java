@@ -41,8 +41,9 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     public void onResume() {
         super.onResume();
         mainViewModel.getProcess().observe(this, process -> {
+            Timber.d("Observing the process");
             if (process == null) {
-
+                Timber.d("Null process");
             } else if (process.getProcessStatus() == Process.PROCESSING) {
                 onProcessing();
             } else if (process.getProcessStatus() == Process.SUCCESSFUL) {
