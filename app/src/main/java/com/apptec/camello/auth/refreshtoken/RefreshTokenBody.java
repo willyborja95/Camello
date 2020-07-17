@@ -13,4 +13,11 @@ public class RefreshTokenBody {
         this.refreshToken = refreshToken;
     }
 
+    @Override
+    public String toString() {
+        return "RefreshTokenBody{" +
+                "accessToken='" + accessToken + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                '}';
+    }
 }
