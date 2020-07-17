@@ -59,6 +59,7 @@ public class RefreshTokenWorker extends Worker {
         } catch (Exception e) {
             Timber.e(e);
             FirebaseCrashlytics.getInstance().recordException(e);
+            return Result.failure();
         }
 
 
