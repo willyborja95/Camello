@@ -40,11 +40,16 @@ public class RefreshTokenWorker extends Worker {
          * */
         Timber.d("Init doWork");
         AuthInterface authInterface = ApiClient.getClient().create(AuthInterface.class);
+        RefreshTokenBody body = new RefreshTokenBody(ApiClient.getAccessToken(), ApiClient.getRefreshToken());
         Call<GeneralResponse<JsonObject>> refreshCall = authInterface.refreshToken(
-                new RefreshTokenBody(ApiClient.getAccessToken(), ApiClient.getRefreshToken())
+                body
         );
 
         try {
+
+//            Timber.d("Body of the request for request the new token: ");
+//            Timber.d("Body: %s", body);
+//            Timber.d("Url: %s", refreshCall.request().url());
             // With do not enqueue the call because it is no necessary an immediate response from this worker
             Response<GeneralResponse<JsonObject>> response = refreshCall.execute();
             // Get the new access token
@@ -54,7 +59,7 @@ public class RefreshTokenWorker extends Worker {
             Timber.i("Token refreshed");
         } catch (IOException e) {
             e.printStackTrace();
-            Timber.w("Refresh token failure: " + e.getMessage());
+            Timber.w("Refresh token failure: %s", e.getMessage());
             return Result.failure();
         } catch (Exception e) {
             Timber.e(e);
