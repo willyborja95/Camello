@@ -1,10 +1,13 @@
 package com.apptec.camello.mainactivity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.apptec.camello.R;
 
 import timber.log.Timber;
 
@@ -21,6 +24,8 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     // Instance of ViewModel
     protected MainViewModel mainViewModel;
 
+    // Progress dialog
+    protected ProgressDialog dialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,6 +83,16 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
         //  TODO: Show a progress dialog
         Timber.d("Show a progress dialog");
 
+        dialog = new ProgressDialog(this.getContext());
+
+
+        dialog.setCancelable(false);
+
+        dialog.setMessage(getString(R.string.processing));
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setContentView(R.layout.dialog_progress);
+
 
     }
 
@@ -85,6 +100,12 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     public void onSuccessProcess() {
         // TODO: Hide the progress dialog and present something like a check
         Timber.d("Progress success");
+
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+
+
     }
 
 
