@@ -67,6 +67,13 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
      */
     @Override
     public void onErrorOccurred(int title, int message) {
+
+        // Dismiss the progress dialog
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+
+
         // Show error
         Timber.d("onErrorOccurred: " + getString(title) + ". " + getString(message));
         BaseDialog dialog = new BaseDialog(title, message, new DialogListener() {
