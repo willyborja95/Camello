@@ -1,10 +1,13 @@
 package com.apptec.camello.mainactivity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.apptec.camello.R;
 
 import timber.log.Timber;
 
@@ -21,6 +24,8 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     // Instance of ViewModel
     protected MainViewModel mainViewModel;
 
+    // Progress dialog
+    protected ProgressDialog dialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,10 +63,17 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     }
 
     /**
-     * Method to show an error if it happens in some process
+     * Method to show an error if it happens in some process running in background
      */
     @Override
     public void onErrorOccurred(int title, int message) {
+
+        // Dismiss the progress dialog
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+
+
         // Show error
         Timber.d("onErrorOccurred: " + getString(title) + ". " + getString(message));
         BaseDialog dialog = new BaseDialog(title, message, new DialogListener() {
@@ -73,18 +85,53 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
         dialog.show(getChildFragmentManager(), "ErrorDialog");
     }
 
+    /**
+     * Called the moment when  we start a background process
+     * Show a progress dialog
+     */
     @Override
     public void onProcessing() {
-        //  TODO: Show a progress dialog
+        // Show a progress dialog
         Timber.d("Show a progress dialog");
+
+        dialog = new ProgressDialog(this.getContext());
+
+
+        dialog.setCancelable(false);
+
+        dialog.setMessage(getString(R.string.processing));
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setContentView(R.layout.dialog_progress);
 
 
     }
 
+    /**
+     * Called when a process is successful
+     * Present something like a check
+     */
     @Override
     public void onSuccessProcess() {
-        // TODO: Hide the progress dialog and present something like a check
+        // Present something like a check
         Timber.d("Progress success");
+
+        if (dialog != null && dialog.isShowing()) {
+
+            dialog.setContentView(R.layout.dialog_success);
+            dialog.setCancelable(true);
+
+        }
+
+
+    }
+
+
+    protected void showProgressDialog() {
+
+    }
+
+    protected void showSuccessDialog() {
     }
 
 
