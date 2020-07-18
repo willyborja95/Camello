@@ -110,6 +110,7 @@
     <string name="error">Error</string>
     <string name="unknown_error">Ah ocurrido un error</string>
     <string name="processing">Procesando</string>
+    <string name="success">Completado</string>
 
 
 </resources>

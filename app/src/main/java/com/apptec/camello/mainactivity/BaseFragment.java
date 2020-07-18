@@ -63,7 +63,7 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     }
 
     /**
-     * Method to show an error if it happens in some process
+     * Method to show an error if it happens in some process running in background
      */
     @Override
     public void onErrorOccurred(int title, int message) {
@@ -78,9 +78,13 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
         dialog.show(getChildFragmentManager(), "ErrorDialog");
     }
 
+    /**
+     * Called the moment when  we start a background process
+     * Show a progress dialog
+     */
     @Override
     public void onProcessing() {
-        //  TODO: Show a progress dialog
+        // Show a progress dialog
         Timber.d("Show a progress dialog");
 
         dialog = new ProgressDialog(this.getContext());
@@ -96,16 +100,31 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
 
     }
 
+    /**
+     * Called when a process is successful
+     * Present something like a check
+     */
     @Override
     public void onSuccessProcess() {
-        // TODO: Hide the progress dialog and present something like a check
+        // Present something like a check
         Timber.d("Progress success");
 
         if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
+
+            dialog.setContentView(R.layout.dialog_success);
+            dialog.setCancelable(true);
+
         }
 
 
+    }
+
+
+    protected void showProgressDialog() {
+
+    }
+
+    protected void showSuccessDialog() {
     }
 
 
