@@ -3,6 +3,7 @@ package com.apptec.camello.auth;
 import androidx.annotation.Nullable;
 
 import com.apptec.camello.mainactivity.fhome.geofence.StopWorking;
+import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
 
@@ -73,6 +74,7 @@ public class SignOutRunnable implements Runnable {
         SharedPreferencesHelper.putStringValue(Constants.USER_REFRESH_TOKEN, "");
         SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
 
+        RoomHelper.getAppDatabaseInstance().deviceDao().deleteAll();
 
         // Notify the listener, and he should will start the login activity
         if (listener != null) {
