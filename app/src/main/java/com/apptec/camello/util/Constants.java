@@ -81,4 +81,6 @@ public class Constants {
 
     // Constant to put in an intent so the main activity could know if navigate to the notifications fragment
     public static final String NAVIGATE_TO_NOTIFICATIONS_FRAGMENT = "navigate_to_notifications";
+    public static final String CURRENT_DEVICE_ID = "device_id";
+    public static final String CURRENT_WORK_ZONE_ID = "work_zone_id";
 }

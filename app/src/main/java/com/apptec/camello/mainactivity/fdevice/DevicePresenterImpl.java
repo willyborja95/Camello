@@ -80,6 +80,9 @@ public class DevicePresenterImpl {
                         public void run() {
                             Timber.d("Save this device information in the local database");
                             RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(thisDevice);
+                            SharedPreferencesHelper.putIntValue(
+                                    Constants.CURRENT_DEVICE_ID,
+                                    response.body().get("data").getAsJsonObject().get("id").getAsInt());
                             isNeedRegisterDevice.postValue(false);      // Change the flag of the view model
                             SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, false);
                         }
