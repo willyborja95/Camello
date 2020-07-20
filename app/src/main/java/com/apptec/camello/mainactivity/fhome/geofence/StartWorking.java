@@ -3,10 +3,12 @@ package com.apptec.camello.mainactivity.fhome.geofence;
 import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.mainactivity.BaseProcessListener;
+import com.apptec.camello.mainactivity.fhome.AssistanceBody;
 import com.apptec.camello.mainactivity.fhome.AssistanceRetrofitInterface;
 import com.apptec.camello.models.WorkZoneModel;
 import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
+import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
@@ -96,7 +98,7 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
 
                     Timber.i("Request code: %s", response.code());
 
-
+                    SharedPreferencesHelper.putIntValue(Constants.CURRENT_WORK_ZONE_ID, workZoneModel.getId());
                     changeWorkingStatus();
 
                     // Notify the listener
@@ -174,9 +176,17 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
     }
 
     private Call<GeneralResponse<JsonObject>> getCall(AssistanceRetrofitInterface retrofitInterface, WorkZoneModel workZoneModel) {
+
+        // Generate the body
+        AssistanceBody assistanceBody = new AssistanceBody(
+                SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_DEVICE_ID, 0),
+                workZoneModel.getId()
+        );
+
         Call<GeneralResponse<JsonObject>> call = retrofitInterface.registerAssistance(
                 ApiClient.getAccessToken(),
-                workZoneModel
+                assistanceBody
+
         );
         return call;
     }

@@ -5,6 +5,7 @@ import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.auth.AuthHelper;
 import com.apptec.camello.mainactivity.BaseProcessListener;
+import com.apptec.camello.mainactivity.fhome.AssistanceBody;
 import com.apptec.camello.mainactivity.fhome.AssistanceRetrofitInterface;
 import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
@@ -153,8 +154,16 @@ public class StopWorking implements Runnable {
     }
 
     private Call<GeneralResponse<JsonObject>> getCall(@NotNull AssistanceRetrofitInterface retrofitInterface) {
+
+        // Create the body
+        AssistanceBody assistanceBody = new AssistanceBody(
+                SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_DEVICE_ID, -1),
+                SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_WORK_ZONE_ID, -1)
+        );
+
         return retrofitInterface.registerAssistance(
-                ApiClient.getAccessToken()
+                ApiClient.getAccessToken(),
+                assistanceBody
         );
     }
 

@@ -297,6 +297,7 @@ public class LoggerRunnable implements Runnable {
             if (!needsToClaimThisDevice) {
                 // Save the data.device because the user already has register this phone
                 new Thread(() -> {
+                    SharedPreferencesHelper.putIntValue(Constants.CURRENT_DEVICE_ID, data.device.getId());
                     RoomHelper.getAppDatabaseInstance().deviceDao().insertOrReplace(data.device);
                 }).start();
             }
