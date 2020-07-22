@@ -1,5 +1,6 @@
 package com.apptec.camello.mainactivity.fpermission.ui;
 
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -34,11 +35,8 @@ import timber.log.Timber;
 
 /**
  * This dialog is for let the user create a new permission
- *
- * @deprecated because it will be replaced by the {@link CustomDialogPermission}
  */
-@Deprecated
-public class DialogPermission extends DialogFragment {
+public class CustomDialogPermission extends DialogFragment {
 
 
     // UI elements
@@ -112,7 +110,7 @@ public class DialogPermission extends DialogFragment {
                 })
                 .setNegativeButton(getString(R.string.permission_negative_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        DialogPermission.this.getDialog().cancel();
+                        CustomDialogPermission.this.getDialog().cancel();
 
                     }
                 });
@@ -143,18 +141,13 @@ public class DialogPermission extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                final TimePickerDialog tpStartDate;
-                tpStartDate = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                CustomTimePickerDialog timePickerDialog = new CustomTimePickerDialog(new CustomTimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        startDate.set(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
-                        strStartDate = dateFormat.format(startDate.getTime());
-                        txtStartDate.setText(strStartDate);
-                        startDate.add(Calendar.MONTH, -1);
-
+                    public void onTimeSet(int selectedHour, int selectTime) {
+                        Timber.d("onTimeSet");
                     }
-                }, startDate.get(Calendar.HOUR_OF_DAY), startDate.get(Calendar.MINUTE), true);//Yes 24 hour time
-                tpStartDate.hide();
+                });
+                timePickerDialog.show(getChildFragmentManager(), "Tag");
 
 
                 DatePickerDialog dpStartDate = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
@@ -165,7 +158,7 @@ public class DialogPermission extends DialogFragment {
                         startDate.set(year, monthOfYear, dayOfMonth);
                         strStartDate = dateFormat.format(startDate.getTime());
                         txtStartDate.setText(strStartDate);
-                        tpStartDate.show();
+
                     }
                 }, startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
 
