@@ -114,17 +114,21 @@ public class MainActivity extends AppCompatActivity implements
 
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_home:
+                        showBottomView();
                         navController.navigate(R.id.homeFragment);
                         break;
                     case R.id.navigation_notifications:
+                        showBottomView();
                         navController.navigate(R.id.notificationsFragment);
                         break;
 
                     case R.id.navigation_permission:
+                        showBottomView();
                         navController.navigate(R.id.permissionFragment);
                         break;
 
                     case R.id.navigation_device:
+                        showBottomView();
                         navController.navigate(R.id.deviceFragment);
                         break;
 
@@ -257,16 +261,17 @@ public class MainActivity extends AppCompatActivity implements
         switch (menuItem.getItemId()) {
             case R.id.privacy_politic:
 
-                // TODO: Navigate to privacy fragment
+                hideBottomView();
                 navController.navigate(R.id.privacyFragment);
 
 
                 break;
 
             case R.id.user_manual:
-                Intent guideIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/Manual_de_Usuario.pdf"));
-                startActivity(guideIntent);
-                finish();
+
+                hideBottomView();
+                navController.navigate(R.id.userManualFragment);
+
                 break;
 
             case R.id.logout_button:
@@ -275,6 +280,24 @@ public class MainActivity extends AppCompatActivity implements
                 break;
         }
         return true;
+    }
+
+
+    /**
+     * Method to hide the bottom view
+     */
+    public void hideBottomView() {
+        bottomNavigationView.setBackgroundColor(getColor(R.color.colorPrimary));
+        bottomNavigationView.setVisibility(View.GONE);
+
+    }
+
+    /**
+     * Method to show the bottom view
+     */
+    public void showBottomView() {
+        bottomNavigationView.setVisibility(View.VISIBLE);
+
     }
 
 
