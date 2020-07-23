@@ -147,7 +147,7 @@ public class CustomDialogPermission extends DialogFragment {
                         Timber.d("onTimeSet");
                     }
                 });
-                timePickerDialog.show(getChildFragmentManager(), "Tag");
+
 
 
                 DatePickerDialog dpStartDate = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
@@ -158,6 +158,7 @@ public class CustomDialogPermission extends DialogFragment {
                         startDate.set(year, monthOfYear, dayOfMonth);
                         strStartDate = dateFormat.format(startDate.getTime());
                         txtStartDate.setText(strStartDate);
+                        timePickerDialog.show(getChildFragmentManager(), "Tag");
 
                     }
                 }, startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
