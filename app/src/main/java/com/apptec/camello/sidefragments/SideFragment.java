@@ -1,4 +1,4 @@
-package com.apptec.camello.mainactivity.sidefragments;
+package com.apptec.camello.sidefragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,13 +11,18 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.apptec.camello.R;
-import com.apptec.camello.databinding.FragmentPrivacyPolicyBinding;
+import com.apptec.camello.databinding.FragmentWebViewBinding;
 
-public class PrivacyFragment extends Fragment {
+import timber.log.Timber;
+
+/**
+ * Base fragment for the side fragments
+ */
+public abstract class SideFragment extends Fragment {
 
 
     // Using data binding
-    FragmentPrivacyPolicyBinding binding;
+    FragmentWebViewBinding binding;
 
 
     /**
@@ -35,9 +40,24 @@ public class PrivacyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_privacy_policy, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_web_view, container, false);
+
+
+        Timber.d("On create fragment");
+
+
+        getActivity().setTheme(R.style.AppTheme_NoActionBar);
+
+        binding.webView.loadUrl(getURL());
 
 
         return binding.getRoot();
     }
+
+    /**
+     * @return The url to be presented in the fragment
+     */
+    public abstract String getURL();
+
+
 }

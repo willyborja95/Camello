@@ -45,6 +45,10 @@
     </fragment>
     <fragment
         android:id="@+id/privacyFragment"
-        android:name="com.apptec.camello.mainactivity.sidefragments.PrivacyFragment"
+        android:name="com.apptec.camello.sidefragments.PrivacyFragment"
         android:label="PrivacyFragment" />
+    <fragment
+        android:id="@+id/userManualFragment"
+        android:name="com.apptec.camello.sidefragments.UserManualFragment"
+        android:label="UserManualFragment" />
 </navigation>
