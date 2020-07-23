@@ -43,6 +43,8 @@
     <!-- UI string values -->
     <string name="empty_notifications_message">No hay notificaciones nuevas en este momento.</string>
     <string name="notifications_fragment_title">Notificaciones</string>
+    <string name="privacy_policy_fragment_title">Política de privacidad</string>
+    <string name="user_manual_fragment_title">Manual de usuario</string>
     <string name="permissions_fragment_title">Permisos</string>
     <string name="parameter_missing_error">Parámetro requerido</string>
     <string name="login_progress_dialog_message">Autenticando usuario</string>

@@ -1,5 +1,6 @@
 package com.apptec.camello.sidefragments;
 
+import com.apptec.camello.R;
 import com.apptec.camello.util.Constants;
 
 /**
@@ -14,6 +15,14 @@ public class UserManualFragment extends SideFragment {
     @Override
     public String getURL() {
         return Constants.URL_USER_MANUAL;
+    }
+
+    /**
+     * @return The resource id of with the title of the fragment
+     */
+    @Override
+    public String getFragmentsTitle() {
+        return getString(R.string.user_manual_fragment_title);
     }
 
 }
