@@ -9,9 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentWebViewBinding;
+import com.apptec.camello.mainactivity.MainViewModel;
 
 import timber.log.Timber;
 
@@ -45,6 +47,11 @@ public abstract class SideFragment extends Fragment {
 
         Timber.d("On create fragment");
 
+        // Getting the main view model
+        MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+
+        // set the title
+        mainViewModel.setActiveFragmentName(getFragmentsTitle());
 
         getActivity().setTheme(R.style.AppTheme_NoActionBar);
 
@@ -58,6 +65,11 @@ public abstract class SideFragment extends Fragment {
      * @return The url to be presented in the fragment
      */
     public abstract String getURL();
+
+    /**
+     * @return The resource id of with the title of the fragment
+     */
+    public abstract String getFragmentsTitle();
 
 
 }

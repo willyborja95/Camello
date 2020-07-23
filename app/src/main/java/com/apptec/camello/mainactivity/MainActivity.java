@@ -25,7 +25,6 @@ import com.apptec.camello.BuildConfig;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.ActivityMainBinding;
 import com.apptec.camello.loginactivity.LoginActivity;
-import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -50,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements
 
     BottomNavigationView bottomNavigationView;
 
+    // Side menu (We put it her to replace when entered to the web view fragments)
+    ImageButton menuRight;
+
+
     // Using data binding
     ActivityMainBinding binding;
 
@@ -69,14 +72,13 @@ public class MainActivity extends AppCompatActivity implements
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
 
 
-        /** For control the side drawer onNavigationItemSelected */
+        // For control the side drawer onNavigationItemSelected
         drawerNavigationView.setNavigationItemSelectedListener(this);
 
 
-        /**
-         * Open or close the side menu
-         */
-        ImageButton menuRight = findViewById(R.id.image_button_side_menu);
+        // Open or close the side menu
+
+        menuRight = findViewById(R.id.image_button_side_menu);
         menuRight.setOnClickListener(v -> {
 
             if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -114,21 +116,21 @@ public class MainActivity extends AppCompatActivity implements
 
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_home:
-                        showBottomView();
+                        setUpNormalNavigation();
                         navController.navigate(R.id.homeFragment);
                         break;
                     case R.id.navigation_notifications:
-                        showBottomView();
+                        setUpNormalNavigation();
                         navController.navigate(R.id.notificationsFragment);
                         break;
 
                     case R.id.navigation_permission:
-                        showBottomView();
+                        setUpNormalNavigation();
                         navController.navigate(R.id.permissionFragment);
                         break;
 
                     case R.id.navigation_device:
-                        showBottomView();
+                        setUpNormalNavigation();
                         navController.navigate(R.id.deviceFragment);
                         break;
 
@@ -233,23 +235,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    /**
-     * I do not know if this method is used or not
-     */
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.btn_update_permissions:
-                //permissionFragment2.updatePermissions();
-                break;
-            case R.id.btn_logout:
-                SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
-                mainViewModel.logout();
-                break;
-        }
-        return true;
-    }
-
 
     /**
      * Drawer Item selected logic
@@ -261,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements
         switch (menuItem.getItemId()) {
             case R.id.privacy_politic:
 
-                hideBottomView();
+                setUpWebViewNavigation();
                 navController.navigate(R.id.privacyFragment);
 
 
@@ -269,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements
 
             case R.id.user_manual:
 
-                hideBottomView();
+                setUpWebViewNavigation();
                 navController.navigate(R.id.userManualFragment);
 
                 break;
@@ -286,8 +271,18 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Method to hide the bottom view
      */
-    public void hideBottomView() {
-        bottomNavigationView.setBackgroundColor(getColor(R.color.colorPrimary));
+    public void setUpWebViewNavigation() {
+
+        // Set an arrow as icon
+        menuRight.setImageDrawable(getDrawable(R.drawable.ic_back_arrow));
+
+        // Set a click listener
+        menuRight.setOnClickListener(v -> {
+            setUpNormalNavigation();
+            navController.navigate(R.id.homeFragment);
+        });
+
+        // Hide the bottom menu
         bottomNavigationView.setVisibility(View.GONE);
 
     }
@@ -295,7 +290,23 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Method to show the bottom view
      */
-    public void showBottomView() {
+    public void setUpNormalNavigation() {
+
+        // Set an the hamburger icon as icon
+        menuRight.setImageDrawable(getDrawable(R.drawable.ic_drawer_menu));
+
+
+        // Set the normal listener
+        menuRight.setOnClickListener(v -> {
+
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                binding.drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        // Show the bottom view
         bottomNavigationView.setVisibility(View.VISIBLE);
 
     }
