@@ -16,7 +16,7 @@ import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentPermissionBinding;
 import com.apptec.camello.mainactivity.BaseFragment;
 import com.apptec.camello.mainactivity.MainViewModel;
-import com.apptec.camello.mainactivity.fpermission.ui.CustomDialogPermission;
+import com.apptec.camello.mainactivity.fpermission.ui.DialogPermission;
 import com.apptec.camello.mainactivity.fpermission.ui.PermissionAdapter;
 
 import java.util.List;
@@ -83,7 +83,7 @@ public class PermissionFragment extends BaseFragment {
                      */
                     Timber.d("Open dialog");
 
-                    CustomDialogPermission dialogPermission = new CustomDialogPermission();
+                    DialogPermission dialogPermission = new DialogPermission();
                     dialogPermission.show(getFragmentManager(), PermissionFragment.class.getSimpleName());
 
 
