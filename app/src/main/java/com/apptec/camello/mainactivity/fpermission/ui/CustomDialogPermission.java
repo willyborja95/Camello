@@ -143,8 +143,10 @@ public class CustomDialogPermission extends DialogFragment {
             public void onClick(View v) {
                 CustomTimePickerDialog timePickerDialog = new CustomTimePickerDialog(new CustomTimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onTimeSet(int selectedHour, int selectTime) {
+                    public void onTimeSet(int selectedHour, int selectedMinute) {
                         Timber.d("onTimeSet");
+                        Timber.d("Selected hour: " + selectedHour + " selected minute: " + selectedMinute);
+
                     }
                 });
 
@@ -191,7 +193,7 @@ public class CustomDialogPermission extends DialogFragment {
                         txtEndDate.setText(strEndDate);
                         endDate.add(Calendar.MONTH, -1);
                     }
-                }, endDate.get(Calendar.HOUR_OF_DAY), endDate.get(Calendar.MINUTE), true);//Yes 24 hour time
+                }, endDate.get(Calendar.HOUR_OF_DAY), endDate.get(Calendar.MINUTE), false);//Yes 24 hour time
                 tpEndDate.hide();
 
 
