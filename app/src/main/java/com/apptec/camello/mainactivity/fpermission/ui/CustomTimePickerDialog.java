@@ -79,7 +79,7 @@ public class CustomTimePickerDialog extends DialogFragment {
                 .setPositiveButton(getString(R.string.notification_ok_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.onTimeSet(hourPicker.getValue(), minutePicker.getValue());
+                        listener.onTimeSet(getSelectedHourIn24Format(), minutePicker.getValue());
                         Timber.d("Ok clicked");
                         CustomTimePickerDialog.this.getDialog().cancel();
                     }
@@ -94,7 +94,7 @@ public class CustomTimePickerDialog extends DialogFragment {
     private void setUpInitialValues() {
 
         // Set max and min values for pickers
-        hourPicker.setMinValue(0);
+        hourPicker.setMinValue(1);
         hourPicker.setMaxValue(12);
 
         minutePicker.setMinValue(0);
@@ -175,6 +175,25 @@ public class CustomTimePickerDialog extends DialogFragment {
         minutePicker = viewDialog.findViewById(R.id.number_picker_minute);
         amButton = viewDialog.findViewById(R.id.text_clickable_am);
         pmButton = viewDialog.findViewById(R.id.text_clickable_pm);
+
+    }
+
+    /**
+     * Verify if the selected hour is am or pm
+     *
+     * @return the selected hour in 24 hour format
+     */
+    private int getSelectedHourIn24Format() {
+        if (amSelected) {
+            if (hourPicker.getValue() == 12) {
+                return 0;
+            }
+            return hourPicker.getValue();
+        }
+        if (hourPicker.getValue() == 12) {
+            return 12;
+        }
+        return hourPicker.getValue() + 12;
 
     }
 
