@@ -207,32 +207,48 @@ public class MainActivity extends AppCompatActivity implements
             // If user interaction was interrupted, the permission request is cancelled and you
             // receive empty arrays.
             Timber.i("User interaction was cancelled.");
-        } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Timber.i("Permission granted.");
-
         } else {
-            Timber.d("Permission denied");
-            // Permission denied.
 
-            // Notify the user via a SnackBar that they have rejected a core permission for the
-            // app, which makes the Activity useless. In a real app, core permissions would
-            // typically be best requested during a welcome-screen flow.
-            showSnackBar(R.string.permission_denied_explanation, R.string.settings,
-                    view -> {
-                        // Build intent that displays the App settings screen.
-                        Intent intent = new Intent();
-                        intent.setAction(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package",
-                                BuildConfig.APPLICATION_ID, null);
-                        intent.setData(uri);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    });
+            if (isSomePermissionGranted(grantResults)) {
+                Timber.d("Permission granted");
+            } else {
+                // Permission denied.
+                Timber.w("Permission denied");
 
+                // Notify the user via a SnackBar that they have rejected a core permission for the
+                // app, which makes the Activity useless. In a real app, core permissions would
+                // typically be best requested during a welcome-screen flow.
+                showSnackBar(R.string.permission_denied_explanation, R.string.settings,
+                        view -> {
+                            // Build intent that displays the App settings screen.
+                            Intent intent = new Intent();
+                            intent.setAction(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package",
+                                    BuildConfig.APPLICATION_ID, null);
+                            intent.setData(uri);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                        });
+            }
         }
 
+    }
+
+    /**
+     * It will receive an array of permission results and return true is some one of them is granted.
+     *
+     * @param array of results
+     * @return true when someone is granted
+     */
+    private boolean isSomePermissionGranted(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
