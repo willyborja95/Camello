@@ -1,12 +1,7 @@
 package com.apptec.camello.loginactivity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.telephony.TelephonyManager;
-
 import androidx.lifecycle.MutableLiveData;
 
-import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.auth.LoggerRunnable;
 import com.apptec.camello.auth.LoginDataValidator;
@@ -54,37 +49,7 @@ public class LoginPresenter {
 
 
 
-    public void storageIMEI() {
-        /**
-         *
-         * Read the IMEI and storage it on an shared preferences's variable.
-         * Change to false the flag of "is first running"
-         */
 
-
-        /** Read the IMEI and storage it on an shared preferences's variable. */
-        TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(App.getContext().TELEPHONY_SERVICE);
-        String imei = "";
-
-        // Getting the imei
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                // The permission eed to be granted first
-            } else {
-                if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
-                    imei = telephonyManager.getDeviceId();
-                }
-                if (android.os.Build.VERSION.SDK_INT >= 26) {
-                    imei = telephonyManager.getImei();
-                }
-                Timber.d("Got IMEI");
-            }
-        }
-        // Saving it on shared preferences
-        SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
-        Timber.d("IMEI: " + imei);
-
-    }
 
     /**
      * This method is called from the MainActivity because at this point we will already have
@@ -104,7 +69,6 @@ public class LoginPresenter {
 
         Timber.d("Handling login process");
 
-        this.storageIMEI();
 
         LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
 

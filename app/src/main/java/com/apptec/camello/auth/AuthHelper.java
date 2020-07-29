@@ -18,11 +18,12 @@ import com.apptec.camello.util.Constants;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import timber.log.Timber;
@@ -69,59 +70,59 @@ public class AuthHelper {
      * Method that return the unique code for the device identifier
      */
     public static String getDeviceUniqueCode() {
-
+        String uniqueCode = "invalid";
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-
+            Timber.d("Unique code created by the imei");
             // Read the IMEI
-            return getLocalImei();
+            uniqueCode = getLocalImei();
 
 
         } else {
             // If the version us up that 29, then provide a unique code from a key file
+            Timber.d("In API >= 29 return a generated a unique code");
 
-
-            File file = new File(Constants.KEY_FILE_NAME);
+            File file = new File(App.getContext().getFilesDir(), Constants.KEY_FILE_NAME);
             if (file.exists()) {                // If the key file exist
-
+                Timber.d("Choose the previous generated key from the key file");
                 // Read the key from the file
-                String key = readFromKeyFile();
+                uniqueCode = readFromKeyFile();
 
-                return key;
             } else {                              // If the key file do not exist
                 // Create a new key and save it into the key file
-
+                Timber.d("Key file does not exist. Create a new one.");
                 // Create a new key
-                String newKey = generateKey();
 
+                uniqueCode = generateKey();
 
                 // Storage the key on the key file
 
-                storageKey(newKey);
-
-                return newKey;
+                storageKey(uniqueCode);
 
 
             }
 
 
         }
+        Timber.d("Unique code: %s", uniqueCode);
+        return uniqueCode;
 
     }
 
     /**
-     * Save the key into the key file
+     * Save the uniqueCode into the key file
      *
-     * @param key new key to be saved
+     * @param uniqueCode new uniqueCode to be saved
      */
-    private static void storageKey(String key) {
+    private static void storageKey(String uniqueCode) {
+
+
         try {
-            OutputStreamWriter outputStreamWriter =
-                    new OutputStreamWriter(App.getContext().openFileOutput("config.txt",
-                            Context.MODE_PRIVATE));
-            outputStreamWriter.write(key);
-            outputStreamWriter.close();
+            FileOutputStream fos = App.getContext().openFileOutput(Constants.KEY_FILE_NAME, Context.MODE_PRIVATE);
+            fos.write(uniqueCode.getBytes());
+        } catch (FileNotFoundException e) {
+            Timber.e(e, "File not fount");
         } catch (IOException e) {
-            Timber.e(e, "Failed to write key file");
+            Timber.e(e);
         }
 
 
@@ -133,6 +134,7 @@ public class AuthHelper {
      * @return GUID
      */
     private static String generateKey() {
+        Timber.d("Generating a random unique code");
 
         return UUID.randomUUID().toString();
 
@@ -144,31 +146,29 @@ public class AuthHelper {
      * @return the key storage in the key file
      */
     private static String readFromKeyFile() {
-        String ret = "";
+        Timber.d("Reading from file");
 
+        StringBuilder stringBuilder = new StringBuilder();
         try {
-            InputStream inputStream = App.getContext().openFileInput(Constants.KEY_FILE_NAME);
+            FileInputStream fis = App.getContext().openFileInput(Constants.KEY_FILE_NAME);
 
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
+            InputStreamReader inputStreamReader =
+                    new InputStreamReader(fis, StandardCharsets.UTF_8);
 
-                while ((receiveString = bufferedReader.readLine()) != null) {
-                    stringBuilder.append("\n").append(receiveString);
-                }
+            BufferedReader reader = new BufferedReader(inputStreamReader);
 
-                inputStream.close();
-                ret = stringBuilder.toString();
+            String line = reader.readLine();
+            while (line != null) {
+                stringBuilder.append(line).append('\n');
+                line = reader.readLine();
             }
-        } catch (FileNotFoundException e) {
-            Timber.e(e, "Key file not fount");
         } catch (IOException e) {
-            Timber.e(e, "Can not read from key file");
+            // Error occurred when opening raw file for reading.
+        } finally {
+            String contents = stringBuilder.toString();
+            return contents;
         }
 
-        return ret;
     }
 
 
@@ -178,7 +178,7 @@ public class AuthHelper {
      */
     private static String getLocalImei() {
 
-        String imei = SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "invalid");
+        String imei = SharedPreferencesHelper.getStringValue(Constants.LOCAL_IMEI, "invalid");
         if (imei.equals("invalid")) {
             // Read the IMEI and storage it on an shared preferences's variable.
             TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -198,7 +198,7 @@ public class AuthHelper {
                 }
             }
             // Saving it on shared preferences
-            SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
+            SharedPreferencesHelper.putStringValue(Constants.LOCAL_IMEI, imei);
             Timber.d("Local IMEI: %s", imei);
 
         }
