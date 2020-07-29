@@ -12,10 +12,10 @@ import com.apptec.camello.R;
 
 import timber.log.Timber;
 
+/**
+ * View model for the login activity
+ */
 public class LoginViewModel extends AndroidViewModel {
-    /**
-     * View model for the login activity
-     */
 
     // This variable help to show error is the form in the ui is wrong
     public MutableLiveData<LoginFormState> loginFormState;
@@ -32,9 +32,11 @@ public class LoginViewModel extends AndroidViewModel {
     // Presenter that do hard work
     private LoginPresenter loginPresenter;
 
-
+    /**
+     * Constructor
+     */
     public LoginViewModel(@NonNull Application application) {
-        /** Constructor */
+
         super(application);
 
         loginFormState = new MutableLiveData<>();
@@ -48,15 +50,14 @@ public class LoginViewModel extends AndroidViewModel {
 
     }
 
+    /**
+     * Verify if is there a previous user session active
+     * <p>
+     * Change the login result if yes and the login activity will know that she should navigate
+     * to the main activity
+     */
     private void verifyPreviousLogin() {
-        /**
-         * Verify if is there a previous user session active
-         *
-         * Change the login result if yes and the login activity will know that she should navigate
-         * to the main activity
-         */
         loginPresenter.verifyPreviousLogin(loginProgress);
-
     }
 
     /**
@@ -71,15 +72,12 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     /**
-     *
+     * Called when the login button is clicked
+     * - Check if the permission for read IMEI is granted
+     * - Validates username and password
      */
     public void loginClicked(String email, String password) {
-        /**
-         * Called when the login button is clicked
-         * - Check if the permission for read IMEI is granted
-         * - Validates username and password
-         *
-         */
+
         // Validates data
         if (!isUserNameValid(email) || !isPasswordValid(password)) {
             Timber.d("Invalid form");
@@ -99,11 +97,7 @@ public class LoginViewModel extends AndroidViewModel {
                 // Say the activity to ask the permission
                 shouldRequestPermission.setValue(true);
             }
-
-
         }
-
-
     }
 
 

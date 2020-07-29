@@ -89,4 +89,5 @@ public class Constants {
     public static final String URL_USER_MANUAL = "https://camello.com.ec/politica-de-privacidad/"; // TODO: Change for the real url
 
 
+    public static final String KEY_FILE_NAME = "key_file.txt";
 }

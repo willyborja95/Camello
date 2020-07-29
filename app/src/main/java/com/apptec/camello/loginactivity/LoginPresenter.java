@@ -86,20 +86,21 @@ public class LoginPresenter {
 
     }
 
-    public void handleLogin(MutableLiveData<LoginProgress> loginResult, String email, String password) {
-        /**
-         * This method is called from the MainActivity because at this point we will already have
-         * the user data.
-         *
-         * Here we request the information about this device.
-         *
-         * The process is describe in this flowchart:
-         * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
-         * iI you do not have access to it. Contact Renato with the email renatojobal@gmail.com
-         *
-         *
+    /**
+     * This method is called from the MainActivity because at this point we will already have
+     * the user data.
+     * <p>
+     * Here we request the information about this device.
+     * <p>
+     * The process is describe in this flowchart:
+     * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
+     * iI you do not have access to it. Contact Renato with the email renatojobal@gmail.com
      *
+     * @param loginResult listener of the progress
+     * @param email       user email
+     * @param password    user password
      */
+    public void handleLogin(MutableLiveData<LoginProgress> loginResult, String email, String password) {
 
         Timber.d("Handling login process");
 
@@ -109,7 +110,6 @@ public class LoginPresenter {
 
         // Creates the body
         UserCredential userCredential = new UserCredential(email, password);
-
 
         Call<GeneralResponse<LoginDataResponse>> call = loginRetrofitInterface.login(userCredential);
 
