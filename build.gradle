@@ -16,6 +16,7 @@ buildscript {
         version_calendar_view = '0.3.1'
         version_gson = '2.8.1'
         version_crashlytics = '2.2.0'
+        version_security_library = '1.0.0-rc02'
     }
 
     repositories {
@@ -26,7 +27,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.google.gms:google-services:4.3.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$version_navigation"
