@@ -27,18 +27,17 @@ import java.util.UUID;
 
 import timber.log.Timber;
 
+/**
+ * This class will contain auth stuff
+ * <p>
+ * - This class will login and logout the user
+ * - Manage for device permissions stuff
+ */
 public class AuthHelper {
-    /**
-     * This class will contain auth stuff
-     * <p>
-     * - This class will login and logout the user
-     * - Manage for device permissions stuff
-     */
+
 
     // Work manager
     private static WorkManager workManager = WorkManager.getInstance(App.getContext());
-
-
 
 
     /**
@@ -177,32 +176,34 @@ public class AuthHelper {
      * Read the IMEI and storage it on an shared preferences's variable.
      * Change to false the flag of "is first running"
      */
-
     private static String getLocalImei() {
 
+        String imei = SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "invalid");
+        if (imei.equals("invalid")) {
+            // Read the IMEI and storage it on an shared preferences's variable.
+            TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(Context.TELEPHONY_SERVICE);
 
-        // Read the IMEI and storage it on an shared preferences's variable.
-        TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(App.getContext().TELEPHONY_SERVICE);
-        String imei = "";
-
-        // Getting the imei
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                // The permission need to be granted first
-            } else {
-                if (Build.VERSION.SDK_INT < 26) {
-                    imei = telephonyManager.getDeviceId();
+            // Getting the imei
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    // The permission need to be granted first
+                } else {
+                    if (Build.VERSION.SDK_INT < 26) {
+                        imei = telephonyManager.getDeviceId();
+                    }
+                    if (android.os.Build.VERSION.SDK_INT >= 26) {
+                        imei = telephonyManager.getImei();
+                    }
+                    Timber.d("Got IMEI");
                 }
-                if (android.os.Build.VERSION.SDK_INT >= 26) {
-                    imei = telephonyManager.getImei();
-                }
-                Timber.d("Got IMEI");
             }
+            // Saving it on shared preferences
+            SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
+            Timber.d("Local IMEI: %s", imei);
+
         }
-        // Saving it on shared preferences
-        SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
-        Timber.d("Local IMEI: %s", imei);
         return imei;
+
 
     }
 
