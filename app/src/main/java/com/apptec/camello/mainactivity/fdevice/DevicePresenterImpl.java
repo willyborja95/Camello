@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.apptec.camello.auth.AuthHelper;
 import com.apptec.camello.models.DeviceModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
@@ -48,7 +49,7 @@ public class DevicePresenterImpl {
         DeviceModel thisDevice = new DeviceModel();
         thisDevice.setName(name);
         thisDevice.setModel(model);
-        thisDevice.setIdentifier(SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, ""));
+        thisDevice.setIdentifier(AuthHelper.getDeviceUniqueCode());
         thisDevice.setPushToken(SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, ""));
         thisDevice.setActive(true);
 

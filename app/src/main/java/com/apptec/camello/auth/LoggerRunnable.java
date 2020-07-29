@@ -1,13 +1,8 @@
 package com.apptec.camello.auth;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.telephony.TelephonyManager;
-
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.loginactivity.LoginProgress;
 import com.apptec.camello.mainactivity.fdevice.DeviceRetrofitInterface;
@@ -60,7 +55,7 @@ public class LoggerRunnable implements Runnable {
     @Override
     public void run() {
 
-        String localImei = getLocalImei();
+
         // At this point we already have the login response
         // We only need to compare the data.device and follow the flowchart
 
@@ -68,12 +63,12 @@ public class LoggerRunnable implements Runnable {
             // Request device info
             // set "advise the user" to false
             // set "needs to claim this device" to true
-            requestDeviceInfo(localImei, false, true);
+            requestDeviceInfo(AuthHelper.getDeviceUniqueCode(), false, true);
 
         } else {
             // Then userImei = localImei ?
 
-            if (SharedPreferencesHelper.getStringValue(Constants.CURRENT_IMEI, "None").equals(data.device.getIdentifier())) {
+            if (AuthHelper.getDeviceUniqueCode().equals(data.device.getIdentifier())) {
                 // Update firebase token if are not the same tokens
                 if (!isTheSameFirebaseToken(data.device.getPushToken())) {
                     String newFirebaseToken = SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, "Error");
@@ -88,7 +83,7 @@ public class LoggerRunnable implements Runnable {
                 // Request device info
                 // set "advise the user" to true
                 // set "needs to claim this device" to true
-                requestDeviceInfo(localImei, true, true);
+                requestDeviceInfo(AuthHelper.getDeviceUniqueCode(), true, true);
             }
 
         }
@@ -96,12 +91,12 @@ public class LoggerRunnable implements Runnable {
 
     }
 
-
+    /**
+     * This method will save the user into the database and the company
+     * We are running in a new thread so we need directly
+     */
     public void saveUserAndCompany(UserModel user, CompanyModel company, List<WorkZoneModel> workZoneModels) {
-        /**
-         * This method will save the user into the database and the company
-         * We are running in a new thread so we need directly
-         */
+
         new Thread(() -> {
             RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(user);
             RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(company);
@@ -111,20 +106,19 @@ public class LoggerRunnable implements Runnable {
 
     }
 
-    public void requestDeviceInfo(String localImei, boolean adviseTheUser, @Nullable boolean needsToClaimThisDevice) {
-        /**
-         *
-         * Here we request the information about this device.
-         *
-         * @param localImei = current phone's imei
-         * @param userHasPreviousDevice = this boolean will be used for know if we have to send or
-         *                              an advice to the user about losing his registration with his
-         *                              previous phone
-         * @param needsToClaimThisDevice = param to know if we should make the user register this device
-         *                               by default it would be false ai this point and we need this variable
-         *                               to send it to the login method
-         *
-         */
+    /**
+     * Here we request the information about this device.
+     *
+     * @param uniqueDeviceCode       = current phone's imei or the key generated
+     * @param adviseTheUser          = this boolean will be used for know if we have to send or
+     *                               an advice to the user about losing his registration with his
+     *                               previous phone
+     * @param needsToClaimThisDevice = param to know if we should make the user register this device
+     *                               by default it would be false ai this point and we need this variable
+     *                               to send it to the login method
+     */
+    public void requestDeviceInfo(String uniqueDeviceCode, boolean adviseTheUser, @Nullable boolean needsToClaimThisDevice) {
+
         Timber.d("Need to request device info");
 
         DeviceRetrofitInterface deviceRetrofitInterface = ApiClient.getClient().create(DeviceRetrofitInterface.class);
@@ -133,7 +127,7 @@ public class LoggerRunnable implements Runnable {
                 // it into the local storage yet, so we can use ApiClient.getAccessToken())
                 data.accessToken,
                 // IMEI:
-                localImei
+                uniqueDeviceCode
         );
 
         call.enqueue(
@@ -162,8 +156,8 @@ public class LoggerRunnable implements Runnable {
                     /**
                      * Simple method to know if the device is available
                      *
-                     * @param body
-                     * @return
+                     * @param body the body response
+                     * @return true when the device is avaialble
                      */
                     private boolean isDeviceAvailable(GeneralResponse body) {
                         try {
@@ -183,38 +177,6 @@ public class LoggerRunnable implements Runnable {
 
     }
 
-    private String getLocalImei() {
-        /**
-         *
-         * Read the IMEI and storage it on an shared preferences's variable.
-         * Change to false the flag of "is first running"
-         */
-
-
-        /** Read the IMEI and storage it on an shared preferences's variable. */
-        TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(App.getContext().TELEPHONY_SERVICE);
-        String imei = "";
-
-        // Getting the imei
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                // The permission need to be granted first
-            } else {
-                if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
-                    imei = telephonyManager.getDeviceId();
-                }
-                if (android.os.Build.VERSION.SDK_INT >= 26) {
-                    imei = telephonyManager.getImei();
-                }
-                Timber.d("Got IMEI");
-            }
-        }
-        // Saving it on shared preferences
-        SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
-        Timber.d("Local IMEI: " + imei);
-        return imei;
-
-    }
 
     private boolean isTheSameFirebaseToken(String serverToken) {
         /**

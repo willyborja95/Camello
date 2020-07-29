@@ -51,7 +51,7 @@ public class Constants {
     public static final String USER_ACCESS_TOKEN = "ACCESS_TOKEN";                                  // Storage a string
     public static final String USER_REFRESH_TOKEN = "REFRESH_TOKEN";                                // Storage a string
     public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";                                   // Storage a string
-    public static final String CURRENT_IMEI = "CURRENT_IMEI";                                       // Storage a string
+    public static final String LOCAL_IMEI = "CURRENT_IMEI";                                         // Storage a string
     public static final String IS_USER_WORKING = "IS_WORKING";                                      // Storage a boolean
     public static final String IS_USER_LOGGED = "IS_LOGGED";                                        // Storage a boolean
     public static final String CURRENT_USER_ID = "CURRENT_USER_ID";                                 // Storage an integer
@@ -90,4 +90,5 @@ public class Constants {
 
 
     public static final String KEY_FILE_NAME = "key_file.txt";
+
 }
