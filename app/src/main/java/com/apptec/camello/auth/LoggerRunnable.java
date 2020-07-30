@@ -25,15 +25,15 @@ import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * This runnable will do the work for log in the user and
+ * you can listen when all work is done
+ * <p>
+ * The process is describe in this flowchart:
+ * https://app.diagrams.net/#G1PANL8t1ijf6I4f7RaZlSYtvjSb_KnJJb
+ * If you do not have access to it. Contact Renato with the email renatojobal@gmail.com
+ */
 public class LoggerRunnable implements Runnable {
-    /**
-     * This runnable will do the work for log in the user and
-     * you can listen when all work is done
-     * <p>
-     * The process is describe in this flowchart:
-     * https://app.diagrams.net/#G1PANL8t1ijf6I4f7RaZlSYtvjSb_KnJJb
-     * If you do not have access to it. Contact Renato with the email renatojobal@gmail.com
-     */
 
     private MutableLiveData<LoginProgress> loginResult; // This will be the listener got by the view model
 
@@ -178,10 +178,11 @@ public class LoggerRunnable implements Runnable {
     }
 
 
+    /**
+     * Return true when the firebase token is the same in the server database
+     */
     private boolean isTheSameFirebaseToken(String serverToken) {
-        /**
-         * Return true when the firebase token is the same in the server database
-         */
+
         String realFirebaseToken = SharedPreferencesHelper.getStringValue(Constants.FIREBASE_TOKEN, "");
 
         if (serverToken.equals(realFirebaseToken)) {
@@ -193,10 +194,11 @@ public class LoggerRunnable implements Runnable {
         return false;
     }
 
+    /**
+     * Upload to the server the new firebase token of this device
+     */
     private void updateTheFirebaseToken(String firebaseToken, int deviceId) {
-        /**
-         * Upload to the server the new firebase token of this device
-         */
+
         Timber.d("Init patch firebase token into the service");
         Timber.d("New firebase token: " + firebaseToken);
         UpdatePushTokenBody updatePushTokenBody = new UpdatePushTokenBody();
@@ -234,18 +236,17 @@ public class LoggerRunnable implements Runnable {
     }
 
 
-    private void login(LoginDataValidator data, boolean adviseTheUser, boolean needsToClaimThisDevice) {
-        /**
-         * We call this method when we finally verify the credentials
-         *
-         * Here:
-         * - save user data in local database
-         * - set shared preferences variables
-         */
+    /**
+     * We call this method when we finally verify the credentials
+     * <p>
+     * Here:
+     * - save user data in local database
+     * - set shared preferences variables
+     */
 
-        /**
-         * Save credentials
-         */
+    private void login(LoginDataValidator data, boolean adviseTheUser, boolean needsToClaimThisDevice) {
+        // Save credentials
+
         Timber.d("Login user.");
         Timber.d("Advise the user = " + adviseTheUser);
         Timber.d("needsToClamThisDevice = " + needsToClaimThisDevice);
@@ -282,11 +283,11 @@ public class LoggerRunnable implements Runnable {
 
     }
 
+    /**
+     * We call this method when the user is trying to login
+     * but this phone is claimed by another user
+     */
     private void doNotLetLogin() {
-        /**
-         * We call this method when the user is trying to login
-         * but this phone is claimed by another user
-         */
 
         loginResult.postValue(new LoginProgress(R.string.device_already_taken_title, R.string.device_already_taken));
     }

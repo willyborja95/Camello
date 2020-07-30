@@ -27,7 +27,11 @@ import com.apptec.camello.repository.localdatabase.daos.UserDao;
 import com.apptec.camello.repository.localdatabase.daos.WorkZoneDao;
 import com.apptec.camello.repository.localdatabase.daos.WorkingPeriodDao;
 
-
+/**
+ * Database
+ * <p>
+ * Register here the entities and the DAOs
+ */
 @Database(entities = {
         UserModel.class,
         NotificationModel.class,
@@ -45,13 +49,7 @@ import com.apptec.camello.repository.localdatabase.daos.WorkingPeriodDao;
         exportSchema = true)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
-    /**
-     * Database
-     * <p>
-     * Register here the entities and the DAOs
-     *
-     * @return
-     */
+
 
     public abstract UserDao userDao();
 

@@ -12,7 +12,6 @@ public class SharedPreferencesHelper {
 
 
     private static SharedPreferences sharedPreferences;                      // Singleton
-    private SharedPreferenceBooleanLiveData sharedPreferenceLiveData;        // Singleton of live data class
 
     /**
      * Return a instance for the shared preferences using the context of the app.

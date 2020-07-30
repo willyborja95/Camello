@@ -13,10 +13,10 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
-public  final class LocationUpdaterService extends Service implements LocationListener {
-    /**
-     * LocationUpdaterService
-     */
+/**
+ * LocationUpdaterService
+ */
+public final class LocationUpdaterService extends Service implements LocationListener {
 
     private String latitude = "default";
     private String longitude = "default";

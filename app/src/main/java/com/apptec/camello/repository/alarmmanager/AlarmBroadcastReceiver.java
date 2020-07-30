@@ -15,6 +15,9 @@ import androidx.annotation.Nullable;
 
 import java.util.Date;
 
+/**
+ * Actually it is not used
+ */
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
 
     LocationManager locationManager = null;
@@ -55,8 +58,6 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
             alarmManager.cancel(wakeupIntent);
         }
         */
-
-
 
 
     }

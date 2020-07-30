@@ -12,14 +12,11 @@ import com.apptec.camello.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
-
+/**
+ * Dao for device
+ */
 @Dao
 public interface DeviceDao {
-    /**
-     * Dao for device
-     * @return
-     */
-
 
     @Query("SELECT * FROM " + DBConstants.DEVICE_TABLE)
     LiveData<List<DeviceModel>> loadAllDevicesLiveData();

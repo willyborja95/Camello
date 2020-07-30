@@ -15,15 +15,15 @@ import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * Runnable that will sync the permissions in a background thread
+ */
 public class SyncPermissions implements Runnable {
+
     /**
-     * Runnable that will sync the permissions in a background thread
+     * Empty constructor
      */
-
-
     public SyncPermissions() {
-        // Empty constructor
-
     }
 
     /**
@@ -33,12 +33,8 @@ public class SyncPermissions implements Runnable {
      */
     @Override
     public void run() {
-
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-
         pullPermissionTypes(permissionRetrofitInterface);
-
-
     }
 
 

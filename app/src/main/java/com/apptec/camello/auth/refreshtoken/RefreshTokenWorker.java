@@ -32,12 +32,13 @@ public class RefreshTokenWorker extends Worker {
         super(context, workerParams);
     }
 
+    /**
+     * Initializing credentials manager code goes here
+     */
     @NonNull
     @Override
     public Result doWork() {
-        /**
-         * Initializing credentials manager code goes here
-         * */
+
         Timber.d("Init doWork");
         AuthInterface authInterface = ApiClient.getClient().create(AuthInterface.class);
         RefreshTokenBody body = new RefreshTokenBody(ApiClient.getAccessToken(), ApiClient.getRefreshToken());
@@ -47,9 +48,9 @@ public class RefreshTokenWorker extends Worker {
 
         try {
 
-//            Timber.d("Body of the request for request the new token: ");
-//            Timber.d("Body: %s", body);
-//            Timber.d("Url: %s", refreshCall.request().url());
+            Timber.d("Body of the request for request the new token: ");
+            Timber.d("Body: %s", body);
+            Timber.d("Url: %s", refreshCall.request().url());
             // With do not enqueue the call because it is no necessary an immediate response from this worker
             Response<GeneralResponse<JsonObject>> response = refreshCall.execute();
             // Get the new access token

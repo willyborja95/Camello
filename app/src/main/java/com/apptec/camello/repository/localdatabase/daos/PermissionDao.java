@@ -12,6 +12,9 @@ import com.apptec.camello.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
+/**
+ * Dao for permission model
+ */
 @Dao
 public interface PermissionDao {
 

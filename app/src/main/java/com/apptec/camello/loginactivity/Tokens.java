@@ -1,4 +1,4 @@
-package com.apptec.camello.repository.webservices.pojoresponse.loginresponse;
+package com.apptec.camello.loginactivity;
 
 import com.google.gson.annotations.SerializedName;
 

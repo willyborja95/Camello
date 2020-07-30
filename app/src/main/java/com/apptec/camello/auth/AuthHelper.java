@@ -41,9 +41,6 @@ public class AuthHelper {
     private static WorkManager workManager = WorkManager.getInstance(App.getContext());
 
 
-    /**
-     *
-     */
     public static void scheduleSync() {
         Timber.d("Scheduling sync when internet is available");
         // Constraints: Do the work if the the network is connected

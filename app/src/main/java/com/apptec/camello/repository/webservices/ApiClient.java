@@ -12,12 +12,13 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * @Override public Response intercept(Chain chain) throws IOException {
+ * return null;
+ * }* ApiClient provides a retrofit instance for make the call to the server
+ */
 public class ApiClient {
-    /**
-     * @Override public Response intercept(Chain chain) throws IOException {
-     * return null;
-     * }* ApiClient provides a retrofit instance for make the call to the server
-     */
+
 
     private static Retrofit retrofit = null;
 

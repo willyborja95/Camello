@@ -11,12 +11,11 @@ import com.apptec.camello.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
-
+/**
+ * Dao for work zone model
+ */
 @Dao
 public interface WorkZoneDao {
-    /**
-     * Dao for work zone model
-     */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrReplace(WorkZoneModel workZone);

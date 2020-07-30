@@ -4,10 +4,10 @@ import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
+/**
+ * Authentication result : success (user details) or error message.
+ */
 public class Process {
-    /**
-     * Authentication result : success (user details) or error message.
-     */
 
     public static final int NOT_INIT = -3;
     public static final int SUCCESSFUL = 1;

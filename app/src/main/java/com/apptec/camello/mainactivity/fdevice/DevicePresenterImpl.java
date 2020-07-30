@@ -1,7 +1,5 @@
 package com.apptec.camello.mainactivity.fdevice;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -20,30 +18,33 @@ import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * Device presenter
+ * <p>
+ * This class will interact between viewmodel and repository
+ */
+
+
 public class DevicePresenterImpl {
+
     /**
-     * Device presenter
-     *
-     * This class will interact between viewmodel and repository
+     * Empty constructor
      */
-
-    private final String TAG = "DevicePresenter";
-
     public DevicePresenterImpl() {
-
     }
 
+    /**  Getting the device*/
     public LiveData<List<DeviceModel>> loadAllDevicesLiveData() {
-        /**  Getting the device*/
+
         return RoomHelper.getAppDatabaseInstance().deviceDao().loadAllDevicesLiveData();
     }
 
-
+    /**
+     * Method to save this device to the server
+     */
     public void saveThisDevice(String name, String model, MutableLiveData<Boolean> isNeedRegisterDevice) {
-        /**
-         * Method to save this device to the server
-         */
-        Log.d(TAG, "Save this device into the server.");
+
+        Timber.d("Save this device into the server.");
 
         // Build the device object
         DeviceModel thisDevice = new DeviceModel();

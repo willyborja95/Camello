@@ -9,10 +9,11 @@ import com.apptec.camello.models.WorkZoneModel;
 
 import java.util.List;
 
+/**
+ * This class will hold the logging data response in objects
+ */
 public class LoginDataValidator {
-    /**
-     * This class will hold the logging data response in objects
-     */
+
 
     public UserModel user;
     public CompanyModel company;
