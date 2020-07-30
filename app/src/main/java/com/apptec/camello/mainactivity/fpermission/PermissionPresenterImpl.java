@@ -24,29 +24,25 @@ import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * Helps the interaction repository - view
+ */
 public class PermissionPresenterImpl {
 
     /**
-     * Helps the interaction repository - view
+     * It return the live of permission into the database
      */
-
     public LiveData<List<PermissionModel>> getLiveDataListPermission() {
-        /**
-         * It return the live of permission into the database
-         */
         return RoomHelper.getAppDatabaseInstance().permissionDao().getLiveDataListPermission();
     }
 
+    /**
+     * Save the permission requested
+     */
     public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate, String comment) {
-        /**
-         * Save the permission requested
-         */
 
         new Thread(() -> {
-            /**
-             * Call the service
-             * on success save the permission into database
-             */
+            // Call the service on success save the permission into database
 
             Date startDateDate = startDate.getTime();
             Date endDateDate = endDate.getTime();
@@ -108,13 +104,11 @@ public class PermissionPresenterImpl {
         }).start();
     }
 
-
+    /**
+     * Create a new Thread for pull the permissions
+     */
     public void syncPermissionsWithNetwork() {
-        /**
-         * Create a new Thread for pull the permissions
-         */
         new Thread(new SyncPermissions()).start();
-
     }
 
     /**

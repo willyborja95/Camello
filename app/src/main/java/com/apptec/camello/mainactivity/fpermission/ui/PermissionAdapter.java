@@ -15,13 +15,12 @@ import com.apptec.camello.mainactivity.fpermission.PermissionFull;
 
 import java.util.List;
 
+/**
+ * This is the adapter for the recycler view list of permission
+ * We use live data and data binding
+ */
 public class PermissionAdapter extends
         RecyclerView.Adapter<PermissionAdapter.MyViewHolder> {
-    /**
-     * This is the adapter for the recycler view list of permission
-     * We use live data and data binding
-     */
-
 
     // Attribute
     LiveData<List<PermissionFull>> permissionFullListLiveData;
@@ -30,13 +29,12 @@ public class PermissionAdapter extends
     PermissionFragment.DeleteButtonListener listener;
 
 
+    /**
+     * Constructor
+     */
     public PermissionAdapter(LiveData<List<PermissionFull>> permissionFullListLiveData, PermissionFragment.DeleteButtonListener listener) {
-        /**
-         * Constructor
-         */
         this.permissionFullListLiveData = permissionFullListLiveData;
         this.listener = listener;
-
     }
 
     // Create new views (invoked by the layout manager)
