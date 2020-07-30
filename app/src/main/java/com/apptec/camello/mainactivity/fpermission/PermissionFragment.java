@@ -18,6 +18,7 @@ import com.apptec.camello.mainactivity.BaseFragment;
 import com.apptec.camello.mainactivity.MainViewModel;
 import com.apptec.camello.mainactivity.fpermission.ui.CustomDialogPermission;
 import com.apptec.camello.mainactivity.fpermission.ui.PermissionAdapter;
+import com.apptec.camello.models.PermissionModel;
 
 import java.util.List;
 
@@ -58,7 +59,12 @@ public class PermissionFragment extends BaseFragment {
         binding.setPermissionViewModel(permissionViewModel);
 
         // Create the adapter
-        permissionAdapter = new PermissionAdapter(mainViewModel.getPermissionFullList());
+        permissionAdapter = new PermissionAdapter(mainViewModel.getPermissionFullList(), new DeleteButtonListener() {
+            @Override
+            public void onDeleteClicked(PermissionModel permissionModel) {
+                mainViewModel.deletePermission(permissionModel);
+            }
+        });
         // Create a layout manager
         binding.recyclerViewPermissionsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -74,13 +80,14 @@ public class PermissionFragment extends BaseFragment {
             }
         });
 
+        //
+        // Open the dialog fragment to add a permission
+        //
         permissionViewModel.addNewPermission().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    /**
-                     * Open the dialog fragment to add a permission
-                     */
+
                     Timber.d("Open dialog");
 
                     CustomDialogPermission dialogPermission = new CustomDialogPermission();
@@ -93,6 +100,13 @@ public class PermissionFragment extends BaseFragment {
 
 
         return binding.getRoot();
+    }
+
+
+    public static interface DeleteButtonListener {
+
+        void onDeleteClicked(PermissionModel permissionModel);
+
     }
 
 }
