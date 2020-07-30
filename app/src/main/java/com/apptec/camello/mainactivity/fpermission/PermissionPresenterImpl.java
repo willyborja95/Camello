@@ -158,6 +158,7 @@ public class PermissionPresenterImpl {
 
                     RoomHelper.getAppDatabaseInstance().permissionDao().delete(permission);
                     if (listener != null) {
+                        Timber.d("Notify the listener");
                         listener.onSuccessProcess();
                     }
 

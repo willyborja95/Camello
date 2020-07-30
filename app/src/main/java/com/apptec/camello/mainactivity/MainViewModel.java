@@ -95,12 +95,8 @@ public class MainViewModel extends AndroidViewModel {
 
         @Override
         public void onSuccessProcess() {
-            if (_currentProcess.getValue() != null) {
-                _currentProcess.getValue().setProcessStatus(Process.SUCCESSFUL);
-            } else {
-                _currentProcess.postValue(new Process(Process.SUCCESSFUL));
-            }
-
+            Timber.d("onSuccessProcess");
+            _currentProcess.postValue(new Process(Process.SUCCESSFUL));
         }
     };
 
@@ -282,27 +278,25 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
+    /**
+     * The activity will be observing this to request new device information or not
+     */
     public MutableLiveData<Boolean> getIsNeededRegisterDevice() {
-        /**
-         *      The activity will be observing this to request new device information or not
-         */
         return this.isNeededRegisterDevice;
     }
 
 
+    /**
+     * Method to save this device to the server
+     */
     public void saveThisDevice(String name, String model) {
-        /**
-         * Method to save this device to the server
-         */
         devicePresenter.saveThisDevice(name, model, this.isNeededRegisterDevice);
-
     }
 
-
+    /**
+     * This method we got a worker for refresh the token periodically
+     */
     private void initRefreshToken() {
-        /**
-         * This method we got a worker for refresh the token periodically
-         */
 
         // Constraints: Do the work if the the network is connected
         Constraints constraints = new Constraints.Builder()
@@ -353,27 +347,25 @@ public class MainViewModel extends AndroidViewModel {
 
     }
 
-
+    /**
+     * Expose the flag to know if the user is logged or not
+     */
     public MutableLiveData<Boolean> getIsUserLogged() {
-        /**
-         * Expose the flag to know if the user is logged or not
-         */
         return this.isUserLogged;
     }
 
-
+    /**
+     * Save the permission requested
+     */
     public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate, String comment) {
-        /**
-         * Save the permission requested
-         */
-
         permissionPresenter.savePermission(selectedItem, startDate, endDate, comment);
     }
 
+    /**
+     * Sync the permissions database with the network
+     */
     public void syncPermissions() {
-        /**
-         * Sync the permissions database with the network
-         */
+
         permissionPresenter.syncPermissionsWithNetwork();
     }
 
