@@ -16,28 +16,30 @@ import java.util.List;
 
 import timber.log.Timber;
 
+/**
+ * NotificationListAdapter
+ */
 public class NotificationListAdapter extends BaseAdapter {
-    /**
-     * NotificationListAdapter
-     */
+
     // Attributes
     Context context;
     LiveData<List<NotificationModel>> notifications;
 
-
+    /**
+     * Constructor
+     */
     public NotificationListAdapter(Context context, LiveData<List<NotificationModel>> notifications) {
-        /**
-         * Constructor
-         * */
+
         this.context = context;
         this.notifications = notifications;
     }
 
+    /**
+     * This method will be used to attach the card view of notification to the list view.
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /**
-         * This method will be used to attach the card view of notification to the list view.
-         * */
+
         convertView = LayoutInflater
                 .from(context)
                 .inflate(R.layout.notification_item, null);

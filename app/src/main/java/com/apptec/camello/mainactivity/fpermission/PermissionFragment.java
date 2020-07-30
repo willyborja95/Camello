@@ -24,11 +24,10 @@ import java.util.List;
 
 import timber.log.Timber;
 
+/**
+ * PermissionFragment
+ */
 public class PermissionFragment extends BaseFragment {
-    /**
-     * PermissionFragment
-     */
-
 
     // Instance of ViewModel
     private MainViewModel mainViewModel;

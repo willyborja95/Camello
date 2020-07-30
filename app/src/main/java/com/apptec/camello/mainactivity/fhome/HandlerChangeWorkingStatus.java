@@ -41,26 +41,26 @@ public class HandlerChangeWorkingStatus implements Runnable {
     @Override
     public void run() {
 
-        /**
+        /*
          * Change the working status
          */
         Timber.d("Init change working status");
 
 
         if (RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod() == null) {
-            /** We entry here when is the first time when the button is pressed since the app was installed.*/
+            /* We entry here when is the first time when the button is pressed since the app was installed.*/
             Timber.d("Not worker initialized");
 
 
             new Thread(new StartWorking(workZoneModel, true, listener)).run();
 
         } else if (isWorking()) {
-            /** If the user is working now, then finish whe work and create a new one */
+            /* If the user is working now, then finish whe work and create a new one */
 
             new Thread(new StopWorking(listener)).run();
 
         } else if (isNotInitWorking()) {
-            /** If the period of working is not init start it*/
+            /* If the period of working is not init start it*/
             new Thread(new StartWorking(workZoneModel, false, listener)).run();
         }
 

@@ -7,25 +7,23 @@ import com.apptec.camello.repository.localdatabase.RoomHelper;
 
 import java.util.List;
 
+/**
+ * This class is in the middle of the MVVM pattern.
+ * It interacts as an intermediary between the Model and the View.
+ */
 public class NotificationPresenter {
+
+
     /**
-     * This class is in the middle of the MVVM pattern.
-     * It interacts as an intermediary between the Model and the View.
+     * Empty constructor
      */
-
-
     public NotificationPresenter() {
-        /**
-         * Empty constructor
-         * */
-
     }
 
-
+    /**
+     * Return the notifications into the live data
+     */
     public LiveData<List<NotificationModel>> loadNotificationsLiveData() {
-        /**
-         * Return the notifications into the live data
-         */
         return RoomHelper.getAppDatabaseInstance().notificationDao().loadAllLiveData();
     }
 }

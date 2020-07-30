@@ -9,13 +9,14 @@ import androidx.room.PrimaryKey;
 import com.apptec.camello.repository.localdatabase.DBConstants;
 import com.apptec.camello.repository.localdatabase.converter.DateConverter;
 
+/**
+ * Model of a notification.
+ * <p>
+ * This will be used for the list adapter attached with the recycler view.
+ */
 @Entity(tableName = DBConstants.NOTIFICATION_TABLE)
 public class NotificationModel {
-    /*
-     * Model of a notification.
-     *
-     * This will be used for the list adapter attached with the recycler view.
-     * */
+
 
     // Attributes
     @ColumnInfo(name = DBConstants.NOTIFICATION_PK)

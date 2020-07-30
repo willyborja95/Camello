@@ -9,11 +9,11 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
+/**
+ * Auth Interface
+ */
 
 public interface AuthInterface {
-    /**
-     * Auth Interface
-     */
 
     @POST(Constants.REFRESH_TOKEN_URL)
     Call<GeneralResponse<JsonObject>> refreshToken(

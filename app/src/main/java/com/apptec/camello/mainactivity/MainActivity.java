@@ -32,11 +32,11 @@ import com.google.android.material.snackbar.Snackbar;
 
 import timber.log.Timber;
 
+/**
+ * This class is the MainActivity
+ */
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
-    /**
-     * This class is the MainActivity
-     */
 
 
     //UI components
@@ -243,8 +243,8 @@ public class MainActivity extends AppCompatActivity implements
      * @return true when someone is granted
      */
     private boolean isSomePermissionGranted(int[] array) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == PackageManager.PERMISSION_GRANTED) {
+        for (int value : array) {
+            if (value == PackageManager.PERMISSION_GRANTED) {
                 return true;
             }
         }

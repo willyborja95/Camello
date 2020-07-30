@@ -2,10 +2,10 @@ package com.apptec.camello.util;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Here goes the constants for no hardcoding
+ */
 public class Constants {
-    /**
-     * Here goes the constants for no hardcoding
-     */
 
 
     /**

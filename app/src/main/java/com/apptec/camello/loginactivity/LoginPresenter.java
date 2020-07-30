@@ -19,26 +19,24 @@ import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * This class wil do the hard work for login
+ */
 public class LoginPresenter {
+
     /**
-     * This class wil do the hard work for login
+     * Empty constructor
      */
-
-
     public LoginPresenter() {
-        /** Empty constructor */
     }
 
-
+    /**
+     * Verifying if credentials are saved
+     */
     public void verifyPreviousLogin(MutableLiveData<LoginProgress> loginResultMutableLiveData) {
-        /**
-         * Verifying if credentials are saved
-         */
-
 
         if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_LOGGED, false)) { // If is a previous user logged
             Timber.d("User already logged");
-
 
             loginResultMutableLiveData.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
         }
@@ -141,8 +139,8 @@ public class LoginPresenter {
             /**
              * We get her if there is a problem with the internet connection
              *
-             * @param call
-             * @param t
+             * @param call     call
+             * @param t        throwable
              */
             @Override
             public void onFinalFailure(Call<GeneralResponse<LoginDataResponse>> call, Throwable t) {

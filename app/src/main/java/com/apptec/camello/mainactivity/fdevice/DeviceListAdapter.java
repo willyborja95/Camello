@@ -23,13 +23,12 @@ public class DeviceListAdapter extends BaseAdapter {
         this.devices = devices;
     }
 
-
-
+    /**
+     * This method will be used to attach the card view of device to the list view.
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /**
-         * This method will be used to attach the card view of device to the list view.
-         * */
+
         convertView = LayoutInflater.from(context).inflate(R.layout.card_view_device, null);
 
         // Getting the object by the position

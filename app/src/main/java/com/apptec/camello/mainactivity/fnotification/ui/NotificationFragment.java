@@ -21,11 +21,10 @@ import com.apptec.camello.models.NotificationModel;
 
 import timber.log.Timber;
 
+/**
+ * NotificationsFragment
+ */
 public class NotificationFragment extends Fragment {
-    /**
-     * NotificationsFragment
-     */
-
 
     //UI elements
     private NotificationListAdapter notificationListAdapter;
@@ -38,11 +37,11 @@ public class NotificationFragment extends Fragment {
     // Using data binding
     private FragmentNotificationBinding binding;
 
+    /**
+     * Link the view model
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        /**
-         * Link the view model
-         */
         super.onCreate(savedInstanceState);
 
         // Setting up view models
@@ -53,16 +52,15 @@ public class NotificationFragment extends Fragment {
         mainViewModel.setActiveFragmentName(getString(R.string.notifications_fragment_title));
     }
 
+    /**
+     * Inflate the view.
+     * Observe the notifications Live Data that is got from the Room database
+     * Create an onItemClickListener to show a dialog about each notification when is pressed.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        /**
-         * Inflate the view.
-         * Observe the notifications Live Data that is got from the Room database
-         * Create an onItemClickListener to show a dialog about each notification when is pressed.
-         */
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_notification, container, false);
-
 
         // Bind the view models
         //binding.setMainViewModel(mainViewModel);
@@ -92,11 +90,12 @@ public class NotificationFragment extends Fragment {
 
         // When clicked show a dialog with more information
         binding.notificationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * Show a dialog with extended information about the dialog
+             */
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /**
-                 * Show a dialog with extended information about the dialog
-                 */
+
                 Timber.d("Item clicked");
                 NotificationModel notification = notificationListAdapter.getItem(position);
                 DialogNotification dialogNotification = new DialogNotification().setNotification(notification);

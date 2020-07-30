@@ -16,10 +16,10 @@ import com.apptec.camello.R;
 
 import timber.log.Timber;
 
+/**
+ * This dialog will be used to show the result of the login process in case it fails
+ */
 public class ResultDialog extends DialogFragment {
-    /**
-     * This dialog will be used to show the result of the login process in case it fails
-     */
 
     // UI elements
     TextView title_message, message;
@@ -32,13 +32,14 @@ public class ResultDialog extends DialogFragment {
         this.message_resource = message_resource;
     }
 
+    /**
+     * This method is called for create the dialog.
+     * When the method show is called.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        /**
-         * This method is called for create the dialog.
-         * When the method show is called.
-         */
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View viewDialog = inflater.inflate(R.layout.dialog_login_result, null);

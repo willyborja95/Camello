@@ -29,10 +29,10 @@ public class BaseDialog extends DialogFragment {
     DialogListener listener;
 
     /**
-     * COnstrucotr to set the content of the title and the message
+     * Constructor to set the content of the title and the message
      *
-     * @param titleContent
-     * @param messageContent
+     * @param titleContent   title of the dialog
+     * @param messageContent message of the dialog
      */
     public BaseDialog(int titleContent, int messageContent, @Nullable DialogListener listener) {
         this.titleContent = titleContent;
