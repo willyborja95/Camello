@@ -2,11 +2,10 @@ package com.apptec.camello.loginactivity;
 
 import androidx.annotation.Nullable;
 
-
+/**
+ * Data validation state of the login form.
+ */
 class LoginFormState {
-    /**
-     * Data validation state of the login form.
-     */
 
     @Nullable
     private Integer usernameError; // R.string resource id

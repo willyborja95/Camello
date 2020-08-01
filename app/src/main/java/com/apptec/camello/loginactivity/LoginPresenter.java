@@ -1,12 +1,7 @@
 package com.apptec.camello.loginactivity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.telephony.TelephonyManager;
-
 import androidx.lifecycle.MutableLiveData;
 
-import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.auth.LoggerRunnable;
 import com.apptec.camello.auth.LoginDataValidator;
@@ -24,26 +19,24 @@ import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * This class wil do the hard work for login
+ */
 public class LoginPresenter {
+
     /**
-     * This class wil do the hard work for login
+     * Empty constructor
      */
-
-
     public LoginPresenter() {
-        /** Empty constructor */
     }
 
-
+    /**
+     * Verifying if credentials are saved
+     */
     public void verifyPreviousLogin(MutableLiveData<LoginProgress> loginResultMutableLiveData) {
-        /**
-         * Verifying if credentials are saved
-         */
-
 
         if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_LOGGED, false)) { // If is a previous user logged
             Timber.d("User already logged");
-
 
             loginResultMutableLiveData.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
         }
@@ -54,62 +47,31 @@ public class LoginPresenter {
 
 
 
-    public void storageIMEI() {
-        /**
-         *
-         * Read the IMEI and storage it on an shared preferences's variable.
-         * Change to false the flag of "is first running"
-         */
 
 
-        /** Read the IMEI and storage it on an shared preferences's variable. */
-        TelephonyManager telephonyManager = (TelephonyManager) App.getContext().getSystemService(App.getContext().TELEPHONY_SERVICE);
-        String imei = "";
-
-        // Getting the imei
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            if (App.getContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                // The permission eed to be granted first
-            } else {
-                if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT < 26) {
-                    imei = telephonyManager.getDeviceId();
-                }
-                if (android.os.Build.VERSION.SDK_INT >= 26) {
-                    imei = telephonyManager.getImei();
-                }
-                Timber.d("Got IMEI");
-            }
-        }
-        // Saving it on shared preferences
-        SharedPreferencesHelper.putStringValue(Constants.CURRENT_IMEI, imei);
-        Timber.d("IMEI: " + imei);
-
-    }
-
-    public void handleLogin(MutableLiveData<LoginProgress> loginResult, String email, String password) {
-        /**
-         * This method is called from the MainActivity because at this point we will already have
-         * the user data.
-         *
-         * Here we request the information about this device.
-         *
-         * The process is describe in this flowchart:
-         * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
-         * iI you do not have access to it. Contact Renato with the email renatojobal@gmail.com
-         *
-         *
+    /**
+     * This method is called from the MainActivity because at this point we will already have
+     * the user data.
+     * <p>
+     * Here we request the information about this device.
+     * <p>
+     * The process is describe in this flowchart:
+     * https://app.diagrams.net/#G1tW39YJ03qZdo2Q2cIN5sRUmWxBkAN9YF
+     * iI you do not have access to it. Contact Renato with the email renatojobal@gmail.com
      *
+     * @param loginResult listener of the progress
+     * @param email       user email
+     * @param password    user password
      */
+    public void handleLogin(MutableLiveData<LoginProgress> loginResult, String email, String password) {
 
         Timber.d("Handling login process");
 
-        this.storageIMEI();
 
         LoginRetrofitInterface loginRetrofitInterface = ApiClient.getClient().create(LoginRetrofitInterface.class);
 
         // Creates the body
         UserCredential userCredential = new UserCredential(email, password);
-
 
         Call<GeneralResponse<LoginDataResponse>> call = loginRetrofitInterface.login(userCredential);
 
@@ -177,8 +139,8 @@ public class LoginPresenter {
             /**
              * We get her if there is a problem with the internet connection
              *
-             * @param call
-             * @param t
+             * @param call     call
+             * @param t        throwable
              */
             @Override
             public void onFinalFailure(Call<GeneralResponse<LoginDataResponse>> call, Throwable t) {

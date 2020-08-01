@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -16,12 +15,13 @@ import androidx.lifecycle.ViewModelProviders;
 import com.apptec.camello.R;
 import com.apptec.camello.mainactivity.MainViewModel;
 
-public class DialogDevice extends DialogFragment {
-    /**
-     * DialogDevice
-     */
+import timber.log.Timber;
 
-    private final String TAG = DialogDevice.class.getSimpleName();
+/**
+ * DialogDevice
+ */
+public class DialogDevice extends DialogFragment {
+
 
     // UI elements
     EditText et_name;
@@ -48,7 +48,7 @@ public class DialogDevice extends DialogFragment {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Log.d(TAG, "Ok button clicked");
+                        Timber.d("Ok button clicked");
 
                         String name = et_name.getText().toString();
                         String model = et_model.getText().toString();

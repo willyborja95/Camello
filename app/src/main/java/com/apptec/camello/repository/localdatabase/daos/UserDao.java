@@ -12,12 +12,11 @@ import com.apptec.camello.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
+/**
+ * Dao fro User
+ */
 @Dao
 public interface UserDao {
-    /**
-     * Dao fro User
-     * @return
-     */
 
     @Query("SELECT * FROM " + DBConstants.USER_TABLE)
     List<UserModel> getAll();

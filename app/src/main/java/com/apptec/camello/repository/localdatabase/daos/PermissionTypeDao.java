@@ -11,12 +11,11 @@ import com.apptec.camello.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
+/**
+ * Dao fro PermissionType
+ */
 @Dao
 public interface PermissionTypeDao {
-    /**
-     * Dao fro PermissionType
-     * @return
-     */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<PermissionType> permissionTypeList);

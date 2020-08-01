@@ -43,6 +43,8 @@
     <!-- UI string values -->
     <string name="empty_notifications_message">No hay notificaciones nuevas en este momento.</string>
     <string name="notifications_fragment_title">Notificaciones</string>
+    <string name="privacy_policy_fragment_title">Política de privacidad</string>
+    <string name="user_manual_fragment_title">Manual de usuario</string>
     <string name="permissions_fragment_title">Permisos</string>
     <string name="parameter_missing_error">Parámetro requerido</string>
     <string name="login_progress_dialog_message">Autenticando usuario</string>
@@ -101,6 +103,17 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
     <string name="sign_out_label">Cerrar Sesión</string>
+
+
+    <!-- Diccionario de errores del servidor -->
+    <string name="server_error_600">Fuera de horario laboral</string>
+    <string name="server_error_600_outside_working_hours">Fuera de horario laboral</string>
+    <string name="server_error_601">No se pudo sincronizar la asistencia correctamente</string>
+    <string name="error">Error</string>
+    <string name="unknown_error">Algo salió mal</string>
+    <string name="processing">Procesando</string>
+    <string name="success">Completado</string>
+    <string name="no_permissions_to_show">No hay permisos que mostrar</string>
 
 
 </resources>

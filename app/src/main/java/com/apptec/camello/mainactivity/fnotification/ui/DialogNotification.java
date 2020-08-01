@@ -17,10 +17,10 @@ import com.apptec.camello.models.NotificationModel;
 
 import timber.log.Timber;
 
+/**
+ * Class for present the notification on a dialog
+ */
 public class DialogNotification extends DialogFragment {
-    /**
-     * Class for present the notification on a dialog
-     */
 
     // UI elements
     private TextView sent_date, title_content, message_content;
@@ -28,24 +28,23 @@ public class DialogNotification extends DialogFragment {
     // Data
     private NotificationModel notification;
 
-
+    /**
+     * This method should be called before the dialog is show.
+     * Otherwise would appear a NPE.
+     */
     public DialogNotification setNotification(NotificationModel notification) {
-        /**
-         * This method should be called before the dialog is show.
-         * Otherwise would appear a NPE.
-         */
         this.notification = notification;
         return this;
     }
 
-
+    /**
+     * This method is called for create the dialog.
+     * When the method show is called.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        /**
-         * This method is called for create the dialog.
-         * When the method show is called.
-         */
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View viewDialog = inflater.inflate(R.layout.dialog_notification, null);

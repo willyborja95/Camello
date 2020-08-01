@@ -10,14 +10,12 @@ import java.util.Date;
 
 import timber.log.Timber;
 
+/**
+ * Permission Data Transfer Object
+ * <p>
+ * This class will help us to transfer Permissions to the server and receive from them
+ */
 public class PermissionDto {
-
-    /**
-     * Permission Data Transfer Object
-     * <p>
-     * This class will help us to transfer Permissions to the server and receive from them
-     */
-
 
     private static final String DATE_INCOMING_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final String DATE_OUT_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -41,10 +39,11 @@ public class PermissionDto {
     private int status;
 
 
+    /**
+     * This construct is used when the data come from the server
+     */
     public PermissionDto(int id, String startDate, String endDate, int type, String comment, int fkPermissionStatus) {
-        /**
-         * This construct is used when the data come from the server
-         */
+
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -53,19 +52,20 @@ public class PermissionDto {
         this.status = fkPermissionStatus;
     }
 
+    /**
+     * This construct is user locally
+     */
     public PermissionDto(String startDate, String endDate, int type) {
-        /**
-         * THis construct is user locally
-         */
+
         this.startDate = startDate;
         this.endDate = endDate;
         this.type = type;
     }
 
+    /**
+     * This construct automatic will transform a Permission model to a PermissionDto
+     */
     public PermissionDto(PermissionModel permissionModel) {
-        /**
-         * This construct automatic will transform a Permission model to a PermissionDto
-         */
         this.id = permissionModel.getId();
         this.startDate = DateConverter.toStringDateFormat(permissionModel.getStartDate(), DATE_OUT_FORMAT);
         this.endDate = DateConverter.toStringDateFormat(permissionModel.getEndDate(), DATE_OUT_FORMAT);
@@ -74,34 +74,40 @@ public class PermissionDto {
 
     }
 
+    /**
+     * Instance an object from permissionModel using this same object
+     */
     public PermissionModel getAsPermissionModel() {
-        /**
-         * Instance an object from permissionModel using this same object
-         */
         PermissionModel permissionModel = new PermissionModel(id, comment, getTypeId(), getStatusId(), getStartDateLong(), getEndDateLong());
         return permissionModel;
     }
 
+    /**
+     * @return the id of the permission Type
+     */
     public int getTypeId() {
-        /** Return the id of the permission Type */
-
         return this.type;
     }
 
+    /**
+     * @return the id of the permission status
+     */
     public int getStatusId() {
-        /** Return the id of the permission status */
-
         return this.status;
     }
 
+    /**
+     * Return this start data string as a long
+     */
     public Long getStartDateLong() {
-        /** Return this start data string as a long */
         return toTimestampUsingCustomFormat(this.startDate, PermissionDto.DATE_INCOMING_FORMAT);
 
     }
 
+    /**
+     * Return this end data string as a long
+     */
     public Long getEndDateLong() {
-        /** Return this end data string as a long */
         return toTimestampUsingCustomFormat(this.endDate, PermissionDto.DATE_INCOMING_FORMAT);
     }
 

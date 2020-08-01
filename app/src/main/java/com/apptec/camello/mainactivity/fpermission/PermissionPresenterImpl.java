@@ -11,7 +11,6 @@ import com.apptec.camello.repository.localdatabase.converter.DateConverter;
 import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
-import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,29 +23,25 @@ import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * Helps the interaction repository - view
+ */
 public class PermissionPresenterImpl {
 
     /**
-     * Helps the interaction repository - view
+     * It return the live of permission into the database
      */
-
     public LiveData<List<PermissionModel>> getLiveDataListPermission() {
-        /**
-         * It return the live of permission into the database
-         */
         return RoomHelper.getAppDatabaseInstance().permissionDao().getLiveDataListPermission();
     }
 
+    /**
+     * Save the permission requested
+     */
     public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate, String comment) {
-        /**
-         * Save the permission requested
-         */
 
         new Thread(() -> {
-            /**
-             * Call the service
-             * on success save the permission into database
-             */
+            // Call the service on success save the permission into database
 
             Date startDateDate = startDate.getTime();
             Date endDateDate = endDate.getTime();
@@ -108,13 +103,11 @@ public class PermissionPresenterImpl {
         }).start();
     }
 
-
+    /**
+     * Create a new Thread for pull the permissions
+     */
     public void syncPermissionsWithNetwork() {
-        /**
-         * Create a new Thread for pull the permissions
-         */
         new Thread(new SyncPermissions()).start();
-
     }
 
     /**
@@ -130,50 +123,40 @@ public class PermissionPresenterImpl {
         }
 
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-        Call<JsonObject> call = permissionRetrofitInterface.deletePermission(
+        Call<GeneralResponse> call = permissionRetrofitInterface.deletePermission(
                 ApiClient.getAccessToken(),
                 permission.getId()
         );
         Timber.d(call.request().toString());
-        call.enqueue(new GeneralCallback<JsonObject>(call) {
-
-
-            /**
-             * Method that will be called after the onResponse() default method after doing some validations
-             * * see {@link GeneralCallback}
-             * This need to be override by the classes that implement GeneralCallback
-             *
-             * @param call     call
-             * @param response response
-             */
+        call.enqueue(new GeneralCallback<GeneralResponse>(call) {
             @Override
-            public void onFinalResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            public void onFinalResponse(Call<GeneralResponse> call, Response<GeneralResponse> response) {
+
                 Timber.d(response.toString());
-                Timber.d(response.body().toString());
 
-                Timber.d("Permission deleted successful");
-
-                // Delete also from database
-                new Thread(() -> {
-
-                    RoomHelper.getAppDatabaseInstance().permissionDao().delete(permission);
+                if (response.code() == 404 || response.code() == 200) {
+                    // Permission already deleted on the server
+                    // Delete it from database
+                    Timber.d("Permission deleted successful");
+                    deletePermissionFromDatabase(permission);
                     if (listener != null) {
+                        Timber.d("Notify the listener");
                         listener.onSuccessProcess();
                     }
 
-                }).start();
+                } else {
+                    // An error occurred
+                    if (listener != null) {
+                        listener.onErrorOccurred(R.string.error, R.string.unknown_error);
+                    }
+
+                }
 
 
             }
 
-            /**
-             * Method to be override by the calling class
-             *
-             * @param call call
-             * @param t    throwable
-             */
             @Override
-            public void onFinalFailure(Call<JsonObject> call, Throwable t) {
+            public void onFinalFailure(Call<GeneralResponse> call, Throwable t) {
                 Timber.e(t);
                 if (listener != null) {
                     listener.onErrorOccurred(R.string.no_internet_connection_title, R.string.no_internet_connection);
@@ -183,4 +166,20 @@ public class PermissionPresenterImpl {
 
     }
 
+
+    private void deletePermissionFromDatabase(PermissionModel permission) {
+        try {
+            new Thread(() -> {
+                Timber.d("Deleting permission from database");
+                RoomHelper.getAppDatabaseInstance().permissionDao().delete(permission);
+            }).start();
+        } catch (Exception e) {
+            Timber.w("Permission already deleted from database");
+        }
+    }
+
 }
+
+
+
+

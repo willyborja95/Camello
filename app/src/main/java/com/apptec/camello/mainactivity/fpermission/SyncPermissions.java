@@ -15,31 +15,26 @@ import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * Runnable that will sync the permissions in a background thread
+ */
 public class SyncPermissions implements Runnable {
+
     /**
-     * Runnable that will sync the permissions in a background thread
+     * Empty constructor
      */
-
-
     public SyncPermissions() {
-        // Empty constructor
-
     }
 
+    /**
+     * 1. Pull the permission types catalog
+     * 2. Pull the permission status catalog
+     * 3. Pull the permissions
+     */
     @Override
     public void run() {
-        /**
-         * 1. Pull the permission types catalog
-         * 2. Pull the permission status catalog
-         * 3. Pull the permissions
-         */
-
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-
-
         pullPermissionTypes(permissionRetrofitInterface);
-
-
     }
 
 
@@ -112,12 +107,11 @@ public class SyncPermissions implements Runnable {
 
     }
 
-
+    /**
+     * This method will bring the permission of this user and save into the database
+     */
     public void syncPermissionsWithNetwork(PermissionRetrofitInterface permissionRetrofitInterface) {
         // 3. Pull the permissions
-        /**
-         * This method will bring the permission of this user and save into the database
-         */
         Timber.i("Starting to sync the permissions list from network");
 
 

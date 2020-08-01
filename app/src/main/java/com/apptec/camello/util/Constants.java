@@ -2,10 +2,10 @@ package com.apptec.camello.util;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Here goes the constants for no hardcoding
+ */
 public class Constants {
-    /**
-     * Here goes the constants for no hardcoding
-     */
 
 
     /**
@@ -51,7 +51,7 @@ public class Constants {
     public static final String USER_ACCESS_TOKEN = "ACCESS_TOKEN";                                  // Storage a string
     public static final String USER_REFRESH_TOKEN = "REFRESH_TOKEN";                                // Storage a string
     public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";                                   // Storage a string
-    public static final String CURRENT_IMEI = "CURRENT_IMEI";                                       // Storage a string
+    public static final String LOCAL_IMEI = "CURRENT_IMEI";                                         // Storage a string
     public static final String IS_USER_WORKING = "IS_WORKING";                                      // Storage a boolean
     public static final String IS_USER_LOGGED = "IS_LOGGED";                                        // Storage a boolean
     public static final String CURRENT_USER_ID = "CURRENT_USER_ID";                                 // Storage an integer
@@ -81,4 +81,14 @@ public class Constants {
 
     // Constant to put in an intent so the main activity could know if navigate to the notifications fragment
     public static final String NAVIGATE_TO_NOTIFICATIONS_FRAGMENT = "navigate_to_notifications";
+    public static final String CURRENT_DEVICE_ID = "device_id";
+    public static final String CURRENT_WORK_ZONE_ID = "work_zone_id";
+
+    // URL for the web view fragments
+    public static final String URL_PRIVACY_POLICY = "https://camello.com.ec/politica-de-privacidad/";
+    public static final String URL_USER_MANUAL = "https://camello.com.ec/politica-de-privacidad/"; // TODO: Change for the real url
+
+
+    public static final String KEY_FILE_NAME = "key_file.txt";
+
 }

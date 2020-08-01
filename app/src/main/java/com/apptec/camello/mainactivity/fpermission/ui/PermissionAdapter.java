@@ -10,28 +10,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.PermissionItemBinding;
+import com.apptec.camello.mainactivity.fpermission.PermissionFragment;
 import com.apptec.camello.mainactivity.fpermission.PermissionFull;
-import com.apptec.camello.mainactivity.fpermission.PermissionPresenterImpl;
 
 import java.util.List;
 
+/**
+ * This is the adapter for the recycler view list of permission
+ * We use live data and data binding
+ */
 public class PermissionAdapter extends
         RecyclerView.Adapter<PermissionAdapter.MyViewHolder> {
-    /**
-     * This is the adapter for the recycler view list of permission
-     * We use live data and data binding
-     */
-
 
     // Attribute
     LiveData<List<PermissionFull>> permissionFullListLiveData;
 
+    // Listener for erase permission button listener
+    PermissionFragment.DeleteButtonListener listener;
 
-    public PermissionAdapter(LiveData<List<PermissionFull>> permissionFullListLiveData) {
-        /**
-         * Constructor
-         */
+
+    /**
+     * Constructor
+     */
+    public PermissionAdapter(LiveData<List<PermissionFull>> permissionFullListLiveData, PermissionFragment.DeleteButtonListener listener) {
         this.permissionFullListLiveData = permissionFullListLiveData;
+        this.listener = listener;
     }
 
     // Create new views (invoked by the layout manager)
@@ -46,7 +49,7 @@ public class PermissionAdapter extends
 
 
         // Return the view holder with the elements attached
-        MyViewHolder viewHolder = new MyViewHolder(binding);
+        MyViewHolder viewHolder = new MyViewHolder(binding, listener);
         return viewHolder;
     }
 
@@ -84,19 +87,20 @@ public class PermissionAdapter extends
         // Using data binding
         PermissionItemBinding itemBinding;
 
-        // Instance of the permission presenter only for the function to delete a permission ?
-        PermissionPresenterImpl permissionPresenter = new PermissionPresenterImpl();
+        // Listener for erase permission button listener
+        PermissionFragment.DeleteButtonListener listener;
 
-        public MyViewHolder(@NonNull PermissionItemBinding itemBinding) {
+        public MyViewHolder(@NonNull PermissionItemBinding itemBinding, PermissionFragment.DeleteButtonListener listener) {
             super(itemBinding.getRoot());
             this.itemBinding = itemBinding;
+            this.listener = listener;
         }
 
 
         public void bind(PermissionFull permissionFull) {
             // Set a click listener for the button to delete the permission
             itemBinding.btnDeletePermission.setOnClickListener(v -> {
-                permissionPresenter.deletePermission(permissionFull.getPermissionModel(), null);
+                listener.onDeleteClicked(permissionFull.getPermissionModel());
             });
 
             itemBinding.setPermissionFull(permissionFull);

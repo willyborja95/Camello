@@ -10,13 +10,11 @@ import com.apptec.camello.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
+/**
+ * Dat for permissions status
+ */
 @Dao
 public interface PermissionStatusDao {
-    /**
-     * Dato for permissions status
-     *
-     * @param permissionStatusList
-     */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<PermissionStatus> permissionStatusList);

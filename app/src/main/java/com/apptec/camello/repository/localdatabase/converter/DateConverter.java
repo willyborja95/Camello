@@ -10,10 +10,11 @@ import java.util.Date;
 
 import timber.log.Timber;
 
+/**
+ * This class is used only for convert date to timestamp and solve some problems
+ */
 public class DateConverter {
-    /**
-     * This class is used only for convert date to timestamp and solve some problems
-     */
+
     @TypeConverter
     public static Date toDate(Long timestamp) {
         return timestamp == null ? null : new Date(timestamp);

@@ -11,16 +11,16 @@ import com.apptec.camello.repository.localdatabase.DBConstants;
 import com.apptec.camello.repository.localdatabase.converter.DateConverter;
 import com.apptec.camello.util.Constants;
 
+/**
+ * This class allow us to access the permission type and permission status directly
+ * instead doing a query every time we need to
+ */
 @DatabaseView("SELECT * " +
         " FROM " + DBConstants.PERMISSION_TABLE + ", " + DBConstants.PERMISSION_STATUS_TABLE + ", " + DBConstants.PERMISSION_TYPE_TABLE +
         " WHERE " + DBConstants.PERMISSION_PERMISSION_STATUS_FK + " = " + DBConstants.PERMISSION_STATUS_PK +
         " AND " + DBConstants.PERMISSION_PERMISSION_TYPE_FK + " = " + DBConstants.PERMISSION_TYPE_PK +
         ";")
 public class PermissionFull {
-    /**
-     * This class allow us to access the permission type and permission status directly
-     * instead doing a query every time we need to
-     */
 
 
     @Embedded

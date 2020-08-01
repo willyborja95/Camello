@@ -3,14 +3,18 @@ package com.apptec.camello.mainactivity.fhome.geofence;
 import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.mainactivity.BaseProcessListener;
+import com.apptec.camello.mainactivity.fhome.AssistanceBody;
 import com.apptec.camello.mainactivity.fhome.AssistanceRetrofitInterface;
 import com.apptec.camello.models.WorkZoneModel;
 import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
+import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.camello.util.Constants;
+import com.apptec.camello.util.ErrorDictionary;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.Nullable;
@@ -56,45 +60,10 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
 
         Timber.d("Handling the request to start working");
 
-        if (this.isFirstTime) {
-            // If there is not a previous working period into the database
-            Timber.d("Not previous working period created, maybe the app is running by first time");
-
-            Timber.d("Created a new working period");
-            // Create a working period instance
-            WorkingPeriodModel startedWorkingPeriod = new WorkingPeriodModel(
-                    System.currentTimeMillis(),   // Current time
-                    Constants.INT_WORKING_STATUS, // Not init status
-                    workZoneModel.getId());       // Foreign key to the work zone
-
-            Timber.d("Save the working period into database");
-            // Save the working period into database
-            RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(startedWorkingPeriod);
-
-        } else {
-            // Change the status of the last working period to "working"
-
-
-            Timber.d("Change the status of the last working period to \"working\"");
-            // Get the last working period
-            WorkingPeriodModel lastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod();
-
-            // Update it
-            lastWorkingPeriod.setStatus(Constants.INT_WORKING_STATUS);
-            lastWorkingPeriod.setStart_date(System.currentTimeMillis());
-            lastWorkingPeriod.setWorkZoneId(workZoneModel.getId());
-
-            // Save the changes into database
-            RoomHelper.getAppDatabaseInstance().workingPeriodDao().updateWorkingPeriod(lastWorkingPeriod);
-
-
-        }
-
-        // Start tracking the work zone
-        App.getGeofenceHelper().startTracking(workZoneModel);
-
-        // Notify the server
+        // Notify the server first
         notifyTheServer(workZoneModel);
+
+
     }
 
 
@@ -123,11 +92,31 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
              */
             @Override
             public void onFinalResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
-                Timber.i("Assistance changed");
-                Timber.i("Request code: %s", response.code());
 
-                // Notify the listener
-                listener.onSuccessProcess();
+                if (response.code() >= 200 && response.code() < 300) {
+                    Timber.i("Assistance changed");
+
+                    Timber.i("Request code: %s", response.code());
+
+                    SharedPreferencesHelper.putIntValue(Constants.CURRENT_WORK_ZONE_ID, workZoneModel.getId());
+                    changeWorkingStatus();
+
+                    // Notify the listener
+                    listener.onSuccessProcess();
+
+                } else {
+                    try {
+                        int errorCode = response.body().getError().getCode();
+                        int message = ErrorDictionary.getErrorMessageByCode(errorCode);
+                        listener.onErrorOccurred(R.string.error, message);
+                    } catch (Exception e) {
+                        listener.onErrorOccurred(R.string.error, R.string.unknown_error);
+                        Timber.e("Unknown error happened while start working");
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                    }
+                }
+
+
             }
 
             /**
@@ -141,10 +130,63 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
 
     }
 
+    /**
+     * This method change the working status into database
+     */
+    private void changeWorkingStatus() {
+        new Thread(() -> {
+            if (isFirstTime) {
+                // If there is not a previous working period into the database
+                Timber.d("Not previous working period created, maybe the app is running by first time");
+
+                Timber.d("Created a new working period");
+                // Create a working period instance
+                WorkingPeriodModel startedWorkingPeriod = new WorkingPeriodModel(
+                        System.currentTimeMillis(),   // Current time
+                        Constants.INT_WORKING_STATUS, // Not init status
+                        workZoneModel.getId());       // Foreign key to the work zone
+
+                Timber.d("Save the working period into database");
+                // Save the working period into database
+                RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(startedWorkingPeriod);
+
+            } else {
+                // Change the status of the last working period to "working"
+
+
+                Timber.d("Change the status of the last working period to \"working\"");
+                // Get the last working period
+                WorkingPeriodModel lastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod();
+
+                // Update it
+                lastWorkingPeriod.setStatus(Constants.INT_WORKING_STATUS);
+                lastWorkingPeriod.setStart_date(System.currentTimeMillis());
+                lastWorkingPeriod.setWorkZoneId(workZoneModel.getId());
+
+                // Save the changes into database
+                RoomHelper.getAppDatabaseInstance().workingPeriodDao().updateWorkingPeriod(lastWorkingPeriod);
+
+
+            }
+        }).start();
+
+
+        // Start tracking the work zone
+        App.getGeofenceHelper().startTracking(workZoneModel);
+    }
+
     private Call<GeneralResponse<JsonObject>> getCall(AssistanceRetrofitInterface retrofitInterface, WorkZoneModel workZoneModel) {
+
+        // Generate the body
+        AssistanceBody assistanceBody = new AssistanceBody(
+                SharedPreferencesHelper.getSharedPreferencesInstance().getInt(Constants.CURRENT_DEVICE_ID, 0),
+                workZoneModel.getId()
+        );
+
         Call<GeneralResponse<JsonObject>> call = retrofitInterface.registerAssistance(
                 ApiClient.getAccessToken(),
-                workZoneModel
+                assistanceBody
+
         );
         return call;
     }

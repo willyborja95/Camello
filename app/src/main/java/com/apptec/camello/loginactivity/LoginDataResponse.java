@@ -4,15 +4,14 @@ import androidx.annotation.Nullable;
 
 import com.apptec.camello.models.DeviceModel;
 import com.apptec.camello.models.WorkZoneModel;
-import com.apptec.camello.repository.webservices.pojoresponse.loginresponse.Tokens;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Login data that will match the response of database
+ */
 public class LoginDataResponse {
-    /**
-     * Login data that will match the response of database
-     */
 
     @SerializedName("employeeId")
     private int id;

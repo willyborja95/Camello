@@ -8,30 +8,37 @@ import androidx.room.PrimaryKey;
 
 import com.apptec.camello.repository.localdatabase.DBConstants;
 import com.apptec.camello.repository.localdatabase.converter.DateConverter;
+import com.google.gson.annotations.SerializedName;
 
+/**
+ * Model of a notification.
+ * <p>
+ * This will be used for the list adapter attached with the recycler view.
+ */
 @Entity(tableName = DBConstants.NOTIFICATION_TABLE)
 public class NotificationModel {
-    /*
-     * Model of a notification.
-     *
-     * This will be used for the list adapter attached with the recycler view.
-     * */
+
 
     // Attributes
     @ColumnInfo(name = DBConstants.NOTIFICATION_PK)
     @PrimaryKey(autoGenerate = true)
+    @SerializedName("id")
     private int id;
 
     @ColumnInfo(name = DBConstants.NOTIFICATION_TITLE)
+    @SerializedName("title")
     private String title;
 
     @ColumnInfo(name = DBConstants.NOTIFICATION_TEXT)
+    @SerializedName("message")
     private String text;
 
     @ColumnInfo(name = DBConstants.NOTIFICATION_SENT_DATE)
+    @SerializedName("createdAt")
     private Long sentDate;
 
     @ColumnInfo(name = DBConstants.NOTIFICATION_EXPIRATION)
+    @SerializedName("expiresAt")
     private Long expirationDate;
 
     // Constructor

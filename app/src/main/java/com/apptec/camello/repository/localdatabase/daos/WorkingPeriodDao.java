@@ -12,11 +12,11 @@ import com.apptec.camello.repository.localdatabase.DBConstants;
 
 import java.util.List;
 
+/**
+ * Dao for working period
+ */
 @Dao
 public interface WorkingPeriodDao {
-    /**
-     * Dao for working period
-     */
 
     @Query("SELECT * FROM " + DBConstants.WORKING_PERIOD_TABLE + " WHERE " + DBConstants.WORKING_PERIOD_PK +
             "=(Select MAX(" + DBConstants.WORKING_PERIOD_PK + ") FROM " + DBConstants.WORKING_PERIOD_TABLE + ")")

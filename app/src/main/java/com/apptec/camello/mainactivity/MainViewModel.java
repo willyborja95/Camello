@@ -13,11 +13,11 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.apptec.camello.App;
+import com.apptec.camello.auth.SignOutRunnable;
 import com.apptec.camello.auth.refreshtoken.RefreshTokenWorker;
 import com.apptec.camello.mainactivity.fdevice.DevicePresenterImpl;
 import com.apptec.camello.mainactivity.fhome.HomePresenterImpl;
 import com.apptec.camello.mainactivity.fhome.geofence.HandleButtonClicked;
-import com.apptec.camello.mainactivity.fhome.geofence.StopWorking;
 import com.apptec.camello.mainactivity.fnotification.NotificationPresenter;
 import com.apptec.camello.mainactivity.fpermission.PermissionFull;
 import com.apptec.camello.mainactivity.fpermission.PermissionPresenterImpl;
@@ -95,12 +95,8 @@ public class MainViewModel extends AndroidViewModel {
 
         @Override
         public void onSuccessProcess() {
-            if (_currentProcess.getValue() != null) {
-                _currentProcess.getValue().setProcessStatus(Process.SUCCESSFUL);
-            } else {
-                _currentProcess.postValue(new Process(Process.SUCCESSFUL));
-            }
-
+            Timber.d("onSuccessProcess");
+            _currentProcess.postValue(new Process(Process.SUCCESSFUL));
         }
     };
 
@@ -222,30 +218,24 @@ public class MainViewModel extends AndroidViewModel {
         new Thread(new HandleButtonClicked(new HandleButtonClicked.Listener() {
             @Override
             public void onErrorOccurred(int title, int message) {
-                Timber.e("Error ocurred");
-                if (_currentProcess.getValue() != null) {
-                    _currentProcess.getValue().errorOccurred(title, message);
-                } else {
-                    _currentProcess.postValue(new Process(title, message));
-                }
+                Timber.e("Error occurred");
+
+                _currentProcess.postValue(new Process(title, message));
+
             }
 
             @Override
             public void onProcessing() {
-                if (_currentProcess.getValue() != null) {
-                    _currentProcess.getValue().setProcessStatus(Process.PROCESSING);
-                } else {
-                    _currentProcess.postValue(new Process(Process.PROCESSING));
-                }
+
+                _currentProcess.postValue(new Process(Process.PROCESSING));
+
             }
 
             @Override
             public void onSuccessProcess() {
-                if (_currentProcess.getValue() != null) {
-                    _currentProcess.getValue().setProcessStatus(Process.SUCCESSFUL);
-                } else {
-                    _currentProcess.postValue(new Process(Process.SUCCESSFUL));
-                }
+
+                _currentProcess.postValue(new Process(Process.SUCCESSFUL));
+
             }
 
             @Override
@@ -288,27 +278,25 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
+    /**
+     * The activity will be observing this to request new device information or not
+     */
     public MutableLiveData<Boolean> getIsNeededRegisterDevice() {
-        /**
-         *      The activity will be observing this to request new device information or not
-         */
         return this.isNeededRegisterDevice;
     }
 
 
+    /**
+     * Method to save this device to the server
+     */
     public void saveThisDevice(String name, String model) {
-        /**
-         * Method to save this device to the server
-         */
         devicePresenter.saveThisDevice(name, model, this.isNeededRegisterDevice);
-
     }
 
-
+    /**
+     * This method we got a worker for refresh the token periodically
+     */
     private void initRefreshToken() {
-        /**
-         * This method we got a worker for refresh the token periodically
-         */
 
         // Constraints: Do the work if the the network is connected
         Constraints constraints = new Constraints.Builder()
@@ -330,49 +318,54 @@ public class MainViewModel extends AndroidViewModel {
 
     }
 
-
+    /**
+     * Delete credentials and tokens
+     * <p>
+     * if the user is working, advice him that the work will be finalized
+     */
     public void logout() {
-        /**
-         * Delete credentials and tokens
-         *
-         * if the user is working, advice him that the work will be finalized
-         */
+
         Timber.d("Login out");
+        boolean shouldStopWorking = false;
         if (this.getLastWorkingPeriod().getValue() != null) {
             if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
                 // TODO: Advice the user that his working period will be ended
-                new Thread(new StopWorking(null)).start();
+                shouldStopWorking = true;
+
 
             }
         }
 
-        App.getAuthHelper().logout();
-        workManager.cancelAllWork();
-        this.isUserLogged.setValue(false);
+
+        new Thread(new SignOutRunnable(false, shouldStopWorking, new SignOutRunnable.SignOutListener() {
+            @Override
+            public void onSuccessFinished() {
+                isUserLogged.postValue(false);
+            }
+        })).start();
+
 
     }
 
-
+    /**
+     * Expose the flag to know if the user is logged or not
+     */
     public MutableLiveData<Boolean> getIsUserLogged() {
-        /**
-         * Expose the flag to know if the user is logged or not
-         */
         return this.isUserLogged;
     }
 
-
+    /**
+     * Save the permission requested
+     */
     public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate, String comment) {
-        /**
-         * Save the permission requested
-         */
-
         permissionPresenter.savePermission(selectedItem, startDate, endDate, comment);
     }
 
+    /**
+     * Sync the permissions database with the network
+     */
     public void syncPermissions() {
-        /**
-         * Sync the permissions database with the network
-         */
+
         permissionPresenter.syncPermissionsWithNetwork();
     }
 

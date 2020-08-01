@@ -9,13 +9,11 @@ import androidx.room.Query;
 import com.apptec.camello.models.CompanyModel;
 import com.apptec.camello.repository.localdatabase.DBConstants;
 
+/**
+ * Dao fro company
+ */
 @Dao
 public interface CompanyDao {
-    /**
-     * Dao fro company
-     *
-     * @return
-     */
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

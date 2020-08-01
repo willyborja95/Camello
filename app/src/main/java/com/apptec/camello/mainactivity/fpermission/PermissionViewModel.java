@@ -31,11 +31,9 @@ public class PermissionViewModel extends ViewModel {
 
     /**
      * Expose the data
+     * This method will be observed by the fragment view
      */
     public LiveData<Boolean> addNewPermission() {
-        /**
-         * This method will be observed by the fragment viewe
-         */
         return this._addNewPermission;
     }
 

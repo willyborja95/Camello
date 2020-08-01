@@ -17,10 +17,10 @@ import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.mainactivity.MainViewModel;
 
+/**
+ * Device fragment
+ */
 public class DeviceFragment extends Fragment {
-    /**
-     * Device fragment
-     */
 
     private final String TAG = DeviceFragment.class.getSimpleName();
 
@@ -40,11 +40,11 @@ public class DeviceFragment extends Fragment {
 
     }
 
-
+    /**
+     * Open the modal/ dialog device dialog
+     */
     private void registerNewDeviceDialog() {
-        /**
-         * Open the modal/ dialog device dialog
-         */
+
         Log.d(TAG, "Opening dialog device.");
         DialogDevice dialogDevice = new DialogDevice();
         dialogDevice.show(getFragmentManager(), "DialogDevice");

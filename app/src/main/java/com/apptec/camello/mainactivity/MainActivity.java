@@ -25,7 +25,6 @@ import com.apptec.camello.BuildConfig;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.ActivityMainBinding;
 import com.apptec.camello.loginactivity.LoginActivity;
-import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -33,11 +32,11 @@ import com.google.android.material.snackbar.Snackbar;
 
 import timber.log.Timber;
 
+/**
+ * This class is the MainActivity
+ */
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
-    /**
-     * This class is the MainActivity
-     */
 
 
     //UI components
@@ -47,6 +46,12 @@ public class MainActivity extends AppCompatActivity implements
     TextView toolbar_name;
 
     MainViewModel mainViewModel;
+
+    BottomNavigationView bottomNavigationView;
+
+    // Side menu (We put it her to replace when entered to the web view fragments)
+    ImageButton menuRight;
+
 
     // Using data binding
     ActivityMainBinding binding;
@@ -61,20 +66,19 @@ public class MainActivity extends AppCompatActivity implements
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);   // Getting the view model
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_view);
+        bottomNavigationView = findViewById(R.id.bottom_view);
 
         NavigationView drawerNavigationView = (NavigationView) findViewById(R.id.nav_drawer);
         View viewNavHeader = drawerNavigationView.getHeaderView(0);
 
 
-        /** For control the side drawer onNavigationItemSelected */
+        // For control the side drawer onNavigationItemSelected
         drawerNavigationView.setNavigationItemSelectedListener(this);
 
 
-        /**
-         * Open or close the side menu
-         */
-        ImageButton menuRight = findViewById(R.id.image_button_side_menu);
+        // Open or close the side menu
+
+        menuRight = findViewById(R.id.image_button_side_menu);
         menuRight.setOnClickListener(v -> {
 
             if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -112,19 +116,24 @@ public class MainActivity extends AppCompatActivity implements
 
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_home:
+                        setUpNormalNavigation();
                         navController.navigate(R.id.homeFragment);
                         break;
                     case R.id.navigation_notifications:
+                        setUpNormalNavigation();
                         navController.navigate(R.id.notificationsFragment);
                         break;
 
                     case R.id.navigation_permission:
+                        setUpNormalNavigation();
                         navController.navigate(R.id.permissionFragment);
                         break;
 
                     case R.id.navigation_device:
+                        setUpNormalNavigation();
                         navController.navigate(R.id.deviceFragment);
                         break;
+
                 }
 
                 ft.commit();
@@ -198,69 +207,72 @@ public class MainActivity extends AppCompatActivity implements
             // If user interaction was interrupted, the permission request is cancelled and you
             // receive empty arrays.
             Timber.i("User interaction was cancelled.");
-        } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Timber.i("Permission granted.");
-
         } else {
-            Timber.d("Permission denied");
-            // Permission denied.
 
-            // Notify the user via a SnackBar that they have rejected a core permission for the
-            // app, which makes the Activity useless. In a real app, core permissions would
-            // typically be best requested during a welcome-screen flow.
-            showSnackBar(R.string.permission_denied_explanation, R.string.settings,
-                    view -> {
-                        // Build intent that displays the App settings screen.
-                        Intent intent = new Intent();
-                        intent.setAction(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package",
-                                BuildConfig.APPLICATION_ID, null);
-                        intent.setData(uri);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    });
+            if (isSomePermissionGranted(grantResults)) {
+                Timber.d("Permission granted");
+            } else {
+                // Permission denied.
+                Timber.w("Permission denied");
 
+                // Notify the user via a SnackBar that they have rejected a core permission for the
+                // app, which makes the Activity useless. In a real app, core permissions would
+                // typically be best requested during a welcome-screen flow.
+                showSnackBar(R.string.permission_denied_explanation, R.string.settings,
+                        view -> {
+                            // Build intent that displays the App settings screen.
+                            Intent intent = new Intent();
+                            intent.setAction(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package",
+                                    BuildConfig.APPLICATION_ID, null);
+                            intent.setData(uri);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                        });
+            }
         }
 
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        /** I do not know if this method is used or not*/
-        switch (item.getItemId()) {
-            case R.id.btn_update_permissions:
-                //permissionFragment2.updatePermissions();
-                break;
-            case R.id.btn_logout:
-                SharedPreferencesHelper.putBooleanValue(Constants.IS_USER_LOGGED, false);
-                mainViewModel.logout();
-                break;
+    /**
+     * It will receive an array of permission results and return true is some one of them is granted.
+     *
+     * @param array of results
+     * @return true when someone is granted
+     */
+    private boolean isSomePermissionGranted(int[] array) {
+        for (int value : array) {
+            if (value == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
 
+    /**
+     * Drawer Item selected logic
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        /**
-         * Drawer Item selected logic
-         */
+
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         switch (menuItem.getItemId()) {
             case R.id.privacy_politic:
-                Intent policiesIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/POLI%CC%81TICA_DE_PRIVACIDAD_APP_REGISTRATE.pdf"));
-                startActivity(policiesIntent);
-                finish();
+
+                setUpWebViewNavigation();
+                navController.navigate(R.id.privacyFragment);
+
 
                 break;
 
             case R.id.user_manual:
-                Intent guideIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://registrateapp.com.ec/assets/Manual_de_Usuario.pdf"));
-                startActivity(guideIntent);
-                finish();
+
+                setUpWebViewNavigation();
+                navController.navigate(R.id.userManualFragment);
+
                 break;
 
             case R.id.logout_button:
@@ -269,6 +281,50 @@ public class MainActivity extends AppCompatActivity implements
                 break;
         }
         return true;
+    }
+
+
+    /**
+     * Method to hide the bottom view
+     */
+    public void setUpWebViewNavigation() {
+
+        // Set an arrow as icon
+        menuRight.setImageDrawable(getDrawable(R.drawable.ic_back_arrow));
+
+        // Set a click listener
+        menuRight.setOnClickListener(v -> {
+            setUpNormalNavigation();
+            navController.navigate(R.id.homeFragment);
+        });
+
+        // Hide the bottom menu
+        bottomNavigationView.setVisibility(View.GONE);
+
+    }
+
+    /**
+     * Method to show the bottom view
+     */
+    public void setUpNormalNavigation() {
+
+        // Set an the hamburger icon as icon
+        menuRight.setImageDrawable(getDrawable(R.drawable.ic_drawer_menu));
+
+
+        // Set the normal listener
+        menuRight.setOnClickListener(v -> {
+
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                binding.drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        // Show the bottom view
+        bottomNavigationView.setVisibility(View.VISIBLE);
+
     }
 
 

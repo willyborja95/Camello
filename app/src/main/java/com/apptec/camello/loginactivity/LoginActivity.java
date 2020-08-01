@@ -23,12 +23,13 @@ import com.apptec.camello.util.Constants;
 
 import timber.log.Timber;
 
+/**
+ * Login activity
+ * <p>
+ * This activity is the manager for the user authentication
+ */
 public class LoginActivity extends AppCompatActivity {
-    /**
-     * Login activity
-     * <p>
-     * This activity is the manager for the user authentication
-     */
+
 
     // View model
     LoginViewModel loginViewModel;
