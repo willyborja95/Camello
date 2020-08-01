@@ -113,6 +113,7 @@
     <string name="unknown_error">Algo salió mal</string>
     <string name="processing">Procesando</string>
     <string name="success">Completado</string>
+    <string name="no_permissions_to_show">No hay permisos que mostrar</string>
 
 
 </resources>
