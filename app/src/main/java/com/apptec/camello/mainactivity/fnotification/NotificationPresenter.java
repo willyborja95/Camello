@@ -47,30 +47,39 @@ public class NotificationPresenter {
         NotificationsRetrofitInterface retrofitInterface =
                 ApiClient.getClient().create(NotificationsRetrofitInterface.class);
 
-        Call<GeneralResponse> call = retrofitInterface.getAllNotifications(ApiClient.getAccessToken());
 
-        call.enqueue(new GeneralCallback<GeneralResponse>(call) {
+        Call<GeneralResponse<List<NotificationModel>>> call = retrofitInterface.getAllNotifications(ApiClient.getAccessToken());
+
+        call.enqueue(new GeneralCallback<GeneralResponse<List<NotificationModel>>>(call) {
             @Override
-            public void onFinalResponse(Call<GeneralResponse> call, Response<GeneralResponse> response) {
+            public void onFinalResponse(Call<GeneralResponse<List<NotificationModel>>> call, Response<GeneralResponse<List<NotificationModel>>> response) {
+                if (response.isSuccessful()) {
+                    // Save the response into the database
+                    if (response.body() != null && response.body().getWrappedData() != null && !response.body().getWrappedData().isEmpty()) {
+                        RoomHelper.getAppDatabaseInstance().notificationDao().insertOrReplace(response.body().getWrappedData());
+                    }
 
-                // Save the response into the database
-                // TODO
-
-                // Notify the listener that all was sync
-                if (listener != null) {
-                    listener.onSuccessProcess();
+                    // Notify the listener that all was sync
+                    if (listener != null) {
+                        listener.onSuccessProcess();
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onErrorOccurred(R.string.error, R.string.unknown_error);
+                    }
                 }
+
+
 
             }
 
             /**
              * Method to be override by the calling class
-             *
-             * @param call call
-             * @param t    throwable
+
              */
             @Override
-            public void onFinalFailure(Call<GeneralResponse> call, Throwable t) {
+            public void onFinalFailure(Call<GeneralResponse<List<NotificationModel>>> call, Throwable t) {
+
                 if (listener != null) {
                     listener.onErrorOccurred(R.string.no_internet_connection_title, R.string.no_internet_connection);
                 }
@@ -81,3 +90,7 @@ public class NotificationPresenter {
     }
 
 }
+
+
+
+
