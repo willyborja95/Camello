@@ -26,8 +26,8 @@
         app:layout_constraintStart_toStartOf="@+id/guideline" />
 
     <com.google.android.material.textview.MaterialTextView
-        style="@style/TextAppearance.MaterialComponents.Body2"
         android:id="@+id/text_view_title_content"
+        style="@style/Custom.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -48,7 +48,7 @@
 
 
     <com.google.android.material.textview.MaterialTextView
-        style="@style/TextAppearance.MaterialComponents.Body2"
+        style="@style/Custom.Body2"
         android:id="@+id/text_view_message_content"
         android:layout_width="0dp"
         android:layout_height="52dp"
