@@ -49,17 +49,29 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
             Timber.d("Observing the process");
             if (process == null) {
                 Timber.d("Null process");
+                // Dismiss all dialogs
+                onNullProcess();
             } else if (process.getProcessStatus() == Process.PROCESSING) {
                 onProcessing();
             } else if (process.getProcessStatus() == Process.SUCCESSFUL) {
                 onSuccessProcess();
-                mainViewModel.consumeProcessStatus();
+
             } else if (process.getProcessStatus() == Process.FAILED) {
                 onErrorOccurred(process.getTitleError(), process.getError());
-                mainViewModel.consumeProcessStatus();
+
             }
         });
 
+    }
+
+    /**
+     * Method for dismiss
+     */
+    private void onNullProcess() {
+        // Dismiss the progress dialog
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
     }
 
     /**
