@@ -40,6 +40,14 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/permission_item"></androidx.recyclerview.widget.RecyclerView>
 
+        <TextView
+            android:id="@+id/no_permissions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/no_permissions_to_show" />
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_permission_floating_button"

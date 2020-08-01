@@ -20,8 +20,6 @@ import com.apptec.camello.mainactivity.fpermission.ui.CustomDialogPermission;
 import com.apptec.camello.mainactivity.fpermission.ui.PermissionAdapter;
 import com.apptec.camello.models.PermissionModel;
 
-import java.util.List;
-
 import timber.log.Timber;
 
 /**
@@ -58,24 +56,28 @@ public class PermissionFragment extends BaseFragment {
         binding.setPermissionViewModel(permissionViewModel);
 
         // Create the adapter
-        permissionAdapter = new PermissionAdapter(mainViewModel.getPermissionFullList(), new DeleteButtonListener() {
-            @Override
-            public void onDeleteClicked(PermissionModel permissionModel) {
-                mainViewModel.deletePermission(permissionModel);
-            }
-        });
+        permissionAdapter = new PermissionAdapter(
+                mainViewModel.getPermissionFullList(),
+                permissionModel -> mainViewModel.deletePermission(permissionModel));
         // Create a layout manager
         binding.recyclerViewPermissionsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        mainViewModel.getPermissionFullList().observe(getViewLifecycleOwner(), new Observer<List<PermissionFull>>() {
-            @Override
-            public void onChanged(List<PermissionFull> permissionFulls) {
-                if (permissionFulls.size() > 0) {
-                    // Change the result list now
-                    binding.recyclerViewPermissionsList.setAdapter(permissionAdapter);
+        mainViewModel.getPermissionFullList().observe(getViewLifecycleOwner(), permissionFulls -> {
+            if (permissionFulls.isEmpty()) {
+                // Change the result list now
+                // If is  not empty
+                // If the list is empty
+                binding.recyclerViewPermissionsList.setVisibility(View.GONE);
+                binding.noPermissions.setVisibility(View.VISIBLE);
 
-                }
+
+            } else {
+                // If is  not empty
+                Timber.d("List of permission is empty");
+                binding.recyclerViewPermissionsList.setVisibility(View.VISIBLE);
+                binding.noPermissions.setVisibility(View.GONE);
+                binding.recyclerViewPermissionsList.setAdapter(permissionAdapter);
             }
         });
 
