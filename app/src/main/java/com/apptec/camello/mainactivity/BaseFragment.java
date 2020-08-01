@@ -53,10 +53,10 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
                 onProcessing();
             } else if (process.getProcessStatus() == Process.SUCCESSFUL) {
                 onSuccessProcess();
-                process = null;
+                mainViewModel.consumeProcessStatus();
             } else if (process.getProcessStatus() == Process.FAILED) {
                 onErrorOccurred(process.getTitleError(), process.getError());
-                process = null;
+                mainViewModel.consumeProcessStatus();
             }
         });
 

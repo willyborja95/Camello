@@ -378,5 +378,12 @@ public class MainViewModel extends AndroidViewModel {
         permissionPresenter.deletePermission(permission, this.processListener);
     }
 
+    /**
+     * Method to set this process listener to null. And not show the dialog more than one time
+     */
+    public void consumeProcessStatus() {
+        this._currentProcess.postValue(null);
+    }
+
 
 }
