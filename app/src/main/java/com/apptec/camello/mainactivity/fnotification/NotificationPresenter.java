@@ -47,6 +47,7 @@ public class NotificationPresenter {
         NotificationsRetrofitInterface retrofitInterface =
                 ApiClient.getClient().create(NotificationsRetrofitInterface.class);
 
+
         Call<GeneralResponse<List<NotificationModel>>> call = retrofitInterface.getAllNotifications(ApiClient.getAccessToken());
 
         call.enqueue(new GeneralCallback<GeneralResponse<List<NotificationModel>>>(call) {
@@ -69,13 +70,16 @@ public class NotificationPresenter {
                 }
 
 
+
             }
 
             /**
              * Method to be override by the calling class
+
              */
             @Override
             public void onFinalFailure(Call<GeneralResponse<List<NotificationModel>>> call, Throwable t) {
+
                 if (listener != null) {
                     listener.onErrorOccurred(R.string.no_internet_connection_title, R.string.no_internet_connection);
                 }
