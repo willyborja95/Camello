@@ -119,7 +119,7 @@ public class PermissionPresenterImpl {
     public void deletePermission(@NotNull PermissionModel permission, @Nullable BaseProcessListener listener) {
 
         if (listener != null) {
-            listener.onProcessing();
+            listener.onProcessing(null, null);
         }
 
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
@@ -141,7 +141,7 @@ public class PermissionPresenterImpl {
                     deletePermissionFromDatabase(permission);
                     if (listener != null) {
                         Timber.d("Notify the listener");
-                        listener.onSuccessProcess();
+                        listener.onSuccessProcess(null, null);
                     }
 
                 } else {

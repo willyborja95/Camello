@@ -114,6 +114,18 @@
     <string name="processing">Procesando</string>
     <string name="success">Completado</string>
     <string name="no_permissions_to_show">No hay permisos que mostrar</string>
+    <string name="process_not_init_default_title_message">Proceso no inciado</string>
+    <string name="process_successful_default_title_message">Completado</string>
+    <string name="process_processing_default_title_message">Procesando</string>
+    <string name="process_failed_default_title_message">Error</string>
+    <string name="process_canceled_default_title_message">Cancelado</string>
+    <string name="process_not_init_default_message">Proceso no inciado</string>
+    <string name="process_successful_default_tmessage">Proceso completado exitosamente</string>
+    <string name="process_processing_default_message">Proceso en curso</string>
+    <string name="process_failed_default_message">Proceso fallido</string>
+    <string name="process_canceled_default_message">El proceso ha sido cancelado</string>
+    <string name="entrance_has_been_registered">Se registró su asistencia</string>
+    <string name="exit_has_been_deleted">Se registró su salida</string>
 
 
 </resources>

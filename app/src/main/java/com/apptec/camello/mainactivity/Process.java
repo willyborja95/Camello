@@ -2,6 +2,8 @@ package com.apptec.camello.mainactivity;
 
 import androidx.annotation.Nullable;
 
+import com.apptec.camello.R;
+
 import java.util.Objects;
 
 /**
@@ -21,60 +23,111 @@ public class Process {
 
 
     @Nullable
-    private Integer error, titleError;  // String resource
-
-    /**
-     * Constructor used when a error happen
-     *
-     * @param titleError title to be show in a dialog
-     * @param error      text to be show in a dialog
-     */
-    public Process(@Nullable Integer titleError, @Nullable Integer error) {
-        this.error = error;
-        this.titleError = titleError;
-        this.processStatus = Process.FAILED;
-    }
+    private Integer message, titleMessage;  // String resource
 
     /**
      * Constructor used when a the process end
      *
      * @param value
      */
-    public Process(@Nullable int value) {
+    public Process(@Nullable int value, @Nullable Integer titleMessage, @Nullable Integer message) {
         this.processStatus = value;
+
+        if (titleMessage != null) {
+            this.titleMessage = titleMessage;
+        } else {
+            this.resolveEmptyTitleMessage(this.processStatus);
+        }
+        if (message != null) {
+            this.message = message;
+        } else {
+            this.resolveEmptyMessage(this.processStatus);
+        }
+
+
+    }
+
+    /**
+     * Set a default title message for the process status
+     *
+     * @param processStatus this process status
+     */
+    private void resolveEmptyTitleMessage(int processStatus) {
+        switch (processStatus) {
+            case NOT_INIT:
+                this.titleMessage = R.string.process_not_init_default_title_message;
+                break;
+            case SUCCESSFUL:
+                this.titleMessage = R.string.process_successful_default_title_message;
+                break;
+            case PROCESSING:
+                this.titleMessage = R.string.process_processing_default_title_message;
+                break;
+            case FAILED:
+                this.titleMessage = R.string.process_failed_default_title_message;
+                break;
+            case CANCELED:
+                this.titleMessage = R.string.process_canceled_default_title_message;
+                break;
+        }
+    }
+
+    /**
+     * Set a default message for the process status
+     *
+     * @param processStatus this process status
+     */
+    private void resolveEmptyMessage(int processStatus) {
+        switch (processStatus) {
+            case NOT_INIT:
+                this.message = R.string.process_not_init_default_message;
+                break;
+            case SUCCESSFUL:
+                this.message = R.string.process_successful_default_tmessage;
+                break;
+            case PROCESSING:
+                this.message = R.string.process_processing_default_message;
+                break;
+            case FAILED:
+                this.message = R.string.process_failed_default_message;
+                break;
+            case CANCELED:
+                this.message = R.string.process_canceled_default_message;
+                break;
+        }
     }
 
     @Nullable
-    public int getProcessStatus() {
+    public Integer getProcessStatus() {
         return this.processStatus;
     }
 
     @Nullable
-    Integer getTitleError() {
-        return titleError;
+    Integer getTitleMessage() {
+        return titleMessage;
     }
 
     @Nullable
-    Integer getError() {
-        return error;
+    Integer getMessage() {
+        return message;
     }
 
     public void setProcessStatus(int processStatus) {
         this.processStatus = processStatus;
     }
 
-    public void setError(@Nullable Integer error) {
-        this.error = error;
+    public void setMessage(@Nullable Integer message) {
+        this.message = message;
     }
 
-    public void setTitleError(@Nullable Integer titleError) {
-        this.titleError = titleError;
+    public void setTitleMessage(@Nullable Integer titleMessage) {
+        this.titleMessage = titleMessage;
     }
 
 
     public void errorOccurred(int title, int message) {
-        this.titleError = title;
-        this.error = message;
+        this.titleMessage = title;
+        this.message = message;
         this.processStatus = Process.FAILED;
     }
 
@@ -85,12 +138,12 @@ public class Process {
         if (o == null || getClass() != o.getClass()) return false;
         Process process = (Process) o;
         return processStatus == process.processStatus &&
-                Objects.equals(error, process.error) &&
-                Objects.equals(titleError, process.titleError);
+                Objects.equals(message, process.message) &&
+                Objects.equals(titleMessage, process.titleMessage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(processStatus, error, titleError);
+        return Objects.hash(processStatus, message, titleMessage);
     }
 }

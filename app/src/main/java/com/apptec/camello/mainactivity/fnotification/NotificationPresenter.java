@@ -41,7 +41,7 @@ public class NotificationPresenter {
      */
     public void syncNotifications(@Nullable BaseProcessListener listener) {
         if (listener != null) {
-            listener.onProcessing();
+            listener.onProcessing(null, null);
         }
 
         NotificationsRetrofitInterface retrofitInterface =
@@ -61,7 +61,7 @@ public class NotificationPresenter {
 
                     // Notify the listener that all was sync
                     if (listener != null) {
-                        listener.onSuccessProcess();
+                        listener.onSuccessProcess(null, null);
                     }
                 } else {
                     if (listener != null) {
