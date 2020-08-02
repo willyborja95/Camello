@@ -116,7 +116,7 @@ public class StopWorking implements Runnable {
 
                 // Notify the listener
                 if (listener != null) {
-                    listener.onSuccessProcess(R.string.entrance_has_been_registered, null);
+                    listener.onSuccessProcess(R.string.exit_has_been_registered, null);
                 }
             }
 

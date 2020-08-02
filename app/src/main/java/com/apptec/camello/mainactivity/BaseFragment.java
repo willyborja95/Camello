@@ -1,6 +1,5 @@
 package com.apptec.camello.mainactivity;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -26,7 +25,7 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     protected MainViewModel mainViewModel;
 
     // Progress dialog
-    protected ProgressDialog dialog;
+    protected CustomProgressDialog dialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,7 +110,7 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
         // Show a progress dialog
         Timber.d("Show a progress dialog");
 
-        dialog = new ProgressDialog(this.getContext());
+        dialog = new CustomProgressDialog(this.getContext());
 
 
         dialog.setCancelable(false);
@@ -140,17 +139,18 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
             dialog.setContentView(R.layout.dialog_success);
             dialog.setCancelable(true);
 
+            if (title != null) {
+                dialog.setMessage(getString(title));
+            }
+
+            dialog.setOnCancelListener(dialog -> mainViewModel.processConsumed());
+            dialog.setOnDismissListener(dialog -> mainViewModel.processConsumed());
+
         }
 
     }
 
 
-    protected void showProgressDialog() {
-
-    }
-
-    protected void showSuccessDialog() {
-    }
 
 
 }

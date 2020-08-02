@@ -124,8 +124,8 @@
     <string name="process_processing_default_message">Proceso en curso</string>
     <string name="process_failed_default_message">Proceso fallido</string>
     <string name="process_canceled_default_message">El proceso ha sido cancelado</string>
-    <string name="entrance_has_been_registered">Se registró su asistencia</string>
-    <string name="exit_has_been_deleted">Se registró su salida</string>
+    <string name="entrance_has_been_registered">Se registró\nsu entrada</string>
+    <string name="exit_has_been_registered">Se registró\nsu salida</string>
 
 
 </resources>
