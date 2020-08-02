@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.camello.R;
@@ -45,20 +46,22 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     @Override
     public void onResume() {
         super.onResume();
-        mainViewModel.getProcess().observe(this, process -> {
-            Timber.d("Observing the process");
-            if (process == null) {
-                Timber.d("Null process");
-                // Dismiss all dialogs
-                onNullProcess();
-            } else if (process.getProcessStatus() == Process.PROCESSING) {
-                onProcessing();
-            } else if (process.getProcessStatus() == Process.SUCCESSFUL) {
-                onSuccessProcess();
+        mainViewModel.getProcess().observe(this, new Observer<Process>() {
+            @Override
+            public void onChanged(Process process) {
+                Timber.d("Observing the process");
+                if (process == null) {
+                    Timber.d("Null process");
+                    // Dismiss all dialogs
+                    onNullProcess();
+                } else if (process.getProcessStatus() == Process.PROCESSING) {
+                    onProcessing(process.getTitleMessage(), process.getMessage());
+                } else if (process.getProcessStatus() == Process.SUCCESSFUL) {
+                    onSuccessProcess(process.getTitleMessage(), process.getMessage());
+                } else if (process.getProcessStatus() == Process.FAILED) {
+                    onErrorOccurred(process.getTitleMessage(), process.getMessage());
 
-            } else if (process.getProcessStatus() == Process.FAILED) {
-                onErrorOccurred(process.getTitleError(), process.getError());
-
+                }
             }
         });
 
@@ -98,11 +101,13 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     }
 
     /**
-     * Called the moment when  we start a background process
-     * Show a progress dialog
+     * The process is running
+     *
+     * @param title   maybe if a custom title is set. It could be null
+     * @param message maybe if a custom message is set. I t could be null
      */
     @Override
-    public void onProcessing() {
+    public void onProcessing(@Nullable Integer title, @Nullable Integer message) {
         // Show a progress dialog
         Timber.d("Show a progress dialog");
 
@@ -120,11 +125,13 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     }
 
     /**
-     * Called when a process is successful
-     * Present something like a check
+     * Process finished right
+     *
+     * @param title
+     * @param message
      */
     @Override
-    public void onSuccessProcess() {
+    public void onSuccessProcess(@Nullable Integer title, @Nullable Integer message) {
         // Present something like a check
         Timber.d("Progress success");
 
@@ -134,7 +141,6 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
             dialog.setCancelable(true);
 
         }
-
 
     }
 

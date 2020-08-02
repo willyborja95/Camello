@@ -51,7 +51,7 @@ public class StopWorking implements Runnable {
     public void run() {
 
         if (listener != null) {
-            listener.onProcessing();
+            listener.onProcessing(null, null);
         }
         Timber.i("Finishing job and creating a new one");
 
@@ -116,7 +116,7 @@ public class StopWorking implements Runnable {
 
                 // Notify the listener
                 if (listener != null) {
-                    listener.onSuccessProcess();
+                    listener.onSuccessProcess(R.string.entrance_has_been_registered, null);
                 }
             }
 

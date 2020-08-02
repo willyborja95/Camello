@@ -80,23 +80,23 @@ public class MainViewModel extends AndroidViewModel {
             if (_currentProcess.getValue() != null) {
                 _currentProcess.getValue().errorOccurred(title, message);
             } else {
-                _currentProcess.postValue(new Process(title, message));
+                _currentProcess.postValue(new Process(Process.FAILED, title, message));
             }
         }
 
         @Override
-        public void onProcessing() {
+        public void onProcessing(Integer title, Integer message) {
             if (_currentProcess.getValue() != null) {
                 _currentProcess.getValue().setProcessStatus(Process.PROCESSING);
             } else {
-                _currentProcess.postValue(new Process(Process.PROCESSING));
+                _currentProcess.postValue(new Process(Process.PROCESSING, title, message));
             }
         }
 
         @Override
-        public void onSuccessProcess() {
+        public void onSuccessProcess(Integer title, Integer message) {
             Timber.d("onSuccessProcess");
-            _currentProcess.postValue(new Process(Process.SUCCESSFUL));
+            _currentProcess.postValue(new Process(Process.SUCCESSFUL, title, message));
         }
     };
 
@@ -210,7 +210,7 @@ public class MainViewModel extends AndroidViewModel {
      */
     public void changeLastWorkingState() {
         Timber.d("Button clicked");
-        _currentProcess.setValue(new Process(Process.NOT_INIT));
+        _currentProcess.setValue(new Process(Process.NOT_INIT, null, null));
         /*
           Verify if the user is trying to stop or start
           see {@link HandleButtonClicked}
@@ -219,28 +219,23 @@ public class MainViewModel extends AndroidViewModel {
             @Override
             public void onErrorOccurred(int title, int message) {
                 Timber.e("Error occurred");
-
-                _currentProcess.postValue(new Process(title, message));
-
+                _currentProcess.postValue(new Process(Process.FAILED, title, message));
             }
 
             @Override
-            public void onProcessing() {
-
-                _currentProcess.postValue(new Process(Process.PROCESSING));
-
+            public void onProcessing(Integer title, Integer message) {
+                _currentProcess.postValue(new Process(Process.PROCESSING, title, message));
             }
 
             @Override
-            public void onSuccessProcess() {
-
-                _currentProcess.postValue(new Process(Process.SUCCESSFUL));
-
+            public void onSuccessProcess(Integer title, Integer message) {
+                _currentProcess.postValue(new Process(Process.SUCCESSFUL, title, message));
             }
 
             @Override
             public void onPermissionDenied() {
                 Timber.e("Location permission are denied");
+                _currentProcess.postValue(null);
                 _requestLocationPermissions.postValue(true);
             }
 

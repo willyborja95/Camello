@@ -56,7 +56,7 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
     public void run() {
 
         // Indicates the listener that we take care of the process now
-        listener.onProcessing();
+        listener.onProcessing(null, null);
 
         Timber.d("Handling the request to start working");
 
@@ -102,7 +102,7 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
                     changeWorkingStatus();
 
                     // Notify the listener
-                    listener.onSuccessProcess();
+                    listener.onSuccessProcess(R.string.exit_has_been_deleted, null);
 
                 } else {
                     try {
