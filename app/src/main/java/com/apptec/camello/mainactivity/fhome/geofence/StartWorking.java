@@ -102,7 +102,7 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
                     changeWorkingStatus();
 
                     // Notify the listener
-                    listener.onSuccessProcess(R.string.exit_has_been_deleted, null);
+                    listener.onSuccessProcess(R.string.entrance_has_been_registered, null);
 
                 } else {
                     try {
