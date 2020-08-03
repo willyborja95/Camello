@@ -4,10 +4,11 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.camello.R;
+import com.apptec.camello.util.EventListener;
+import com.apptec.camello.util.EventObserver;
 
 import timber.log.Timber;
 
@@ -45,14 +46,15 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     @Override
     public void onResume() {
         super.onResume();
-        mainViewModel.getProcess().observe(this, new Observer<Process>() {
+        mainViewModel.getProcess().observe(this, new EventObserver<>(new EventListener<Process>() {
             @Override
-            public void onChanged(Process process) {
+            public void onEvent(Process process) {
                 Timber.d("Observing the process");
+
                 if (process == null) {
                     Timber.d("Null process");
                     // Dismiss all dialogs
-                    onNullProcess();
+                    // onNullProcess();
                 } else if (process.getProcessStatus() == Process.PROCESSING) {
                     onProcessing(process.getTitleMessage(), process.getMessage());
                 } else if (process.getProcessStatus() == Process.SUCCESSFUL) {
@@ -62,7 +64,7 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
 
                 }
             }
-        });
+        }));
 
     }
 

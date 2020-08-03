@@ -29,6 +29,7 @@ import com.apptec.camello.models.UserModel;
 import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.util.Constants;
+import com.apptec.camello.util.Event;
 
 import java.util.Calendar;
 import java.util.List;
@@ -77,30 +78,22 @@ public class MainViewModel extends AndroidViewModel {
     private BaseProcessListener processListener = new BaseProcessListener() {
         @Override
         public void onErrorOccurred(int title, int message) {
-            if (_currentProcess.getValue() != null) {
-                _currentProcess.getValue().errorOccurred(title, message);
-            } else {
-                _currentProcess.postValue(new Process(Process.FAILED, title, message));
-            }
+            _currentProcess.postValue(new Event<>(new Process(Process.FAILED, title, message)));
         }
 
         @Override
         public void onProcessing(Integer title, Integer message) {
-            if (_currentProcess.getValue() != null) {
-                _currentProcess.getValue().setProcessStatus(Process.PROCESSING);
-            } else {
-                _currentProcess.postValue(new Process(Process.PROCESSING, title, message));
-            }
+            _currentProcess.postValue(new Event<>(new Process(Process.PROCESSING, title, message)));
         }
 
         @Override
         public void onSuccessProcess(Integer title, Integer message) {
             Timber.d("onSuccessProcess");
-            _currentProcess.postValue(new Process(Process.SUCCESSFUL, title, message));
+            _currentProcess.postValue(new Event<>(new Process(Process.SUCCESSFUL, title, message)));
         }
     };
 
-    private final MutableLiveData<Process> _currentProcess = new MutableLiveData<>(null);
+    private final MutableLiveData<Event<Process>> _currentProcess = new MutableLiveData<>(new Event<>(null));
 
 
     // Presenter for each feature
@@ -147,15 +140,20 @@ public class MainViewModel extends AndroidViewModel {
     /**
      * Expose the process
      */
-    public LiveData<Process> getProcess() {
+    public LiveData<Event<Process>> getProcess() {
         return this._currentProcess;
     }
 
     /**
-     * FOr be sure that we present the process one time
+     * For be sure that we present the process one time
      */
     public void processConsumed() {
-        this._currentProcess.setValue(null);
+        try {
+            this._currentProcess.getValue().consume();
+        } catch (NullPointerException npe) {
+            Timber.w("Event process is null");
+        }
+
     }
 
 
@@ -210,7 +208,7 @@ public class MainViewModel extends AndroidViewModel {
      */
     public void changeLastWorkingState() {
         Timber.d("Button clicked");
-        _currentProcess.setValue(new Process(Process.NOT_INIT, null, null));
+        _currentProcess.setValue(new Event<>(new Process(Process.NOT_INIT, null, null)));
         /*
           Verify if the user is trying to stop or start
           see {@link HandleButtonClicked}
@@ -219,17 +217,17 @@ public class MainViewModel extends AndroidViewModel {
             @Override
             public void onErrorOccurred(int title, int message) {
                 Timber.e("Error occurred");
-                _currentProcess.postValue(new Process(Process.FAILED, title, message));
+                _currentProcess.postValue(new Event<>(new Process(Process.FAILED, title, message)));
             }
 
             @Override
             public void onProcessing(Integer title, Integer message) {
-                _currentProcess.postValue(new Process(Process.PROCESSING, title, message));
+                _currentProcess.postValue(new Event<>(new Process(Process.PROCESSING, title, message)));
             }
 
             @Override
             public void onSuccessProcess(Integer title, Integer message) {
-                _currentProcess.postValue(new Process(Process.SUCCESSFUL, title, message));
+                _currentProcess.postValue(new Event<>(new Process(Process.SUCCESSFUL, title, message)));
             }
 
             @Override
