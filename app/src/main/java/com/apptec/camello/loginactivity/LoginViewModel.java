@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.camello.R;
+import com.apptec.camello.util.Event;
+import com.apptec.camello.util.Process;
 
 import timber.log.Timber;
 
@@ -21,7 +23,7 @@ public class LoginViewModel extends AndroidViewModel {
     public MutableLiveData<LoginFormState> loginFormState;
 
     // To show the progress of the login progress to the view
-    private MutableLiveData<LoginProgress> loginProgress;
+    private MutableLiveData<Event<Process>> loginProgress;
 
     // Read IMEI permission
     public MutableLiveData<Boolean> permissionGranted = new MutableLiveData<>(false);
@@ -40,7 +42,7 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
 
         loginFormState = new MutableLiveData<>();
-        loginProgress = new MutableLiveData<>(new LoginProgress(LoginProgress.NOT_INIT)); // Because we don't know yet the result
+        loginProgress = new MutableLiveData<>(new Event<>(new Process(Process.NOT_INIT, null, null))); // Because we don't know yet the result
 
         loginPresenter = new LoginPresenter();
         Timber.d("Login view model view model built");
@@ -67,7 +69,7 @@ public class LoginViewModel extends AndroidViewModel {
         return loginFormState;
     }
 
-    LiveData<LoginProgress> getLoginProgress() {
+    LiveData<Event<Process>> getLoginProgress() {
         return loginProgress;
     }
 

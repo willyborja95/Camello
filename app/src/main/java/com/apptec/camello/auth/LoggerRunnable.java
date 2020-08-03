@@ -4,7 +4,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.camello.R;
-import com.apptec.camello.loginactivity.LoginProgress;
 import com.apptec.camello.mainactivity.fdevice.DeviceRetrofitInterface;
 import com.apptec.camello.models.CompanyModel;
 import com.apptec.camello.models.UpdatePushTokenBody;
@@ -17,6 +16,8 @@ import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.Error;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.camello.util.Constants;
+import com.apptec.camello.util.Event;
+import com.apptec.camello.util.Process;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -35,14 +36,14 @@ import timber.log.Timber;
  */
 public class LoggerRunnable implements Runnable {
 
-    private MutableLiveData<LoginProgress> loginResult; // This will be the listener got by the view model
+    private MutableLiveData<Event<Process>> loginResult; // This will be the listener got by the view model
 
 
     private LoginDataValidator data;
 
 
     public LoggerRunnable(
-            MutableLiveData<LoginProgress> loginResult,
+            MutableLiveData<Event<Process>> loginResult,
             LoginDataValidator data) {
 
         this.data = data.getValidData();
@@ -279,7 +280,7 @@ public class LoggerRunnable implements Runnable {
         SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, needsToClaimThisDevice);
 
 
-        loginResult.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
+        loginResult.postValue(new Event<>(new Process(Process.SUCCESSFUL, null, null)));
 
     }
 
@@ -289,7 +290,9 @@ public class LoggerRunnable implements Runnable {
      */
     private void doNotLetLogin() {
 
-        loginResult.postValue(new LoginProgress(R.string.device_already_taken_title, R.string.device_already_taken));
+        loginResult.postValue(
+                new Event<>(new Process(Process.FAILED, R.string.device_already_taken_title, R.string.device_already_taken))
+        );
     }
 
 

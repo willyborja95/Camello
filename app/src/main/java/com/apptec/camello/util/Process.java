@@ -1,4 +1,4 @@
-package com.apptec.camello.mainactivity;
+package com.apptec.camello.util;
 
 import androidx.annotation.Nullable;
 
@@ -103,12 +103,12 @@ public class Process {
     }
 
     @Nullable
-    Integer getTitleMessage() {
+    public Integer getTitleMessage() {
         return titleMessage;
     }
 
     @Nullable
-    Integer getMessage() {
+    public Integer getMessage() {
         return message;
     }
 

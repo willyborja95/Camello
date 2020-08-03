@@ -20,6 +20,9 @@ import com.apptec.camello.mainactivity.MainActivity;
 import com.apptec.camello.mainactivity.fnotification.NotificationBuilder;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
+import com.apptec.camello.util.EventListener;
+import com.apptec.camello.util.EventObserver;
+import com.apptec.camello.util.Process;
 
 import timber.log.Timber;
 
@@ -86,29 +89,34 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
 
         // Setup the result listener for the result
-        loginViewModel.getLoginProgress().observe(this, loginResult -> {
-            Timber.d("Login result has changed");
-            Timber.d(loginResult.toString());
-            // Verify is the result is success
-            if (loginResult.getProcessStatus() == LoginProgress.SUCCESSFUL) {
-                // Log in the user
-                // - navigate to logged activity
-                navigateToLoggedView();
-                loginResult = null;
-            } else if (loginResult.getProcessStatus() == LoginProgress.PROCESSING) {
-                // Processing
-                binding.progressBar.setVisibility(View.VISIBLE);
+        loginViewModel.getLoginProgress().observe(this, new EventObserver<>(new EventListener<Process>() {
+            @Override
+            public void onEvent(Process process) {
+                Timber.d("Login result has changed");
 
-            } else if (loginResult.getProcessStatus() == LoginProgress.FAILED) {
-                // Show the errors
-                binding.progressBar.setVisibility(View.INVISIBLE);
-                ResultDialog resultDialog = new ResultDialog(loginResult.getTitleError(), loginResult.getError());
-                resultDialog.show(getSupportFragmentManager(), "Result");
-                loginResult = null;
+                // Verify is the result is success
+                if (process != null) {
+                    Timber.d(process.toString());
+                    if (process.getProcessStatus() == Process.SUCCESSFUL) {
+                        // Log in the user
+                        // - navigate to logged activity
+                        navigateToLoggedView();
+
+                    } else if (process.getProcessStatus() == Process.PROCESSING) {
+                        // Processing
+                        binding.progressBar.setVisibility(View.VISIBLE);
+
+                    } else if (process.getProcessStatus() == Process.FAILED) {
+                        // Show the errors
+                        binding.progressBar.setVisibility(View.INVISIBLE);
+                        ResultDialog resultDialog = new ResultDialog(process.getTitleMessage(), process.getMessage());
+                        resultDialog.show(getSupportFragmentManager(), "Result");
+                    }
+                }
+
+
             }
-
-
-        });
+        }));
 
         // Set if the ream IMEI permission is granted
         loginViewModel.permissionGranted.setValue(this.isReadImeiPermissionGranted());

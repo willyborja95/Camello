@@ -14,6 +14,8 @@ import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.camello.util.Constants;
+import com.apptec.camello.util.Event;
+import com.apptec.camello.util.Process;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -33,20 +35,14 @@ public class LoginPresenter {
     /**
      * Verifying if credentials are saved
      */
-    public void verifyPreviousLogin(MutableLiveData<LoginProgress> loginResultMutableLiveData) {
+    public void verifyPreviousLogin(MutableLiveData<Event<Process>> loginResultMutableLiveData) {
 
         if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.IS_USER_LOGGED, false)) { // If is a previous user logged
             Timber.d("User already logged");
 
-            loginResultMutableLiveData.postValue(new LoginProgress(LoginProgress.SUCCESSFUL));
+            loginResultMutableLiveData.postValue(new Event<>(new Process(Process.SUCCESSFUL, null, null)));
         }
     }
-
-
-
-
-
-
 
 
     /**
@@ -63,7 +59,7 @@ public class LoginPresenter {
      * @param email       user email
      * @param password    user password
      */
-    public void handleLogin(MutableLiveData<LoginProgress> loginResult, String email, String password) {
+    public void handleLogin(MutableLiveData<Event<Process>> loginResult, String email, String password) {
 
         Timber.d("Handling login process");
 
@@ -130,7 +126,13 @@ public class LoginPresenter {
                 } else if (response.code() == 404 || response.code() == 401) {
                     // Failed credentials
                     Timber.w("Invalid credentials");
-                    loginResult.postValue(new LoginProgress(R.string.invalid_credentials_title, R.string.invalid_credentials));
+                    loginResult.postValue(
+                            new Event<>(
+                                    new Process(
+                                            Process.FAILED, R.string.invalid_credentials_title,
+                                            R.string.invalid_credentials))
+
+                    );
 
                 }
             }
@@ -145,7 +147,12 @@ public class LoginPresenter {
             @Override
             public void onFinalFailure(Call<GeneralResponse<LoginDataResponse>> call, Throwable t) {
                 Timber.w("Maybe there is not internet connection");
-                loginResult.postValue(new LoginProgress(R.string.no_internet_connection_title, R.string.no_internet_connection));
+                loginResult.postValue(
+                        new Event<>(
+                                new Process(Process.FAILED,
+                                        R.string.no_internet_connection_title,
+                                        R.string.no_internet_connection))
+                );
 
             }
         });

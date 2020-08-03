@@ -30,6 +30,7 @@ import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.util.Constants;
 import com.apptec.camello.util.Event;
+import com.apptec.camello.util.Process;
 
 import java.util.Calendar;
 import java.util.List;

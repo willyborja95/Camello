@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.apptec.camello.R;
 import com.apptec.camello.util.EventListener;
 import com.apptec.camello.util.EventObserver;
+import com.apptec.camello.util.Process;
 
 import timber.log.Timber;
 
