@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        style="@style/titles"
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="20dp"
-        android:text="@string/dialog_permission_title"></TextView>
+        android:text="@string/dialog_permission_title" />
 
     <Spinner
         android:id="@+id/spnPermissionType"
@@ -22,8 +22,9 @@
         android:layout_marginRight="35dp"
         android:spinnerMode="dropdown" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/txtStartDate"
+        style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="35dp"
@@ -35,13 +36,13 @@
         android:drawableStart="@drawable/ic_calendar"
         android:drawablePadding="10dp"
         android:focusable="false"
-        android:fontFamily="@font/opensans_light"
-        android:hint="@string/start_date_label"
-        android:inputType="date"
-        android:textSize="17dp" />
 
-    <EditText
+        android:hint="@string/start_date_label"
+        android:inputType="date" />
+
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/txtEndDate"
+        style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="35dp"
@@ -53,10 +54,9 @@
         android:drawableStart="@drawable/ic_calendar"
         android:drawablePadding="10dp"
         android:focusable="false"
-        android:fontFamily="@font/opensans_light"
+
         android:hint="@string/end_date_label"
-        android:inputType="date"
-        android:textSize="17dp" />
+        android:inputType="date" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textField"
@@ -66,7 +66,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="35dp"
         android:layout_marginBottom="10dp"
-        android:hint="Comentario"
+        android:hint="@string/comment"
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText

@@ -24,17 +24,15 @@
 
 
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txtPermissionType"
+                style="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/nunito_bold"
                 android:gravity="center_vertical"
                 android:text="@{permissionFull.permissionType.typeName}"
-                android:textColor="@color/black"
-                android:textSize="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Intempestivo" />
@@ -54,31 +52,32 @@
                 tools:src="@drawable/ic_delete" />
 
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
 
                 android:id="@+id/lblPermissionStatus"
+                style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/opensans_light"
+
                 android:text="Estado: "
-                android:textColor="@color/black"
-                android:textSize="15dp"
+
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtPermissionType"
                 tools:text="Estado: " />
 
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txtPermissionStatus"
+                style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:fontFamily="@font/opensans_light"
+
                 android:text="@{permissionFull.permissionStatus.statusName}"
-                android:textColor="@color/black"
-                android:textSize="15dp"
+
                 app:layout_constraintBaseline_toBaselineOf="@+id/lblPermissionStatus"
                 app:layout_constraintStart_toEndOf="@+id/lblPermissionStatus"
                 tools:text="Aceptado" />
@@ -104,36 +103,35 @@
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/white"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/circle_chip_background"
-                    android:src="@drawable/ic_play"
-                    tools:src="@drawable/ic_play" />
+                    android:src="@drawable/ic_play" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/txtStartDate"
-
+                        style="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@android:color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/opensans_light"
                         android:text="@{permissionFull.onlyStartDate}"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
                         tools:text="03-02-2020" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/txtStartTime"
-
+                        style="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@android:color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/opensans_light"
+
                         android:text="@{permissionFull.onlyStartTime}"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
+
+
                         tools:text="11:41" />
                 </LinearLayout>
             </LinearLayout>
@@ -156,6 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
+                    android:backgroundTint="@android:color/white"
                     android:background="@drawable/circle_chip_background"
                     android:src="@drawable/ic_stop" />
 
@@ -164,54 +163,48 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/txtEndDate"
+                        style="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@android:color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/opensans_light"
                         android:text="@{permissionFull.onlyEndDate}"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
                         tools:text="03-02-2020" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/txtEndTime"
+                        style="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@android:color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/opensans_light"
                         android:text="@{permissionFull.onlyEndTime}"
-                        android:textColor="@color/white"
-                        android:textSize="15dp"
                         tools:text="15:00" />
                 </LinearLayout>
 
 
             </LinearLayout>
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/lblComment"
+                style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:fontFamily="@font/opensans_light"
-                android:textColor="@color/black"
-                android:textSize="15dp"
                 android:text="Comentario: "
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txtComment"
+                style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/opensans_light"
-                android:textSize="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/lblComment"

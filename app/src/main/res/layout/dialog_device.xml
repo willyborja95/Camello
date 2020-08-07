@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/title_add_device_fragment"
-        android:fontFamily="@font/nunito_bold"
-        android:textColor="@color/black"
-        android:textSize="20dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="20dp"
-        ></TextView>
+        android:text="@string/title_add_device_fragment" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit_text_device_name"
+        style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre del equipo"
         android:layout_marginLeft="35dp"
-        android:layout_marginRight="35dp"></EditText>
+        android:layout_marginRight="35dp"
+        android:hint="@string/device_name" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit_text_device_model"
+        style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Modelo"
         android:layout_marginLeft="35dp"
-        android:layout_marginRight="35dp"></EditText>
+        android:layout_marginRight="35dp"
+        android:hint="@string/model" />
 
 
 </LinearLayout>
