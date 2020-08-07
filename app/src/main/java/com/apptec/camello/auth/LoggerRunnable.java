@@ -98,6 +98,7 @@ public class LoggerRunnable implements Runnable {
      */
     public void saveUserAndCompany(UserModel user, CompanyModel company, List<WorkZoneModel> workZoneModels) {
 
+        user.setCompany(company);
         new Thread(() -> {
             RoomHelper.getAppDatabaseInstance().userDao().insertOrReplace(user);
             RoomHelper.getAppDatabaseInstance().companyDao().insertOrReplace(company);
