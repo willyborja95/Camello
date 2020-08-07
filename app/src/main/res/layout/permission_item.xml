@@ -116,6 +116,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/txtStartDate"
                         style="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@android:color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{permissionFull.onlyStartDate}"
@@ -124,6 +125,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/txtStartTime"
                         style="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@android:color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
@@ -164,6 +166,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/txtEndDate"
                         style="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@android:color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{permissionFull.onlyEndDate}"
@@ -172,6 +175,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/txtEndTime"
                         style="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@android:color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{permissionFull.onlyEndTime}"
