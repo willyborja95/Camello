@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Camello</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="home_fragment_title">Panel Principal</string>
+    <string name="home_fragment_title">Registro</string>
     <string name="title_dashboard">Historial</string>
 
     <string name="devices_fragment_title">Equipos</string>
@@ -49,9 +49,9 @@
     <string name="parameter_missing_error">Parámetro requerido</string>
     <string name="login_progress_dialog_message">Autenticando usuario</string>
     <string name="home_text_view_start_message">Bienvenido</string>
-    <string name="home_button_start_message">Iniciar</string>
+    <string name="home_button_start_message">INICIAR</string>
     <string name="home_text_view_finish_message">Trabajando</string>
-    <string name="home_button_finish_message">Finalizar</string>
+    <string name="home_button_finish_message">FINALIZAR</string>
     <string name="title_error_connection">Error de conexión</string>
     <string name="message_error_connection">Al parecer no hay conexión a Internet.</string>
     <string name="message_example">A través de este medio se comunica que el día viernes de esta semana se suspenden las actividades por motivos de la emeregencia sanitaria.</string>
@@ -126,6 +126,9 @@
     <string name="process_canceled_default_message">El proceso ha sido cancelado</string>
     <string name="entrance_has_been_registered">Se registró\nsu entrada</string>
     <string name="exit_has_been_registered">Se registró\nsu salida</string>
+    <string name="device_name">Nombre del equipo</string>
+    <string name="model">Modelo</string>
+    <string name="comment">Comentario</string>
 
 
 </resources>

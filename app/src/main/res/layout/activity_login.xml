@@ -24,10 +24,10 @@
             android:id="@+id/imageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/white"
+            android:adjustViewBounds="false"
+            android:background="@android:color/white"
             android:contentDescription="@string/logo_alt"
             android:elevation="0dp"
-            android:adjustViewBounds="false"
             android:src="@mipmap/ic_launcher_camello"
             app:layout_constraintBottom_toTopOf="@+id/textView2"
             app:layout_constraintEnd_toEndOf="parent"
@@ -70,8 +70,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:autofillHints=""
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/opensans_light"
+                android:backgroundTint="@android:color/white"
                 android:hint="@string/email_hint"
                 android:inputType="textWebEmailAddress"
 
@@ -79,7 +78,7 @@
                 android:textColor="@android:color/white"
                 android:textColorHighlight="@android:color/white"
                 android:textColorHint="@android:color/white"
-                android:textColorLink="@color/white"
+                android:textColorLink="@android:color/white"
                 android:textCursorDrawable="@drawable/text_cursor_login"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/password"
@@ -96,8 +95,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:autofillHints=""
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/opensans_light"
+                android:backgroundTint="@android:color/white"
                 android:hint="@string/password_hint"
                 android:inputType="textPassword"
 
@@ -113,16 +111,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/email" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txtBienvenido"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:fontFamily="@font/nunito_bold"
                 android:text="@string/init_session_label"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:textStyle="bold"
+                android:textColor="@android:color/white"
+
                 app:layout_constraintEnd_toStartOf="@+id/loginButton"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -130,15 +127,13 @@
 
             <TextView
                 android:id="@+id/txtIniciarSesion"
+                style="@style/TextAppearance.MaterialComponents.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtBienvenido"
                 android:layout_marginStart="16dp"
-                android:fontFamily="@font/opensans_light"
-
                 android:text="@string/welcome"
-                android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textColor="@android:color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtBienvenido" />
 

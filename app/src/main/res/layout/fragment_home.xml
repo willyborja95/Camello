@@ -46,32 +46,32 @@
                     android:gravity="bottom"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/fragment_home_button_message"
+                        style="@style/TextAppearance.MaterialComponents.Headline6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="15dp"
-                        android:fontFamily="@font/nunito_bold"
+
                         android:text="@string/home_text_view_start_message"
                         android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="25sp" />
+                        android:textColor="@android:color/black" />
 
 
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/fragment_home_start_button"
+                    style="@style/TextAppearance.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:background="@drawable/bottom_half_circle"
+                    android:onClick="handleButtonClicked"
                     android:paddingBottom="20sp"
                     android:text="@string/home_button_start_message"
                     android:textAllCaps="false"
-                    android:onClick="handleButtonClicked"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
                     tools:text="@string/home_button_start_message" />
             </LinearLayout>
 

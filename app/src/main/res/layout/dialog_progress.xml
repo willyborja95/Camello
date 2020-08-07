@@ -24,11 +24,12 @@
             android:layout_height="wrap_content" />
 
 
-        <TextView
-            android:gravity="center"
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="center"
             android:text="@string/processing" />
 
 

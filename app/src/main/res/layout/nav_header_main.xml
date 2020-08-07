@@ -29,23 +29,28 @@
             android:layout_height="64dp"
             android:src="@drawable/ic_user" />
 
-        <TextView
-            android:id="@+id/company_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:text="@{user.company.companyName}"
-            tools:text="App Tec S.A." />
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/user_fullname"
+            style="@style/TextAppearance.MaterialComponents.Subtitle2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:text="@{user.name}"
             tools:text="Mario Piedrita" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/company_name"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.5"
+            android:gravity="center"
+
+            android:text="@{user.company.companyName}"
+            android:textColor="@android:color/black"
+            tools:text="App Tec S.A." />
+
 
     </LinearLayout>
 
