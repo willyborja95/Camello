@@ -5,14 +5,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.ActivityLoginBinding;
@@ -22,7 +22,6 @@ import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
 import com.apptec.camello.util.EventListener;
 import com.apptec.camello.util.EventObserver;
-import com.apptec.camello.util.Process;
 
 import timber.log.Timber;
 
@@ -40,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     // Using data binding
     ActivityLoginBinding binding;
 
+    private NavController navController;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,22 +53,16 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);         // Getting the view model
 
+        setUpNavigation();
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+
+        loginViewModel.getNewDestination().observe(this, new EventObserver<>(new EventListener<Integer>() {
             @Override
-            public void onChanged(LoginFormState loginFormState) {
-                if (loginFormState.isDataValid()) {
-                    //
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                } else {
-                    // Data invalid, set errors
-                    // binding.progressBar.setVisibility(View.INVISIBLE);
-                    binding.email.setError(getString(loginFormState.getUsernameError()));
-                    binding.password.setError(getString(loginFormState.getPasswordError()));
-                }
-            }
-        });
+            public void onEvent(Integer integer) {
+                // TODO
 
+            }
+        }));
 
         binding.setLoginViewModel(loginViewModel);
 
@@ -88,35 +83,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
-        // Setup the result listener for the result
-        loginViewModel.getLoginProgress().observe(this, new EventObserver<>(new EventListener<Process>() {
-            @Override
-            public void onEvent(Process process) {
-                Timber.d("Login result has changed");
-
-                // Verify is the result is success
-                if (process != null) {
-                    Timber.d(process.toString());
-                    if (process.getProcessStatus() == Process.SUCCESSFUL) {
-                        // Log in the user
-                        // - navigate to logged activity
-                        navigateToLoggedView();
-
-                    } else if (process.getProcessStatus() == Process.PROCESSING) {
-                        // Processing
-                        binding.progressBar.setVisibility(View.VISIBLE);
-
-                    } else if (process.getProcessStatus() == Process.FAILED) {
-                        // Show the errors
-                        binding.progressBar.setVisibility(View.INVISIBLE);
-                        ResultDialog resultDialog = new ResultDialog(process.getTitleMessage(), process.getMessage());
-                        resultDialog.show(getSupportFragmentManager(), "Result");
-                    }
-                }
-
-
-            }
-        }));
 
         // Set if the ream IMEI permission is granted
         loginViewModel.permissionGranted.setValue(this.isReadImeiPermissionGranted());
@@ -173,6 +139,33 @@ public class LoginActivity extends AppCompatActivity {
 
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Set up the navigation system
+     */
+    private void setUpNavigation() {
+
+        navController = ((NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.login_nav_host_fragment))
+                .getNavController();
+
+        loginViewModel.getNewDestination().observe(this, new EventObserver<>(new EventListener<Integer>() {
+            @Override
+            public void onEvent(Integer destinationId) {
+                Timber.d("New destination. ");
+                navigate(destinationId);
+            }
+        }));
+    }
+
+    /**
+     * We finally navigate to the specified destination
+     *
+     * @param destId resource layout id
+     */
+    private void navigate(int destId) {
+        navController.navigate(destId);
     }
 
 

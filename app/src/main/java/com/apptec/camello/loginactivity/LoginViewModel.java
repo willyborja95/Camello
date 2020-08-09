@@ -34,6 +34,9 @@ public class LoginViewModel extends AndroidViewModel {
     // Presenter that do hard work
     private LoginPresenter loginPresenter;
 
+    // To know which activity we have to navigate to
+    private final MutableLiveData<Event<Integer>> newDestination = new MutableLiveData<>();
+
     /**
      * Constructor
      */
@@ -102,6 +105,24 @@ public class LoginViewModel extends AndroidViewModel {
         }
     }
 
+    /**
+     * Expose the destination
+     *
+     * @return newDestination
+     */
+    public LiveData<Event<Integer>> getNewDestination() {
+        return newDestination;
+    }
+
+    /**
+     * Method called inside the fragments and will trigger a navigation to the new destination
+     *
+     * @param destinationId
+     */
+    public void setNewDestination(int destinationId) {
+        newDestination.setValue(new Event<>(destinationId));
+    }
+
 
     // A placeholder username validation check
     private boolean isUserNameValid(String username) {
@@ -122,8 +143,6 @@ public class LoginViewModel extends AndroidViewModel {
 
 
     // To notify the activity if we should request the permission
-
-
     public MutableLiveData<Boolean> getShouldRequestPermission() {
         return shouldRequestPermission;
     }
