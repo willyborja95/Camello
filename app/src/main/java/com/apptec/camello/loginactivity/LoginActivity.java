@@ -1,10 +1,13 @@
 package com.apptec.camello.loginactivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,11 +58,21 @@ public class LoginActivity extends AppCompatActivity {
 
         setUpNavigation();
 
+        // Present the right fragment
+        if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.USER_ACCEPTED_PRIVACY_POLICY, false)) {
+            loginViewModel.setNewDestination(ShowPoliciesFragmentDirections.actionShowPoliciesFragmentToFormFragment().getActionId());
+        } else {
+            hideKeyboard();
+            loginViewModel.setNewDestination(R.id.showPoliciesFragment);
+        }
 
         loginViewModel.getNewDestination().observe(this, new EventObserver<>(new EventListener<Integer>() {
             @Override
             public void onEvent(Integer integer) {
-                // TODO
+                if (integer != null) {
+                    navigate(integer);
+                }
+
 
             }
         }));
@@ -73,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         Timber.d("Finished on create");
+
 
 
     }
@@ -94,7 +108,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Set a listener for navigate to the logged activity
+        loginViewModel.getShouldNavigateToMainActivity().observe(this, new EventObserver<>(new EventListener<Boolean>() {
+            @Override
+            public void onEvent(Boolean aBoolean) {
+                if (aBoolean) {
+                    navigateToLoggedView();
+                }
+            }
+        }));
+
+
         super.onResume();
+
 
     }
 
@@ -166,6 +192,26 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void navigate(int destId) {
         navController.navigate(destId);
+    }
+
+
+    /**
+     * Method to hide the keyboard input
+     */
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = this.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        try {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch (NullPointerException npe) {
+            Timber.w(npe);
+        }
+
     }
 
 

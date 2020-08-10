@@ -37,6 +37,9 @@ public class LoginViewModel extends AndroidViewModel {
     // To know which activity we have to navigate to
     private final MutableLiveData<Event<Integer>> newDestination = new MutableLiveData<>();
 
+    // Variable to know if we should navigate to next fragment
+    private final MutableLiveData<Event<Boolean>> shouldNavigateToMainActivity = new MutableLiveData<>();
+
     /**
      * Constructor
      */
@@ -145,5 +148,13 @@ public class LoginViewModel extends AndroidViewModel {
     // To notify the activity if we should request the permission
     public MutableLiveData<Boolean> getShouldRequestPermission() {
         return shouldRequestPermission;
+    }
+
+    public void navigateToMainActivity() {
+        this.shouldNavigateToMainActivity.setValue(new Event<>(false));
+    }
+
+    public MutableLiveData<Event<Boolean>> getShouldNavigateToMainActivity() {
+        return shouldNavigateToMainActivity;
     }
 }

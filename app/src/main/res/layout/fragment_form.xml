@@ -9,6 +9,11 @@
         <variable
             name="loginViewModel"
             type="com.apptec.camello.loginactivity.LoginViewModel" />
+
+        <variable
+            name="navDirection"
+            type="androidx.navigation.NavDirections" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

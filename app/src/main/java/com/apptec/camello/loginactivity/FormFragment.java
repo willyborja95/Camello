@@ -73,7 +73,7 @@ public class FormFragment extends BaseLoginFragment {
                     if (process.getProcessStatus() == Process.SUCCESSFUL) {
                         // Log in the user
                         // - navigate to logged activity
-                        // loginViewModel.setNewDestination();
+                        loginViewModel.navigateToMainActivity();
 
                     } else if (process.getProcessStatus() == Process.PROCESSING) {
                         // Processing
