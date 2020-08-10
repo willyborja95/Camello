@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/login_navigation"
+    app:startDestination="@id/showPoliciesFragment">
+
+    <fragment
+        android:id="@+id/formFragment"
+        android:name="com.apptec.camello.loginactivity.FormFragment"
+        android:label="FormFragment">
+        <action
+            android:id="@+id/action_formFragment_to_showPoliciesFragment"
+            app:destination="@id/showPoliciesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/showPoliciesFragment"
+        android:name="com.apptec.camello.loginactivity.ShowPoliciesFragment"
+        android:label="ShowPoliciesFragment">
+        <action
+            android:id="@+id/action_showPoliciesFragment_to_formFragment"
+            app:destination="@id/formFragment" />
+    </fragment>
+</navigation>

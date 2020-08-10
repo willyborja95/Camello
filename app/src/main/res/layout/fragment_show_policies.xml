@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:windowSoftInputMode="stateAlwaysHidden"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="loginViewModel"
+            type="com.apptec.camello.loginactivity.LoginViewModel" />
+
+        <variable
+            name="navDirection"
+            type="androidx.navigation.NavDirections" />
+
+        <variable
+            name="buttonEnabled"
+            type="Boolean" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin">
+
+        <WebView
+            android:id="@+id/web_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/accept_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/accept_button"
+            android:background="@drawable/accept_button_rounded"
+            android:onClick="@{() -> loginViewModel.setNewDestination(navDirection.getActionId())}"
+            android:backgroundTint="@{buttonEnabled == true ? @color/colorPrimary : @android:color/darker_gray}"
+            android:textColor="@android:color/background_light"
+            tools:backgroundTint="@color/colorPrimary"
+
+            tools:textColor="@android:color/white"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="ACEPTAR"
+            android:paddingStart="48dp"
+            android:paddingEnd="48dp"
+            app:cornerRadius="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/web_view" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

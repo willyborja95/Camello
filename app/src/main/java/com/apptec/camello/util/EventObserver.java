@@ -16,6 +16,7 @@ package com.apptec.camello.util;
  */
 
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
 /**
@@ -38,6 +39,7 @@ public class EventObserver<T> implements Observer<Event<T>> {
      *
      * @param event It could be null
      */
+    @Nullable
     @Override
     public void onChanged(Event<T> event) {
         if (event != null) {

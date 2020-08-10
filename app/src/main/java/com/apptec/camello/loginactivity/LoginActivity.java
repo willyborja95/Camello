@@ -1,18 +1,21 @@
 package com.apptec.camello.loginactivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.ActivityLoginBinding;
@@ -22,7 +25,6 @@ import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
 import com.apptec.camello.util.EventListener;
 import com.apptec.camello.util.EventObserver;
-import com.apptec.camello.util.Process;
 
 import timber.log.Timber;
 
@@ -40,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
     // Using data binding
     ActivityLoginBinding binding;
 
+    private NavController navController;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,22 +56,26 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);         // Getting the view model
 
+        setUpNavigation();
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        // Present the right fragment
+        if (SharedPreferencesHelper.getSharedPreferencesInstance().getBoolean(Constants.USER_ACCEPTED_PRIVACY_POLICY, false)) {
+            loginViewModel.setNewDestination(ShowPoliciesFragmentDirections.actionShowPoliciesFragmentToFormFragment().getActionId());
+        } else {
+            hideKeyboard();
+            loginViewModel.setNewDestination(R.id.showPoliciesFragment);
+        }
+
+        loginViewModel.getNewDestination().observe(this, new EventObserver<>(new EventListener<Integer>() {
             @Override
-            public void onChanged(LoginFormState loginFormState) {
-                if (loginFormState.isDataValid()) {
-                    //
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                } else {
-                    // Data invalid, set errors
-                    // binding.progressBar.setVisibility(View.INVISIBLE);
-                    binding.email.setError(getString(loginFormState.getUsernameError()));
-                    binding.password.setError(getString(loginFormState.getPasswordError()));
+            public void onEvent(Integer integer) {
+                if (integer != null) {
+                    navigate(integer);
                 }
-            }
-        });
 
+
+            }
+        }));
 
         binding.setLoginViewModel(loginViewModel);
 
@@ -80,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         Timber.d("Finished on create");
 
 
+
     }
 
     /**
@@ -88,35 +97,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
-        // Setup the result listener for the result
-        loginViewModel.getLoginProgress().observe(this, new EventObserver<>(new EventListener<Process>() {
-            @Override
-            public void onEvent(Process process) {
-                Timber.d("Login result has changed");
-
-                // Verify is the result is success
-                if (process != null) {
-                    Timber.d(process.toString());
-                    if (process.getProcessStatus() == Process.SUCCESSFUL) {
-                        // Log in the user
-                        // - navigate to logged activity
-                        navigateToLoggedView();
-
-                    } else if (process.getProcessStatus() == Process.PROCESSING) {
-                        // Processing
-                        binding.progressBar.setVisibility(View.VISIBLE);
-
-                    } else if (process.getProcessStatus() == Process.FAILED) {
-                        // Show the errors
-                        binding.progressBar.setVisibility(View.INVISIBLE);
-                        ResultDialog resultDialog = new ResultDialog(process.getTitleMessage(), process.getMessage());
-                        resultDialog.show(getSupportFragmentManager(), "Result");
-                    }
-                }
-
-
-            }
-        }));
 
         // Set if the ream IMEI permission is granted
         loginViewModel.permissionGranted.setValue(this.isReadImeiPermissionGranted());
@@ -128,7 +108,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Set a listener for navigate to the logged activity
+        loginViewModel.getShouldNavigateToMainActivity().observe(this, new EventObserver<>(new EventListener<Boolean>() {
+            @Override
+            public void onEvent(Boolean aBoolean) {
+                if (aBoolean != null && aBoolean) {
+                    navigateToLoggedView();
+                }
+            }
+        }));
+
+
         super.onResume();
+
 
     }
 
@@ -173,6 +165,53 @@ public class LoginActivity extends AppCompatActivity {
 
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Set up the navigation system
+     */
+    private void setUpNavigation() {
+
+        navController = ((NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.login_nav_host_fragment))
+                .getNavController();
+
+        loginViewModel.getNewDestination().observe(this, new EventObserver<>(new EventListener<Integer>() {
+            @Override
+            public void onEvent(Integer destinationId) {
+                Timber.d("New destination. ");
+                navigate(destinationId);
+            }
+        }));
+    }
+
+    /**
+     * We finally navigate to the specified destination
+     *
+     * @param destId resource layout id
+     */
+    private void navigate(int destId) {
+        navController.navigate(destId);
+    }
+
+
+    /**
+     * Method to hide the keyboard input
+     */
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = this.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        try {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch (NullPointerException npe) {
+            Timber.w(npe);
+        }
+
     }
 
 

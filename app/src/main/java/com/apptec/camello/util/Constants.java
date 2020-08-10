@@ -91,4 +91,5 @@ public class Constants {
 
     public static final String KEY_FILE_NAME = "key_file.txt";
 
+    public static final String USER_ACCEPTED_PRIVACY_POLICY = "ACCEPTED_PRIVACY_POLICY";
 }
