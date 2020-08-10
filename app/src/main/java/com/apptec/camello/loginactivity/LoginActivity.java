@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.getShouldNavigateToMainActivity().observe(this, new EventObserver<>(new EventListener<Boolean>() {
             @Override
             public void onEvent(Boolean aBoolean) {
-                if (aBoolean) {
+                if (aBoolean != null && aBoolean) {
                     navigateToLoggedView();
                 }
             }

@@ -14,6 +14,10 @@
             name="navDirection"
             type="androidx.navigation.NavDirections" />
 
+        <variable
+            name="buttonEnabled"
+            type="Boolean" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +41,10 @@
             android:id="@+id/accept_button"
             android:background="@drawable/accept_button_rounded"
             android:onClick="@{() -> loginViewModel.setNewDestination(navDirection.getActionId())}"
+            android:backgroundTint="@{buttonEnabled == true ? @color/colorPrimary : @android:color/darker_gray}"
+            android:textColor="@android:color/background_light"
             tools:backgroundTint="@color/colorPrimary"
+
             tools:textColor="@android:color/white"
 
             android:layout_width="wrap_content"
