@@ -146,4 +146,13 @@ public class Process {
     public int hashCode() {
         return Objects.hash(processStatus, message, titleMessage);
     }
+
+    @Override
+    public String toString() {
+        return "Process{" +
+                "processStatus=" + processStatus +
+                ", message=" + message +
+                ", titleMessage=" + titleMessage +
+                '}';
+    }
 }

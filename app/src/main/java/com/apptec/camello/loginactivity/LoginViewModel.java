@@ -85,7 +85,7 @@ public class LoginViewModel extends AndroidViewModel {
      * - Validates username and password
      */
     public void loginClicked(String email, String password) {
-
+        Timber.d("Login clicked");
         // Validates data
         if (!isUserNameValid(email) || !isPasswordValid(password)) {
             Timber.d("Invalid form");
@@ -151,7 +151,7 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public void navigateToMainActivity() {
-        this.shouldNavigateToMainActivity.setValue(new Event<>(false));
+        this.shouldNavigateToMainActivity.setValue(new Event<>(true));
     }
 
     public MutableLiveData<Event<Boolean>> getShouldNavigateToMainActivity() {

@@ -35,6 +35,9 @@ public class FormFragment extends BaseLoginFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_form, container, false);
 
+        // Attach the view model
+        binding.setLoginViewModel(loginViewModel);
+
         // Control the message to show to the user interacts with the form
         loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
             @Override
