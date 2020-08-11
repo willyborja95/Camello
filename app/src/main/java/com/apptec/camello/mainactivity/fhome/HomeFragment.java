@@ -12,19 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentHomeBinding;
 import com.apptec.camello.mainactivity.BaseFragment;
-import com.apptec.camello.mainactivity.fhome.ui.DayViewContainer;
-import com.apptec.camello.mainactivity.fhome.ui.MonthHeaderViewContainer;
 import com.apptec.camello.util.Constants;
-import com.jakewharton.threetenabp.AndroidThreeTen;
-import com.kizitonwose.calendarview.model.CalendarDay;
-import com.kizitonwose.calendarview.model.CalendarMonth;
-import com.kizitonwose.calendarview.ui.DayBinder;
-import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder;
-
-import org.threeten.bp.DayOfWeek;
-import org.threeten.bp.YearMonth;
-import org.threeten.bp.format.TextStyle;
-import org.threeten.bp.temporal.WeekFields;
 
 import java.util.Locale;
 
@@ -126,46 +114,7 @@ public class HomeFragment extends BaseFragment {
      */
     private void setupCalendar() {
 
-        // Calendar
-        AndroidThreeTen.init(getActivity());
-        binding.calendarView.setDayBinder(new DayBinder<DayViewContainer>() {
-            @NonNull
-            @Override
-            public DayViewContainer create(@NonNull View view) {
-                return new DayViewContainer(view);
-            }
-
-            @Override
-            public void bind(@NonNull DayViewContainer container, @NonNull CalendarDay calendarDay) {
-                container.getDayText().setText(calendarDay.getDate().getDayOfMonth()+"");
-                String dayName =
-                        calendarDay.getDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, LOCALE_ES);
-                container.getDayNameText().setText(dayName);
-            }
-        });
-        binding.calendarView.setMonthHeaderBinder(new MonthHeaderFooterBinder<MonthHeaderViewContainer>() {
-            @NonNull
-            @Override
-            public MonthHeaderViewContainer create(@NonNull View view) {
-                return new MonthHeaderViewContainer(view);
-            }
-
-            @Override
-            public void bind(@NonNull MonthHeaderViewContainer container, @NonNull CalendarMonth calendarMonth) {
-                String month =
-                        calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL, LOCALE_ES);
-                String monthYearTxt = String.format("%s de %d", month, calendarMonth.getYear());
-                container.getMonthText().setText(monthYearTxt);
-
-            }
-        });
-        YearMonth currentMonth = YearMonth.now();
-        YearMonth firstMonth = currentMonth.minusMonths(0);
-        YearMonth lastMonth = currentMonth.plusMonths(0);
-        DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
-        binding.calendarView.setup(firstMonth, lastMonth, firstDayOfWeek);
-
-        binding.calendarView.scrollToMonth(currentMonth);
+        // TODO
 
     }
 
