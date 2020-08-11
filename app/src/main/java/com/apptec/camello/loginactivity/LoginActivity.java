@@ -88,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
         Timber.d("Finished on create");
 
 
-
     }
 
     /**
