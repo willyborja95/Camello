@@ -13,7 +13,7 @@ buildscript {
         version_play_services = "17.0.0"
         version_timber = '4.7.1'
         version_fmc = '20.1.5'    // Firebase cloud message
-        version_calendar_view = '0.3.1'
+        version_calendar_view = '0.3.1' // Not used, but kept the version number just in case
         version_gson = '2.8.1'
         version_crashlytics = '2.2.0'
         version_security_library = '1.0.0-rc02'
