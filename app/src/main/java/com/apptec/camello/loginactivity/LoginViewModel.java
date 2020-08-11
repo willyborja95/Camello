@@ -85,7 +85,7 @@ public class LoginViewModel extends AndroidViewModel {
      * - Validates username and password
      */
     public void loginClicked(String email, String password) {
-
+        Timber.d("Login clicked");
         // Validates data
         if (!isUserNameValid(email) || !isPasswordValid(password)) {
             Timber.d("Invalid form");
@@ -106,6 +106,18 @@ public class LoginViewModel extends AndroidViewModel {
                 shouldRequestPermission.setValue(true);
             }
         }
+    }
+
+    /**
+     * Method called by the {@link com.apptec.camello.loginactivity.forgotpassword.ForgotPasswordDialog}
+     * to call the server on the corresponding url
+     *
+     * @param targetEmail the user email
+     */
+    public void recoverPassword(String targetEmail) {
+        // Using the same loginProgress as the listener because I don't think is necessary create a new
+        // observer on the formFragment
+        loginPresenter.callRecoverPassword(targetEmail, loginProgress);
     }
 
     /**
@@ -151,7 +163,7 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public void navigateToMainActivity() {
-        this.shouldNavigateToMainActivity.setValue(new Event<>(false));
+        this.shouldNavigateToMainActivity.setValue(new Event<>(true));
     }
 
     public MutableLiveData<Event<Boolean>> getShouldNavigateToMainActivity() {

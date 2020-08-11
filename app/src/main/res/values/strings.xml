@@ -129,6 +129,15 @@
     <string name="device_name">Nombre del equipo</string>
     <string name="model">Modelo</string>
     <string name="comment">Comentario</string>
+    <string name="recover_password_ok">ENVIAR</string>
+    <string name="failed_recover_password_title">Error</string>
+    <string name="failed_recover_password_message">No se ha encontrado un usuario con ese correo</string>
+    <string name="unknown_error_message">Ah ocurrido un error</string>
+    <string name="recover_password_process_sucesful_title">Completado</string>
+    <string name="recover_password_process_sucesful_message">Se ha enviado un mensaje al correo electrónico que proporcionaste</string>
+    <string name="recover_password_label">Recuperar contraseña</string>
+    <string name="enter_email">Ingrese su correo electrónico</string>
+    <string name="recover_password_target_mail">Correo*</string>
 
 
 </resources>

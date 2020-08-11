@@ -15,6 +15,7 @@ public class Constants {
     // Auth
     public static final String LOGIN_URL = "/api/auth/login";
     public static final String REFRESH_TOKEN_URL = "/api/auth/token";
+    public static final String RECOVER_PASSWORD_URL = "/api/auth/forgot-password";
 
     // Permissions
     public static final String ALL_PERMISSIONS_URL = "api/permission/employee/{userId}";
@@ -92,4 +93,5 @@ public class Constants {
     public static final String KEY_FILE_NAME = "key_file.txt";
 
     public static final String USER_ACCEPTED_PRIVACY_POLICY = "ACCEPTED_PRIVACY_POLICY";
+
 }

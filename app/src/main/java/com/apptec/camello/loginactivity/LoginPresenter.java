@@ -1,10 +1,13 @@
 package com.apptec.camello.loginactivity;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.apptec.camello.R;
 import com.apptec.camello.auth.LoggerRunnable;
 import com.apptec.camello.auth.LoginDataValidator;
+import com.apptec.camello.loginactivity.forgotpassword.RecoverPassword;
+import com.apptec.camello.loginactivity.forgotpassword.RecoverPasswordBody;
 import com.apptec.camello.models.CompanyModel;
 import com.apptec.camello.models.DeviceModel;
 import com.apptec.camello.models.UserCredential;
@@ -16,6 +19,8 @@ import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.camello.util.Constants;
 import com.apptec.camello.util.Event;
 import com.apptec.camello.util.Process;
+
+import org.jetbrains.annotations.NotNull;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -159,4 +164,67 @@ public class LoginPresenter {
 
 
     }
+
+
+    /**
+     * Method to call the server on the corresponding endpoint
+     *
+     * @param targetEmail     user email
+     * @param processListener a listener of the processListener
+     */
+    public void callRecoverPassword(@NotNull String targetEmail, @Nullable MutableLiveData<Event<Process>> processListener) {
+        Timber.d("Recovering password process");
+
+
+        RecoverPassword recoverInterface = ApiClient.getClient().create(RecoverPassword.class);
+
+        // Creating the body
+        RecoverPasswordBody body = new RecoverPasswordBody(targetEmail);
+
+        Call<GeneralResponse> call = recoverInterface.recoverPassword(body);
+
+        call.enqueue(new GeneralCallback<GeneralResponse>(call) {
+            @Override
+            public void onFinalResponse(Call<GeneralResponse> call, Response<GeneralResponse> response) {
+
+                if (response.code() == 404) {
+                    if (processListener != null) {
+                        processListener.postValue(new Event<>(new Process(Process.FAILED,
+                                R.string.failed_recover_password_title,
+                                R.string.failed_recover_password_message)));
+                    }
+                } else if (response.code() == 200) {
+                    if (processListener != null) {
+                        // We set as failed because. In this wat the observer will not navigate to the login activity
+                        processListener.postValue(new Event<>(new Process(Process.FAILED,
+                                R.string.recover_password_process_sucesful_title,
+                                R.string.recover_password_process_sucesful_message)));
+                    }
+                } else {
+                    Timber.e("Unknown error while recovering the password");
+                    if (processListener != null) {
+                        processListener.postValue(new Event<>(new Process(Process.FAILED,
+                                R.string.unknown_error,
+                                R.string.unknown_error_message)));
+                    }
+                }
+
+            }
+
+            /**
+             * If all
+             */
+            @Override
+            public void onFinalFailure(Call<GeneralResponse> call, Throwable t) {
+                Timber.w(t);
+                if (processListener != null) {
+                    processListener.postValue(new Event<>(new Process(Process.FAILED,
+                            R.string.unknown_error,
+                            R.string.unknown_error_message)));
+                }
+            }
+        });
+
+    }
+
 }
