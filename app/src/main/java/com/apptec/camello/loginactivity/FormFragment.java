@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer;
 
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentFormBinding;
+import com.apptec.camello.loginactivity.forgotpassword.ForgotPasswordDialog;
 import com.apptec.camello.util.EventListener;
 import com.apptec.camello.util.EventObserver;
 import com.apptec.camello.util.Process;
@@ -54,8 +55,26 @@ public class FormFragment extends BaseLoginFragment {
             }
         });
 
+        // Set listener when the user click the recover password text
+        setUpRecoverPassword();
 
         return binding.getRoot();
+    }
+
+    /**
+     * Implement a listener for the recover password text
+     */
+    private void setUpRecoverPassword() {
+        binding.textViewRecoverPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open the fragment
+                Timber.d("Forgot password clicked");
+                ForgotPasswordDialog forgotPasswordDialog = new ForgotPasswordDialog();
+                forgotPasswordDialog.show(getChildFragmentManager(), ForgotPasswordDialog.class.getSimpleName());
+
+            }
+        });
     }
 
     /**

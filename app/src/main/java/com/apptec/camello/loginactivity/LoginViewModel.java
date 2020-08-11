@@ -109,6 +109,18 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     /**
+     * Method called by the {@link com.apptec.camello.loginactivity.forgotpassword.ForgotPasswordDialog}
+     * to call the server on the corresponding url
+     *
+     * @param targetEmail the user email
+     */
+    public void recoverPassword(String targetEmail) {
+        // Using the same loginProgress as the listener because I don't think is necessary create a new
+        // observer on the formFragment
+        loginPresenter.callRecoverPassword(targetEmail, loginProgress);
+    }
+
+    /**
      * Expose the destination
      *
      * @return newDestination
