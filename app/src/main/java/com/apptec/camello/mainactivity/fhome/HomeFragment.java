@@ -14,6 +14,8 @@ import com.apptec.camello.databinding.FragmentHomeBinding;
 import com.apptec.camello.mainactivity.BaseFragment;
 import com.apptec.camello.util.Constants;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import timber.log.Timber;
@@ -114,8 +116,50 @@ public class HomeFragment extends BaseFragment {
      */
     private void setupCalendar() {
 
-        // TODO
+        Calendar calendar = Calendar.getInstance(LOCALE_ES);
 
+        SimpleDateFormat monthLabelFormat = new SimpleDateFormat("MMMM y");
+
+
+        // Get the month and year
+        String montAndYear = monthLabelFormat.format(calendar.getTime());
+
+        Timber.d("Current month and year: %s", montAndYear);
+
+        binding.dateLabel.setText(montAndYear.toLowerCase());
+
+
+        binding.setCurrentDay(calendar.get(Calendar.DAY_OF_WEEK) - 1); // Minus 1 because in Calendar API the week starts on sunday
+        // but in our calendar we starts on monday
+
+
+        // Bind the correct numbers for each day number holder
+        binding.mondayNumber.setText(getDayNumberFor(2));
+        binding.tuesdayNumber.setText(getDayNumberFor(3));
+        binding.wednesdayNumber.setText(getDayNumberFor(4));
+        binding.thursdayNumber.setText(getDayNumberFor(5));
+        binding.fridayNumber.setText(getDayNumberFor(6));
+        binding.saturdayNumber.setText(getDayNumberFor(7));
+        binding.sundayNumber.setText(getDayNumberFor(8));
+
+
+    }
+
+    /**
+     * Method that return the day number for the day of the week. Util for paint the calendar.
+     * The day start on monday
+     *
+     * @param dayPosition The day position on the week. For example monday would be number 0. Tuesday number 1
+     * @return the correct number. Taking care if the day belongs to another month.
+     */
+    private String getDayNumberFor(int dayPosition) {
+        Timber.d("Target date position: " + dayPosition);
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dayInMonth = new SimpleDateFormat("d");
+        int differenceBetweenDates = dayPosition - calendar.get(Calendar.DAY_OF_WEEK);
+        calendar.add(Calendar.DATE, differenceBetweenDates);
+
+        return dayInMonth.format(calendar.getTime());
     }
 
 

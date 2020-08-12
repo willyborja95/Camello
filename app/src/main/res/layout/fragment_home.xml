@@ -8,6 +8,10 @@
         <variable
             name="mainViewModel"
             type="com.apptec.camello.mainactivity.MainViewModel" />
+
+        <variable
+            name="currentDay"
+            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -193,33 +197,55 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/monday_number"
-                android:layout_width="wrap_content"
+                android:background="@drawable/circle_background"
+                android:gravity="center"
+                android:layout_width="16dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="@+id/textView7"
                 app:layout_constraintStart_toStartOf="@+id/textView7"
                 app:layout_constraintTop_toTopOf="@+id/thursday_number"
-                tools:text="3" />
+
+
+                android:backgroundTint="@{currentDay == 1 ? @color/white : @color/colorPrimary}"
+                android:textColor="@{currentDay == 1 ? @color/colorPrimary : @color/white}"
+
+                tools:text="1" />
+
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tuesday_number"
+                android:background="@drawable/circle_background"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="@+id/textView8"
                 app:layout_constraintStart_toStartOf="@+id/textView8"
                 app:layout_constraintTop_toTopOf="@+id/thursday_number"
-                tools:text="4" />
+
+                android:backgroundTint="@{currentDay == 2 ? @color/white : @color/colorPrimary}"
+                android:textColor="@{currentDay == 2 ? @color/colorPrimary : @color/white}"
+
+                tools:text="2" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/wednesday_number"
+                android:background="@drawable/circle_background"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="@+id/textView9"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toTopOf="@+id/thursday_number"
-                tools:text="5" />
+
+                android:backgroundTint="@{currentDay == 3 ? @color/white : @color/colorPrimary}"
+                android:textColor="@{currentDay == 3 ? @color/colorPrimary : @color/white}"
+
+                tools:text="3" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/thursday_number"
+                android:background="@drawable/circle_background"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -228,34 +254,56 @@
                 app:layout_constraintEnd_toEndOf="@+id/textView10"
                 app:layout_constraintStart_toStartOf="@+id/textView10"
                 app:layout_constraintTop_toBottomOf="@+id/textView10"
-                tools:text="6" />
+
+                android:backgroundTint="@{currentDay == 4 ? @color/white : @color/colorPrimary}"
+                android:textColor="@{currentDay == 4 ? @color/colorPrimary : @color/white}"
+
+                tools:text="4" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/friday_number"
+                android:background="@drawable/circle_background"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="@+id/textView11"
                 app:layout_constraintStart_toStartOf="@+id/textView11"
                 app:layout_constraintTop_toTopOf="@+id/monday_number"
-                tools:text="7" />
+
+                android:backgroundTint="@{currentDay == 5 ? @color/white : @color/colorPrimary}"
+                android:textColor="@{currentDay == 5 ? @color/colorPrimary : @color/white}"
+
+                tools:text="5" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/saturday_number"
+                android:background="@drawable/circle_background"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="@+id/textView12"
                 app:layout_constraintStart_toStartOf="@+id/textView12"
                 app:layout_constraintTop_toTopOf="@+id/thursday_number"
-                tools:text="8" />
+
+                android:backgroundTint="@{currentDay == 6 ? @color/white : @color/colorPrimary}"
+                android:textColor="@{currentDay == 6 ? @color/colorPrimary : @color/white}"
+
+                tools:text="6" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/sunday_number"
+                android:background="@drawable/circle_background"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="@+id/textView13"
                 app:layout_constraintStart_toStartOf="@+id/textView13"
                 app:layout_constraintTop_toTopOf="@+id/thursday_number"
-                tools:text="9" />
+
+                android:backgroundTint="@{currentDay == 7 ? @color/white : @color/colorPrimary}"
+                android:textColor="@{currentDay == 7 ? @color/colorPrimary : @color/white}"
+
+                tools:text="7" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
