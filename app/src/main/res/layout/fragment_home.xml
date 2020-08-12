@@ -105,6 +105,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textView7"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -116,6 +117,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textView8"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -173,6 +175,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textView13"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -184,6 +187,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/date_label"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
@@ -197,10 +201,11 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/monday_number"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:background="@drawable/circle_background"
                 android:gravity="center"
-                android:layout_width="16dp"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 app:layout_constraintEnd_toEndOf="@+id/textView7"
                 app:layout_constraintStart_toStartOf="@+id/textView7"
                 app:layout_constraintTop_toTopOf="@+id/thursday_number"
@@ -214,6 +219,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tuesday_number"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:background="@drawable/circle_background"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -229,6 +235,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/wednesday_number"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:background="@drawable/circle_background"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -244,6 +251,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/thursday_number"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:background="@drawable/circle_background"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -262,6 +270,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/friday_number"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:background="@drawable/circle_background"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -277,6 +286,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/saturday_number"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:background="@drawable/circle_background"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -292,6 +302,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/sunday_number"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:background="@drawable/circle_background"
                 android:gravity="center"
                 android:layout_width="wrap_content"
