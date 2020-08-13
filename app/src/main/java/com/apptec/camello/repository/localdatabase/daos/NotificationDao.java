@@ -21,11 +21,11 @@ public interface NotificationDao {
     @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE + " ORDER BY " + DBConstants.NOTIFICATION_SENT_DATE + " DESC")
     LiveData<List<NotificationModel>> loadAllLiveData();
 
-    @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE + " where " + DBConstants.NOTIFICATION_PK + " = :id")
-    List<NotificationModel> loadNotificationSync(int id);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertOrReplaceList(List<NotificationModel> notificationModelList);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOrReplace(List<NotificationModel> notificationModelList);
+    void insertOrReplace(NotificationModel notificationModel);
 
     @Insert
     void insert(NotificationModel notification);

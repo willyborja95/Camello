@@ -10,6 +10,10 @@ import com.apptec.camello.repository.localdatabase.DBConstants;
 import com.apptec.camello.repository.localdatabase.converter.DateConverter;
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
 /**
  * Model of a notification.
  * <p>
@@ -20,10 +24,10 @@ public class NotificationModel {
 
 
     // Attributes
-    @ColumnInfo(name = DBConstants.NOTIFICATION_PK)
-    @PrimaryKey(autoGenerate = true)
-    @SerializedName("id")
-    private int id;
+    @ColumnInfo(name = DBConstants.NOTIFICATION_SENT_DATE)
+    @PrimaryKey(autoGenerate = false)  // Using this attribute as primary key
+    @SerializedName("createdAt")
+    private Long sentDate;
 
     @ColumnInfo(name = DBConstants.NOTIFICATION_TITLE)
     @SerializedName("title")
@@ -33,21 +37,29 @@ public class NotificationModel {
     @SerializedName("message")
     private String text;
 
-    @ColumnInfo(name = DBConstants.NOTIFICATION_SENT_DATE)
-    @SerializedName("createdAt")
-    private Long sentDate;
-
     @ColumnInfo(name = DBConstants.NOTIFICATION_EXPIRATION)
     @SerializedName("expiresAt")
     private Long expirationDate;
 
-    // Constructor
-    public NotificationModel(String title, String text, Long expirationDate, Long sentDate) {
+    @ColumnInfo(name = DBConstants.NOTIFICATION_IS_READ)
+    @SerializedName("isReaded")
+    private Boolean isRead;
 
+    /**
+     * Constructor used when a notification is get from the push notification
+     *
+     * @param title          title of the notification
+     * @param text           principal message
+     * @param expirationDate a long that indicates when the notification should be deleted from the device database
+     * @param sentDate       the time when the notifications was created on the server.
+     */
+    public NotificationModel(String title, String text, @NotNull Long expirationDate, @NotNull Long sentDate) {
         this.title = title;
         this.text = text;
         this.expirationDate = expirationDate;
         this.sentDate = sentDate;
+
+        this.isRead = false;
     }
 
     /**
@@ -59,13 +71,6 @@ public class NotificationModel {
     }
 
     // Setter and getters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -100,6 +105,19 @@ public class NotificationModel {
     }
 
 
+    public Boolean getRead() {
+        return isRead;
+    }
+
+    public void setRead(Boolean read) {
+        isRead = read;
+    }
+
+    /**
+     * Method to know if the notifications are the same
+     * We compare the
+     */
+
     // Attributes and methods for the view
     @Ignore
     String readableSentDate = null;
@@ -121,15 +139,29 @@ public class NotificationModel {
         return readAbleExpirationDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NotificationModel that = (NotificationModel) o;
+        return sentDate.equals(that.sentDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sentDate);
+    }
 
     @Override
     public String toString() {
-        return "Notification{" +
-                "id=" + id +
+        return "NotificationModel{" +
+                "sentDate=" + sentDate +
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
                 ", expirationDate=" + expirationDate +
-                ", sentDate=" + sentDate +
+                ", isRead=" + isRead +
+                ", readableSentDate='" + readableSentDate + '\'' +
+                ", readAbleExpirationDate='" + readAbleExpirationDate + '\'' +
                 '}';
     }
 }

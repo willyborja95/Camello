@@ -1,4 +1,4 @@
-package com.apptec.camello.mainactivity.fnotification.ui;
+package com.apptec.camello.mainactivity.fnotification;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,7 +16,8 @@ import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentNotificationBinding;
 import com.apptec.camello.mainactivity.MainViewModel;
-import com.apptec.camello.mainactivity.fnotification.NotificationViewModel;
+import com.apptec.camello.mainactivity.fnotification.ui.DialogNotification;
+import com.apptec.camello.mainactivity.fnotification.ui.NotificationListAdapter;
 import com.apptec.camello.models.NotificationModel;
 
 import timber.log.Timber;
@@ -47,7 +48,6 @@ public class NotificationFragment extends Fragment {
         // Setting up view models
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);                    // Getting the main view model
         notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);       // Getting the view model for this fragment
-
 
         mainViewModel.setActiveFragmentName(getString(R.string.notifications_fragment_title));
     }
@@ -99,11 +99,29 @@ public class NotificationFragment extends Fragment {
                 Timber.d("Item clicked");
                 NotificationModel notification = notificationListAdapter.getItem(position);
                 DialogNotification dialogNotification = new DialogNotification().setNotification(notification);
-                dialogNotification.show(getFragmentManager(), DialogNotification.class.getSimpleName());
+                dialogNotification.show(getChildFragmentManager(), DialogNotification.class.getSimpleName());
             }
         });
 
+        // Set up the refresh button
+        setUpRefreshButton();
+
         return binding.getRoot();
+    }
+
+    /**
+     * Method for get the ready and visible the refresh button
+     */
+    private void setUpRefreshButton() {
+        // TODO
+//        ImageView refreshButton = binding.getRoot().findViewById(R.id.refresh_button);
+//        refreshButton.setVisibility(View.VISIBLE);
+//        refreshButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mainViewModel.syncNotifications();
+//            }
+//        });
     }
 
 

@@ -26,7 +26,7 @@ public class Constants {
     public static final String PERMISSION_DELETE_URL = "/api/permission/{permissionId}";
 
     // Notifications
-    public static final String NOTIFICATIONS_URL = "notifications";
+    public static final String NOTIFICATIONS_URL = "/api/notification/retrieve";
 
     //Devices
     public static final String DEVICE_URL = "/api/employee";  // api/employee/{{userid}}/devices/

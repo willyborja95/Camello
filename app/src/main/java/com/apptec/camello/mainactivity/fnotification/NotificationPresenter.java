@@ -56,7 +56,15 @@ public class NotificationPresenter {
                 if (response.isSuccessful()) {
                     // Save the response into the database
                     if (response.body() != null && response.body().getWrappedData() != null && !response.body().getWrappedData().isEmpty()) {
-                        RoomHelper.getAppDatabaseInstance().notificationDao().insertOrReplace(response.body().getWrappedData());
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                RoomHelper.getAppDatabaseInstance().notificationDao().insertOrReplaceList(response.body().getWrappedData());
+
+                            }
+                        }).start();
+
+
                     }
 
                     // Notify the listener that all was sync

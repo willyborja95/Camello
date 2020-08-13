@@ -138,6 +138,8 @@
     <string name="recover_password_label">Recuperar contraseña</string>
     <string name="enter_email">Ingrese su correo electrónico</string>
     <string name="recover_password_target_mail">Correo*</string>
+    <string name="refresh_button">Sincronizar</string>
+    <string name="side_menu_button">Abrir menú lateral</string>
 
 
 </resources>
