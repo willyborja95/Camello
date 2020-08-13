@@ -41,6 +41,7 @@ public class DBConstants {
     public static final String NOTIFICATION_TEXT = "text";
     public static final String NOTIFICATION_EXPIRATION = "expiration_date";
     public static final String NOTIFICATION_SENT_DATE = "sent_date";
+    public static final String NOTIFICATION_IS_READ = "is_read";
 
 
     /**
