@@ -18,7 +18,7 @@ import java.util.List;
 @Dao
 public interface NotificationDao {
 
-    @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE)
+    @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE + " ORDER BY " + DBConstants.NOTIFICATION_SENT_DATE + " DESC")
     LiveData<List<NotificationModel>> loadAllLiveData();
 
     @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE + " where " + DBConstants.NOTIFICATION_PK + " = :id")
