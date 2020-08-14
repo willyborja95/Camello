@@ -4,21 +4,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.apptec.camello.App;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentNotificationBinding;
 import com.apptec.camello.mainactivity.MainViewModel;
-import com.apptec.camello.mainactivity.fnotification.ui.DialogNotification;
 import com.apptec.camello.mainactivity.fnotification.ui.NotificationListAdapter;
-import com.apptec.camello.models.NotificationModel;
 
 import timber.log.Timber;
 
@@ -67,11 +64,11 @@ public class NotificationFragment extends Fragment {
         binding.setNotificationViewModel(notificationViewModel);
 
         // Observing the view model mNotification
-        notificationListAdapter = new NotificationListAdapter(App.getContext(), mainViewModel.getNotifications());
+        notificationListAdapter = new NotificationListAdapter(mainViewModel.getNotifications());
+        binding.notificationListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mainViewModel.getNotifications().observe(
-                getActivity(),
-                notificationModels -> {
-                    if (notificationModels.isEmpty()) {
+                getActivity(), notificationModelList -> {
+                    if (notificationModelList.isEmpty()) {
                         Timber.d("List notifications is empty");
                         // If the list is empty
                         binding.notificationListView.setVisibility(View.GONE);
@@ -89,19 +86,19 @@ public class NotificationFragment extends Fragment {
         );
 
         // When clicked show a dialog with more information
-        binding.notificationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            /**
-             * Show a dialog with extended information about the dialog
-             */
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Timber.d("Item clicked");
-                NotificationModel notification = notificationListAdapter.getItem(position);
-                DialogNotification dialogNotification = new DialogNotification().setNotification(notification);
-                dialogNotification.show(getChildFragmentManager(), DialogNotification.class.getSimpleName());
-            }
-        });
+//        binding.notificationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            /**
+//             * Show a dialog with extended information about the dialog
+//             */
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                Timber.d("Item clicked");
+//                NotificationModel notification = notificationListAdapter.getItem(position);
+//                DialogNotification dialogNotification = new DialogNotification().setNotification(notification);
+//                dialogNotification.show(getChildFragmentManager(), DialogNotification.class.getSimpleName());
+//            }
+//        });
 
         // Set up the refresh button
         setUpRefreshButton();

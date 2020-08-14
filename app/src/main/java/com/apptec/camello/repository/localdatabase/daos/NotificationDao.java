@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.apptec.camello.models.NotificationModel;
 import com.apptec.camello.repository.localdatabase.DBConstants;
@@ -33,5 +34,6 @@ public interface NotificationDao {
     @Delete
     void delete(NotificationModel notification);
 
-
+    @Update
+    void update(NotificationModel notification);
 }
