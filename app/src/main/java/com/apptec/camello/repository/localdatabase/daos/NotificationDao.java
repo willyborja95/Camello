@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.apptec.camello.models.NotificationModel;
 import com.apptec.camello.repository.localdatabase.DBConstants;
@@ -18,14 +19,14 @@ import java.util.List;
 @Dao
 public interface NotificationDao {
 
-    @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE)
+    @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE + " ORDER BY " + DBConstants.NOTIFICATION_SENT_DATE + " DESC")
     LiveData<List<NotificationModel>> loadAllLiveData();
 
-    @Query("SELECT * FROM " + DBConstants.NOTIFICATION_TABLE + " where " + DBConstants.NOTIFICATION_PK + " = :id")
-    List<NotificationModel> loadNotificationSync(int id);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertOrReplaceList(List<NotificationModel> notificationModelList);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOrReplace(List<NotificationModel> notificationModelList);
+    void insertOrReplace(NotificationModel notificationModel);
 
     @Insert
     void insert(NotificationModel notification);
@@ -33,5 +34,6 @@ public interface NotificationDao {
     @Delete
     void delete(NotificationModel notification);
 
-
+    @Update
+    void update(NotificationModel notification);
 }

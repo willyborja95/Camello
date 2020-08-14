@@ -134,6 +134,8 @@ public class MainViewModel extends AndroidViewModel {
         // Pull data from the permission catalog
         permissionPresenter.syncPermissionsWithNetwork();
 
+        // Sync notifications
+        syncNotifications();
 
     }
 
@@ -341,6 +343,15 @@ public class MainViewModel extends AndroidViewModel {
 
     }
 
+    public MutableLiveData<Runnable> refreshButtonAction = new MutableLiveData<>(null);
+
+    public void refreshButtonClicked() {
+        if (refreshButtonAction != null) {
+            new Thread(refreshButtonAction.getValue()).start();
+
+        }
+    }
+
     /**
      * Expose the flag to know if the user is logged or not
      */
@@ -373,4 +384,11 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
+    /**
+     * Method to syn the notifications with the server
+     */
+    public void syncNotifications() {
+        notificationPresenter.syncNotifications(this.processListener);
+
+    }
 }

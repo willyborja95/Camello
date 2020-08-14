@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.apptec.camello.mainactivity.fnotification.ui.NotificationFragment"
+        android:name="com.apptec.camello.mainactivity.fnotification.NotificationFragment"
         android:label="NotificationsFragment">
         <action
             android:id="@+id/action_notificationsFragment_to_permissionFragment"

@@ -99,7 +99,7 @@ public class NotificationBuilder implements Runnable {
         }
 
         if (notification != null) {
-            Timber.d(notification.toString());
+            Timber.d("Got new notification: %s", notification.toString());
             // Also save the notification into database
             saveNotificationIntoDatabase(notification);
         } else {
@@ -233,7 +233,7 @@ public class NotificationBuilder implements Runnable {
     public void saveNotificationIntoDatabase(@NonNull NotificationModel notification) {
         Timber.d("Saving notification into database: %s", notification.toString());
         new Thread(
-                () -> RoomHelper.getAppDatabaseInstance().notificationDao().insert(notification)
+                () -> RoomHelper.getAppDatabaseInstance().notificationDao().insertOrReplace(notification)
         ).run();
     }
 

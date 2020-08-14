@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.apptec.camello.R;
 import com.apptec.camello.models.NotificationModel;
+import com.apptec.camello.repository.localdatabase.RoomHelper;
 
 import timber.log.Timber;
 
@@ -66,6 +67,15 @@ public class DialogNotification extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Timber.d("Ok clicked");
+
+                        // Update the state of the notification to read
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                notification.setRead(true);
+                                RoomHelper.getAppDatabaseInstance().notificationDao().update(notification);
+                            }
+                        }).start();
                         DialogNotification.this.getDialog().cancel();
                     }
                 });
