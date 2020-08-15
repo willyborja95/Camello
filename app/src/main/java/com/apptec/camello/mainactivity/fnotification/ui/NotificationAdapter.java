@@ -16,6 +16,8 @@ import com.apptec.camello.models.NotificationModel;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * NotificationListAdapter
  */
@@ -124,7 +126,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
          */
         public void bind(NotificationModel notificationModel, FragmentManager childFragmentManager) {
 
+            Timber.d("Notification to be placed: %s", notificationModel.toString());
+
             itemBinding.setNotification(notificationModel);
+
 
             itemBinding.notificationCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
