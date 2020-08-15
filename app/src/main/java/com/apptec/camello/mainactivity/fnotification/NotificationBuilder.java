@@ -99,6 +99,7 @@ public class NotificationBuilder implements Runnable {
         }
 
         if (notification != null) {
+            notification.setIsRead(0);
             Timber.d("Got new notification: %s", notification.toString());
             // Also save the notification into database
             saveNotificationIntoDatabase(notification);
@@ -205,6 +206,12 @@ public class NotificationBuilder implements Runnable {
      * @param notification = NotificationModel instance
      */
     public void sendNotification(@NonNull NotificationModel notification) {
+
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+
         Timber.d("Creating the notification");
         // Build the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(App.getContext(), NotificationConstants.MESSAGES_CHANNEL_ID)
@@ -217,12 +224,15 @@ public class NotificationBuilder implements Runnable {
                 .setAllowSystemGeneratedContextualActions(true)
                 .setAutoCancel(true);
 
-
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(App.getContext());
 
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(0, builder.build());
 
+//            }
+//        }).start();
+//
+//
 
     }
 
