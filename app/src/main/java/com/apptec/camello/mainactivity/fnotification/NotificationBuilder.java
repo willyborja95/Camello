@@ -222,6 +222,7 @@ public class NotificationBuilder implements Runnable {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 // Set the intent that will fire when the user taps the notification
                 .setAllowSystemGeneratedContextualActions(true)
+                .setNumber(RoomHelper.getAppDatabaseInstance().notificationDao().getUnreadNotifications())
                 .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(App.getContext());

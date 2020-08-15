@@ -16,7 +16,6 @@ import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentNotificationBinding;
 import com.apptec.camello.mainactivity.MainViewModel;
 import com.apptec.camello.mainactivity.fnotification.ui.NotificationAdapter;
-import com.apptec.camello.repository.localdatabase.RoomHelper;
 
 import timber.log.Timber;
 
@@ -60,13 +59,6 @@ public class NotificationFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_notification, container, false);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Timber.d("Test");
-                Timber.d("Unread notifications: %s", RoomHelper.getAppDatabaseInstance().notificationDao().getUnreadNotifications());
-            }
-        }).start();
 
         // Bind the view models
         //binding.setMainViewModel(mainViewModel);
