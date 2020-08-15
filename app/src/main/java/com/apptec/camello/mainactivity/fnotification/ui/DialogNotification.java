@@ -72,7 +72,7 @@ public class DialogNotification extends DialogFragment {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                notification.setRead(true);
+                                notification.setIsRead(1);
                                 RoomHelper.getAppDatabaseInstance().notificationDao().update(notification);
                             }
                         }).start();

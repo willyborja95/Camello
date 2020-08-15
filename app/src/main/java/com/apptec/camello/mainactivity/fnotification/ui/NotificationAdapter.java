@@ -1,10 +1,12 @@
 package com.apptec.camello.mainactivity.fnotification.ui;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,17 +16,23 @@ import com.apptec.camello.models.NotificationModel;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * NotificationListAdapter
  */
-public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.MyViewHolder> {
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.MyViewHolder> {
 
     // Attribute
     LiveData<List<NotificationModel>> notificationList;
 
+    // Fragment manager for showing the dialog for each notification
+    FragmentManager childFragmentManager;
 
-    public NotificationListAdapter(LiveData<List<NotificationModel>> notificationList) {
+
+    public NotificationAdapter(LiveData<List<NotificationModel>> notificationList, FragmentManager childFragmentManager) {
         this.notificationList = notificationList;
+        this.childFragmentManager = childFragmentManager;
     }
 
     /**
@@ -62,7 +70,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         NotificationModel notificationModel = getItem(position);
 
         // - replace the contents of the view with that element
-        holder.bind(notificationModel);
+        holder.bind(notificationModel, childFragmentManager);
     }
 
     /**
@@ -104,6 +112,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         // Use data binding
         NotificationItemBinding itemBinding;
 
+
         public MyViewHolder(@NonNull NotificationItemBinding itemBinding) {
             super(itemBinding.getRoot());
             this.itemBinding = itemBinding;
@@ -113,9 +122,26 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
          * Bind this data with the layout
          *
          * @param notificationModel
+         * @param childFragmentManager
          */
-        public void bind(NotificationModel notificationModel) {
+        public void bind(NotificationModel notificationModel, FragmentManager childFragmentManager) {
+
+            Timber.d("Notification to be placed: %s", notificationModel.toString());
+
             itemBinding.setNotification(notificationModel);
+
+
+            itemBinding.notificationCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    // Show a dialog with extended information about the dialog
+                    DialogNotification dialogNotification = new DialogNotification().setNotification(notificationModel);
+                    dialogNotification.show(childFragmentManager, DialogNotification.class.getSimpleName());
+                }
+            });
+
+
         }
     }
 }

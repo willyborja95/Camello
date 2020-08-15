@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import timber.log.Timber;
+
 /**
  * Model of a notification.
  * <p>
@@ -43,7 +45,7 @@ public class NotificationModel {
 
     @ColumnInfo(name = DBConstants.NOTIFICATION_IS_READ)
     @SerializedName("isReaded")
-    private Boolean isRead;
+    private int isRead = 0;
 
     /**
      * Constructor used when a notification is get from the push notification
@@ -52,14 +54,14 @@ public class NotificationModel {
      * @param text           principal message
      * @param expirationDate a long that indicates when the notification should be deleted from the device database
      * @param sentDate       the time when the notifications was created on the server.
+     * @param isRead         a boolean to know if the notification has been read (1 = True, 0 = False)
      */
-    public NotificationModel(String title, String text, @NotNull Long expirationDate, @NotNull Long sentDate) {
+    public NotificationModel(String title, String text, @NotNull Long expirationDate, @NotNull Long sentDate, int isRead) {
         this.title = title;
         this.text = text;
         this.expirationDate = expirationDate;
         this.sentDate = sentDate;
-
-        this.isRead = false;
+        this.isRead = isRead;
     }
 
     /**
@@ -104,13 +106,12 @@ public class NotificationModel {
         this.sentDate = sentDate;
     }
 
-
-    public Boolean getRead() {
+    public int getIsRead() {
         return isRead;
     }
 
-    public void setRead(Boolean read) {
-        isRead = read;
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
     }
 
     /**
@@ -141,9 +142,11 @@ public class NotificationModel {
 
     @Override
     public boolean equals(Object o) {
+        Timber.d("Equals method called");
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NotificationModel that = (NotificationModel) o;
+        Timber.d("Comparing between this element: " + this.toString() + " and this " + that.toString());
         return sentDate.equals(that.sentDate);
     }
 

@@ -28,6 +28,10 @@ public interface NotificationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrReplace(NotificationModel notificationModel);
 
+    @Query("SELECT COUNT(*) FROM " + DBConstants.NOTIFICATION_TABLE
+            + " WHERE (" + DBConstants.NOTIFICATION_IS_READ + "= 0)")
+    int getUnreadNotifications();
+
     @Insert
     void insert(NotificationModel notification);
 

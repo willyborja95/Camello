@@ -25,26 +25,31 @@ public class NotificationSetUp implements Runnable {
                 NotificationConstants.MESSAGES_CHANNEL_ID,
                 NotificationConstants.MESSAGES_IMPORTANCE,
                 App.getContext().getString(R.string.notification_channel_name),
-                App.getContext().getString(R.string.notification_channel_description)
+                App.getContext().getString(R.string.notification_channel_description),
+                true
         );
 
         createNotificationChannel(
                 NotificationConstants.LOCATION_CHANNEL_ID,
                 NotificationConstants.LOCATION_IMPORTANCE,
                 App.getContext().getString(R.string.location_channel_name),
-                App.getContext().getString(R.string.location_channel_description)
+                App.getContext().getString(R.string.location_channel_description),
+                false
         );
 
 
     }
 
 
-    private void createNotificationChannel(String channelId, int importance, String name, String description) {
+    private void createNotificationChannel(String channelId, int importance, String name, String description, boolean showBadge) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId, name, importance);
             channel.setDescription(description);
+
+            channel.setShowBadge(showBadge);
+
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(App.getContext(), NotificationManager.class);
