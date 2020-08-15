@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentNotificationBinding;
 import com.apptec.camello.mainactivity.MainViewModel;
-import com.apptec.camello.mainactivity.fnotification.ui.NotificationListAdapter;
+import com.apptec.camello.mainactivity.fnotification.ui.NotificationAdapter;
 
 import timber.log.Timber;
 
@@ -25,7 +25,7 @@ import timber.log.Timber;
 public class NotificationFragment extends Fragment {
 
     //UI elements
-    private NotificationListAdapter notificationListAdapter;
+    private NotificationAdapter notificationListAdapter;
 
 
     // Instances of ViewModel
@@ -64,7 +64,7 @@ public class NotificationFragment extends Fragment {
         binding.setNotificationViewModel(notificationViewModel);
 
         // Observing the view model mNotification
-        notificationListAdapter = new NotificationListAdapter(mainViewModel.getNotifications());
+        notificationListAdapter = new NotificationAdapter(mainViewModel.getNotifications(), getChildFragmentManager());
         binding.notificationListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mainViewModel.getNotifications().observe(
                 getActivity(), notificationModelList -> {
@@ -86,19 +86,7 @@ public class NotificationFragment extends Fragment {
         );
 
         // When clicked show a dialog with more information
-//        binding.notificationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            /**
-//             * Show a dialog with extended information about the dialog
-//             */
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                Timber.d("Item clicked");
-//                NotificationModel notification = notificationListAdapter.getItem(position);
-//                DialogNotification dialogNotification = new DialogNotification().setNotification(notification);
-//                dialogNotification.show(getChildFragmentManager(), DialogNotification.class.getSimpleName());
-//            }
-//        });
+
 
         // Set up the refresh button
         setUpRefreshButton();
