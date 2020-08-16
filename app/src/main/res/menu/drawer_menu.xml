@@ -13,6 +13,18 @@
             android:id="@+id/logout_button"
             android:layout_gravity="center"
             android:title="@string/sign_out_label" />
-
+        <item
+            android:id="@+id/footer_spacer_1"
+            android:checkable="false"
+            android:enabled="false"
+            android:orderInCategory="200"
+            android:title="" />
+        <item
+            android:id="@+id/footer_spacer_2"
+            android:checkable="false"
+            android:enabled="false"
+            android:orderInCategory="200"
+            android:title="" />
     </group>
+
 </menu>
