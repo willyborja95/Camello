@@ -68,6 +68,7 @@
 
             <EditText
                 android:id="@+id/email"
+                android:focusedByDefault="false"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -93,6 +94,7 @@
 
             <EditText
                 android:id="@+id/password"
+                android:focusedByDefault="false"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

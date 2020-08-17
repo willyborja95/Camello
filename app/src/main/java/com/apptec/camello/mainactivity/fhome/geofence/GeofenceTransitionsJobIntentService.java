@@ -97,6 +97,11 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        // String formatedTime = DateConverter.toStringDateFormat(System.currentTimeMillis());
+
+        //  String notificationMessage = getString(R.string.notification_exit_title)+", "+formatedTime;
+        String notificationMessage = getString(R.string.notification_exit_title);
+
         Intent notificationIntent = new Intent(getApplicationContext(), LoginActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(LoginActivity.class);
