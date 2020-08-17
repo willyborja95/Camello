@@ -1,5 +1,7 @@
 package com.apptec.camello.mainactivity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -192,6 +195,96 @@ public class MainActivity extends AppCompatActivity implements
                 navController.navigate(R.id.notificationsFragment);
             }
         }
+
+        // Setup the navigation drawer footer menu
+        setUpFooterMenu();
+    }
+
+    /**
+     * THis method will ada functionality to the footer items
+     */
+    private void setUpFooterMenu() {
+        binding.footerItemNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String contact = Constants.CAMELLO_NUMBER; // use country code with your phone number
+                String url = "https://api.whatsapp.com/send?phone=" + contact;
+                try {
+                    // Send a message trough whatsapp if it is installed
+                    PackageManager pm = getPackageManager();
+                    pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                } catch (PackageManager.NameNotFoundException e) {
+                    // Send a message trough the default app for sms
+                    Timber.d("Whatsapp not installed");
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", Constants.CAMELLO_NUMBER, null));
+
+
+                    // Create intent to show the chooser dialog
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.send_message_trough));
+
+                    // Verify that the intent will resolve to an activity
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(chooser);
+                    }
+
+                }
+
+            }
+        });
+        binding.footerItemNumber.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Camello contacto", Constants.CAMELLO_NUMBER);
+                try {
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(getApplication(), getString(R.string.number_copied_to_clipboard), Toast.LENGTH_SHORT).show();
+                } catch (NullPointerException npe) {
+                    Timber.w(npe);
+                }
+
+                return true;
+            }
+        });
+        binding.footerItemMail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", Constants.CAMELLO_MAIL, null));
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.CAMELLO_MAIL});
+
+
+                // Create intent to show the chooser dialog
+                Intent chooser = Intent.createChooser(intent, getString(R.string.send_mail));
+
+                // Verify that the intent will resolve to an activity
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(chooser);
+                }
+
+
+            }
+        });
+        binding.footerItemMail.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Camello correo", Constants.CAMELLO_MAIL);
+                try {
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(getApplication(), getString(R.string.number_copied_to_clipboard), Toast.LENGTH_SHORT).show();
+                } catch (NullPointerException npe) {
+                    Timber.w(npe);
+                }
+
+                return true;
+            }
+        });
 
     }
 

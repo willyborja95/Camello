@@ -75,7 +75,7 @@
 
 
                 <LinearLayout
-                    android:id="@+id/footer_item_"
+                    android:id="@+id/footer_item_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
@@ -93,12 +93,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="24dp"
                         android:gravity="center"
-                        android:text="+593 986643052" />
+                        android:text="@string/camello_number" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/footer_item_2"
+                    android:id="@+id/footer_item_mail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
@@ -117,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="24dp"
                         android:gravity="center"
-                        android:text="soporte@camello.com.ec" />
+                        android:text="@string/camello_mail" />
                 </LinearLayout>
 
 
