@@ -140,6 +140,11 @@
     <string name="recover_password_target_mail">Correo*</string>
     <string name="refresh_button">Sincronizar</string>
     <string name="side_menu_button">Abrir menú lateral</string>
+    <string name="camello_number">+593 986643052</string>
+    <string name="camello_mail">soporte@camello.com.ec</string>
+    <string name="number_copied_to_clipboard">Número copiado al portapapeles</string>
+    <string name="send_message_trough">Enviar mensaje a través de</string>
+    <string name="send_mail">Enviar correo</string>
 
 
 </resources>

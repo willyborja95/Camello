@@ -94,4 +94,9 @@ public class Constants {
 
     public static final String USER_ACCEPTED_PRIVACY_POLICY = "ACCEPTED_PRIVACY_POLICY";
 
+    // Other constants
+    public static final String CAMELLO_NUMBER = "593986643058";
+    public static final String CAMELLO_MAIL = "soporte@camello.com.ec";
+
+
 }
