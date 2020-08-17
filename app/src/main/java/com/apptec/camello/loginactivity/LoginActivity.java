@@ -1,12 +1,13 @@
 package com.apptec.camello.loginactivity;
 
 import android.Manifest;
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.Nullable;
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         setTheme(R.style.SplashTheme);                                                  // Showing the splash screen for until the activity is ready
         super.onCreate(savedInstanceState);
 
-
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         // Verify here if is there a previous user logged
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);            // Set the content view
 
@@ -119,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         super.onResume();
-
+        hideKeyboard();
 
     }
 
@@ -198,17 +199,11 @@ public class LoginActivity extends AppCompatActivity {
      * Method to hide the keyboard input
      */
     public void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
+        Timber.d("Hiding the keyboard from the activity method");
         View view = this.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(this);
-        }
-        try {
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        } catch (NullPointerException npe) {
-            Timber.w(npe);
         }
 
     }

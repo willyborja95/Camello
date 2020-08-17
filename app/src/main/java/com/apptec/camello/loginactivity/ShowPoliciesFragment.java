@@ -1,12 +1,9 @@
 package com.apptec.camello.loginactivity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +32,7 @@ public class ShowPoliciesFragment extends BaseLoginFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_show_policies, container, false);
         disableDisclaimerButton();
-        hideKeyboardFrom(getContext(), binding.getRoot());
+
         binding.webView.loadUrl(Constants.URL_PRIVACY_POLICY);
 
         // Setup the listener for set the button available
@@ -81,22 +78,7 @@ public class ShowPoliciesFragment extends BaseLoginFragment {
 
     }
 
-    /**
-     * Crap method is not working
-     *
-     * @param context
-     * @param view
-     */
-    public void hideKeyboardFrom(Context context, View view) {
-        Timber.d("Hiding the keyboard");
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        try {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        } catch (NullPointerException npe) {
-            Timber.d(npe);
-        }
 
-    }
 
     /**
      * Called when the fragment is visible to the user and actively running.
@@ -104,6 +86,5 @@ public class ShowPoliciesFragment extends BaseLoginFragment {
     @Override
     public void onResume() {
         super.onResume();
-        hideKeyboardFrom(getContext(), binding.getRoot());
     }
 }
