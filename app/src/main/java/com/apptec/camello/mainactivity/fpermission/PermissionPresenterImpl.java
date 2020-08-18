@@ -106,8 +106,8 @@ public class PermissionPresenterImpl {
     /**
      * Create a new Thread for pull the permissions
      */
-    public void syncPermissionsWithNetwork() {
-        new Thread(new SyncPermissions()).start();
+    public void syncPermissionsWithNetwork(@Nullable BaseProcessListener listener) {
+        new Thread(new SyncPermissions(listener)).start();
     }
 
     /**

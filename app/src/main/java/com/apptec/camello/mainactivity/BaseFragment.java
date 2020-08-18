@@ -1,6 +1,8 @@
 package com.apptec.camello.mainactivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -154,6 +156,23 @@ public class BaseFragment extends Fragment implements BaseProcessListener {
     }
 
 
+    /**
+     * Method to hide the refresh button of the app bar
+     */
+    protected void hideRefreshButton() {
+        ImageButton refreshButton = getActivity().findViewById(R.id.refresh_button);
+        refreshButton.setVisibility(View.GONE);
+    }
+
+
+    /**
+     * Method for get the ready and visible the refresh button
+     */
+    protected void setUpRefreshButton(View.OnClickListener onClickListener) {
+        ImageButton refreshButton = getActivity().findViewById(R.id.refresh_button);
+        refreshButton.setVisibility(View.VISIBLE);
+        refreshButton.setOnClickListener(onClickListener);
+    }
 
 
 }

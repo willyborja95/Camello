@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentNotificationBinding;
+import com.apptec.camello.mainactivity.BaseFragment;
 import com.apptec.camello.mainactivity.MainViewModel;
 import com.apptec.camello.mainactivity.fnotification.ui.NotificationAdapter;
 
@@ -22,7 +22,7 @@ import timber.log.Timber;
 /**
  * NotificationsFragment
  */
-public class NotificationFragment extends Fragment {
+public class NotificationFragment extends BaseFragment {
 
     //UI elements
     private NotificationAdapter notificationListAdapter;
@@ -90,25 +90,16 @@ public class NotificationFragment extends Fragment {
 
 
         // Set up the refresh button
-        setUpRefreshButton();
+        setUpRefreshButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainViewModel.syncNotifications(true);
+            }
+        });
 
         return binding.getRoot();
     }
 
-    /**
-     * Method for get the ready and visible the refresh button
-     */
-    private void setUpRefreshButton() {
-        // TODO
-//        ImageView refreshButton = binding.getRoot().findViewById(R.id.refresh_button);
-//        refreshButton.setVisibility(View.VISIBLE);
-//        refreshButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mainViewModel.syncNotifications();
-//            }
-//        });
-    }
 
 
 }

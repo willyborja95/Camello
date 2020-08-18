@@ -132,7 +132,7 @@ public class MainViewModel extends AndroidViewModel {
         isUserLogged = new MutableLiveData<>(true);
 
         // Pull data from the permission catalog
-        permissionPresenter.syncPermissionsWithNetwork();
+        syncPermissions(false);
 
         // Sync notifications
         syncNotifications(false);
@@ -361,9 +361,13 @@ public class MainViewModel extends AndroidViewModel {
     /**
      * Sync the permissions database with the network
      */
-    public void syncPermissions() {
+    public void syncPermissions(boolean listen) {
+        if (listen) {
+            permissionPresenter.syncPermissionsWithNetwork(this.processListener);
+        } else {
+            permissionPresenter.syncPermissionsWithNetwork(null);
+        }
 
-        permissionPresenter.syncPermissionsWithNetwork();
     }
 
     /**

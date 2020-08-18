@@ -9,18 +9,18 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.apptec.camello.App;
 import com.apptec.camello.R;
+import com.apptec.camello.mainactivity.BaseFragment;
 import com.apptec.camello.mainactivity.MainViewModel;
 
 /**
  * Device fragment
  */
-public class DeviceFragment extends Fragment {
+public class DeviceFragment extends BaseFragment {
 
     private final String TAG = DeviceFragment.class.getSimpleName();
 
@@ -47,7 +47,7 @@ public class DeviceFragment extends Fragment {
 
         Log.d(TAG, "Opening dialog device.");
         DialogDevice dialogDevice = new DialogDevice();
-        dialogDevice.show(getFragmentManager(), "DialogDevice");
+        dialogDevice.show(getChildFragmentManager(), "DialogDevice");
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -73,11 +73,9 @@ public class DeviceFragment extends Fragment {
         deviceListAdapter = new DeviceListAdapter(App.getContext(), mainViewModel.getDevices());
         mainViewModel.getDevices().observe(getActivity(), devices -> devicesListView.setAdapter(deviceListAdapter));
 
-
+        hideRefreshButton();
         return view;
     }
-
-
 
 
 }

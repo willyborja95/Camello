@@ -1,5 +1,7 @@
 package com.apptec.camello.mainactivity.fpermission;
 
+import com.apptec.camello.R;
+import com.apptec.camello.mainactivity.BaseProcessListener;
 import com.apptec.camello.models.PermissionStatus;
 import com.apptec.camello.models.PermissionType;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
@@ -8,6 +10,8 @@ import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
 import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.camello.util.Constants;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -20,10 +24,13 @@ import timber.log.Timber;
  */
 public class SyncPermissions implements Runnable {
 
+    @Nullable BaseProcessListener listener;
+
     /**
-     * Empty constructor
+     * Constructor with a listener or not
      */
-    public SyncPermissions() {
+    public SyncPermissions(@Nullable BaseProcessListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -33,6 +40,9 @@ public class SyncPermissions implements Runnable {
      */
     @Override
     public void run() {
+        if (listener != null) {
+            listener.onProcessing(null, null);
+        }
         PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
         pullPermissionTypes(permissionRetrofitInterface);
     }
@@ -132,15 +142,41 @@ public class SyncPermissions implements Runnable {
              */
             @Override
             public void onFinalResponse(Call<GeneralResponse<List<PermissionDto>>> call, Response<GeneralResponse<List<PermissionDto>>> response) {
+
                 new Thread(() -> {
-                    for (int i = 0; i < response.body().getWrappedData().size(); i++) {
-                        // Save the list of permission into data
-                        RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(response.body().getWrappedData().get(i).getAsPermissionModel());
+                    try {
+                        for (int i = 0; i < response.body().getWrappedData().size(); i++) {
+                            // Save the list of permission into data
+                            RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(response.body().getWrappedData().get(i).getAsPermissionModel());
+                        }
+                        Timber.d("Sync permission succeed");
+                        // Notify the listener that all was sync
+                        if (listener != null) {
+                            listener.onSuccessProcess(null, null);
+                        }
+                    } catch (Exception e) {
+                        Timber.e(e);
+                        if (listener != null) {
+                            listener.onErrorOccurred(R.string.error, R.string.unknown_error);
+                        }
                     }
-                    Timber.d("Sync permission succeed");
+
                 }).start();
             }
 
+            /**
+             * Method to be override by the calling class
+             *
+             * @param call call
+             * @param t    throwable
+             */
+            @Override
+            public void onFinalFailure(Call<GeneralResponse<List<PermissionDto>>> call, Throwable t) {
+                Timber.e(t);
+                if (listener != null) {
+                    listener.onErrorOccurred(R.string.no_internet_connection_title, R.string.no_internet_connection);
+                }
+            }
         });
 
 
