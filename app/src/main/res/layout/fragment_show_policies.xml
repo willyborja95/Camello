@@ -29,7 +29,6 @@
 
         <WebView
             android:id="@+id/web_view"
-            android:focusedByDefault="true"
             android:focusable="false"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -42,7 +41,6 @@
 
         <Button
             android:id="@+id/accept_button"
-            android:focusable="false"
             android:background="@drawable/accept_button_rounded"
             android:onClick="@{() -> loginViewModel.setNewDestination(navDirection.getActionId())}"
             android:backgroundTint="@{buttonEnabled == true ? @color/colorPrimary : @android:color/darker_gray}"
