@@ -87,7 +87,7 @@ public class Constants {
 
     // URL for the web view fragments
     public static final String URL_PRIVACY_POLICY = "https://camello.com.ec/politica-de-privacidad/";
-    public static final String URL_USER_MANUAL = "https://camello.com.ec/politica-de-privacidad/"; // TODO: Change for the real url
+    public static final String URL_USER_MANUAL = "https://man.camello.com.ec/app-movil/inicio-sesion/"; // TODO: Change for the real url
 
 
     public static final String KEY_FILE_NAME = "key_file.txt";

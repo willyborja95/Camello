@@ -72,7 +72,7 @@ public class HomeFragment extends BaseFragment {
                     }
                 });
 
-
+        hideRefreshButton();
         return binding.getRoot();
     }
 
