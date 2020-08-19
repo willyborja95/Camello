@@ -145,6 +145,8 @@
     <string name="number_copied_to_clipboard">Número copiado al portapapeles</string>
     <string name="send_message_trough">Enviar mensaje a través de</string>
     <string name="send_mail">Enviar correo</string>
+    <string name="request_permission_date_error_title">Error al solicitar el permiso</string>
+    <string name="request_permission_date_error">La fecha de inicio debe ser antes de la de fin</string>
 
 
 </resources>

@@ -38,69 +38,121 @@ public class PermissionPresenterImpl {
     /**
      * Save the permission requested
      */
-    public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate, String comment) {
+    public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate, @Nullable String comment, @Nullable BaseProcessListener listener) {
 
         new Thread(() -> {
-            // Call the service on success save the permission into database
 
-            Date startDateDate = startDate.getTime();
-            Date endDateDate = endDate.getTime();
+            if (listener != null) {
+                listener.onProcessing(null, null);
+            }
 
-            Long startDate1 = DateConverter.toTimestamp(startDateDate);
-            Long endDate1 = DateConverter.toTimestamp(endDateDate);
+            if (isValidPermission(selectedItem, startDate, endDate)) {
+                // Call the service on success save the permission into database
+                Date startDateDate = startDate.getTime();
+                Date endDateDate = endDate.getTime();
 
-            // Creating the body
-            PermissionModel permission = new PermissionModel(comment, selectedItem.getId(), 1, startDate1, endDate1);
-            PermissionDto permissionDto = new PermissionDto(permission);
+                Long startDate1 = DateConverter.toTimestamp(startDateDate);
+                Long endDate1 = DateConverter.toTimestamp(endDateDate);
 
-            PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
-            Call<GeneralResponse<PermissionDto>> call = permissionRetrofitInterface.createPermission(
-                    ApiClient.getAccessToken(),
-                    permissionDto
-            );
-            Timber.d(permissionDto.toString(), permissionDto);
-            call.enqueue(new GeneralCallback<GeneralResponse<PermissionDto>>(call) {
+                // Creating the body
+                PermissionModel permission = new PermissionModel(comment, selectedItem.getId(), 1, startDate1, endDate1);
+                PermissionDto permissionDto = new PermissionDto(permission);
 
-                /**
-                 * Method that will be called after the onResponse default method after doing some validations
-                 * * see {@link GeneralCallback}
-                 * This need to be override by the classes that implement GeneralCallback
-                 *
-                 * @param call     call
-                 * @param response response
-                 */
-                @Override
-                public void onFinalResponse(Call<GeneralResponse<PermissionDto>> call, Response<GeneralResponse<PermissionDto>> response) {
-                    // Save the permission also into the database
+                PermissionRetrofitInterface permissionRetrofitInterface = ApiClient.getClient().create(PermissionRetrofitInterface.class);
+                Call<GeneralResponse<PermissionDto>> call = permissionRetrofitInterface.createPermission(
+                        ApiClient.getAccessToken(),
+                        permissionDto
+                );
+                Timber.d(permissionDto.toString(), permissionDto);
+                call.enqueue(new GeneralCallback<GeneralResponse<PermissionDto>>(call) {
 
-                    if (response.isSuccessful()) {
+                                 /**
+                                  * Method that will be called after the onResponse default method after doing some validations
+                                  * * see {@link GeneralCallback}
+                                  * This need to be override by the classes that implement GeneralCallback
+                                  *
+                                  * @param call     call
+                                  * @param response response
+                                  */
+                                 @Override
+                                 public void onFinalResponse(Call<GeneralResponse<PermissionDto>> call, Response<GeneralResponse<PermissionDto>> response) {
+                                     // Save the permission also into the database
 
-                        // Get the permission id form the response and also the status by the way
-                        int correctId = response.body().getWrappedData().getId();
-                        int correctStatus = response.body().getWrappedData().getStatusId();
-                        Timber.d("Permission: " + response.body().getWrappedData().toString());
-                        Timber.i("CorrectId: " + correctId);
-                        Timber.i("CorrectStatus: " + correctStatus);
+                                     if (response.isSuccessful()) {
 
-                        // Update the permission with the id and status before save into database
-                        permission.setId(correctId);
-                        permission.setFkPermissionStatus(correctStatus);
+                                         // Get the permission id form the response and also the status by the way
+                                         int correctId = response.body().getWrappedData().getId();
+                                         int correctStatus = response.body().getWrappedData().getStatusId();
+                                         Timber.d("Permission: %s", response.body().getWrappedData().toString());
+                                         Timber.i("CorrectId: %s", correctId);
+                                         Timber.i("CorrectStatus: %s", correctStatus);
 
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Timber.d("Saving the permission result into database");
-                                RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(permission);
-                            }
-                        }).start();
-                    } else {
+                                         // Update the permission with the id and status before save into database
+                                         permission.setId(correctId);
+                                         permission.setFkPermissionStatus(correctStatus);
 
-                        Timber.e("Response not successful");
-                    }
+                                         new Thread(new Runnable() {
+                                             @Override
+                                             public void run() {
+                                                 Timber.d("Saving the permission result into database");
+                                                 RoomHelper.getAppDatabaseInstance().permissionDao().insertOrReplace(permission);
+
+                                                 if (listener != null) {
+                                                     listener.onSuccessProcess(null, null);
+                                                 }
+
+                                             }
+                                         }).start();
+                                     } else {
+                                         Timber.e("Response not successful");
+                                         if (listener != null) {
+                                             listener.onErrorOccurred(R.string.title_error_connection, R.string.message_error_connection);
+                                         }
+
+                                     }
+                                 }
+
+
+                                 /**
+                                  * Method to be override by the calling class
+                                  */
+                                 @Override
+                                 public void onFinalFailure(Call<GeneralResponse<PermissionDto>> call, Throwable t) {
+                                     Timber.e(t, "Error while requesting a new permission");
+                                     if (listener != null) {
+                                         listener.onErrorOccurred(R.string.request_permission_date_error_title, R.string.request_permission_date_error);
+                                     }
+                                 }
+                             }
+
+
+                );
+            } else {
+                if (listener != null) {
+                    listener.onErrorOccurred(R.string.request_permission_date_error_title, R.string.request_permission_date_error);
                 }
-            });
+            }
+
 
         }).start();
+    }
+
+    /**
+     * Method that validates the permission entered
+     *
+     * @param selectedItem The permission type
+     * @param startDate    the target start date
+     * @param endDate      the target end date
+     * @return true when the start date is before end date
+     */
+    private boolean isValidPermission(PermissionType selectedItem, Calendar startDate, Calendar endDate) {
+        Timber.d("Validating data");
+        if (startDate == null || endDate == null || selectedItem == null) {
+            return false;
+        }
+
+        return startDate.before(endDate);
+
     }
 
     /**

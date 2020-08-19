@@ -355,7 +355,7 @@ public class MainViewModel extends AndroidViewModel {
      * Save the permission requested
      */
     public void savePermission(PermissionType selectedItem, Calendar startDate, Calendar endDate, String comment) {
-        permissionPresenter.savePermission(selectedItem, startDate, endDate, comment);
+        permissionPresenter.savePermission(selectedItem, startDate, endDate, comment, this.processListener);
     }
 
     /**

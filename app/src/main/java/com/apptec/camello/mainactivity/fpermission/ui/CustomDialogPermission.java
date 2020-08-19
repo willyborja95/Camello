@@ -69,9 +69,9 @@ public class CustomDialogPermission extends DialogFragment {
 
 
         View viewDialog = inflater.inflate(R.layout.dialog_permission, null);
-        editTextStartDate = (EditText) viewDialog.findViewById(R.id.txtStartDate);
-        editTextEndDate = (EditText) viewDialog.findViewById(R.id.txtEndDate);
-        spnPermissionType = (Spinner) viewDialog.findViewById(R.id.spnPermissionType);
+        editTextStartDate = viewDialog.findViewById(R.id.txtStartDate);
+        editTextEndDate = viewDialog.findViewById(R.id.txtEndDate);
+        spnPermissionType = viewDialog.findViewById(R.id.spnPermissionType);
         editTextComment = viewDialog.findViewById(R.id.dialog_permission_comment);
 
         RoomHelper.getAppDatabaseInstance().permissionTypeDao().getPermissionTypes().observe(this, new Observer<List<PermissionType>>() {
@@ -93,14 +93,10 @@ public class CustomDialogPermission extends DialogFragment {
                         // Save the permission requested
                         Timber.d("onClick: Ok");
                         PermissionType permissionType = (PermissionType) spnPermissionType.getSelectedItem();
-                        if (isValidPermission()) {
-                            Timber.d("Valid data, saving permission");
-                            mainViewModel.savePermission(permissionType, calendarStartDate, calendarEndDate, editTextComment.getText().toString());
-                        } else {
-                            Timber.w("Invalid data, do not save permission");
-                            editTextStartDate.setError("Inválido");
-                            editTextEndDate.setError("Inválido");
-                        }
+
+                        Timber.d("Valid data, saving permission");
+                        mainViewModel.savePermission(permissionType, calendarStartDate, calendarEndDate, editTextComment.getText().toString());
+
 
                     }
                 })
@@ -112,19 +108,6 @@ public class CustomDialogPermission extends DialogFragment {
                 });
 
         return builder.create();
-    }
-
-    /**
-     * Method that validates the permission entered
-     *
-     * @return true when the start date is before end date
-     */
-    private boolean isValidPermission() {
-        Timber.d("Validating data");
-        if (editTextStartDate.getText().length() < 1 || editTextEndDate.getText().length() < 1) {
-            return false;
-        }
-        return calendarStartDate.before(calendarEndDate);
     }
 
 
@@ -147,8 +130,6 @@ public class CustomDialogPermission extends DialogFragment {
                         calendarStartDate.add(Calendar.MONTH, -1);
                     }
                 });
-
-
 
 
                 DatePickerDialog dpStartDate = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
