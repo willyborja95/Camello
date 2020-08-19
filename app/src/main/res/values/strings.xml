@@ -24,7 +24,7 @@
     <string name="geofence_transition_invalid_type">
         Geofence transition error: invalid transition type %1$d
     </string>
-    <string name="device_already_taken">Este dispositivo esta siendo usado por otra persona</string>
+    <string name="device_already_taken">Este dispositivo esta siendo usado por otra persona.</string>
 
     <!-- Transition type strings -->
     <string name="geofence_transition_entered">Entered</string>
@@ -87,7 +87,7 @@
     <string name="login_button_alt">Acceder</string>
 
     <string name="not_correct_location_title">No es posible</string>
-    <string name="not_correct_location_message">No te encuentras en una zona de trabajo</string>
+    <string name="not_correct_location_message">No te encuentras en una zona de trabajo.</string>
 
     <!-- Notification settings -->
     <string name="notification_channel_name">Mensajes</string>
@@ -97,7 +97,7 @@
     <string name="location_channel_description">Notificaciones de tu locaclización</string>
 
     <string name="no_internet_connection_title">Error de red</string>
-    <string name="no_internet_connection">Al parecer no tienes acceso a internet</string>
+    <string name="no_internet_connection">Al parecer no tienes acceso a internet.</string>
     <string name="available_device">Habilitado</string>
     <string name="not_available_device">Deshabilitado</string>
     <string name="ok">Ok</string>
@@ -108,7 +108,7 @@
     <!-- Diccionario de errores del servidor -->
     <string name="server_error_600">Fuera de horario laboral</string>
     <string name="server_error_600_outside_working_hours">Fuera de horario laboral</string>
-    <string name="server_error_601">No se pudo sincronizar la asistencia correctamente</string>
+    <string name="server_error_601">No se pudo sincronizar la asistencia correctamente.</string>
     <string name="error">Error</string>
     <string name="unknown_error">Algo salió mal</string>
     <string name="processing">Procesando</string>
@@ -131,10 +131,10 @@
     <string name="comment">Comentario</string>
     <string name="recover_password_ok">ENVIAR</string>
     <string name="failed_recover_password_title">Error</string>
-    <string name="failed_recover_password_message">No se ha encontrado un usuario con ese correo</string>
+    <string name="failed_recover_password_message">No se ha encontrado un usuario con ese correo.</string>
     <string name="unknown_error_message">Ah ocurrido un error</string>
     <string name="recover_password_process_sucesful_title">Completado</string>
-    <string name="recover_password_process_sucesful_message">Se ha enviado un mensaje al correo electrónico que proporcionaste</string>
+    <string name="recover_password_process_sucesful_message">Se ha enviado un mensaje al correo electrónico que proporcionaste.</string>
     <string name="recover_password_label">Recuperar contraseña</string>
     <string name="enter_email">Ingrese su correo electrónico</string>
     <string name="recover_password_target_mail">Correo*</string>
@@ -146,7 +146,7 @@
     <string name="send_message_trough">Enviar mensaje a través de</string>
     <string name="send_mail">Enviar correo</string>
     <string name="request_permission_date_error_title">Error al solicitar el permiso</string>
-    <string name="request_permission_date_error">La fecha de inicio debe ser antes de la de fin</string>
+    <string name="request_permission_date_error">La fecha de inicio debe ser antes de la de fin.</string>
 
 
 </resources>
