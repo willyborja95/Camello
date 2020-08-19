@@ -404,6 +404,10 @@ public class MainActivity extends AppCompatActivity implements
         // Set an the hamburger icon as icon
         menuRight.setImageDrawable(getDrawable(R.drawable.ic_drawer_menu));
 
+        int size = binding.navDrawer.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            binding.navDrawer.getMenu().getItem(i).setChecked(false);
+        }
 
         // Set the normal listener
         menuRight.setOnClickListener(v -> {
