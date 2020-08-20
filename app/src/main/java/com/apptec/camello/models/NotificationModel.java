@@ -45,7 +45,7 @@ public class NotificationModel {
 
     @ColumnInfo(name = DBConstants.NOTIFICATION_IS_READ)
     @SerializedName("isReaded")
-    private int isRead = 0;
+    private int isRead = 0;   // (1 = True, 0 = False)
 
     /**
      * Constructor used when a notification is get from the push notification

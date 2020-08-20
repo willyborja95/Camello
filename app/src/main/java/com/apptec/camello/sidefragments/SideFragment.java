@@ -1,9 +1,14 @@
 package com.apptec.camello.sidefragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentWebViewBinding;
 import com.apptec.camello.mainactivity.MainViewModel;
+import com.apptec.camello.util.Constants;
 
 import timber.log.Timber;
 
@@ -58,6 +64,12 @@ public abstract class SideFragment extends Fragment {
         binding.webView.loadUrl(getURL());
 
 
+        binding.webView.setWebViewClient(new CustomWebViewClient());
+
+        WebSettings webSettings = binding.webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
+
         return binding.getRoot();
     }
 
@@ -70,6 +82,21 @@ public abstract class SideFragment extends Fragment {
      * @return The resource id of with the title of the fragment
      */
     public abstract String getFragmentsTitle();
+
+
+    private class CustomWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (Constants.CAMELLO_HOST.equals(Uri.parse(url).getHost())) {
+                // This is my website, so do not override; let my WebView load the page
+                return false;
+            }
+            // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+            return true;
+        }
+    }
 
 
 }

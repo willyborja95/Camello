@@ -97,6 +97,7 @@ public class Constants {
     // Other constants
     public static final String CAMELLO_NUMBER = "593986643058";
     public static final String CAMELLO_MAIL = "soporte@camello.com.ec";
+    public static final String CAMELLO_HOST = "man.camello.com.ec";
 
 
 }
