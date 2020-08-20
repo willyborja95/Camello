@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.apptec.camello.R;
@@ -67,6 +68,10 @@ public class NotificationFragment extends BaseFragment {
         // Observing the view model mNotification
         notificationListAdapter = new NotificationAdapter(mainViewModel.getNotifications(), getChildFragmentManager());
         binding.notificationListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.notificationListView.getContext(),
+                DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(getContext().getDrawable(R.drawable.recycler_divider));
+        binding.notificationListView.addItemDecoration(dividerItemDecoration);
         mainViewModel.getNotifications().observe(
                 getActivity(), notificationModelList -> {
                     if (notificationModelList.isEmpty()) {

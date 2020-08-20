@@ -16,8 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@{notification.isRead == 1 ? @color/readNotificationBackground : @color/white}"
-        android:layout_marginTop="8dp"
+        card_view:cardElevation="0dp"
         android:padding="4dp">
+
         <!-- Card view of a notification -->
 
 
@@ -25,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:backgroundTint="@android:color/darker_gray"
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
 
