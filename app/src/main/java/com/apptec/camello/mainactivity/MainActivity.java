@@ -200,6 +200,9 @@ public class MainActivity extends AppCompatActivity implements
 
         // Setup the navigation drawer footer menu
         setUpFooterMenu();
+
+        // Set up the number of unread notifications
+        setUpNotificationBadge();
     }
 
     /**

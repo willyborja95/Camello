@@ -51,10 +51,12 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/colorPrimary"
             android:clickable="true"
+            android:focusable="true"
             android:onClick="@{() -> permissionViewModel.onAddNewPermission(true)}"
-            app:srcCompat="@drawable/ic_add"
-            android:focusable="true" />
+            app:rippleColor="#FFFFFF"
+            app:srcCompat="@drawable/ic_add" />
 
     </RelativeLayout>
 </layout>
