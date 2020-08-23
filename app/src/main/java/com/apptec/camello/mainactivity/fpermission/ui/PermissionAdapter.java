@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,13 +29,23 @@ public class PermissionAdapter extends
     // Listener for erase permission button listener
     PermissionFragment.DeleteButtonListener listener;
 
+    // Fragment manager for showing the dialog for each notification
+    FragmentManager childFragmentManager;
 
     /**
      * Constructor
+     *
+     * @param permissionFullListLiveData LIst of permissions
+     * @param listener                   delete button action
+     * @param childFragmentManager       child fragment manager to open the confirmation dialog
      */
-    public PermissionAdapter(LiveData<List<PermissionFull>> permissionFullListLiveData, PermissionFragment.DeleteButtonListener listener) {
+    public PermissionAdapter(
+            LiveData<List<PermissionFull>> permissionFullListLiveData,
+            PermissionFragment.DeleteButtonListener listener,
+            FragmentManager childFragmentManager) {
         this.permissionFullListLiveData = permissionFullListLiveData;
         this.listener = listener;
+        this.childFragmentManager = childFragmentManager;
     }
 
     // Create new views (invoked by the layout manager)
@@ -60,7 +71,7 @@ public class PermissionAdapter extends
         PermissionFull permissionFull = getItem(position);
 
         // - replace the contents of the view with that element
-        holder.bind(permissionFull);
+        holder.bind(permissionFull, this.childFragmentManager);
 
     }
 
@@ -90,6 +101,12 @@ public class PermissionAdapter extends
         // Listener for erase permission button listener
         PermissionFragment.DeleteButtonListener listener;
 
+        /**
+         * Constructor
+         *
+         * @param itemBinding Binding class
+         * @param listener    button listener action
+         */
         public MyViewHolder(@NonNull PermissionItemBinding itemBinding, PermissionFragment.DeleteButtonListener listener) {
             super(itemBinding.getRoot());
             this.itemBinding = itemBinding;
@@ -97,10 +114,33 @@ public class PermissionAdapter extends
         }
 
 
-        public void bind(PermissionFull permissionFull) {
+        /**
+         * Method to bind the item with the information
+         *
+         * @param permissionFull       target information
+         * @param childFragmentManager useful to open the confirmation dialog
+         */
+        public void bind(PermissionFull permissionFull, FragmentManager childFragmentManager) {
             // Set a click listener for the button to delete the permission
             itemBinding.btnDeletePermission.setOnClickListener(v -> {
-                listener.onDeleteClicked(permissionFull.getPermissionModel());
+
+                // Open a dialog to confirm the user action
+                ConfirmActionDialog dialog = new ConfirmActionDialog(
+                        R.string.delete_permission_title,
+                        R.string.delte_permission_message,
+                        new ConfirmActionDialog.ResponseListener() {
+                            @Override
+                            public void onAccepted() {
+                                listener.onDeleteClicked(permissionFull.getPermissionModel());
+                            }
+
+                            @Override
+                            public void onCanceled() {
+
+                            }
+                        });
+                dialog.show(childFragmentManager, "ConfirmationDialog");
+
             });
 
             itemBinding.setPermissionFull(permissionFull);

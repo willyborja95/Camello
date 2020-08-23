@@ -58,7 +58,8 @@ public class PermissionFragment extends BaseFragment {
         // Create the adapter
         permissionAdapter = new PermissionAdapter(
                 mainViewModel.getPermissionFullList(),
-                permissionModel -> mainViewModel.deletePermission(permissionModel));
+                permissionModel -> mainViewModel.deletePermission(permissionModel),
+                getChildFragmentManager());
         // Create a layout manager
         binding.recyclerViewPermissionsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
