@@ -147,6 +147,8 @@
     <string name="send_mail">Enviar correo</string>
     <string name="request_permission_date_error_title">Error al solicitar el permiso</string>
     <string name="request_permission_date_error">La fecha de inicio debe ser antes de la de fin.</string>
+    <string name="delete_permission_title">Eliminar Permiso</string>
+    <string name="delte_permission_message">¿Está seguro que desea eliminar el permiso?</string>
 
 
 </resources>

@@ -58,7 +58,8 @@ public class PermissionFragment extends BaseFragment {
         // Create the adapter
         permissionAdapter = new PermissionAdapter(
                 mainViewModel.getPermissionFullList(),
-                permissionModel -> mainViewModel.deletePermission(permissionModel));
+                permissionModel -> mainViewModel.deletePermission(permissionModel),
+                getChildFragmentManager());
         // Create a layout manager
         binding.recyclerViewPermissionsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -99,6 +100,13 @@ public class PermissionFragment extends BaseFragment {
             }
         });
 
+        // Set up the refresh button
+        setUpRefreshButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainViewModel.syncPermissions(true);
+            }
+        });
 
         return binding.getRoot();
     }
