@@ -100,6 +100,13 @@ public class PermissionFragment extends BaseFragment {
             }
         });
 
+        // Set up the refresh button
+        setUpRefreshButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainViewModel.syncPermissions(true);
+            }
+        });
 
         return binding.getRoot();
     }
