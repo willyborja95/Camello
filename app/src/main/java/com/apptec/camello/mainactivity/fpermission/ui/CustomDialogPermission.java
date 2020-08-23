@@ -63,7 +63,7 @@ public class CustomDialogPermission extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);              // Getting the view model
 
@@ -87,7 +87,7 @@ public class CustomDialogPermission extends DialogFragment {
         setUpTimesPicker();
 
         builder.setView(viewDialog)              // Add action buttons
-                .setPositiveButton(getString(R.string.permission_positive_button), new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.permission_positive_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // Save the permission requested
@@ -100,7 +100,7 @@ public class CustomDialogPermission extends DialogFragment {
 
                     }
                 })
-                .setNegativeButton(getString(R.string.permission_negative_button), new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.permission_negative_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         CustomDialogPermission.this.getDialog().cancel();
 

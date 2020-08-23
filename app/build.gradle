@@ -10,7 +10,7 @@ android {
     // Version code
     def versionMajor = 4
     def versionMinor = 6
-    def versionPatch = 6
+    def versionPatch = 8
 
 
     compileSdkVersion 29

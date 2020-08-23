@@ -28,7 +28,9 @@ import com.apptec.camello.BuildConfig;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.ActivityMainBinding;
 import com.apptec.camello.loginactivity.LoginActivity;
+import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.util.Constants;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -198,6 +200,9 @@ public class MainActivity extends AppCompatActivity implements
 
         // Setup the navigation drawer footer menu
         setUpFooterMenu();
+
+        // Set up the number of unread notifications
+        setUpNotificationBadge();
     }
 
     /**
@@ -449,6 +454,26 @@ public class MainActivity extends AppCompatActivity implements
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Method to show the notification badge
+     */
+    private void setUpNotificationBadge() {
+        BadgeDrawable badge = binding.bottomView.getOrCreateBadge(R.id.navigation_notifications);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int unreadNotifications = RoomHelper.getAppDatabaseInstance().notificationDao().getUnreadNotifications();
+                if (unreadNotifications > 0) {
+                    badge.setNumber(unreadNotifications);
+                } else {
+                    badge.setVisible(false);
+                    badge.clearNumber();
+                }
+            }
+        }).start();
     }
 
 }

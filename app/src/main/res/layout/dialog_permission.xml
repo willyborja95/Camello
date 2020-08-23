@@ -1,73 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/materialTextView"
         style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/dialog_permission_title" />
+        android:layout_marginTop="16dp"
+        android:text="@string/dialog_permission_title"
+        app:layout_constraintBottom_toTopOf="@+id/spnPermissionType"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Spinner
         android:id="@+id/spnPermissionType"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="35dp"
-        android:spinnerMode="dropdown" />
+        android:layout_marginTop="24dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/txtStartDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialTextView" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/txtStartDate"
         style="@style/TextAppearance.MaterialComponents.Body1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="35dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="16dp"
         android:background="@null"
         android:clickable="true"
         android:drawableStart="@drawable/ic_calendar"
         android:drawablePadding="10dp"
-        android:focusable="false"
 
+        android:focusable="false"
         android:hint="@string/start_date_label"
-        android:inputType="date" />
+        android:inputType="date"
+        app:layout_constraintBottom_toTopOf="@+id/txtEndDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spnPermissionType" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/txtEndDate"
         style="@style/TextAppearance.MaterialComponents.Body1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="35dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="16dp"
         android:background="@null"
         android:clickable="true"
         android:drawableStart="@drawable/ic_calendar"
         android:drawablePadding="10dp"
-        android:focusable="false"
 
+        android:focusable="false"
         android:hint="@string/end_date_label"
-        android:inputType="date" />
+        android:inputType="date"
+        app:layout_constraintBottom_toTopOf="@+id/textField"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStartDate" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textField"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="35dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:hint="@string/comment"
-        app:endIconMode="clear_text">
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtEndDate">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dialog_permission_comment"
@@ -76,4 +92,4 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

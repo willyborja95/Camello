@@ -92,7 +92,7 @@ public class PermissionFragment extends BaseFragment {
                     Timber.d("Open dialog");
 
                     CustomDialogPermission dialogPermission = new CustomDialogPermission();
-                    dialogPermission.show(getFragmentManager(), PermissionFragment.class.getSimpleName());
+                    dialogPermission.show(getChildFragmentManager(), PermissionFragment.class.getSimpleName());
 
 
                 }
