@@ -142,7 +142,7 @@ public class GeofenceHelper {
         sGeofencingClient.removeGeofences(getGeofencePendingIntent()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                // TODO:
+                Timber.d("Successfully removed geofences");
             }
         });
     }

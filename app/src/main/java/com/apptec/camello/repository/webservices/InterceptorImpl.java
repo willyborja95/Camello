@@ -51,6 +51,7 @@ public class InterceptorImpl implements okhttp3.Interceptor {
             } catch (NullPointerException npe) {
                 Timber.e("Probably a invalid token is being sent");
                 // TODO: Logout the user
+                Timber.w("We should logout the user here");
 
             }
 
