@@ -80,6 +80,9 @@ public class Constants {
 
     public static final int SYNC_JOB_ID = 1235;
 
+    // Job tags
+    public static final String WORKER_REFRESHER = "refresher"; // The worker that refresh the woken every 15 minutes
+
     // Constant to put in an intent so the main activity could know if navigate to the notifications fragment
     public static final String NAVIGATE_TO_NOTIFICATIONS_FRAGMENT = "navigate_to_notifications";
     public static final String CURRENT_DEVICE_ID = "device_id";
@@ -87,7 +90,7 @@ public class Constants {
 
     // URL for the web view fragments
     public static final String URL_PRIVACY_POLICY = "https://camello.com.ec/politica-de-privacidad/";
-    public static final String URL_USER_MANUAL = "https://man.camello.com.ec/app-movil/inicio-sesion/"; // TODO: Change for the real url
+    public static final String URL_USER_MANUAL = "https://man.camello.com.ec/app-movil/inicio-sesion/";
 
 
     public static final String KEY_FILE_NAME = "key_file.txt";

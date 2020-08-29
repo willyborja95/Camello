@@ -308,7 +308,7 @@ public class MainViewModel extends AndroidViewModel {
                 .build();
 
         workManager.enqueueUniquePeriodicWork(
-                "refresher",
+                Constants.WORKER_REFRESHER,
                 ExistingPeriodicWorkPolicy.REPLACE,
                 refreshTokenRequest);
 
@@ -325,7 +325,7 @@ public class MainViewModel extends AndroidViewModel {
         boolean shouldStopWorking = false;
         if (this.getLastWorkingPeriod().getValue() != null) {
             if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
-                // TODO: Advice the user that his working period will be ended
+                // Advice the user that his working period will be ended
                 shouldStopWorking = true;
 
 

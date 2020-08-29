@@ -1,11 +1,15 @@
 package com.apptec.camello.auth;
 
 import androidx.annotation.Nullable;
+import androidx.work.WorkManager;
 
+import com.apptec.camello.App;
 import com.apptec.camello.mainactivity.fhome.geofence.StopWorking;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.util.Constants;
+
+import timber.log.Timber;
 
 /**
  * This class that implements a runnable will be the only way to logout the user for any part
@@ -89,7 +93,7 @@ public class SignOutRunnable implements Runnable {
      * Method to take out the worker for sync the last assistance from the WorkManager's queue
      */
     private void stopSyncWorker() {
-        // TODO
+        // ? TODO
     }
 
 
@@ -97,6 +101,10 @@ public class SignOutRunnable implements Runnable {
      * Method to take out the worker for refresh token from the WorkManager's queue
      */
     private void stopRefreshTokenWorker() {
-        // TODO:
+        try {
+            WorkManager.getInstance(App.getContext()).cancelUniqueWork(Constants.WORKER_REFRESHER);
+        } catch (Exception e) {
+            Timber.d(e, "Failed when trying to stop refresh worker");
+        }
     }
 }
