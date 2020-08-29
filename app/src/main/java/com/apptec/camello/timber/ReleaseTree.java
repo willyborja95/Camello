@@ -31,9 +31,10 @@ public class ReleaseTree extends Timber.Tree {
      */
     @Override
     protected boolean isLoggable(@Nullable String tag, int priority) {
-        return priority != Log.VERBOSE && priority != Log.DEBUG && priority != Log.INFO;
+        // return priority != Log.VERBOSE && priority != Log.DEBUG && priority != Log.INFO;
 
-        // Only log warn, error and _what the fucks_
+        // Fow now we will logging all messages for debug purposes
+        return true;
     }
 
     /**
