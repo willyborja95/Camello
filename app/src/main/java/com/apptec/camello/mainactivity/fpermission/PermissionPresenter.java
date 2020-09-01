@@ -26,7 +26,7 @@ import timber.log.Timber;
 /**
  * Helps the interaction repository - view
  */
-public class PermissionPresenterImpl {
+public class PermissionPresenter {
 
     /**
      * It return the live of permission into the database
@@ -148,6 +148,9 @@ public class PermissionPresenterImpl {
     private boolean isValidPermission(PermissionType selectedItem, Calendar startDate, Calendar endDate) {
         Timber.d("Validating data");
         if (startDate == null || endDate == null || selectedItem == null) {
+            return false;
+        }
+        if (startDate.after(System.currentTimeMillis() - 1000)) {
             return false;
         }
 

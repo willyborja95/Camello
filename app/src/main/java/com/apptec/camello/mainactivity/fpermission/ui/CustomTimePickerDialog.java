@@ -153,12 +153,12 @@ public class CustomTimePickerDialog extends DialogFragment {
     private void updateButton() {
         if (amSelected) {
             amButton.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
-            amButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+            amButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             pmButton.setTextColor(ContextCompat.getColor(getContext(), android.R.color.black));
             pmButton.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.darker_gray));
         } else {
             pmButton.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
-            pmButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+            pmButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             amButton.setTextColor(ContextCompat.getColor(getContext(), android.R.color.black));
             amButton.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.darker_gray));
         }

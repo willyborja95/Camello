@@ -144,7 +144,7 @@ public class CustomDialogPermission extends DialogFragment {
 
                     }
                 }, calendarStartDate.get(Calendar.YEAR), calendarStartDate.get(Calendar.MONTH), calendarStartDate.get(Calendar.DAY_OF_MONTH));
-
+                dpStartDate.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 dpStartDate.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
@@ -188,7 +188,7 @@ public class CustomDialogPermission extends DialogFragment {
                         tpEndDate.show(getChildFragmentManager(), "TimePickerEndHour");
                     }
                 }, calendarEndDate.get(Calendar.YEAR), calendarEndDate.get(Calendar.MONTH), calendarEndDate.get(Calendar.DAY_OF_MONTH));
-
+                dpEndDate.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 dpEndDate.setOnCancelListener(new DatePickerDialog.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
