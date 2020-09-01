@@ -20,7 +20,7 @@ import com.apptec.camello.mainactivity.fhome.HomePresenterImpl;
 import com.apptec.camello.mainactivity.fhome.geofence.HandleButtonClicked;
 import com.apptec.camello.mainactivity.fnotification.NotificationPresenter;
 import com.apptec.camello.mainactivity.fpermission.PermissionFull;
-import com.apptec.camello.mainactivity.fpermission.PermissionPresenterImpl;
+import com.apptec.camello.mainactivity.fpermission.PermissionPresenter;
 import com.apptec.camello.models.DeviceModel;
 import com.apptec.camello.models.NotificationModel;
 import com.apptec.camello.models.PermissionModel;
@@ -102,7 +102,7 @@ public class MainViewModel extends AndroidViewModel {
     NotificationPresenter notificationPresenter;
     DevicePresenterImpl devicePresenter;
     HomePresenterImpl homePresenter;
-    PermissionPresenterImpl permissionPresenter;
+    PermissionPresenter permissionPresenter;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -112,7 +112,7 @@ public class MainViewModel extends AndroidViewModel {
         devicePresenter = new DevicePresenterImpl();
         notificationPresenter = new NotificationPresenter();
         homePresenter = new HomePresenterImpl();
-        permissionPresenter = new PermissionPresenterImpl();
+        permissionPresenter = new PermissionPresenter();
 
         // Load here the live data needed
         mNotifications = notificationPresenter.loadNotificationsLiveData();

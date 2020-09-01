@@ -20,12 +20,12 @@ public class PermissionViewModel extends ViewModel {
     private MutableLiveData<Boolean> _addNewPermission = new MutableLiveData<Boolean>();
 
     // Instance of permission presenter
-    PermissionPresenterImpl permissionPresenter;
+    PermissionPresenter permissionPresenter;
 
     public PermissionViewModel() {
         // Constructor
         Timber.d("Permission view model attached");
-        permissionPresenter = new PermissionPresenterImpl();
+        permissionPresenter = new PermissionPresenter();
 
     }
 
