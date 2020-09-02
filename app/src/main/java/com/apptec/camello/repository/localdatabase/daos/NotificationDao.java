@@ -32,6 +32,10 @@ public interface NotificationDao {
             + " WHERE (" + DBConstants.NOTIFICATION_IS_READ + "= 0)")
     int getUnreadNotifications();
 
+    @Query("SELECT COUNT(*) FROM " + DBConstants.NOTIFICATION_TABLE
+            + " WHERE (" + DBConstants.NOTIFICATION_IS_READ + "= 0)")
+    LiveData<Integer> getUnreadNotificationsLiveData();
+
     @Insert
     void insert(NotificationModel notification);
 

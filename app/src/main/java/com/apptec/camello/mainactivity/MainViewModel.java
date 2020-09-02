@@ -71,6 +71,9 @@ public class MainViewModel extends AndroidViewModel {
     // This boolean variable is needed to the activity could know if we should logout
     private MutableLiveData<Boolean> isUserLogged;
 
+    // For show in a badge the number of unread notifications
+    private LiveData<Integer> unreadNotificationsLiveData;
+
     // Work manager
     private WorkManager workManager = WorkManager.getInstance(App.getContext());
 
@@ -136,6 +139,8 @@ public class MainViewModel extends AndroidViewModel {
 
         // Sync notifications
         syncNotifications(false);
+
+        unreadNotificationsLiveData = RoomHelper.getAppDatabaseInstance().notificationDao().getUnreadNotificationsLiveData();
 
     }
 
@@ -343,6 +348,14 @@ public class MainViewModel extends AndroidViewModel {
 
     }
 
+    /**
+     * Expose the number of unread notifications
+     *
+     * @return Live data
+     */
+    public LiveData<Integer> getUnreadNotificationsLiveData() {
+        return this.unreadNotificationsLiveData;
+    }
 
     /**
      * Expose the flag to know if the user is logged or not
