@@ -106,9 +106,6 @@
 
 
     <!-- Diccionario de errores del servidor -->
-    <string name="server_error_600">Fuera de horario laboral</string>
-    <string name="server_error_600_outside_working_hours">Fuera de horario laboral</string>
-    <string name="server_error_601">No se pudo sincronizar la asistencia correctamente.</string>
     <string name="error">Error</string>
     <string name="unknown_error">Algo salió mal</string>
     <string name="processing">Procesando</string>
@@ -149,6 +146,31 @@
     <string name="request_permission_date_error">La fechas ingresadas no son válidas.</string>
     <string name="delete_permission_title">Eliminar Permiso</string>
     <string name="delte_permission_message">¿Está seguro que desea eliminar el permiso?</string>
+
+
+    <!-- Diccionario de errores del servidor -->
+    <string name="server_error_600">Fuera de horario laboral.</string>
+    <string name="server_error_601">No se pudo sincronizar la asistencia correctamente.</string>
+    <string name="server_error_400">Email o contraseña incorrectos.</string>
+    <string name="server_error_300">Usuario no autenticado.</string>
+    <string name="server_error_301">Usuario no autorizado.</string>
+    <string name="server_error_302">Refresh token inválido.</string>
+    <string name="server_error_303">Refresh token expirado, inicie sesion nuevamente.</string>
+    <string name="server_error_304">Se debe especificar el token de acceso.</string>
+    <string name="server_error_501">Token invalido.</string>
+    <string name="server_error_502">Token expirado.</string>
+    <string name="server_error_404">Recurso no encontrado.</string>
+    <string name="server_error_403">Campos invalidos.</string>
+    <string name="server_error_700">No se puede registrar desde el dispositivo de otro empleado.</string>
+    <string name="server_error_701">Dispositivo deshabilitado, contacte al administrador de su empresa.</string>
+    <string name="server_error_801">Llave expirada.</string>
+    <string name="server_error_800">Llave invalida.</string>
+    <string name="server_error_802">Archivo con extension inválida.</string>
+    <string name="server_error_803">No se pudo sincronizar correctamente.</string>
+    <string name="server_error_805">No se puedo completar la accion. Contáctese con soporte.</string>
+    <string name="server_error_806">Servicio deshabilitado.</string>
+    <string name="server_error_804">No se encontro el recurso.</string>
+    <string name="server_error_900">El código del dispositivo no esta registrado.</string>
 
 
 </resources>

@@ -94,26 +94,28 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
             public void onFinalResponse(Call<GeneralResponse<JsonObject>> call, Response<GeneralResponse<JsonObject>> response) {
 
                 if (response.code() >= 200 && response.code() < 300) {
-                    Timber.i("Assistance changed");
 
-                    Timber.i("Request code: %s", response.code());
+                    if (response.body().isOk()) {
+                        Timber.i("Assistance changed");
 
-                    SharedPreferencesHelper.putIntValue(Constants.CURRENT_WORK_ZONE_ID, workZoneModel.getId());
-                    changeWorkingStatus();
+                        Timber.i("Request code: %s", response.code());
 
-                    // Notify the listener
-                    listener.onSuccessProcess(R.string.entrance_has_been_registered, null);
+                        SharedPreferencesHelper.putIntValue(Constants.CURRENT_WORK_ZONE_ID, workZoneModel.getId());
+                        changeWorkingStatus();
 
-                } else {
-                    try {
-                        int errorCode = response.body().getError().getCode();
-                        int message = ErrorDictionary.getErrorMessageByCode(errorCode);
-                        listener.onErrorOccurred(R.string.error, message);
-                    } catch (Exception e) {
-                        listener.onErrorOccurred(R.string.error, R.string.unknown_error);
-                        Timber.e("Unknown error happened while start working");
-                        FirebaseCrashlytics.getInstance().recordException(e);
+                        // Notify the listener
+                        listener.onSuccessProcess(R.string.entrance_has_been_registered, null);
+                        return;
                     }
+                }
+                try {
+                    int errorCode = response.body().getError().getCode();
+                    int message = ErrorDictionary.getErrorMessageByCode(errorCode);
+                    listener.onErrorOccurred(R.string.error, message);
+                } catch (Exception e) {
+                    listener.onErrorOccurred(R.string.error, R.string.unknown_error);
+                    Timber.e("Unknown error happened while start working");
+                    FirebaseCrashlytics.getInstance().recordException(e);
                 }
 
 
