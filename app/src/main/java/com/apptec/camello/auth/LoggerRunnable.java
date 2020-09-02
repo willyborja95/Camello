@@ -18,6 +18,7 @@ import com.apptec.camello.repository.webservices.pojoresponse.GeneralResponse;
 import com.apptec.camello.util.Constants;
 import com.apptec.camello.util.Event;
 import com.apptec.camello.util.Process;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -250,8 +251,8 @@ public class LoggerRunnable implements Runnable {
         // Save credentials
 
         Timber.d("Login user.");
-        Timber.d("Advise the user = " + adviseTheUser);
-        Timber.d("needsToClamThisDevice = " + needsToClaimThisDevice);
+        Timber.d("Advise the user = %s", adviseTheUser);
+        Timber.d("needsToClamThisDevice = %s", needsToClaimThisDevice);
         if (adviseTheUser) {
             // THis mean that we do not have to save the device data because the user has not register
             // this phone yet
@@ -280,7 +281,8 @@ public class LoggerRunnable implements Runnable {
         SharedPreferencesHelper.putIntValue(Constants.CURRENT_USER_ID, data.user.getId());
         SharedPreferencesHelper.putBooleanValue(Constants.NEEDED_DEVICE_INFO, needsToClaimThisDevice);
 
-
+        FirebaseCrashlytics.getInstance().setCustomKey("User email", data.user.getEmail());
+        FirebaseCrashlytics.getInstance().setCustomKey("User id", data.user.getId());
         loginResult.postValue(new Event<>(new Process(Process.SUCCESSFUL, null, null)));
 
     }
