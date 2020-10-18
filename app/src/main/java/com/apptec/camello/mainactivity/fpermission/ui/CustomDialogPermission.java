@@ -127,7 +127,7 @@ public class CustomDialogPermission extends DialogFragment {
                         calendarStartDate.set(calendarStartDate.get(Calendar.YEAR), calendarStartDate.get(Calendar.MONTH), calendarStartDate.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
                         startDateRepresentation = dateFormat.format(calendarStartDate.getTime());
                         editTextStartDate.setText(startDateRepresentation);
-                        calendarStartDate.add(Calendar.MONTH, -1);
+
                     }
                 });
 
@@ -172,7 +172,7 @@ public class CustomDialogPermission extends DialogFragment {
                         calendarEndDate.set(calendarEndDate.get(Calendar.YEAR), calendarEndDate.get(Calendar.MONTH), calendarEndDate.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
                         endDateRepresentation = dateFormat.format(calendarEndDate.getTime());
                         editTextEndDate.setText(endDateRepresentation);
-                        calendarEndDate.add(Calendar.MONTH, -1);
+
                     }
                 });
 

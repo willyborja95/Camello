@@ -52,6 +52,8 @@ public class DBConstants {
     public static final String PERMISSION_COMMENT = "comment";
     public static final String PERMISSION_PERMISSION_TYPE_FK = "type_fk";
     public static final String PERMISSION_PERMISSION_STATUS_FK = "status_fk";
+    public static final String PERMISSION_START_DATE_FORMATTED = "start_date_f";
+    public static final String PERMISSION_END_DATE_FORMATTED = "end_date_f";
     public static final String PERMISSION_START_DATE = "start_date";
     public static final String PERMISSION_END_DATE = "end_date";
 

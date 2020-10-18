@@ -46,6 +46,12 @@ public class PermissionModel implements Serializable {
     @ColumnInfo(name = DBConstants.PERMISSION_PERMISSION_STATUS_FK)
     private int fkPermissionStatus;
 
+    @ColumnInfo(name = DBConstants.PERMISSION_START_DATE_FORMATTED)
+    private String startDateFormatted;
+
+    @ColumnInfo(name = DBConstants.PERMISSION_END_DATE_FORMATTED)
+    private String endDateFormatted;
+
     @ColumnInfo(name = DBConstants.PERMISSION_START_DATE)
     private Long startDate;
 
@@ -120,6 +126,22 @@ public class PermissionModel implements Serializable {
 
     public void setEndDate(Long endDate) {
         this.endDate = endDate;
+    }
+
+    public String getStartDateFormatted() {
+        return startDateFormatted;
+    }
+
+    public void setStartDateFormatted(String startDateFormatted) {
+        this.startDateFormatted = startDateFormatted;
+    }
+
+    public String getEndDateFormatted() {
+        return endDateFormatted;
+    }
+
+    public void setEndDateFormatted(String endDateFormatted) {
+        this.endDateFormatted = endDateFormatted;
     }
 
     @Override
