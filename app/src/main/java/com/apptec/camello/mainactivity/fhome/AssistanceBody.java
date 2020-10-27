@@ -30,4 +30,11 @@ public class AssistanceBody {
         this.workzoneId = workzoneId;
     }
 
+    @Override
+    public String toString() {
+        return "AssistanceBody{" +
+                "deviceId=" + deviceId +
+                ", workzoneId=" + workzoneId +
+                '}';
+    }
 }

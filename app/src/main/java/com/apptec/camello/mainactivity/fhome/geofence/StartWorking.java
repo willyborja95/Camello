@@ -190,6 +190,9 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
                 assistanceBody
 
         );
+
+        Timber.w("Start working body: %s", assistanceBody);
+
         return call;
     }
 

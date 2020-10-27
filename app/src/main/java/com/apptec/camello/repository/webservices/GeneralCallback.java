@@ -41,10 +41,11 @@ public abstract class GeneralCallback<T> implements Callback<T> {
             if (!response.isSuccessful()) {
                 Timber.w("Response is not successful");
             }
-            Timber.d("Response: %s", response.toString());
+            Timber.w("Response: %s", response.toString());
+            Timber.w("Request body: %s", call.request().body().toString());
         } catch (Exception e) {
             Timber.w("The response have some problems");
-            Timber.e(e);
+            Timber.w(e);
         }
 
         // Finally call the onFinalResponse, a method that have to be override by the implementations classes
