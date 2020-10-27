@@ -1,0 +1,446 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 22,
+    "identityHash": "32f7e4d62ba3e98feeb21e083c3de727",
+    "entities": [
+      {
+        "tableName": "user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` INTEGER NOT NULL, `user_name` TEXT, `user_lastname` TEXT, `user_email` TEXT, `company_id` TEXT, PRIMARY KEY(`user_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "user_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastName",
+            "columnName": "user_lastname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "user_email",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "company.companyName",
+            "columnName": "company_id",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "user_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "notification",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sent_date` INTEGER, `title` TEXT, `text` TEXT, `expiration_date` INTEGER, `is_read` INTEGER NOT NULL, PRIMARY KEY(`sent_date`))",
+        "fields": [
+          {
+            "fieldPath": "sentDate",
+            "columnName": "sent_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "expirationDate",
+            "columnName": "expiration_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isRead",
+            "columnName": "is_read",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "sent_date"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "device",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` INTEGER NOT NULL, `device_name` TEXT, `device_model` TEXT, `device_identifier` TEXT, `device_active` INTEGER NOT NULL, `device_token` TEXT, `device_platform` INTEGER NOT NULL, PRIMARY KEY(`device_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "device_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "device_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "model",
+            "columnName": "device_model",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "identifier",
+            "columnName": "device_identifier",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "active",
+            "columnName": "device_active",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pushToken",
+            "columnName": "device_token",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "platform",
+            "columnName": "device_platform",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "device_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "company",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`company_id` TEXT NOT NULL, PRIMARY KEY(`company_id`))",
+        "fields": [
+          {
+            "fieldPath": "companyName",
+            "columnName": "company_id",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "company_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "zone",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zone_id` INTEGER NOT NULL, `zone_name` TEXT, `lat` TEXT, `lng` TEXT, `radius` TEXT, PRIMARY KEY(`zone_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "zone_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "zone_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "lat",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "lng",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "radius",
+            "columnName": "radius",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "zone_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "period",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`period_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `period_start_date` INTEGER, `period_end_date` INTEGER, `period_status` INTEGER NOT NULL, `work_zone` INTEGER, FOREIGN KEY(`work_zone`) REFERENCES `zone`(`zone_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "period_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "start_date",
+            "columnName": "period_start_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "end_date",
+            "columnName": "period_end_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "period_status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workZoneId",
+            "columnName": "work_zone",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "period_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_period_work_zone",
+            "unique": false,
+            "columnNames": [
+              "work_zone"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_period_work_zone` ON `${TABLE_NAME}` (`work_zone`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "zone",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "work_zone"
+            ],
+            "referencedColumns": [
+              "zone_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "ptype",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ptype_id` INTEGER NOT NULL, `type_name` TEXT, PRIMARY KEY(`ptype_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "ptype_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "typeName",
+            "columnName": "type_name",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ptype_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "pstatus",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pstatus_id` INTEGER NOT NULL, `status_name` TEXT, PRIMARY KEY(`pstatus_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "pstatus_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusName",
+            "columnName": "status_name",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "pstatus_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "permission",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`permission_id` INTEGER NOT NULL, `comment` TEXT, `type_fk` INTEGER NOT NULL, `status_fk` INTEGER NOT NULL, `start_date_f` TEXT, `end_date_f` TEXT, `start_date` INTEGER, `end_date` INTEGER, PRIMARY KEY(`permission_id`), FOREIGN KEY(`type_fk`) REFERENCES `ptype`(`ptype_id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`status_fk`) REFERENCES `pstatus`(`pstatus_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "permission_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "comment",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fkPermissionType",
+            "columnName": "type_fk",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fkPermissionStatus",
+            "columnName": "status_fk",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startDateFormatted",
+            "columnName": "start_date_f",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endDateFormatted",
+            "columnName": "end_date_f",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "start_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "end_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "permission_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_permission_type_fk",
+            "unique": false,
+            "columnNames": [
+              "type_fk"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_permission_type_fk` ON `${TABLE_NAME}` (`type_fk`)"
+          },
+          {
+            "name": "index_permission_status_fk",
+            "unique": false,
+            "columnNames": [
+              "status_fk"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_permission_status_fk` ON `${TABLE_NAME}` (`status_fk`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "ptype",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "type_fk"
+            ],
+            "referencedColumns": [
+              "ptype_id"
+            ]
+          },
+          {
+            "table": "pstatus",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "status_fk"
+            ],
+            "referencedColumns": [
+              "pstatus_id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [
+      {
+        "viewName": "PermissionFull",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT *  FROM permission, pstatus, ptype WHERE status_fk = pstatus_id AND type_fk = ptype_id;"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '32f7e4d62ba3e98feeb21e083c3de727')"
+    ]
+  }
+}
