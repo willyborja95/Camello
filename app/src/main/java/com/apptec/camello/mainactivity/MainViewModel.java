@@ -402,7 +402,13 @@ public class MainViewModel extends AndroidViewModel {
         } else {
             notificationPresenter.syncNotifications(null);
         }
-
-
     }
+
+    /**
+     * Method for know the status of the working status
+     */
+    public void getAssistanceState() {
+        // TODO(Call the AssistanceRetrofitInterface)
+    }
+
 }

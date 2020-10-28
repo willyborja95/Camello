@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -42,6 +43,15 @@ public interface AssistanceRetrofitInterface {
     Call<GeneralResponse<JsonObject>> syncAssistance(
             @Header(Constants.AUTHORIZATION_HEADER) String token,
             @Body SyncAssistanceBody body
+    );
+
+
+    /**
+     * Endpoint that let us know witch the assistance state
+     */
+    @GET(Constants.ASSISTANCE_STATE)
+    Call<GeneralResponse<JsonObject>> getAssistanceState(
+            @Header(Constants.AUTHORIZATION_HEADER) String token
     );
 
 

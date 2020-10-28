@@ -37,6 +37,7 @@ public class Constants {
     // Assistance
     public static final String REGISTER_ASSISTANCE_URL = "/api/attendance";
     public static final String SYNC_ASSISTANCE_URL = "/api/attendance/sync";
+    public static final String ASSISTANCE_STATE = "/api/attendance/state";
 
 
     // Shared preferences key words values
