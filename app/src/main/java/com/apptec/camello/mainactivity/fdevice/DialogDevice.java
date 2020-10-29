@@ -2,7 +2,6 @@ package com.apptec.camello.mainactivity.fdevice;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,16 +25,16 @@ public class DialogDevice extends DialogFragment {
     // UI elements
     EditText et_name;
     EditText et_model;
-    ProgressDialog progressDialog;
+
 
     // View model
     private MainViewModel mainViewModel;
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Timber.d("On created dialog");
 
         mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);                    // Getting the view model
 
-        progressDialog = new ProgressDialog(getContext());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
         LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -53,7 +52,9 @@ public class DialogDevice extends DialogFragment {
                         String name = et_name.getText().toString();
                         String model = et_model.getText().toString();
 
+                        Timber.d("Calling view model to save device");
                         mainViewModel.saveThisDevice(name, model);
+                        Timber.d("Called to save device");
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {

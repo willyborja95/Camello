@@ -62,6 +62,8 @@ public class DeviceFragment extends BaseFragment {
                 // Request register device
                 if (aBoolean) {
                     registerNewDeviceDialog();
+                } else {
+                    onSuccessProcess(null, null);
                 }
             }
         });
@@ -78,4 +80,10 @@ public class DeviceFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainViewModel.processConsumed();
+        onSuccessProcess(null, null);
+    }
 }

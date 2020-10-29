@@ -76,11 +76,6 @@ public class HomeFragment extends BaseFragment {
         return binding.getRoot();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mainViewModel.getAssistanceState(true);
-    }
 
     /**
      * Setting up an observer to the mLastWorkingPeriod

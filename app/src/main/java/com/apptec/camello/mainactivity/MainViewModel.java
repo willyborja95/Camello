@@ -379,6 +379,7 @@ public class MainViewModel extends AndroidViewModel {
      */
     public void syncPermissions(boolean listen) {
         if (listen) {
+            Timber.d("Calling with a process listener from syncPermissions");
             permissionPresenter.syncPermissionsWithNetwork(this.processListener);
         } else {
             permissionPresenter.syncPermissionsWithNetwork(null);
@@ -401,6 +402,7 @@ public class MainViewModel extends AndroidViewModel {
      */
     public void syncNotifications(boolean listen) {
         if (listen) {
+            Timber.d("Calling with a process listener from syncNotifications");
             notificationPresenter.syncNotifications(this.processListener);
         } else {
             notificationPresenter.syncNotifications(null);
@@ -412,6 +414,7 @@ public class MainViewModel extends AndroidViewModel {
      */
     public void getAssistanceState(boolean listen) {
         if (listen) {
+            Timber.d("Calling with a process listener from getAssistanceState");
             homePresenter.getAssistanceStatus(this.processListener, isWorking);
         } else {
             homePresenter.getAssistanceStatus(null, isWorking);
