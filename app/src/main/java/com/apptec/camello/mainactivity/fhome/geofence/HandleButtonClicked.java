@@ -14,7 +14,6 @@ import com.apptec.camello.R;
 import com.apptec.camello.mainactivity.BaseProcessListener;
 import com.apptec.camello.models.WorkZoneModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
-import com.apptec.camello.util.Constants;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +35,7 @@ public class HandleButtonClicked implements Runnable {
      */
     private HandleButtonClicked.Listener listener;
     private Context context;
+    private boolean booleanStartWorkig;
 
 
     // Client for get the location
@@ -54,9 +54,10 @@ public class HandleButtonClicked implements Runnable {
     /**
      * Constructor with listener
      */
-    public HandleButtonClicked(@NotNull HandleButtonClicked.Listener listener, @NotNull Context context) {
+    public HandleButtonClicked(@NotNull HandleButtonClicked.Listener listener, @NotNull Context context, boolean booleanStartWorkig) {
         this.listener = listener;
         this.context = context;
+        this.booleanStartWorkig = booleanStartWorkig;
     }
 
 
@@ -70,16 +71,13 @@ public class HandleButtonClicked implements Runnable {
     @Override
     public void run() {
 
-        if (RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod() == null) {
+        if (booleanStartWorkig) {
             /** We entry here when is the first time when the button is pressed since the app was installed.*/
-            verifyAvailableStartWorking(true);
-        } else if (isWorking()) {
+            verifyAvailableStartWorking();
+        } else {
             /** If the user is working now, he is trying to stop working */
             new Thread(new StopWorking(listener)).start();
 
-        } else if (isNotInitWorking()) {
-            /** If the period of working is not init start it*/
-            verifyAvailableStartWorking(false);
         }
 
 
@@ -90,10 +88,8 @@ public class HandleButtonClicked implements Runnable {
      * 1. Verify if the has granted location permission
      * 2. Verify if the user has internet connection
      * 3. Verify if the user is inside a work zone
-     *
-     * @param firstTime boolean that let us know if is the first time when the user is trying to start working
      */
-    private void verifyAvailableStartWorking(boolean firstTime) {
+    private void verifyAvailableStartWorking() {
         if (permissionGranted()) {
             Timber.d("Location permission granted");
             if (hasInternet()) {
@@ -127,7 +123,7 @@ public class HandleButtonClicked implements Runnable {
                                             Timber.i("The user is inside a work zone");
 
                                             // Here we finally start working
-                                            startWorking(workZones.get(i), firstTime);
+                                            startWorking(workZones.get(i));
                                             return; // Break
                                         }
 
@@ -156,8 +152,8 @@ public class HandleButtonClicked implements Runnable {
 
     }
 
-    private void startWorking(WorkZoneModel workZoneModel, boolean firstTime) {
-        new Thread(new StartWorking<Listener>(workZoneModel, firstTime, listener)).start();
+    private void startWorking(WorkZoneModel workZoneModel) {
+        new Thread(new StartWorking<Listener>(workZoneModel, listener)).start();
     }
 
 
@@ -190,23 +186,5 @@ public class HandleButtonClicked implements Runnable {
     }
 
 
-    /**
-     * Return true when the last working status was 'working'
-     *
-     * @return
-     */
-    private boolean isWorking() {
-
-        return RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod().getStatus() == Constants.INT_WORKING_STATUS;
-    }
-
-    /**
-     * Return true when the last working status was 'not init'
-     *
-     * @return
-     */
-    private boolean isNotInitWorking() {
-        return RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod().getStatus() == Constants.INT_NOT_INIT_STATUS;
-    }
 
 }

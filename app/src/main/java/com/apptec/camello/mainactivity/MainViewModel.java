@@ -26,7 +26,6 @@ import com.apptec.camello.models.NotificationModel;
 import com.apptec.camello.models.PermissionModel;
 import com.apptec.camello.models.PermissionType;
 import com.apptec.camello.models.UserModel;
-import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.util.Constants;
 import com.apptec.camello.util.Event;
@@ -59,8 +58,6 @@ public class MainViewModel extends AndroidViewModel {
     // This info will be on the drawer
     private final LiveData<UserModel> mUser;
 
-    // This boolean variable show if the user is working or not
-    private LiveData<WorkingPeriodModel> mLastWorkingPeriod;
 
     // To handle if needed the first login
     private MutableLiveData<Boolean> isNeededRegisterDevice;
@@ -77,6 +74,8 @@ public class MainViewModel extends AndroidViewModel {
     // Work manager
     private WorkManager workManager = WorkManager.getInstance(App.getContext());
 
+    // To know if the user is working or not
+    private MutableLiveData<Boolean> isWorking = new MutableLiveData<>(false);
 
     // Show a process
     private BaseProcessListener processListener = new BaseProcessListener() {
@@ -122,7 +121,6 @@ public class MainViewModel extends AndroidViewModel {
         mDevices = devicePresenter.loadAllDevicesLiveData();
         mUser = RoomHelper.getAppDatabaseInstance().userDao().getLiveDataUser();
         mActiveFragmentName = new MutableLiveData<>();      // It is used to set the toolbar title
-        mLastWorkingPeriod = homePresenter.getLiveDataLastWorkingPeriod();
         mPermissionFullList = RoomHelper.getAppDatabaseInstance().permissionFullDao().getAllPermissionsFull();
 
 
@@ -141,6 +139,7 @@ public class MainViewModel extends AndroidViewModel {
         syncNotifications(false);
 
         unreadNotificationsLiveData = RoomHelper.getAppDatabaseInstance().notificationDao().getUnreadNotificationsLiveData();
+
 
     }
 
@@ -196,12 +195,6 @@ public class MainViewModel extends AndroidViewModel {
         return mDevices;
     }
 
-    /**
-     * Exposing the last working period
-     */
-    public LiveData<WorkingPeriodModel> getLastWorkingPeriod() {
-        return mLastWorkingPeriod;
-    }
 
     /**
      * Expose if the user has to grant location permissions
@@ -236,6 +229,7 @@ public class MainViewModel extends AndroidViewModel {
             @Override
             public void onSuccessProcess(Integer title, Integer message) {
                 _currentProcess.postValue(new Event<>(new Process(Process.SUCCESSFUL, title, message)));
+                isWorking.postValue(!isWorking.getValue());
             }
 
             @Override
@@ -246,7 +240,8 @@ public class MainViewModel extends AndroidViewModel {
             }
 
 
-        }, App.getContext())).start();
+        }, App.getContext()
+                , isWorking.getValue())).start();
 
 
     }
@@ -320,6 +315,16 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     /**
+     * Expose the user status
+     *
+     * @return
+     */
+    public LiveData<Boolean> booleanIsWorking() {
+        return this.isWorking;
+    }
+
+
+    /**
      * Delete credentials and tokens
      * <p>
      * if the user is working, advice him that the work will be finalized
@@ -328,13 +333,11 @@ public class MainViewModel extends AndroidViewModel {
 
         Timber.d("Login out");
         boolean shouldStopWorking = false;
-        if (this.getLastWorkingPeriod().getValue() != null) {
-            if (this.mLastWorkingPeriod.getValue().getStatus() == Constants.INT_WORKING_STATUS) {
-                // Advice the user that his working period will be ended
-                shouldStopWorking = true;
+        if (this.isWorking.getValue()) {
+            // Advice the user that his working period will be ended
+            shouldStopWorking = true;
 
 
-            }
         }
 
 
@@ -407,8 +410,13 @@ public class MainViewModel extends AndroidViewModel {
     /**
      * Method for know the status of the working status
      */
-    public void getAssistanceState() {
-        // TODO(Call the AssistanceRetrofitInterface)
+    public void getAssistanceState(boolean listen) {
+        if (listen) {
+            homePresenter.getAssistanceStatus(this.processListener, isWorking);
+        } else {
+            homePresenter.getAssistanceStatus(null, isWorking);
+        }
     }
+
 
 }

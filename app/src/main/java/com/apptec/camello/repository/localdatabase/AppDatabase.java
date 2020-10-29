@@ -15,7 +15,6 @@ import com.apptec.camello.models.PermissionStatus;
 import com.apptec.camello.models.PermissionType;
 import com.apptec.camello.models.UserModel;
 import com.apptec.camello.models.WorkZoneModel;
-import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.converter.DateConverter;
 import com.apptec.camello.repository.localdatabase.daos.CompanyDao;
 import com.apptec.camello.repository.localdatabase.daos.DeviceDao;
@@ -25,7 +24,6 @@ import com.apptec.camello.repository.localdatabase.daos.PermissionStatusDao;
 import com.apptec.camello.repository.localdatabase.daos.PermissionTypeDao;
 import com.apptec.camello.repository.localdatabase.daos.UserDao;
 import com.apptec.camello.repository.localdatabase.daos.WorkZoneDao;
-import com.apptec.camello.repository.localdatabase.daos.WorkingPeriodDao;
 
 /**
  * Database
@@ -38,14 +36,13 @@ import com.apptec.camello.repository.localdatabase.daos.WorkingPeriodDao;
         DeviceModel.class,
         CompanyModel.class,
         WorkZoneModel.class,
-        WorkingPeriodModel.class,
         PermissionType.class,
         PermissionStatus.class,
         PermissionModel.class},
         views = {
                 PermissionFull.class
         },
-        version = 22,
+        version = 23,
         exportSchema = true)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -60,8 +57,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CompanyDao companyDao();
 
     public abstract WorkZoneDao workZoneDao();
-
-    public abstract WorkingPeriodDao workingPeriodDao();
 
     public abstract PermissionDao permissionDao();
 

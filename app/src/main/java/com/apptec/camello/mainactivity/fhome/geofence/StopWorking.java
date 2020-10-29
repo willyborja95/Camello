@@ -7,8 +7,6 @@ import com.apptec.camello.auth.AuthHelper;
 import com.apptec.camello.mainactivity.BaseProcessListener;
 import com.apptec.camello.mainactivity.fhome.AssistanceBody;
 import com.apptec.camello.mainactivity.fhome.AssistanceRetrofitInterface;
-import com.apptec.camello.models.WorkingPeriodModel;
-import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
@@ -54,27 +52,6 @@ public class StopWorking implements Runnable {
             listener.onProcessing(null, null);
         }
         Timber.i("Finishing job and creating a new one");
-
-        // Change the status of the last working period to "finished" and the end time
-        // to the current time
-
-        // Get the last working period
-        WorkingPeriodModel lastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod();
-
-        // Update it
-        lastWorkingPeriod.setStatus(Constants.INT_FINISHED_STATUS);
-        lastWorkingPeriod.setEnd_date(System.currentTimeMillis());
-
-        // Save the changes into database
-        RoomHelper.getAppDatabaseInstance().workingPeriodDao().updateWorkingPeriod(lastWorkingPeriod);
-
-        // Create a new working period with the status not init
-        WorkingPeriodModel notInitWorkingPeriod = new WorkingPeriodModel(
-                Constants.INT_NOT_INIT_STATUS // Not init status
-        );
-
-        // Save the new working period into database
-        RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(notInitWorkingPeriod);
 
 
         // Stop tracking the work zone

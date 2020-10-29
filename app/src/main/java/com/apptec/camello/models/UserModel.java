@@ -9,7 +9,6 @@ import androidx.room.PrimaryKey;
 import com.apptec.camello.repository.localdatabase.DBConstants;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 @Entity(tableName = DBConstants.USER_TABLE)
 public class UserModel implements Serializable {
@@ -30,9 +29,6 @@ public class UserModel implements Serializable {
     @Embedded
     public CompanyModel company;
 
-
-    @Ignore
-    private ArrayList<WorkingPeriodModel> workingPeriodList;
 
     public int getId() {
         return id;
@@ -74,13 +70,6 @@ public class UserModel implements Serializable {
         this.company = company;
     }
 
-    public ArrayList<WorkingPeriodModel> getWorkingPeriodList() {
-        return workingPeriodList;
-    }
-
-    public void setWorkingPeriodList(ArrayList<WorkingPeriodModel> workingPeriodList) {
-        this.workingPeriodList = workingPeriodList;
-    }
 
     @Ignore
     public String getFullName() {

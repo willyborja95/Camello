@@ -171,6 +171,7 @@
     <string name="server_error_806">Servicio deshabilitado.</string>
     <string name="server_error_804">No se encontro el recurso.</string>
     <string name="server_error_900">El código del dispositivo no esta registrado.</string>
+    <string name="synced">Sincronizado</string>
 
 
 </resources>

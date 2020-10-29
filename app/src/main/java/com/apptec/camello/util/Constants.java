@@ -75,6 +75,9 @@ public class Constants {
     public static final int INT_WORKING_STATUS = 1;     // Init an working
     public static final int INT_FINISHED_STATUS = 2;     // Finalized
 
+    // Server working constants
+    public static final String WORKING = "clockIn";
+    public static final String NOT_WORKING = "clockOut";
 
     public static final int NOT_WORK_ZONE_ID = -1;
     public static final String NEED_SYNC_ASSISTANCE = "NEED_TO_SYNC";

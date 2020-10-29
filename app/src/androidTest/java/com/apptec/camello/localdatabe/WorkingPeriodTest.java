@@ -6,9 +6,7 @@ import androidx.room.Room;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.apptec.camello.App;
-import com.apptec.camello.models.WorkingPeriodModel;
 import com.apptec.camello.repository.localdatabase.AppDatabase;
-import com.apptec.camello.repository.localdatabase.daos.WorkingPeriodDao;
 
 import org.junit.After;
 import org.junit.Before;

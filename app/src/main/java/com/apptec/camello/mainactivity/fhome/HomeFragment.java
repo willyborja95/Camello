@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentHomeBinding;
 import com.apptec.camello.mainactivity.BaseFragment;
-import com.apptec.camello.util.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -76,16 +76,21 @@ public class HomeFragment extends BaseFragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mainViewModel.getAssistanceState(true);
+    }
 
     /**
      * Setting up an observer to the mLastWorkingPeriod
      */
     private void setupCentralButtonManager() {
 
-        mainViewModel.getLastWorkingPeriod().observe(getViewLifecycleOwner(), workingPeriod -> {
-            try {
-                Timber.d("Working period status: %s", workingPeriod.getStatus());
-                if (workingPeriod.getStatus() == Constants.INT_NOT_INIT_STATUS) {
+        mainViewModel.booleanIsWorking().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
                     // The user is working
                     Timber.d("Update the UI to not working");
                     binding.fragmentHomeStartButton.setText(getString(R.string.home_button_start_message));
@@ -98,15 +103,9 @@ public class HomeFragment extends BaseFragment {
                     binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_finish_message));
 
                 }
-            } catch (NullPointerException npe) {
-                // It is not working
-                Timber.d("Update the UI to not working");
-                binding.fragmentHomeStartButton.setText(getString(R.string.home_button_start_message));
-                binding.fragmentHomeButtonMessage.setText(getString(R.string.home_text_view_start_message));
-
             }
-
         });
+
 
     }
 
@@ -178,5 +177,9 @@ public class HomeFragment extends BaseFragment {
         });
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainViewModel.getAssistanceState(false);
+    }
 }

@@ -6,8 +6,6 @@ import com.apptec.camello.mainactivity.BaseProcessListener;
 import com.apptec.camello.mainactivity.fhome.AssistanceBody;
 import com.apptec.camello.mainactivity.fhome.AssistanceRetrofitInterface;
 import com.apptec.camello.models.WorkZoneModel;
-import com.apptec.camello.models.WorkingPeriodModel;
-import com.apptec.camello.repository.localdatabase.RoomHelper;
 import com.apptec.camello.repository.sharedpreferences.SharedPreferencesHelper;
 import com.apptec.camello.repository.webservices.ApiClient;
 import com.apptec.camello.repository.webservices.GeneralCallback;
@@ -30,7 +28,6 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
 
     // Attributes
     private WorkZoneModel workZoneModel;
-    private boolean isFirstTime;
 
 
     // Listener
@@ -41,13 +38,10 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
      * Ideal constructor
      *
      * @param workZoneModel work zone when the user will going to work
-     * @param isFirstTime   boolean that indicates if we have to create a new row in database or use an
-     *                      exiting one. If is the first time we have to create a new row.
      * @param listener      listener of the process
      */
-    public StartWorking(WorkZoneModel workZoneModel, boolean isFirstTime, T listener) {
+    public StartWorking(WorkZoneModel workZoneModel, T listener) {
         this.workZoneModel = workZoneModel;
-        this.isFirstTime = isFirstTime;
         this.listener = listener;
     }
 
@@ -136,42 +130,6 @@ public class StartWorking<T extends BaseProcessListener> implements Runnable {
      * This method change the working status into database
      */
     private void changeWorkingStatus() {
-        new Thread(() -> {
-            if (isFirstTime) {
-                // If there is not a previous working period into the database
-                Timber.d("Not previous working period created, maybe the app is running by first time");
-
-                Timber.d("Created a new working period");
-                // Create a working period instance
-                WorkingPeriodModel startedWorkingPeriod = new WorkingPeriodModel(
-                        System.currentTimeMillis(),   // Current time
-                        Constants.INT_WORKING_STATUS, // Not init status
-                        workZoneModel.getId());       // Foreign key to the work zone
-
-                Timber.d("Save the working period into database");
-                // Save the working period into database
-                RoomHelper.getAppDatabaseInstance().workingPeriodDao().insert(startedWorkingPeriod);
-
-            } else {
-                // Change the status of the last working period to "working"
-
-
-                Timber.d("Change the status of the last working period to \"working\"");
-                // Get the last working period
-                WorkingPeriodModel lastWorkingPeriod = RoomHelper.getAppDatabaseInstance().workingPeriodDao().getLastWorkingPeriod();
-
-                // Update it
-                lastWorkingPeriod.setStatus(Constants.INT_WORKING_STATUS);
-                lastWorkingPeriod.setStart_date(System.currentTimeMillis());
-                lastWorkingPeriod.setWorkZoneId(workZoneModel.getId());
-
-                // Save the changes into database
-                RoomHelper.getAppDatabaseInstance().workingPeriodDao().updateWorkingPeriod(lastWorkingPeriod);
-
-
-            }
-        }).start();
-
 
         // Start tracking the work zone
         App.getGeofenceHelper().startTracking(workZoneModel);
