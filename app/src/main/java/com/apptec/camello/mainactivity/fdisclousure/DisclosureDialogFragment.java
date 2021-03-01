@@ -1,10 +1,13 @@
 package com.apptec.camello.mainactivity.fdisclousure;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +36,7 @@ public class DisclosureDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button positive_button = view.findViewById(R.id.disclosure_positive_button);
+        ImageView help = view.findViewById(R.id.help_image_view);
 
         positive_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,11 +48,33 @@ public class DisclosureDialogFragment extends DialogFragment {
                 DisclosureDialogFragment.this.getDialog().cancel();
             }
         });
+
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                watch_video("https://youtu.be/IZcLX880iks");
+            }
+        });
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    }
+
+    /**
+     * Method for open a intent with the youtube video
+     * @param url
+     */
+    void watch_video(String url)
+    {
+        Intent yt_play = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        Intent chooser = Intent.createChooser(yt_play , "Open With");
+
+        if (yt_play .resolveActivity(getContext().getPackageManager()) != null) {
+            startActivity(chooser);
+        }
     }
 }

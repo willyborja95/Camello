@@ -175,6 +175,8 @@
     <string name="disclosure_title">Uso de tu localización</string>
     <string name="disclosure_explanation">Camello accede a tu ubicación en segundo plano para poder comprobar si te encuentras o no en una zona de trabajo, y de acuerdo a eso poder registrar un periodo.\n\nUna vez que has iniciado un periodo, Camello accede a tu ubicación en segundo plano incluso si la aplicación es cerrada o no está siendo usada.</string>
     <string name="disclosure_positive_button">Siguiente</string>
+    <string name="disclosure_image_alt">imagen de referencia</string>
+    <string name="help_button_alt">ayuda</string>
 
 
 </resources>
