@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import com.apptec.camello.R;
 import com.apptec.camello.databinding.FragmentHomeBinding;
 import com.apptec.camello.mainactivity.BaseFragment;
+import com.apptec.camello.mainactivity.fdisclousure.DisclosureDialogFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -163,10 +164,10 @@ public class HomeFragment extends BaseFragment {
     private void requestLocationPermissions() {
         mainViewModel.isNeededToRequestLocationPermissions().observe(getViewLifecycleOwner(), aBoolean -> {
             if (aBoolean) {
-                requestPermissions(
-                        new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                                android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        1);
+
+                DisclosureDialogFragment disclosureDialogFragment = new DisclosureDialogFragment();
+                disclosureDialogFragment.show(getChildFragmentManager(), "Disclosure");
+
 
             }
         });
