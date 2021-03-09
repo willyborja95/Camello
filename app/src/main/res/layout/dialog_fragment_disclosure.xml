@@ -7,43 +7,52 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/activity_horizontal_margin">
 
-    <ImageView
-        android:id="@+id/reference_image_view"
+
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:alpha="0.8"
-        android:contentDescription="@string/disclosure_image_alt"
-        android:scaleType="centerInside"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/disclosure_positive_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/disclosure_title"
-        app:srcCompat="@drawable/disclosure_img" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/disclosure_title"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/disclosure_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/disclosure_explanation"
-        style="@style/TextAppearance.MaterialComponents.Body2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/disclosure_explanation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reference_image_view" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/disclosure_title"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:gravity="center"
+                android:text="@string/disclosure_title" />
+
+            <ImageView
+                android:id="@+id/reference_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
+                android:alpha="0.8"
+                android:contentDescription="@string/disclosure_image_alt"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/disclosure_img" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/disclosure_explanation"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/disclosure_explanation" />
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/disclosure_positive_button"
@@ -53,8 +62,7 @@
         android:layout_marginBottom="16dp"
         android:text="@string/disclosure_positive_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/disclosure_explanation" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/help_image_view"
@@ -64,7 +72,6 @@
         android:contentDescription="@string/help_button_alt"
         app:layout_constraintBottom_toBottomOf="@+id/disclosure_positive_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/disclosure_positive_button"
         app:srcCompat="@drawable/ic_baseline_help_center_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

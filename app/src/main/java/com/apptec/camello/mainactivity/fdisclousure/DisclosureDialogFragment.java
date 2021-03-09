@@ -52,7 +52,7 @@ public class DisclosureDialogFragment extends DialogFragment {
         help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                watch_video("https://youtu.be/IZcLX880iks");
+                watch_video("https://youtu.be/YdRF49rRz58");
             }
         });
 
