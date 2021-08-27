@@ -70,11 +70,16 @@ public class SyncPermissions implements Runnable {
                 // Save the response into the database
                 new Thread(() -> {
 
-                    RoomHelper.getAppDatabaseInstance().permissionTypeDao().insertAll(response.body().getWrappedData());
-                    Timber.d("Permission types catalog pulled successfully");
+                    if (response.body() != null) {
+                        RoomHelper.getAppDatabaseInstance().permissionTypeDao().insertAll(response.body().getWrappedData());
+                        Timber.d("Permission types catalog pulled successfully");
 
-                    // Pull the permission states catalog
-                    pullPermissionStatus(permissionRetrofitInterface);
+                        // Pull the permission states catalog
+                        pullPermissionStatus(permissionRetrofitInterface);
+                    }else {
+                        Timber.e("Permission types catalog failed. response.body() == null. Response: %s", response);
+
+                    }
                 }).start();
             }
         });
